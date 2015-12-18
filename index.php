@@ -1,0 +1,58 @@
+<?php
+include "include/common.php";
+
+if($input[error]){	
+	$tags[Header]="Ошибка 404";
+	$tags[file_name]=$_SERVER['REQUEST_URI'];	
+	$content=my_msg_to_str("file_not_found",$tags,"");	
+	
+	echo get_tpl_by_title($part[tpl_name],$tags,"",$content);
+	exit();
+}
+
+if(!isset($_GET["view"]))$_GET["view"]=9;
+
+$query="select title,content from article where id='".$_GET["view"]."'";
+$result=my_query($query,$conn);
+list($title,$text)=$result->fetch_array();
+
+$tags[Header]=$title;
+$text=replace_base_href($text);
+
+$content="<table width=100% border=0 cellspacing=0 cellpadding=0 align=center>
+<tr class=content><td>".$text."<br></TD></TR>
+</table><br>";
+
+include $INC_DIR . "lib_comments.php";
+$comments = new COMMENTS ("blog");
+
+$TABLE="blog_posts";
+$query = "SELECT {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid)
+        where {$TABLE}.active='Y'
+        group by {$TABLE}.id  order by {$TABLE}.id desc limit 5";
+$result = my_query($query, $conn, true);
+
+if ($result->num_rows) {
+    $content.="<div id=blog>";
+    while ($row = $result->fetch_array()) {
+            $row["post_title"]="<a href=\"".get_post_href($row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
+            $row["content"] = replace_base_href($row["content"], false);
+            if(strlen($row["target_type"])){
+                $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );
+                $row["target_link"]="<br><a href=\"{$href}\">Перейти >></a>";
+            }
+            $row["comment_line"] = 
+                    " [ <a href=\"".get_post_href($row)."#comment_form\" title=\"{$row["title"]}\">Добавить комментарий</a> ] ".
+                    " [ <a href=\"".get_post_href($row)."#comments\" title=\"{$row["title"]}\">".
+                    "Комментариев: " . $comments->show_count($row[id])."</a> ]";
+
+            $content.=get_tpl_by_title("blog_post", $row, $result);
+
+    }
+    $content.="<center><a href=blog/page2/>Далее >></a></center>";
+    $content.="</div>";
+}
+
+echo get_tpl_by_title($part[tpl_name],$tags,"",$content);
+
+?>

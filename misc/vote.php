@@ -33,7 +33,7 @@ $tags[vote_title]=$vote_title;
 $query="select title,count(vote_log.id) as hits from vote_variants 
 left join vote_log on (vote_log.variant_id=vote_variants.id)
 where vote_id=$vote_id group by vote_variants.id order by num";
-$result=my_query($query,$conn);
+$result=my_query($query);
 
 $total=0;
 while($row=$result->fetch_array()){

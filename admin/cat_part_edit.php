@@ -53,7 +53,7 @@ if ($_POST["added"]) {
     my_query($query, $conn, 0);
     print_ok("Раздел успешно добавлен.");
     if ($_FILES["img_file"]["size"]) {
-	$part_id = mysql_insert_id($conn);
+	$part_id = $mysqli->insert_id;
 	$f_info = pathinfo($_FILES["img_file"]["name"]);
 	$img = $part_id . "." . $f_info["extension"];
 //		if(move_uploaded_file($_FILES["img_file"]["tmp_name"],$IMG_PATH.$img)){
@@ -134,8 +134,8 @@ function sub_part($prev_id, $deep) {
 			<td>$spaces<a href=cat_item_edit.php?part_id=$row[id]>$row[num] $row[title]</a></td>
 			<td>$row[seo_alias]</a></td>
 			<td align=center>" . (is_file($IMG_PATH . $row[img]) ? "<img src=$IMG_URL$row[img] border=0>" : "&nbsp;") . "</td>
-			<td width=16><a href=" . $_SERVER["PHP_SELF"] . "?edit=1&id=$row[id]><img src=\"../img/open.gif\" width=16 height=16 alt=\"Редактировать\" border=0></a></td>
-			<td width=16><a href=" . $_SERVER["PHP_SELF"] . "?del=1&id=$row[id]><img src=\"../img/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
+			<td width=16><a href=" . $_SERVER["PHP_SELF"] . "?edit=1&id=$row[id]><img src=\"../images/open.gif\" width=16 height=16 alt=\"Редактировать\" border=0></a></td>
+			<td width=16><a href=" . $_SERVER["PHP_SELF"] . "?del=1&id=$row[id]><img src=\"../images/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
 		</tr>
 		";
 	sub_part($row[id], $deep + 1);

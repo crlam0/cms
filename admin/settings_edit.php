@@ -21,7 +21,7 @@ if ($input["edit"]){
 if (($input["view"])||($input["adding"])){
 	    if($input["view"]){
             $query="select * from settings where id='$input[id]'";
-            $result=my_query($query,$conn);
+            $result=my_query($query);
             $tags=array_merge($tags,$result->fetch_array());
         	$tags[type]="edit";
         	$tags[form_title]="Редактирование";
@@ -34,7 +34,7 @@ if (($input["view"])||($input["adding"])){
 }else{
 
 	$query="SELECT * from settings order by title asc";
-	$result=my_query($query,$conn);
+	$result=my_query($query);
 	$content.=get_tpl_by_title("settings_edit_table",$tags,$result);
 	echo get_tpl_by_title($part[tpl_name],$tags,"",$content);	
 }

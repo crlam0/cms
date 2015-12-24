@@ -62,7 +62,6 @@ if ($input["added_image"]) {
 	if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
 	    $content.=my_msg_to_str("error","","Неверный тип файла !");
 	} else {
-	    $image_id = mysql_insert_id($conn);
 	    $f_info = pathinfo($_FILES["img_file"]["name"]);
 	    $file_name = encodestring($input[form][title]) . "." . $f_info["extension"];
 	    if (move_uploaded_image($_FILES["img_file"], $DIR . $settings["gallery_upload_path"] . $file_name, 1024)) {
@@ -156,7 +155,7 @@ if ($_GET["del_gallery_list_image"]) {
 
 if($input["active"]){
 	$query="update gallery_list set active='".$input["active"]."' where id=".$input["id"];
-	if(my_query($query,$conn)){
+	if(my_query($query)){
 		print $input["active"];
 	}else{
 		print mysql_error();
@@ -170,7 +169,7 @@ if ($input["added_gallery"]) {
     $query = "insert into gallery_list " . db_insert_fields($input[form]);
     my_query($query, $conn);
     if ($_FILES["img_file"]["size"]) {
-        $part_id = mysql_insert_id($conn);
+        $part_id = $mysqli->insert_id;
         $f_info = pathinfo($_FILES["img_file"]["name"]);
         $img = encodestring($input["form"]["title"]) . "." . $f_info["extension"];
         if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings['gallery_list_img_max_width'])) {

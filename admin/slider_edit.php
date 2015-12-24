@@ -33,7 +33,6 @@ if ($input["added_image"]) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
             $content.=my_msg_to_str("error", "", "Неверный тип файла !");
         } else {
-            $image_id = mysql_insert_id($conn);
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input[form][title]) . "." . $f_info["extension"];
             if (move_uploaded_image($_FILES["img_file"], $DIR . $settings["slider_upload_path"] . $file_name, 1600)) {

@@ -41,14 +41,14 @@ class COMMENTS
             $data = $input[form];
             $tags = array_merge($tags, $data);            
         }
-        $tags[editor] = $this->__editor->GetContol(400, 200, $SUBDIR . "img/bbcode_editor");
+        $tags[editor] = $this->__editor->GetContol(400, 200, $SUBDIR . "images/bbcode_editor");
         if(!strlen($tags["action"])) $tags["action"] = $_SERVER["PHP_SELF"];        
         $_SESSION["IMG_CODE"] = rand(111111, 999999);        
         return $this->__get_form_data_result.get_tpl_by_title("comment_add_form", $tags);
     }
 
     function get_form_data($input){
-        global $_SERVER,$SUBDIR,$conn,$settings;
+        global $_SERVER,$SUBDIR,$settings;
         if ($input["add_comment"]) { 
             $err = 0;            
             if (strlen($input[form]["author"]) < 3) {
@@ -72,11 +72,8 @@ class COMMENTS
                 $input[form][uid] = $_SESSION["UID"];
                 $input[form][target_type]=$this->__target_type;
                 $input[form][target_id]=$this->__target_id;
+                $input[form][content]=$this->__editor->GetHTML();
                 $query = "insert into {$this->__table} " . db_insert_fields($input[form]);
-                $result = my_query($query, $conn);
-                $last_id = mysql_insert_id($conn);
-                $content=$this->__editor->GetHTML();
-                $query = "update {$this->__table} set content='{$content}' where id='{$last_id}'";
                 $result = my_query($query, $conn);
                 $output.=my_msg_to_str("","","Комментарий успешно добавлен");
                 $msg="Автор: {$input[form][author]} ( {$input[form][ip]} )\n";

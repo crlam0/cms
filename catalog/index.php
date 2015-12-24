@@ -135,7 +135,7 @@ if ($_SESSION['PART_ID']) {
 
 if(strlen($input['item_title'])){
     $query="select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.seo_alias='".$input["item_title"]."' order by b_code,title asc";
-    $result=my_query($query,$conn);
+    $result=my_query($query);
     $row = $result->fetch_array();
     $item_id=$row['id'];
     $tags=array_merge($tags,$row);
@@ -145,7 +145,7 @@ if(strlen($input['item_title'])){
     $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";
 
     $query="select * from cat_item_images where item_id='{$item_id}' and id<>'{$row['default_img']}' order by id asc";
-    $result=my_query($query,$conn);
+    $result=my_query($query);
     $tags[images].="<div style=\"width:100%;height:1px;float:left;\">&nbsp;</div>";
     if($result->num_rows){
             $tags[images].="<div class=item_images>";

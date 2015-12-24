@@ -8,14 +8,14 @@ if (isset($input["uri"])) {
         $input["view"]=$params[1];
     }else{
         $query="select id from article_list where seo_alias like '".$params[0]."'";
-        $result=my_query($query,$conn);
+        $result=my_query($query);
         list($_SESSION["view_items"])=$result->fetch_array();
     }
 }
 
 if (isset($input["view"])) {
     $query="select id from article where seo_alias like '".$input["view"]."'";
-    $result=my_query($query,$conn);
+    $result=my_query($query);
     list($article_id)=$result->fetch_array();
     $input["id"] = ( is_numeric($article_id) ? $article_id : $input["view"]);
     $input["view_article"] = 1;

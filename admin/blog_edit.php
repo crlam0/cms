@@ -8,7 +8,7 @@ $IMG_PATH = $DIR.$settings['blog_img_path'];
 if ($input["get_target_select"]) {
     $query = "select target_id,href from blog_posts where id='{$input["item_id"]}'";
     $result = my_query($query, $conn, 1);
-    list($target_id, $href) = mysql_fetch_array($result);
+    list($target_id, $href) = $result->fetch_array();
     switch ($input["target_type"]) {
         case "link":
             $output = "<td>Прямая ссылка:</td><td><input type=edit maxlength=255 size=64 name=form[href] value=\"$href\"></td>";
@@ -96,7 +96,6 @@ if ($_GET["del_img"]) {
     $_GET["edit"] = 1;
 }
 
-
 if ($input["added_post"]) {
     $input[form][date_add] = "now()";
     $input[form][uid] = $_SESSION["UID"];
@@ -107,7 +106,6 @@ if ($input["added_post"]) {
     $query = "insert into blog_posts " . db_insert_fields($input[form]);
     my_query($query, $conn, 1);
     if ($_FILES["img_file"]["size"]) {
-        $part_id = mysql_insert_id($conn);
         $f_info = pathinfo($_FILES["img_file"]["name"]);
         $img = encodestring($input["form"]["title"]) . "." . $f_info["extension"];
         if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings['blog_img_max_width'])) {
@@ -167,7 +165,7 @@ if (($input["edit_post"]) || ($input["add_post"])) {
         $tags[form_title] = "Добавление";
         $tags[Header] = "Добавление поста";
     }
-    $tags[head_inc] = $EDITOR_INC;
+    $tags[head_inc] = $JQUERY_INC . $EDITOR_INC;
     $tags["content"] = replace_base_href($tags["content"], false);
     $tags["target_type_select"] = "
         <select name=\"form[target_type]\" id=\"target_type\">

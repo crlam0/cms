@@ -11,7 +11,7 @@ if ($input['error']) {
 }
 
 $query="select title,content from article where seo_alias='main'";
-$result=my_query($query,$conn);
+$result=my_query($query);
 list($title,$text)=$result->fetch_array();
 
 $tags[Header]=$title;

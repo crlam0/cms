@@ -23,7 +23,7 @@ global $DIR,$SUBDIR,$BASE_HREF,$conn,$settings,$input;
 			}
 			$tags[menu_content].="</li>\n";
 		}
-		return get_tpl_by_title("bl_menu",$tags,$result);		
+		return get_tpl_by_title("block_menu",$tags,$result);		
 	break;	
 	
         case "menu_bottom":
@@ -84,16 +84,16 @@ global $DIR,$SUBDIR,$BASE_HREF,$conn,$settings,$input;
                         }
                 }
                 $tags[menu_content].=$content;
-                return get_tpl_by_title("bl_cat_menu",$tags,$result);
+                return get_tpl_by_title("block_cat_menu",$tags,$result);
 	break;	
     
 	case "news":
 		$query="select *,date_format(date,'%d.%m.%Y') as date from news order by id desc limit $settings[news_block_count]";
-		$result=my_query($query,$conn);
+		$result=my_query($query);
 		function get_news_short_content($tmp,$row){
 			return cut_str($row[content],100);
 		}
-		return get_tpl_by_title("bl_news",$tags,$result);				
+		return get_tpl_by_title("block_news",$tags,$result);				
 	break;	
 
         case "last_posts":
@@ -162,13 +162,13 @@ global $DIR,$SUBDIR,$BASE_HREF,$conn,$settings,$input;
                             </div>\n";
                     $i++;
                 }
-                return get_tpl_by_title("bl_vote", $tags);
+                return get_tpl_by_title("block_vote", $tags);
             }
             break;
 
         case "contacts":
             $query="select content from article where seo_alias = 'contacts_block'";
-            $result=my_query($query,$conn);
+            $result=my_query($query);
             list($content)=$result->fetch_array();
             return $content;
             break;

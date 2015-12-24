@@ -55,7 +55,7 @@ if ($input["add_image"]) {
     if ($_FILES["img_file"]["size"]) {
         $query = "insert into cat_item_images(item_id,descr) values('{$input["id"]}','{$input["descr"]}')";
         my_query($query, $conn);
-        $image_id = mysql_insert_id($conn);
+        $image_id = $mysqli->insert_id;
         $f_info = pathinfo($_FILES["img_file"]["name"]);
         $img = $input["id"] . "_" . $image_id . "." . $f_info["extension"];
         if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings["catalog_item_img_max_width"])) {
@@ -91,7 +91,7 @@ if ($input["added"]) {
     if (!isset($input[form][special_offer]))$input[form][special_offer] = 0;
     $query = "insert into cat_item " . db_insert_fields($input[form]);
     my_query($query, $conn);
-    $insert_id=mysql_insert_id($conn);
+    $insert_id=$mysqli->insert_id;
     if($seo_alias_duplicate){
         $input[form][seo_alias].='_'.$insert_id;
         my_query("update cat_item set seo_alias='{$input[form][seo_alias]}' where id='{$insert_id}'", $conn);
@@ -133,7 +133,7 @@ function get_image_list($item_id) {
 		<td align=center><input type=radio name=ch_default class=default_img image_id=$row[id]" . ($row[default_img] == $row[id] ? " checked" : "") . "></td>
 		<td align=center><img src={$IMG_URL}$row[fname] border=0 width=150></td>
 		<td><span id=descr_$row[id]>$row[descr]</span></td>
-		<td align=center><a href=# class=del_button image_id=$row[id] alt=\"Удалить\"><img src=\"../img/del.gif\"  border=0></a></td>
+		<td align=center><a href=# class=del_button image_id=$row[id] alt=\"Удалить\"><img src=\"../images/del.gif\"  border=0></a></td>
 		</tr>";
     }
     $content.="</table>";

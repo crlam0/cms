@@ -9,7 +9,7 @@ if(!$stris)$view=1;
 
 if ($_GET["del_user"]){
 	$query="delete from users where id=".$_GET["uid"];
-	my_query($query,$conn);
+	my_query($query);
 	$content.=my_msg_to_str("", "", "Пользователь успешно удален !");
 	$view=1;
 }
@@ -18,23 +18,23 @@ if ($_POST["edit_user"]){
 	$flags=@implode(";", $_POST["flags"]);
         if(strlen($_POST["passwd"]))$passwd_inc="passwd='".md5($_POST["passwd"])."',";
 	$query="update users set login='".$_POST["login"]."',".$passwd_inc."email='".$_POST["email"]."',fullname='".$_POST["fullname"]."',flags='$flags' where id=".$_POST["uid"]."";
-	my_query($query,$conn);
+	my_query($query);
 	$content.=my_msg_to_str("", "", "Редактирование успешно завершено !");
 	$view=1;
 }
 
 if ($_POST["add_user"]){
 	$query="select id from users where login='".$_POST["login"]."'";
-	$result=my_query($query,$conn);
+	$result=my_query($query);
 	if($result->num_rows){
 		$content.=my_msg_to_str("error","","Такой пользователь уже существует ! (".$_POST["login"].")");
 	}else{
 		$flags=@implode(";", $_POST["flags"]);
                 if(strlen($_POST["passwd"]))$_POST["passwd"]=md5($_POST["passwd"]);
 		$query="INSERT INTO users(login,passwd,fullname,email,flags,regdate) values('".$_POST["login"]."','".$_POST["passwd"]."','".$_POST["fullname"]."','".$_POST["email"]."','$flags',now())";
-		my_query($query,$conn);
+		my_query($query);
 		$query="select last_insert_id()";
-		$result=my_query($query,$conn);
+		$result=my_query($query);
 		list($_POST["uid"])=$result->fetch_array();
 		$content.=my_msg_to_str("", "", "Пользователь успешно добавлен !");
 		$view=1;
@@ -44,7 +44,7 @@ if ($_POST["add_user"]){
 if ( ($_GET["edit"]) || ($_GET["add"])){
 	if ($_GET["edit"]){
 		$query="SELECT id,login,passwd,email,fullname,regdate,flags from users where id='".$_GET["uid"]."'";
-		$result=my_query($query,$conn);
+		$result=my_query($query);
 		$row = $result->fetch_array();
 		$flags=@explode(";",$row[flags]);
 	}else{
@@ -88,14 +88,14 @@ if($view){
         ";
 
 	$query="select * from users order by login";
-	$result=my_query($query,$conn);
+	$result=my_query($query);
 	while ($row = $result->fetch_array()){
 		echo "
                 <tr class=content align=left>
                 <td><b>$row[login]</b></td>
                 <td>$row[fullname]</td>
-                <td width=16><a href=".$_SERVER["PHP_SELF"]."?edit=1&uid=$row[id]><img src=\"../img/open.gif\" alt=\"Редактировать\" border=0></a></td>
-                <td width=16><a href=".$_SERVER["PHP_SELF"]."?del_user=1&uid=$row[id]><img src=\"../img/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
+                <td width=16><a href=".$_SERVER["PHP_SELF"]."?edit=1&uid=$row[id]><img src=\"../images/open.gif\" alt=\"Редактировать\" border=0></a></td>
+                <td width=16><a href=".$_SERVER["PHP_SELF"]."?del_user=1&uid=$row[id]><img src=\"../images/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
                 </tr>
                 ";
 	}

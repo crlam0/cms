@@ -9,8 +9,8 @@ $TABLE="blog_posts";
 if (isset($input["uri"])) {
     $params = explode("#", $input["uri"]);
     $query="select id from {$TABLE} where seo_alias like '".$params[0]."'";    
-    $result=mysql_query($query,$conn);
-    list($post_id)=mysql_fetch_array($result);
+    $result=my_query($query);
+    list($post_id)=$result->fetch_array();
     $input["view_post"] = ( is_numeric($post_id) ? $post_id : $input["view_post"]);
 
     if(strstr($input["uri"],"page")){
@@ -24,12 +24,12 @@ if(!is_array($input)){
     $_SESSION["BLOG_PAGE"] = 1;
 }
 
-$comments = new COMMENTS ("news",$input["view_post"]);
+$comments = new COMMENTS ("blog",$input["view_post"]);
 
 if ($input["view_post"]) {
     $query = "select {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid) where {$TABLE}.id='{$input["view_post"]}'";
     $result = my_query($query, $conn, true);
-    $row = mysql_fetch_array($result);
+    $row =$result->fetch_array();
 
     $tags[nav_str].="<span class=nav_next><a href=\"{$_SERVER["PHP_SELF_DIR"]}\">$tags[Header]</a></span>";
     $tags[nav_str].="<span class=nav_next>{$row["title"]}</span>";
@@ -76,12 +76,12 @@ if ($input["view_post"]) {
         group by {$TABLE}.id  order by {$TABLE}.id desc limit $offset,$MSG_PER_PAGE";
     $result = my_query($query, $conn, true);
 
-    if (!mysql_num_rows($result)) {
+    if (!$result->num_rows) {
         $content.=my_msg_to_str("part_empty");
     } else {
         $content.="<div id=blog>";
         $content.=$tags[pages_list];
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = $result->fetch_array()) {
             $row["post_title"]="<a href=\"".get_post_href($row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
             $row["content"] = replace_base_href($row["content"], false);
             if(strlen($row["target_type"])){

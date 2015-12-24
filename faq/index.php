@@ -53,7 +53,7 @@ if($input["added"]){
 		$input[form][txt]=strip_tags($input[form][txt],"<b><i><p><br>");
 		$input[form][txt]=$editor->GetHTML();
 		$query="insert into $TABLE ".db_insert_fields($input[form]);		
-		$result=my_query($query,$conn);		
+		$result=my_query($query);		
                 $msg.=$editor->GetHTML()."\n";
                 $msg.="Автор: ".$input[form][author]."\n";
                 $msg.="E-Mail: ".$input[form][email]."\n";

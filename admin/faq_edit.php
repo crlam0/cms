@@ -6,7 +6,7 @@ $TABLE="faq";
 
 if($input["active"]){
 	$query="update $TABLE set active='".$input["active"]."' where id=".$input["id"];
-	if(my_query($query,$conn)){
+	if(my_query($query)){
 		print $input["active"];
 	}else{
 		print mysql_error();

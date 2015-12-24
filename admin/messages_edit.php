@@ -21,7 +21,7 @@ if ($input["edit"]){
 if (($input["view"])||($input["adding"])){
 	if($input["view"]){
             $query="select * from messages where id='$input[id]'";
-            $result=my_query($query,$conn);
+            $result=my_query($query);
             $tags=array_merge($tags,$result->fetch_array());
         	$tags[form_type]="edit";
         	$tags[form_title]="Редактирование";
@@ -39,7 +39,7 @@ if (($input["view"])||($input["adding"])){
 }else{
 
 	$query="SELECT * from messages order by title asc";
-	$result=my_query($query,$conn);
+	$result=my_query($query);
 	$content.=get_tpl_by_title("messages_edit_table",$tags,$result);
 	echo get_tpl_by_title($part[tpl_name],$tags,"",$content);	
 }

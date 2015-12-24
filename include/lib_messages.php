@@ -45,7 +45,7 @@ function print_arr($arr){
 function admin_log($msg){
 	global $conn,$_SESSION;
 	$query="insert into admin_log(user_id,date,msg) values('".$_SESSION[UID]."',now(),'$msg')";
-	my_query($query,$conn);
+	my_query($query);
 }
 
 function send_mail ($msg_to,$subject,$msg) {

@@ -7,7 +7,7 @@ if ( (isset($input["uri"])) && (!isset($_GET["load"]))) {
     $params = explode("/", $input["uri"]);
     
     $query="select id from gallery_list where seo_alias like '".$params[0]."'";
-    $result=my_query($query,$conn);
+    $result=my_query($query);
     list($_SESSION["view_gallery"])=$result->fetch_array();
     
     if(strlen($params[1])){

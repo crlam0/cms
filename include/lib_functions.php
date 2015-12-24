@@ -196,7 +196,7 @@ Menu functions
 
 
 function get_article_list_href($list_id,$row = array()){
-    global $SUBDIR,$conn;
+    global $SUBDIR;
     if($row["id"])$list_id=$row["id"];
     $query="select seo_alias from article_list where id='{$list_id}'";
     $result=my_query($query,$conn,1);
@@ -209,7 +209,7 @@ function get_article_list_href($list_id,$row = array()){
 }
 
 function get_article_href($article_id,$row = array()){
-    global $SUBDIR,$conn;
+    global $SUBDIR;
     if($row["id"])$article_id=$row["id"];
     $query="select seo_alias,list_id from article where id='{$article_id}'";
     $result=my_query($query,$conn,1);
@@ -222,7 +222,7 @@ function get_article_href($article_id,$row = array()){
 }
 
 function get_media_list_href($list_id,$row = array()){
-    global $SUBDIR,$conn;
+    global $SUBDIR;
     if($row["id"])$list_id=$row["id"];
     $query="select seo_alias from media_list where id='{$list_id}'";
     $result=my_query($query,$conn,1);
@@ -235,29 +235,25 @@ function get_media_list_href($list_id,$row = array()){
 }
 
 function cat_prev_part($prev_id,$deep,$arr){
-    global $conn;
     $query="SELECT id,title,prev_id,seo_alias from cat_part where id='$prev_id' order by title asc";
-    $result=mysql_query($query,$conn);
+    $result=my_query($query);
     $arr[$deep]=mysql_fetch_array($result);
     if($arr[$deep]["prev_id"])$arr=cat_prev_part($arr[$deep]["prev_id"],$deep+1,$arr);
     return $arr;
 }
 
 function get_cat_part_href($list_id,$row = array()){
-    global $SUBDIR,$conn;
+    global $SUBDIR;
 
     if(is_numeric($row["id"])){
         $part_id=$row["id"];
     }else{
         $part_id=$list_id;
     }
-
     unset($arr);
-
     $uri="catalog/";
     if($part_id){
             $arr=cat_prev_part($part_id,0,$arr);
-            // print_arr($arr);
             $arr=array_reverse($arr);
             while (list ($n, $row) = @each ($arr)){
                 $uri.=$row[seo_alias]."/";
@@ -267,7 +263,7 @@ function get_cat_part_href($list_id,$row = array()){
 }
 
 function get_gallery_list_href($list_id,$row = array()){
-    global $SUBDIR,$conn;
+    global $SUBDIR;
     if($row["id"])$list_id=$row["id"];
     $query="select seo_alias from gallery_list where id='{$list_id}'";
     $result=my_query($query,$conn,1);
@@ -281,9 +277,9 @@ function get_gallery_list_href($list_id,$row = array()){
 function get_post_href($row){
     global $SUBDIR;
     if(strlen($row["seo_alias"])) {
-        return $SUBDIR."news/".$row["seo_alias"]."/";
+        return $SUBDIR."blog/".$row["seo_alias"]."/";
     }else{
-        return $SUBDIR."news/"."?view_post=".$row["id"];
+        return $SUBDIR."blog/"."?view_post=".$row["id"];
     }
 }
 

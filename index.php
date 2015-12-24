@@ -33,7 +33,7 @@ $result = my_query($query, $conn, true);
 if ($result->num_rows) {
     $content.="<div id=blog>";
     while ($row = $result->fetch_array()) {
-            $row["post_title"]="<a href=\"".get_post_href(null,$row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
+            $row["post_title"]="<a href=\"".$SUBDIR.get_post_href(null,$row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
             $row["content"] = replace_base_href($row["content"], false);
             if(strlen($row["target_type"])){
                 $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );

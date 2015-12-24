@@ -62,6 +62,7 @@ if ($input["added_image"]) {
 	if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
 	    $content.=my_msg_to_str("error","","Неверный тип файла !");
 	} else {
+            $image_id=$mysqli->insert_id;
 	    $f_info = pathinfo($_FILES["img_file"]["name"]);
 	    $file_name = encodestring($input[form][title]) . "." . $f_info["extension"];
 	    if (move_uploaded_image($_FILES["img_file"], $DIR . $settings["gallery_upload_path"] . $file_name, 1024)) {

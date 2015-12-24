@@ -2,6 +2,7 @@
 var popupStatus = 0;
 
 function loadPopup() {
+    centerPopup();
     if (popupStatus == 0) {
         $("#backgroundPopup").css({
             "opacity": "0.7"

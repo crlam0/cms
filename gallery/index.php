@@ -19,9 +19,9 @@ if ( (isset($input["uri"])) && (!isset($input["load"]))) {
 
 if($settings["gallery_use_popup"]){
     $tags[head_inc] .= $JQUERY_INC .
-            "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/popup.js\"></script>\n".
-            "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/jquery.waitforimages.min.js\"></script>\n".
-            "<script type=\"text/javascript\" src=\"{$BASE_HREF}gallery/gallery.js\"></script>\n";
+            '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
+            '<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>'."\n".
+            '<script type="text/javascript" src="'.$BASE_HREF.'gallery/gallery.js"></script>'."\n";
 }
 
 $tags[nav_str].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>$tags[Header]</a>";

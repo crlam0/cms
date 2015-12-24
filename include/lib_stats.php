@@ -1,26 +1,26 @@
 <?php
 
 /*
-  create table visitor_log(
-  id int(11) not null auto_increment,
-  date datetime,
-  day varchar(16),
-  remote_addr varchar(16),
-  remote_host varchar(32),
-  user_agent varchar(64),
-  script_name varchar(32),
-  request_uri varchar(255),
-  uid int(11),
-  unique_visitor int(1) not null default '1',
-  primary key(id),
-  key (day),
-  key (remote_addr),
-  key (remote_host),
-  key (user_agent),
-  key (script_name),
-  key (uid),
-  key (unique_visitor)
-  );
+CREATE TABLE `visitor_log` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `date` DATETIME NULL DEFAULT NULL,
+    `day` VARCHAR(16) NULL DEFAULT NULL,
+    `remote_addr` VARCHAR(16) NULL DEFAULT NULL,
+    `remote_host` VARCHAR(255) NULL DEFAULT NULL,
+    `user_agent` VARCHAR(64) NULL DEFAULT NULL,
+    `script_name` VARCHAR(64) NULL DEFAULT NULL,
+    `request_uri` VARCHAR(255) NULL DEFAULT NULL,
+    `uid` INT(11) NULL DEFAULT NULL,
+    `unique_visitor` INT(1) NOT NULL DEFAULT '1',
+    PRIMARY KEY (`id`),
+    INDEX `day` (`day`),
+    INDEX `remote_addr` (`remote_addr`),
+    INDEX `remote_host` (`remote_host`),
+    INDEX `user_agent` (`user_agent`),
+    INDEX `script_name` (`script_name`),
+    INDEX `uid` (`uid`),
+    INDEX `unique_visitor` (`unique_visitor`)
+)
 
  */
 

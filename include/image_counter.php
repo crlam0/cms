@@ -1,4 +1,4 @@
-<? 
+<?php 
 include "common.php";
 
 $query="select count(id),count(distinct remote_addr) from visitor_log";

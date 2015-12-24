@@ -65,10 +65,10 @@ if ($input["get_target_select"]) {
 
 if ($input["active"]) {
     $query = "update blog_posts set active='" . $input["active"] . "' where id=" . $input["id"];
-    if (mysql_query($query, $conn)) {
-        print $input["active"];
+    if (my_query($query, $conn)) {
+        echo $input["active"];
     } else {
-        print mysql_error();
+        echo mysql_error();
     }
     exit;
 }

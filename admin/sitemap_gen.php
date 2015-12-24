@@ -21,7 +21,7 @@ $pages = array(
         'priority' => '0.90',
     ),
     array(
-        'url' => "news/",
+        'url' => "faq/",
         'changefreq' => 'monthly',
         'priority' => '0.50',
     ),
@@ -55,7 +55,7 @@ while ($row = $result->fetch_array()) {
         'priority' => '0.80',
     );
 }
-$query = 'SELECT * from blog_posts order by date_add asc';
+$query = "SELECT * from blog_posts where active='Y' order by date_add asc";
 $result = my_query($query, $conn, true);
 while ($row = $result->fetch_array()) {
     $url = 'blog/' . ( strlen($row["seo_alias"]) ? $row["seo_alias"] . '/' : '?view_post=' . strlen($row['id']) );

@@ -19,8 +19,8 @@ if ( (isset($input["uri"])) && (!isset($_GET["load"]))) {
 
 if($settings["gallery_use_popup"]){
     $tags[head_inc] .= $JQUERY_INC .
-            "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/popup.js\"></script>\n".
-            "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/jquery.waitforimages.min.js\"></script>\n".
+            "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/popup.js\"></script>\n".
+            "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/jquery.waitforimages.min.js\"></script>\n".
             "<script type=\"text/javascript\" src=\"{$BASE_HREF}gallery/gallery.js\"></script>\n";
 }
 

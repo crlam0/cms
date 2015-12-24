@@ -1,0 +1,14 @@
+/nbproject/
+/upload/
+/src/
+/include/global.php
+/admin/nav.php
+/*.html
+/*.sql
+/main.tpl
+/css/
+/images/design/
+/favicon.png
+/dump.cmd
+/sitemap.xml
+/bannners.php

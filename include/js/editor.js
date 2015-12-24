@@ -6,7 +6,7 @@ $(document).ready(function(){
                 language : 'ru',
                 width : 900,
                 height : 400,
-		filebrowserBrowseUrl : '../inc/filemanager/index.html'
+		filebrowserBrowseUrl : '../include/filemanager/index.html'
 	});
 });
 

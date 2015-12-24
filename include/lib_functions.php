@@ -234,12 +234,12 @@ function get_media_list_href($list_id,$row = array()){
     }
 }
 
-function cat_prev_part($prev_id,$deep){
-    global $conn,$arr;
+function cat_prev_part($prev_id,$deep,$arr){
+    global $conn;
     $query="SELECT id,title,prev_id,seo_alias from cat_part where id='$prev_id' order by title asc";
-    $result=my_query($query,$conn);
-    $arr[$deep]=$result->fetch_array();
-    if($arr[$deep]["prev_id"])cat_prev_part($arr[$deep]["prev_id"],$deep+1);
+    $result=mysql_query($query,$conn);
+    $arr[$deep]=mysql_fetch_array($result);
+    if($arr[$deep]["prev_id"])$arr=cat_prev_part($arr[$deep]["prev_id"],$deep+1,$arr);
     return $arr;
 }
 
@@ -252,9 +252,11 @@ function get_cat_part_href($list_id,$row = array()){
         $part_id=$list_id;
     }
 
+    unset($arr);
+
     $uri="catalog/";
     if($part_id){
-            $arr=cat_prev_part($part_id,0);
+            $arr=cat_prev_part($part_id,0,$arr);
             // print_arr($arr);
             $arr=array_reverse($arr);
             while (list ($n, $row) = @each ($arr)){

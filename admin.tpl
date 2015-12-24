@@ -5,7 +5,7 @@
 <meta name="keywords" content="[%settings(base_keywords)%]">
 <meta name="description" content="Admin's part of BooT's site">
 <LINK href="../css/admin.css" type=text/css rel=stylesheet>
-<script type="text/javascript" src="../inc/misc.js"></script>
+<script type="text/javascript" src="../include/js/misc.js"></script>
 <link rel="icon" type="image/png" href="[%BASE_HREF%]favicon.png" />
 [%head_inc%]
 </head>

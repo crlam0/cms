@@ -167,8 +167,8 @@ if(strlen($input['item_title'])){
     </div>";
     
     $tags['head_inc'] =  
-        '<script type="text/javascript" src="'.$BASE_HREF.'include/popup.js"></script>
-        <script type="text/javascript" src="'.$BASE_HREF.'include/jquery.waitforimages.min.js"></script>
+        '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>
+        <script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>
         <script type="text/javascript" src="'.$BASE_HREF.'catalog/catalog.js"></script>
         <script src="//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU" type="text/javascript"></script>    
         ';
@@ -266,7 +266,7 @@ if($_SESSION["PART_ID"]==0){
 }
 
 $tags['head_inc'] =  
-    '<script type="text/javascript" src="'.$BASE_HREF.'include/popup.js"></script>
+    '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>
     <script type="text/javascript" src="'.$BASE_HREF.'catalog/catalog.js"></script>
     ';
 

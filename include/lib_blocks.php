@@ -26,15 +26,6 @@ global $DIR,$SUBDIR,$BASE_HREF,$conn,$settings,$input;
 		return get_tpl_by_title("bl_menu",$tags,$result);		
 	break;	
 	
-	case "news":
-		$query="select *,date_format(date,'%d.%m.%Y') as date from news order by id desc limit $settings[news_block_count]";
-		$result=my_query($query,$conn);
-		function get_news_short_content($tmp,$row){
-			return cut_str($row[content],100);
-		}
-		return get_tpl_by_title("bl_news",$tags,$result);				
-	break;	
-
         case "menu_bottom":
             list($root_id) = my_select_row("select id from menu_list where bottom_menu=1", 1);
             if (!$root_id)
@@ -64,6 +55,46 @@ global $DIR,$SUBDIR,$BASE_HREF,$conn,$settings,$input;
             return $tags[menu_content];
             break;
 
+
+        case "cat_menu":
+                function sub_part_bl($prev_id,$deep){
+                        global $conn,$SUBDIR;
+                        $query="SELECT * from cat_part where prev_id=$prev_id order by num,title asc";
+                        $result=mysql_query($query,$conn);
+                        $content="";
+                        while ($row = mysql_fetch_array($result)){
+                                $content.="<a class=item2 href=\"".$SUBDIR.get_cat_part_href($row[id])."\" title=\"$row[title]\"><span> - $row[title]</span></a>\n";
+                //		sub_part_bl($row[id],$deep+1);
+                        }
+                        return $content;
+                }
+
+                $query="SELECT * from cat_part where prev_id='0' order by num,title asc";
+                $result=mysql_query($query,$conn);
+                $content="";
+                while ($row = mysql_fetch_array($result)){
+                        $content.="<a class=item href=\"".$SUBDIR.get_cat_part_href($row[id])."\" title=\"$row[title]\"><span>$row[title]</span></a>\n";
+                        if($_SESSION["PART_ID"]==$row[id]){
+                            $content.=sub_part_bl($row[id],1);
+                        }else{
+                            list($prev_id)=my_select_row("select prev_id from cat_part where id='{$_SESSION["PART_ID"]}'",1);
+                            if($prev_id==$row[id]){
+                                $content.=sub_part_bl($row[id],1);
+                            }
+                        }
+                }
+                $tags[menu_content].=$content;
+                return get_tpl_by_title("bl_cat_menu",$tags,$result);
+	break;	
+    
+	case "news":
+		$query="select *,date_format(date,'%d.%m.%Y') as date from news order by id desc limit $settings[news_block_count]";
+		$result=my_query($query,$conn);
+		function get_news_short_content($tmp,$row){
+			return cut_str($row[content],100);
+		}
+		return get_tpl_by_title("bl_news",$tags,$result);				
+	break;	
 
         case "last_posts":
             $TABLE="blog_posts";
@@ -98,7 +129,6 @@ global $DIR,$SUBDIR,$BASE_HREF,$conn,$settings,$input;
                 return "";
             }
             break;
-
 
         case "slider":
             $SCRIPT = $server['SCRIPT_NAME'];

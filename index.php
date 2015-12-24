@@ -1,18 +1,16 @@
 <?php
 include "include/common.php";
 
-if($input[error]){	
-	$tags[Header]="Ошибка 404";
-	$tags[file_name]=$_SERVER['REQUEST_URI'];	
-	$content=my_msg_to_str("file_not_found",$tags,"");	
-	
-	echo get_tpl_by_title($part[tpl_name],$tags,"",$content);
-	exit();
+if ($input['error']) {
+    $tags['Header'] = 'Ошибка 404';
+    $tags['file_name'] = $_SERVER['REQUEST_URI'];
+    $content = my_msg_to_str('file_not_found', $tags, "");
+
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    exit();
 }
 
-if(!isset($_GET["view"]))$_GET["view"]=9;
-
-$query="select title,content from article where id='".$_GET["view"]."'";
+$query="select title,content from article where seo_alias='main'";
 $result=my_query($query,$conn);
 list($title,$text)=$result->fetch_array();
 

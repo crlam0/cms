@@ -122,7 +122,7 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0) {
     unset($src);
     if (($src_file["type"] == 'image/jpeg') || ($src_file["type"] == 'image/pjpeg')) {
         $src = imagecreatefromjpeg($src_file["tmp_name"]);
-    } elseif ($src_file["type"] == 'image/x-png') {
+    } elseif (($src_file["type"] == 'image/png')||($src_file["type"] == 'image/x-png')) {
         $src = imagecreatefrompng($src_file['tmp_name']);
     }
     if ($src) {

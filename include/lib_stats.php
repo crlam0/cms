@@ -24,16 +24,28 @@ CREATE TABLE `visitor_log` (
 
  */
 
-$closed_urls=array('img','image','admin/','favicon');
+$deny_urls=array('img','image','admin/','favicon');
+$deny_remote_hosts=array('bot','spider','yandex','google','mail.ru');
+$deny_user_agents=array('bot','spider','YandexMetrika','Yahoo');
 
-$closed_url=0;
-foreach($closed_urls as $url){
+$deny=0;
+foreach($deny_urls as $url){
     if(strstr($server["REQUEST_URI"],$url)){
-        $closed_url=1;
+        $deny=1;
+    }
+}
+foreach($deny_remote_hosts as $host){
+    if(stristr($server["REMOTE_HOST"],$host)){
+        $deny=1;
+    }
+}
+foreach($deny_user_agents as $agent){
+    if(stristr($server["HTTP_USER_AGENT"],$agent)){
+        $deny=1;
     }
 }
 
-if (!$closed_url) {
+if (!$deny) {
     /* 	if(!$_COOKIE[$COOKIE_NAME."_STATS"]){
       setcookie($COOKIE_NAME."_STATS", time(), time()+$settings[stats_cookie_hours]*3600);
       $unique=1;

@@ -15,6 +15,10 @@ if (!$input["preview"]) {
     my_query("update gallery_image set view_count=view_count+1 where id='$input[id]'", $conn, true);
 }
 
+if(!$input['windowHeight']){
+    $input['windowHeight']=800;
+}
+
 if (($file_type == "image/jpeg") || ($file_type == "image/pjpeg")) {
     $src = imagecreatefromjpeg($file_name);
     list($width_src, $height_src) = getimagesize($file_name);
@@ -52,11 +56,9 @@ if (($file_type == "image/jpeg") || ($file_type == "image/pjpeg")) {
                 }
             }
         }
-//	echo "$width_src $height_src $width $height $height_full";exit();
+	// echo "$width_src $height_src $width $height $height_full";exit();
         $dst = imagecreatetruecolor($width, $height);
 
-        // $dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h
-        
         if($gallery_fix_size){
             if($width_src<$height_src){
                 $aspect_ratio=$width_src/$width;
@@ -72,6 +74,7 @@ if (($file_type == "image/jpeg") || ($file_type == "image/pjpeg")) {
                 $src_h = $height_src;
                 $src_y = 0 ;                
             }
+        // $dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h
             imagecopyresampled($dst, $src, 0, 0, $src_x, $src_y, $width, $height, $src_w, $src_h);
         } else {
             imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $width_src, $height_src);

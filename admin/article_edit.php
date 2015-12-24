@@ -17,7 +17,7 @@ if ($_SESSION["view_article"]) {
 }
 
 if ($input["del_article"]) {
-    $query = "delete from article where id='$input[id]'";
+    $query = "delete from article_item where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Статья успешно удалена.");
 }
@@ -28,7 +28,7 @@ if ($input["added_article"]) {
     $input[form][content] = $_POST["form"]["content"];
     $input[form][content]=replace_base_href($input[form][content],true);
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $query = "insert into article" . db_insert_fields($input[form]);
+    $query = "insert into article_item" . db_insert_fields($input[form]);
     my_query($query, $conn, 1);
     $content.=my_msg_to_str("", "", "Статья успешно добавлена.");
 }
@@ -43,7 +43,7 @@ if ($input["edited_article"]) {
     $input[form][content] = $_POST["form"]["content"];
     $input[form][content]=replace_base_href($input[form][content],true);
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $query = "update article set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $query = "update article_item set " . db_update_fields($input[form]) . " where id='$input[id]'";
     my_query($query, $conn, 1);
     $content.=my_msg_to_str("", "", "Статья успешно изменена.");
     if($input["update"]){
@@ -53,7 +53,7 @@ if ($input["edited_article"]) {
 
 if (($input["edit_article"]) || ($input["add_article"])) {
     if ($input["edit_article"]) {
-	$query = "select * from article where id='$input[id]'";
+	$query = "select * from article_item where id='$input[id]'";
 	$result = my_query($query, $conn);
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags[type] = "edited_article";
@@ -72,7 +72,7 @@ if (($input["edit_article"]) || ($input["add_article"])) {
 }
 
 if ($_SESSION["view_article"]) {
-    $query = "SELECT * from article where list_id=" . $_SESSION["view_article"] . " order by date_add asc";
+    $query = "SELECT * from article_item where list_id=" . $_SESSION["view_article"] . " order by date_add asc";
     $result = my_query($query, $conn, true);
     $content.=get_tpl_by_title("article_edit_table", $tags, $result);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
@@ -80,7 +80,7 @@ if ($_SESSION["view_article"]) {
 }
 
 if ($input["del_list"]) {
-    $query = "select id from article where list_id='$input[id]'";
+    $query = "select id from article_item where list_id='$input[id]'";
     $result = my_query($query, $conn);
     if ($result->num_rows) {
 	$content.=my_msg_to_str("error","","Этот раздел не пустой !");
@@ -125,9 +125,9 @@ if (($input["edit_list"]) || ($input["add_list"])) {
     exit();
 }
 
-$query = "SELECT article_list.*,count(article.id) as files
+$query = "SELECT article_list.*,count(article_item.id) as files
 from article_list 
-left join article on (article.list_id=article_list.id) 
+left join article_item on (article_item.list_id=article_list.id) 
 group by article_list.id order by article_list.date_add desc";
 $result = my_query($query, $conn, true);
 $content.=get_tpl_by_title("article_list_edit_table", $tags, $result);

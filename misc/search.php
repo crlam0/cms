@@ -11,7 +11,7 @@ $content='
 if(strlen($input["search_str"])>3){
     $query="
     (SELECT id, 'article' as type, seo_alias, title, content, MATCH (title,content) AGAINST ('{$input["search_str"]}') AS score
-    FROM article 
+    FROM article_item 
     WHERE MATCH (title,content) AGAINST ('{$input["search_str"]}'))
     UNION    
     (SELECT id, 'news' as type, seo_alias, title, content, MATCH (title,content) AGAINST ('{$input["search_str"]}') AS score

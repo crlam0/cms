@@ -211,7 +211,7 @@ function get_article_list_href($list_id,$row = array()){
 function get_article_href($article_id,$row = array()){
     global $SUBDIR;
     if($row["id"])$article_id=$row["id"];
-    $query="select seo_alias,list_id from article where id='{$article_id}'";
+    $query="select seo_alias,list_id from article_item where id='{$article_id}'";
     $result=my_query($query,$conn,1);
     list($seo_alias,$list_id)=$result->fetch_array();
     if(strlen($seo_alias)) {

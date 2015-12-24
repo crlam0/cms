@@ -258,12 +258,14 @@ if($_SESSION["PART_ID"]){
 }
 
 
+/*
 if($_SESSION["PART_ID"]==0){
-    $query = "select title,content from article where id='35'";
+    $query = "select title,content from article_item where id='35'";
     $result = my_query($query, $conn);
     list($title, $text) = $result->fetch_array();
     $content=$text."".$content;
 }
+*/
 
 $tags['head_inc'] =  
     '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>

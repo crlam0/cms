@@ -166,7 +166,7 @@ function get_block($block_name) {
             break;
 
         case "contacts":
-            $query = "select content from article where seo_alias = 'contacts_block'";
+            $query = "select content from article_item where seo_alias = 'contacts_block'";
             $result = my_query($query);
             list($content) = $result->fetch_array();
             return $content;

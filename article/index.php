@@ -14,7 +14,7 @@ if (isset($input["uri"])) {
 }
 
 if (isset($input["view"])) {
-    $query="select id from article where seo_alias like '".$input["view"]."'";
+    $query="select id from article_item where seo_alias like '".$input["view"]."'";
     $result=my_query($query);
     list($article_id)=$result->fetch_array();
     $input["id"] = ( is_numeric($article_id) ? $article_id : $input["view"]);
@@ -31,7 +31,7 @@ if (!count($input)) {
 }
 
 if ($input["view_article"]) {
-    $query = "select * from article where id='" . $input["id"] . "'";
+    $query = "select * from article_item where id='" . $input["id"] . "'";
     $result = my_query($query, $conn);
     $row = $result->fetch_array();
 
@@ -50,7 +50,7 @@ if ($input["view_article"]) {
 
 
 if ($_SESSION["view_items"]) {
-    $query = "select * from article where list_id=" . $_SESSION["view_items"];
+    $query = "select * from article_item where list_id=" . $_SESSION["view_items"];
     $result = my_query($query, $conn, 1);
 
     $tags[nav_str].="<a href=" . $_SERVER["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";

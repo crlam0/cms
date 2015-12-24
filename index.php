@@ -10,7 +10,7 @@ if ($input['error']) {
     exit();
 }
 
-$query="select title,content from article where seo_alias='main'";
+$query="select title,content from article_item where seo_alias='main'";
 $result=my_query($query);
 list($title,$text)=$result->fetch_array();
 

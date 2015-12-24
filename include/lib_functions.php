@@ -235,29 +235,28 @@ function get_media_list_href($list_id,$row = array()){
 }
 
 function cat_prev_part($prev_id,$deep,$arr){
-    $query="SELECT id,title,prev_id,seo_alias from cat_part where id='$prev_id' order by title asc";
+    $query="SELECT id,title,prev_id,seo_alias from cat_part where id='{$prev_id}' order by title asc";
     $result=my_query($query);
-    $arr[$deep]=mysql_fetch_array($result);
-    if($arr[$deep]["prev_id"])$arr=cat_prev_part($arr[$deep]["prev_id"],$deep+1,$arr);
+    $arr[$deep]=$result->fetch_array();
+    if($arr[$deep]['prev_id'])$arr=cat_prev_part($arr[$deep]['prev_id'],$deep+1,$arr);
     return $arr;
 }
 
 function get_cat_part_href($list_id,$row = array()){
     global $SUBDIR;
-
-    if(is_numeric($row["id"])){
-        $part_id=$row["id"];
+    if(is_numeric($row['id'])){
+        $part_id=$row['id'];
     }else{
         $part_id=$list_id;
     }
     unset($arr);
-    $uri="catalog/";
+    $uri='catalog/';
     if($part_id){
-            $arr=cat_prev_part($part_id,0,$arr);
-            $arr=array_reverse($arr);
-            while (list ($n, $row) = @each ($arr)){
-                $uri.=$row[seo_alias]."/";
-            }
+        $arr=cat_prev_part($part_id,0,$arr);
+        $arr=array_reverse($arr);
+        while (list ($n, $row) = @each ($arr)){
+            $uri.=$row['seo_alias'].'/';
+        }
     }
     return $uri;
 }
@@ -274,12 +273,13 @@ function get_gallery_list_href($list_id,$row = array()){
         return "gallery/index.php?view_gallery=1&id=".$list_id;        
     }
 }
-function get_post_href($row){
+function get_post_href($post_id,$row){
     global $SUBDIR;
-    if(strlen($row["seo_alias"])) {
-        return $SUBDIR."blog/".$row["seo_alias"]."/";
+    if($row['id'])$post_id=$row['id'];
+    if(strlen($row['seo_alias'])) {
+        return "blog/".$row['seo_alias']."/";
     }else{
-        return $SUBDIR."blog/"."?view_post=".$row["id"];
+        return "blog/"."?view_post=".$row['id'];
     }
 }
 

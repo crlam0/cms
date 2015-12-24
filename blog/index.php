@@ -1,5 +1,5 @@
 <?php
-$tags[Header] = "Новости";
+$tags[Header] = "Блог";
 include "../include/common.php";
 include $INC_DIR . "lib_comments.php";
 
@@ -52,7 +52,7 @@ if ($input["view_post"]) {
 
     $comments->get_form_data($input);
     $content.=$comments->show_list();
-    $tags["action"]=get_post_href($row)."#comments";
+    $tags["action"]=get_post_href(null,$row)."#comments";
     $content.=$comments->show_form($tags);
     
 } else {
@@ -82,7 +82,7 @@ if ($input["view_post"]) {
         $content.="<div id=blog>";
         $content.=$tags[pages_list];
         while ($row = $result->fetch_array()) {
-            $row["post_title"]="<a href=\"".get_post_href($row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
+            $row["post_title"]="<a href=\"".get_post_href(null,$row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
             $row["content"] = replace_base_href($row["content"], false);
             if(strlen($row["target_type"])){
                 $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );
@@ -95,8 +95,8 @@ if ($input["view_post"]) {
                 </div>';
             }            
             $row["comment_line"] = 
-                    " [ <a href=\"".get_post_href($row)."#comment_form\" title=\"{$row["title"]}\">Добавить комментарий</a> ] ".
-                    " [ <a href=\"".get_post_href($row)."#comments\" title=\"{$row["title"]}\">".
+                    " [ <a href=\"".get_post_href(null,$row)."#comment_form\" title=\"{$row["title"]}\">Добавить комментарий</a> ] ".
+                    " [ <a href=\"".get_post_href(null,$row)."#comments\" title=\"{$row["title"]}\">".
                     "Комментариев: " . $comments->show_count($row[id])."</a> ]";
             $content.=get_tpl_by_title("blog_post", $row, $result);
 

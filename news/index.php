@@ -10,7 +10,7 @@ if($input["show"]){
 	$row=$result->fetch_array();
 	$tags[nav_str].="<span class=nav_next>$row[title]</span>";
         $tags[Header].=" - ".$row[title];
-	mysql_data_seek($result,0);	
+	$result->data_seek(0);	
 }else{
 	$tags[nav_str].="<span class=nav_next>$tags[Header]</span>";
 }

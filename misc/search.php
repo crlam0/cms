@@ -28,7 +28,7 @@ if(strlen($input["search_str"])>3){
                     $href=$SUBDIR.get_article_href($row["id"]);
                     break;
                 case "news":
-                    $href=get_post_href($row);
+                    $href=get_post_href(null,$row);
                     break;
             }
             $content.="<a class=search_result href=\"{$href}\" title=\"{$row["title"]}\">{$row["title"]}</a><br />";

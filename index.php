@@ -33,15 +33,15 @@ $result = my_query($query, $conn, true);
 if ($result->num_rows) {
     $content.="<div id=blog>";
     while ($row = $result->fetch_array()) {
-            $row["post_title"]="<a href=\"".get_post_href($row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
+            $row["post_title"]="<a href=\"".get_post_href(null,$row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
             $row["content"] = replace_base_href($row["content"], false);
             if(strlen($row["target_type"])){
                 $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );
                 $row["target_link"]="<br><a href=\"{$href}\">Перейти >></a>";
             }
             $row["comment_line"] = 
-                    " [ <a href=\"".get_post_href($row)."#comment_form\" title=\"{$row["title"]}\">Добавить комментарий</a> ] ".
-                    " [ <a href=\"".get_post_href($row)."#comments\" title=\"{$row["title"]}\">".
+                    " [ <a href=\"".get_post_href(null,$row)."#comment_form\" title=\"{$row["title"]}\">Добавить комментарий</a> ] ".
+                    " [ <a href=\"".get_post_href(null,$row)."#comments\" title=\"{$row["title"]}\">".
                     "Комментариев: " . $comments->show_count($row[id])."</a> ]";
 
             $content.=get_tpl_by_title("blog_post", $row, $result);

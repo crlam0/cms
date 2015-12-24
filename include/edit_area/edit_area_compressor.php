@@ -64,18 +64,18 @@
 			$encodings = array();
 			$desactivate_gzip=false;
 					
-			if (isset($_SERVER['HTTP_ACCEPT_ENCODING']))
-				$encodings = explode(',', strtolower(preg_replace("/\s+/", "", $_SERVER['HTTP_ACCEPT_ENCODING'])));
+			if (isset($server['HTTP_ACCEPT_ENCODING']))
+				$encodings = explode(',', strtolower(preg_replace("/\s+/", "", $server['HTTP_ACCEPT_ENCODING'])));
 			
 			// desactivate gzip for IE version < 7
-			if(preg_match("/(?:msie )([0-9.]+)/i", $_SERVER['HTTP_USER_AGENT'], $ie))
+			if(preg_match("/(?:msie )([0-9.]+)/i", $server['HTTP_USER_AGENT'], $ie))
 			{
 				if($ie[1]<7)
 					$desactivate_gzip=true;	
 			}
 			
 			// Check for gzip header or northon internet securities
-			if (!$desactivate_gzip && $this->param['use_gzip'] && (in_array('gzip', $encodings) || in_array('x-gzip', $encodings) || isset($_SERVER['---------------'])) && function_exists('ob_gzhandler') && !ini_get('zlib.output_compression')) {
+			if (!$desactivate_gzip && $this->param['use_gzip'] && (in_array('gzip', $encodings) || in_array('x-gzip', $encodings) || isset($server['---------------'])) && function_exists('ob_gzhandler') && !ini_get('zlib.output_compression')) {
 				$this->gzip_enc_header= in_array('x-gzip', $encodings) ? "x-gzip" : "gzip";
 				$this->use_gzip=true;
 				$this->cache_file=$this->gzip_cache_file;
@@ -117,7 +117,7 @@
 				if(filemtime($this->cache_file) >= $cache_date){
 					// if cache file is up to date
 					$last_modified = gmdate("D, d M Y H:i:s",filemtime($this->cache_file))." GMT";
-					if (isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) && strcasecmp($_SERVER["HTTP_IF_MODIFIED_SINCE"], $last_modified) === 0)
+					if (isset($server["HTTP_IF_MODIFIED_SINCE"]) && strcasecmp($server["HTTP_IF_MODIFIED_SINCE"], $last_modified) === 0)
 					{
 						header("HTTP/1.1 304 Not Modified");
 						header("Last-modified: ".$last_modified);

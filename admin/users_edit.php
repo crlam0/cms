@@ -51,7 +51,7 @@ if ( ($_GET["edit"]) || ($_GET["add"])){
 		$flags=@explode(";","stat;passwd;");
 	}
 	echo "
-        <form action=".$_SERVER["PHP_SELF"]." method=post>
+        <form action=".$server["PHP_SELF"]." method=post>
         <input type=hidden name=uid value=$row[id]>
         <input type=hidden name=".(($_GET["edit"])||($_POST["add_ok"])?"edit_user":"add_user")." value=1>
         <table width=500 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
@@ -94,14 +94,14 @@ if($view){
                 <tr class=content align=left>
                 <td><b>$row[login]</b></td>
                 <td>$row[fullname]</td>
-                <td width=16><a href=".$_SERVER["PHP_SELF"]."?edit=1&uid=$row[id]><img src=\"../images/open.gif\" alt=\"Редактировать\" border=0></a></td>
-                <td width=16><a href=".$_SERVER["PHP_SELF"]."?del_user=1&uid=$row[id]><img src=\"../images/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
+                <td width=16><a href=".$server["PHP_SELF"]."?edit=1&uid=$row[id]><img src=\"../images/open.gif\" alt=\"Редактировать\" border=0></a></td>
+                <td width=16><a href=".$server["PHP_SELF"]."?del_user=1&uid=$row[id]><img src=\"../images/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
                 </tr>
                 ";
 	}
 	echo "</table><br>
         <center>
-        <form action=".$_SERVER["PHP_SELF"]." method=get>
+        <form action=".$server["PHP_SELF"]." method=get>
         <input type=hidden name=add value=1>
         <input type=submit value=\"Добавить\">
         </form>

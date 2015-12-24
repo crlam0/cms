@@ -4,11 +4,11 @@ $tags[Header] = "Голосования";
 include "../include/common.php";
 
 if ($input["view_vote"]) {
-    $_SESSION["view_vote"] = $input["id"];
+    $session["view_vote"] = $input["id"];
 }
 
 if ($input["list_vote"]) {
-    $_SESSION["view_vote"] = "";
+    $session["view_vote"] = "";
 }
 
 if ($input["del_variant"]) {
@@ -18,14 +18,14 @@ if ($input["del_variant"]) {
 }
 
 if ($input["added_variant"]) {
-    $input[form][vote_id] = $_SESSION["view_vote"];
+    $input[form][vote_id] = $session["view_vote"];
     $query = "insert into vote_variants " . db_insert_fields($input[form]);
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Вариант успешно добавлен.");
 }
 
 if ($input["edited_variant"]) {
-    $input[form][vote_id] = $_SESSION["view_vote"];
+    $input[form][vote_id] = $session["view_vote"];
     $query = "update vote_variants set " . db_update_fields($input[form]) . " where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Вариант успешно изменен.");
@@ -47,10 +47,10 @@ if (($input["edit_variant"]) || ($input["add_variant"])) {
     exit();
 }
 
-if ($_SESSION["view_vote"]) {
+if ($session["view_vote"]) {
     $query = "SELECT vote_variants.*,count(vote_log.id) as hits from vote_variants
 	left join vote_log on (vote_log.variant_id=vote_variants.id)
-	where vote_id=" . $_SESSION["view_vote"] . " group by vote_variants.id order by num asc";
+	where vote_id=" . $session["view_vote"] . " group by vote_variants.id order by num asc";
     $result = my_query($query, $conn, true);
     $content.=get_tpl_by_title("vote_variants_edit_table", $tags, $result);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);

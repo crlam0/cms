@@ -4,7 +4,7 @@ $tags[Header] = 'Генератор sitemap.xml';
 include '../include/common.php';
 
 //адрес вашего сайта
-$ServerUrl = 'http://' . $_SERVER["HTTP_HOST"] . $SUBDIR;
+$ServerUrl = 'http://' . $server["HTTP_HOST"] . $SUBDIR;
 // создаем новый xml документ
 $dom = new DOMDocument('1.0', 'UTF-8');
 $dom->formatOutput = true;
@@ -132,7 +132,7 @@ foreach ($pages as $page) {
 
 $xml = $dom->saveXML();
 //сохраняем файл sitemap.xml на диск
-file_put_contents($_SERVER['DOCUMENT_ROOT'] . $SUBDIR . 'sitemap.xml', $xml);
+file_put_contents($server['DOCUMENT_ROOT'] . $SUBDIR . 'sitemap.xml', $xml);
 $content.= my_msg_to_str('', '', 'Готово');
 
 echo get_tpl_by_title($part[tpl_name], $tags, '', $content);

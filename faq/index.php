@@ -9,19 +9,19 @@ $tags[nav_str].="<span class=nav_next>$tags[Header]</span>";
 
 $code_ok=0;
 if(isset($input["send_img_code"])){
-	if($input["img_code"]==$_SESSION["IMG_CODE"]){
+	if($input["img_code"]==$session["IMG_CODE"]){
 		$code_ok=1;
 	}else{
 		$code_err=1;
 	}
 }
-$_SESSION["IMG_CODE"]=rand(111111,999999);
+$session["IMG_CODE"]=rand(111111,999999);
 
 if(isset($input["page"])){
-	$_SESSION["FAQ_PAGE"]=$input["page"];
+	$session["FAQ_PAGE"]=$input["page"];
 }
 
-if(!isset($_SESSION["FAQ_PAGE"]))$_SESSION["FAQ_PAGE"]=1;
+if(!isset($session["FAQ_PAGE"]))$session["FAQ_PAGE"]=1;
 
 $TABLE="faq";
 $MSG_PER_PAGE=$settings["faq_msg_per_page"];
@@ -48,7 +48,7 @@ if($input["added"]){
 	if(($err)||(!$code_ok)){
 		$input["add"]=1;
 	}else{				
-		$input[form][ip]=$_SERVER["REMOTE_ADDR"];
+		$input[form][ip]=$server["REMOTE_ADDR"];
 		$input[form][date]="now()";
 		$input[form][txt]=strip_tags($input[form][txt],"<b><i><p><br>");
 		$input[form][txt]=$editor->GetHTML();
@@ -81,11 +81,11 @@ list($PAGES)=$result->fetch_array();
 
 if($PAGES>1){
 	$tags[pages_list]="<center>";
-	for($i=1;$i<=$PAGES;$i++)$tags[pages_list].=($i==$_SESSION["FAQ_PAGE"]?"[ <b>$i</b> ]&nbsp;":"[ <a href=".$_SERVER["PHP_SELF"]."?page=$i>$i</a> ]&nbsp;");
+	for($i=1;$i<=$PAGES;$i++)$tags[pages_list].=($i==$session["FAQ_PAGE"]?"[ <b>$i</b> ]&nbsp;":"[ <a href=".$server["PHP_SELF"]."?page=$i>$i</a> ]&nbsp;");
 	$tags[pages_list].="</center>";
 }
 
-$limit=$MSG_PER_PAGE*($_SESSION["FAQ_PAGE"]-1);
+$limit=$MSG_PER_PAGE*($session["FAQ_PAGE"]-1);
 $query="SELECT id from $TABLE where active='Y' order by id desc limit $limit";
 $result=my_query($query,$conn,true);
 while ($row = $result->fetch_array())$LAST_ID=$row[id];

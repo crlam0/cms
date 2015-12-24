@@ -42,8 +42,8 @@ function print_arr($arr){
 
 /* inserts record to admin_log */
 function admin_log($msg){
-	global $conn,$_SESSION;
-	$query="insert into admin_log(user_id,date,msg) values('".$_SESSION[UID]."',now(),'$msg')";
+	global $conn,$session;
+	$query="insert into admin_log(user_id,date,msg) values('".$session[UID]."',now(),'$msg')";
 	my_query($query);
 }
 

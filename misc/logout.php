@@ -1,6 +1,6 @@
 <?php 
 include "../include/common.php"; 
-$_SESSION["UID"]=0;
-$_SESSION["FLAGS"]="";
+$session["UID"]=0;
+$session["FLAGS"]="";
 header("Location: $BASE_HREF");
 ?>

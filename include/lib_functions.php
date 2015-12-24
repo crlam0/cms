@@ -7,9 +7,9 @@ Misc functions
 =========================================================================*/
 
 function have_flag($flag){
-	global $_SESSION;
+	global $session;
 	if(!strlen($flag))return 1;
-	return @strstr($_SESSION["FLAGS"],$flag);
+	return @strstr($session["FLAGS"],$flag);
 }
 
 function add_zero($summ){
@@ -145,7 +145,7 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0) {
 }
 
 function show_month($month,$service_id) {
-    global $_SESSION, $_SERVER;
+    global $session, $server;
     $month_names = array(1 => 'Январь', 2 => 'Февраль', 3 => 'Март', 4 => 'Апрель', 5 => 'Май', 6 => 'Июнь', 7 => 'Июль', 8 => 'Август', 9 => 'Сентябрь', 10 => 'Октябрь', 11 => 'Ноябрь', 12 => 'Декабрь');
     $day_names = array('Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс');
     $allow_past = false;
@@ -173,7 +173,7 @@ function show_month($month,$service_id) {
             echo '<div class="day' . $today . '">';
             $day = date('j', $i);
 //             if ((date('Ymd', $i)>date('Ymd')) ) {
-//                echo "<a href=\"" . $_SERVER["PHP_SELF"] . "?sel_service=" . $service_id . "&sel_day=" . date('Y-m-d', $i) . "\">$day</a>";
+//                echo "<a href=\"" . $server["PHP_SELF"] . "?sel_service=" . $service_id . "&sel_day=" . date('Y-m-d', $i) . "\">$day</a>";
 //            } else {
                 echo date('j', $i);
 //            }
@@ -310,11 +310,11 @@ function get_menu_href($tmp,$row){
 }
 
 function replace_base_href($content,$direction = false){
-    global $_SERVER,$SUBDIR;
+    global $server,$SUBDIR;
     if($direction){
-        return str_replace("http://".$_SERVER["HTTP_HOST"].$SUBDIR, "[%SUBDIR%]", $content);
+        return str_replace("http://".$server["HTTP_HOST"].$SUBDIR, "[%SUBDIR%]", $content);
     }else{
-        return str_replace("[%SUBDIR%]","http://".$_SERVER["HTTP_HOST"].$SUBDIR, $content);        
+        return str_replace("[%SUBDIR%]","http://".$server["HTTP_HOST"].$SUBDIR, $content);        
     }
 }
 

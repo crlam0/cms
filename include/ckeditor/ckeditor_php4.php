@@ -493,10 +493,10 @@ class CKEditor
 		/**
 		 * The absolute pathname of the currently executing script.
 		 * Note: If a script is executed with the CLI, as a relative path, such as file.php or ../file.php,
-		 * $_SERVER['SCRIPT_FILENAME'] will contain the relative path specified by the user.
+		 * $server['SCRIPT_FILENAME'] will contain the relative path specified by the user.
 		 */
-		if (isset($_SERVER['SCRIPT_FILENAME'])) {
-			$realPath = dirname($_SERVER['SCRIPT_FILENAME']);
+		if (isset($server['SCRIPT_FILENAME'])) {
+			$realPath = dirname($server['SCRIPT_FILENAME']);
 		}
 		else {
 			/**
@@ -507,10 +507,10 @@ class CKEditor
 
 		/**
 		 * The filename of the currently executing script, relative to the document root.
-		 * For instance, $_SERVER['PHP_SELF'] in a script at the address http://example.com/test.php/foo.bar
+		 * For instance, $server['PHP_SELF'] in a script at the address http://example.com/test.php/foo.bar
 		 * would be /test.php/foo.bar.
 		 */
-		$selfPath = dirname($_SERVER['PHP_SELF']);
+		$selfPath = dirname($server['PHP_SELF']);
 		$file = str_replace("\\", "/", __FILE__);
 
 		if (!$selfPath || !$realPath || !$file) {

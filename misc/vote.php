@@ -10,7 +10,7 @@ if(is_array($input[vote])){
 	}else{
 		$dont_vote=1;
 	}
-	$query="select id from vote_log where ip='".$_SERVER["REMOTE_ADDR"]."' and unix_timestamp(date)>unix_timestamp()-24*60*60";
+	$query="select id from vote_log where ip='".$server["REMOTE_ADDR"]."' and unix_timestamp(date)>unix_timestamp()-24*60*60";
 	$result=my_query($query,$conn,1);
 	if($result->num_rows>5){
 		$dont_vote=1;
@@ -20,7 +20,7 @@ if(is_array($input[vote])){
 		$content=my_msg_to_str("vote_deny");
 	}else{
 		foreach ($input[vote] as $key => $value){
-			$query="insert into vote_log(date,variant_id,ip) values(now(),'$value','".$_SERVER["REMOTE_ADDR"]."')";
+			$query="insert into vote_log(date,variant_id,ip) values(now(),'$value','".$server["REMOTE_ADDR"]."')";
 			my_query($query,$conn,1);
 		}
 		$content=my_msg_to_str("vote_success");

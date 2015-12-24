@@ -9,7 +9,7 @@ if (isset($input["uri"])) {
     }else{
         $query="select id from article_list where seo_alias like '".$params[0]."'";
         $result=my_query($query);
-        list($_SESSION["view_items"])=$result->fetch_array();
+        list($session["view_items"])=$result->fetch_array();
     }
 }
 
@@ -22,11 +22,11 @@ if (isset($input["view"])) {
 }
 
 if ($input["view_items"]) {
-    $_SESSION["view_items"] = $input["id"];
+    $session["view_items"] = $input["id"];
 }
 
 if (!count($input)) {
-    $_SESSION["view_items"] = "";
+    $session["view_items"] = "";
     $tags[Header] = "Статьи";
 }
 
@@ -35,7 +35,7 @@ if ($input["view_article"]) {
     $result = my_query($query, $conn);
     $row = $result->fetch_array();
 
-    $tags[nav_str].="<a href=" . $_SERVER["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
+    $tags[nav_str].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
     list($id, $title) = my_select_row("select id,title from article_list where id='$row[list_id]'", 1);
     $tags[nav_str].="<span class=nav_next><a href=\"".$SUBDIR.get_article_list_href($id)."\">$title</a></span>";
     $tags[nav_str].="<span class=nav_next>$row[title]</span>";
@@ -49,12 +49,12 @@ if ($input["view_article"]) {
 }
 
 
-if ($_SESSION["view_items"]) {
-    $query = "select * from article_item where list_id=" . $_SESSION["view_items"];
+if ($session["view_items"]) {
+    $query = "select * from article_item where list_id=" . $session["view_items"];
     $result = my_query($query, $conn, 1);
 
-    $tags[nav_str].="<a href=" . $_SERVER["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
-    list($title) = my_select_row("select title from article_list where id='{$_SESSION["view_items"]}'", 1);
+    $tags[nav_str].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
+    list($title) = my_select_row("select title from article_list where id='{$session["view_items"]}'", 1);
     $tags[nav_str].="<span class=nav_next>$title</span>";
     $tags[Header] = $title;
 
@@ -64,7 +64,7 @@ if ($_SESSION["view_items"]) {
 }
 
 
-if (!$_SESSION["view_items"]) {
+if (!$session["view_items"]) {
     $query = "select * from article_list";
     $result = my_query($query, $conn, 1);
 

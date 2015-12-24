@@ -6,7 +6,7 @@ $query="select * from news ".($input["show"]?" where id='".$input["show"]."' ":"
 $result=my_query($query,$conn,1);
 
 if($input["show"]){
-	$tags[nav_str].="<a href=".$_SERVER["PHP_SELF"]." class=nav_next>$tags[Header]</a>";
+	$tags[nav_str].="<a href=".$server["PHP_SELF"]." class=nav_next>$tags[Header]</a>";
 	$row=$result->fetch_array();
 	$tags[nav_str].="<span class=nav_next>$row[title]</span>";
         $tags[Header].=" - ".$row[title];

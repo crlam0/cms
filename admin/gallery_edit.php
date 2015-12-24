@@ -6,15 +6,15 @@ include "../include/common.php";
 $IMG_PATH = $DIR.$settings['gallery_list_img_path'];
 
 if ($input["view_gallery"]) {
-    $_SESSION["view_gallery"] = $input["id"];
+    $session["view_gallery"] = $input["id"];
 }
 
 if ($input["list_gallery"]) {
-    $_SESSION["view_gallery"] = "";
+    $session["view_gallery"] = "";
 }
 
-if ($_SESSION["view_gallery"]) {
-    list($list_title) = my_select_row("select title from gallery_list where id='" . $_SESSION["view_gallery"] . "'", 1);
+if ($session["view_gallery"]) {
+    list($list_title) = my_select_row("select title from gallery_list where id='" . $session["view_gallery"] . "'", 1);
     $tags[Header].=" -> $list_title";
 }
 
@@ -55,7 +55,7 @@ if ($input["del_image"]) {
 
 if ($input["added_image"]) {
     $input[form][date_add] = "now()";
-    $input[form][gallery_id] = $_SESSION["view_gallery"];
+    $input[form][gallery_id] = $session["view_gallery"];
     $query = "insert into gallery_image " . db_insert_fields($input[form]);
     my_query($query, $conn);    
     if ($_FILES["img_file"]["size"] > 100) {
@@ -118,8 +118,8 @@ if (($input["edit_image"]) || ($input["add_image"])) {
     exit();
 }
 
-if ($_SESSION["view_gallery"]) {
-    $query = "SELECT * from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " order by date_add asc";
+if ($session["view_gallery"]) {
+    $query = "SELECT * from gallery_image where gallery_id=" . $session["view_gallery"] . " order by date_add asc";
     $result = my_query($query, $conn, true);
     $content.=get_tpl_by_title("gallery_image_edit_table", $tags, $result);
     $tags[head_inc]=$JQUERY_INC;
@@ -220,7 +220,7 @@ if (($input["edit_gallery"]) || ($input["add_gallery"])) {
     $tags[head_inc] = $EDITOR_SIMPLE_INC;
     
     $tags[img_tag] = (is_file($IMG_PATH . $tags['image_name']) ? "<img src=../{$settings['gallery_list_img_path']}{$tags['image_name']} class=margin><br>" : "[ Отсутствует ]<br>");
-    $tags[del_button] = (is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $_SERVER["PHP_SELF"] . "?del_gallery_list_image=1&id=$tags[id]>Удалить</a><br>" : "");
+    $tags[del_button] = (is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $server["PHP_SELF"] . "?del_gallery_list_image=1&id=$tags[id]>Удалить</a><br>" : "");
 
     $content.=get_tpl_by_title("gallery_list_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);

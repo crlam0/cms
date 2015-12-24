@@ -2,7 +2,7 @@
 
 include "common.php";
 
-$code=$_SESSION["IMG_CODE"];
+$code=$session["IMG_CODE"];
 
 $im_w=80;
 $im_h=30;

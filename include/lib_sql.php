@@ -13,12 +13,12 @@ if (mysqli_connect_error()) {
 /* test field marameter for deny sql injections */
 
 function db_test_param($str,$param="") {
-    global $_SERVER;
+    global $server;
     if (is_array($str))return $str;
     if (get_magic_quotes_gpc()){
 	$str=stripslashes($str);
     }
-    if(!strstr($_SERVER["PHP_SELF"], "admin/"))$str=htmlspecialchars($str);
+    if(!strstr($server["PHP_SELF"], "admin/"))$str=htmlspecialchars($str);
     if($param=="title")$str=str_replace("\"","&quot;",$str);
     $str=str_replace("'","\'",$str);
     $str=str_replace("\"","\\\"",$str);

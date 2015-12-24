@@ -23,7 +23,7 @@ $loop_content
 */
 
 function tpl_parse_string($content,$tags=array(),$sql_row=array(),$sql_row_summ=array(),$inner_content=""){
-	global $input,$settings,$_SESSION,$server,$blocks,$conn,$DIR,$LEFT,$RIGHT;
+	global $input,$settings,$session,$server,$blocks,$conn,$DIR,$LEFT,$RIGHT;
 	preg_match_all("@\[\%(.*?)\%\]@", $content, $temp, PREG_SET_ORDER);
 	$total=count($temp);$a=0;unset($replace_str);
 	if ($total) while ($temp[$a]){
@@ -95,9 +95,9 @@ function tpl_parse_string($content,$tags=array(),$sql_row=array(),$sql_row_summ=
 }
 
 function tpl_parse($content,$tags=array(),$sql_result=array(),$inner_content=""){
-	global $_SERVER,$BASE_HREF,$SUBDIR;
-	$tags[PHP_SELF]=$_SERVER["PHP_SELF"];
-	$tags[PHP_SELF_DIR]=$_SERVER["PHP_SELF_DIR"];
+	global $server,$BASE_HREF,$SUBDIR;
+	$tags[PHP_SELF]=$server["PHP_SELF"];
+	$tags[PHP_SELF_DIR]=$server["PHP_SELF_DIR"];
 	$tags[BASE_HREF]=$BASE_HREF;
 	$tags[SUBDIR]=$SUBDIR;
 	//foreach ($tags as $key => $value) { $result=str_replace("[%".$key."%]",$value,$result); }
@@ -156,7 +156,7 @@ function get_tpl_by_title($title,$tags=array(),$sql_result=array(),$inner_conten
 		}
 	}
 	if(!$template){
-		$template=my_select_row("select * from templates where title='$title' and '".$_SERVER["REQUEST_URI"]."' like concat('%',uri,'%')",1);
+		$template=my_select_row("select * from templates where title='$title' and '".$server["REQUEST_URI"]."' like concat('%',uri,'%')",1);
 	}
 	if(!$template){
 		$template=my_select_row("select * from templates where title='$title'",1);

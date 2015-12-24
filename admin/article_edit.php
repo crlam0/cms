@@ -4,15 +4,15 @@ $tags[Header] = "Статьи";
 include "../include/common.php";
 
 if ($input["view_article"]) {
-    $_SESSION["view_article"] = $input["id"];
+    $session["view_article"] = $input["id"];
 }
 
 if ($input["view_list"]) {
-    $_SESSION["view_article"] = "";
+    $session["view_article"] = "";
 }
 
-if ($_SESSION["view_article"]) {
-    list($list_title) = my_select_row("select title from article_list where id='" . $_SESSION["view_article"] . "'", 1);
+if ($session["view_article"]) {
+    list($list_title) = my_select_row("select title from article_list where id='" . $session["view_article"] . "'", 1);
     $tags[Header].=" -> $list_title";
 }
 
@@ -24,7 +24,7 @@ if ($input["del_article"]) {
 
 if ($input["added_article"]) {
     $input[form][date_add] = "now()";
-    $input[form][list_id] = $_SESSION["view_article"];
+    $input[form][list_id] = $session["view_article"];
     $input[form][content] = $_POST["form"]["content"];
     $input[form][content]=replace_base_href($input[form][content],true);
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
@@ -71,8 +71,8 @@ if (($input["edit_article"]) || ($input["add_article"])) {
     exit();
 }
 
-if ($_SESSION["view_article"]) {
-    $query = "SELECT * from article_item where list_id=" . $_SESSION["view_article"] . " order by date_add asc";
+if ($session["view_article"]) {
+    $query = "SELECT * from article_item where list_id=" . $session["view_article"] . " order by date_add asc";
     $result = my_query($query, $conn, true);
     $content.=get_tpl_by_title("article_edit_table", $tags, $result);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);

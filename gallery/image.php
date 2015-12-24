@@ -12,7 +12,7 @@ if (!is_file($file_name)) {
 }
 
 if (!$input["preview"]) {
-    my_query("update gallery_image set view_count=view_count+1 where id='$input[id]'", $conn);
+    my_query("update gallery_image set view_count=view_count+1 where id='$input[id]'", $conn, true);
 }
 
 if (($file_type == "image/jpeg") || ($file_type == "image/pjpeg")) {

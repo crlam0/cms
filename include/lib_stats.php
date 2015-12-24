@@ -28,7 +28,7 @@ $closed_urls=array('img','image','admin/','favicon');
 
 $closed_url=0;
 foreach($closed_urls as $url){
-    if(strstr($_SERVER["REQUEST_URI"],$url)){
+    if(strstr($server["REQUEST_URI"],$url)){
         $closed_url=1;
     }
 }
@@ -42,21 +42,21 @@ if (!$closed_url) {
       }
      */
     $unique=0;
-    $query="select id from visitor_log where remote_addr='" . $_SERVER["REMOTE_ADDR"] . "'";
+    $query="select id from visitor_log where remote_addr='" . $server["REMOTE_ADDR"] . "'";
     $result=my_query($query, $conn, true);
     if(!$result->num_rows)$unique=1;    
     $data['date']='now()';
     $data['day']="date_format(now(),'%Y-%m-%d')";
     $data['unique_visitor']=$unique;
     $uid = 0;
-    if ($_SESSION["UID"])$data['uid'] = $_SESSION["UID"];
-    $data['remote_addr']=$_SERVER['REMOTE_ADDR'];
-    if (!$_SERVER["REMOTE_HOST"])$data['remote_host'] = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-    $data['script_name']=$_SERVER["SCRIPT_NAME"];
-    $data['request_uri'] = $_SERVER['REQUEST_URI'];
+    if ($session["UID"])$data['uid'] = $session["UID"];
+    $data['remote_addr']=$server['REMOTE_ADDR'];
+    if (!$server["REMOTE_HOST"])$data['remote_host'] = gethostbyaddr($server['REMOTE_ADDR']);
+    $data['script_name']=$server["SCRIPT_NAME"];
+    $data['request_uri'] = $server['REQUEST_URI'];
     if (strlen($SUBDIR) > 1)$data['script_name'] = str_replace($SUBDIR, "/", $data['script_name']);    
     if (strlen($SUBDIR) > 1)$data['request_uri'] = str_replace($SUBDIR, "/", $data['request_uri']);
-    $data['user_agent']=$_SERVER["HTTP_USER_AGENT"];
+    $data['user_agent']=$server["HTTP_USER_AGENT"];
 
     $query = "insert into visitor_log" . db_insert_fields($data);
     my_query($query, $conn, 1);

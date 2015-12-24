@@ -98,7 +98,7 @@ if ($_GET["del_img"]) {
 
 if ($input["added_post"]) {
     $input[form][date_add] = "now()";
-    $input[form][uid] = $_SESSION["UID"];
+    $input[form][uid] = $session["UID"];
     $input[form][content] = $input["form"]["content"];
     $input[form][content] = replace_base_href($input[form][content], true);
     if (!strlen($input[form][seo_alias]))
@@ -179,7 +179,7 @@ if (($input["edit_post"]) || ($input["add_post"])) {
         </select>
     ";
     $tags[img_tag] = (is_file($IMG_PATH . $tags['image_name']) ? "<img src=../{$settings['blog_img_path']}{$tags['image_name']} class=margin><br>" : "[ Отсутствует ]<br>");
-    $tags[del_button] = (is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $_SERVER["PHP_SELF"] . "?del_img=1&id=$tags[id]>Удалить</a><br>" : "");
+    $tags[del_button] = (is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $server["PHP_SELF"] . "?del_img=1&id=$tags[id]>Удалить</a><br>" : "");
 
     $content.=get_tpl_by_title("blog_post_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);

@@ -3,7 +3,7 @@ include "include/common.php";
 
 if ($input['error']) {
     $tags['Header'] = 'Ошибка 404';
-    $tags['file_name'] = $_SERVER['REQUEST_URI'];
+    $tags['file_name'] = $server['REQUEST_URI'];
     $content = my_msg_to_str('file_not_found', $tags, "");
 
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

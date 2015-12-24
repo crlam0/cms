@@ -2,9 +2,9 @@
 
 include_once "global.php";
 
-$_SESSION["UID"]=0;
-$_SESSION["UNAME"]='';
-$_SESSION["FLAGS"]='';
+$session["UID"]=0;
+$session["UNAME"]='';
+$session["FLAGS"]='';
 
 session_cache_limiter('nocache');
 session_name($SESSID);
@@ -14,6 +14,7 @@ include_once $INC_DIR."lib_sql.php";
 
 if(is_array($_GET))foreach ($_GET as $key => $value) $input[$key]=db_test_param($value,$key);
 if(is_array($_POST))foreach ($_POST as $key => $value) $input[$key]=db_test_param($value,$key);
+if(is_array($_SESSION))foreach ($_SESSION as $key => $value) $session[$key]=$value;
 if(is_array($_SERVER))foreach ($_SERVER as $key => $value) $server[$key]=$value;
 
 include_once $INC_DIR."lib_blocks.php";
@@ -45,12 +46,12 @@ if (!$part[id]) {
     exit();
 }
 
-if ((strlen($part[user_flag])) && (!strstr($_SESSION["FLAGS"], $part[user_flag])) && (!strstr($_SESSION["FLAGS"], "global"))) {
-    if ($_SESSION['UID']) {
+if ((strlen($part[user_flag])) && (!strstr($session["FLAGS"], $part[user_flag])) && (!strstr($session["FLAGS"], "global"))) {
+    if ($session['UID']) {
         echo "<h1 align=center>У вас нет соответствующих прав !</h1>";
         exit();
     } else {
-        $_SESSION['GO_TO_URI'] = $server['REQUEST_URI'];
+        $session['GO_TO_URI'] = $server['REQUEST_URI'];
         header('Location: ' . $SUBDIR . 'login/');
         exit;
     }
@@ -71,7 +72,7 @@ $EDITOR_HTML_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/edit
 
 $tags[nav_str]="<a href=$SUBDIR class=nav_home>Главная</a>";
 
-$_SERVER["PHP_SELF_DIR"]=dirname($_SERVER["PHP_SELF"])."/";
+$server["PHP_SELF_DIR"]=dirname($server["PHP_SELF"])."/";
 
 $tags[head_inc]="";
 

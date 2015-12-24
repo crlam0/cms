@@ -25,14 +25,14 @@ function auth() {
 
   include_once "../../../global.php";
 
-  $_SESSION["UID"]=0;
-  $_SESSION["FLAGS"]='';
+  $session["UID"]=0;
+  $session["FLAGS"]='';
 
   session_cache_limiter('nocache');
   session_name($SESSID);
   session_start();
 
-  return strstr($_SESSION["FLAGS"],"admin"); 
+  return strstr($session["FLAGS"],"admin"); 
 }
 
 
@@ -80,7 +80,7 @@ $config['unallowed_dirs']= array('_thumbs','.CDN_ACCESS_LOGS', 'cloudservers');
  *	for Vhost or outside files folder
  */
 // $config['doc_root'] = '/home/user/userfiles'; // No end slash
-// $config['doc_root'] = $_SERVER['DOCUMENT_ROOT']; // No end slash
+// $config['doc_root'] = $server['DOCUMENT_ROOT']; // No end slash
 
 
 /**

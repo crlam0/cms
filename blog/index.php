@@ -14,14 +14,14 @@ if (isset($input["uri"])) {
     $input["view_post"] = ( is_numeric($post_id) ? $post_id : $input["view_post"]);
 
     if(strstr($input["uri"],"page")){
-        $session["BLOG_PAGE"]=str_replace("page","",$input["uri"]);
+        $_SESSION["BLOG_PAGE"]=str_replace("page","",$input["uri"]);
     }else{
-        $session["BLOG_PAGE"]=1;
+        $_SESSION["BLOG_PAGE"]=1;
     }
 }
 
 if(!is_array($input)){
-    $session["BLOG_PAGE"] = 1;
+    $_SESSION["BLOG_PAGE"] = 1;
 }
 
 $comments = new COMMENTS ("blog",$input["view_post"]);
@@ -61,12 +61,12 @@ if ($input["view_post"]) {
     
     $query = "SELECT ceiling(count(id)/$MSG_PER_PAGE) from {$TABLE} where active='Y'";
     list($PAGES) = my_select_row($query, $conn, 1);
-    $offset=$MSG_PER_PAGE*($session["BLOG_PAGE"]-1);
+    $offset=$MSG_PER_PAGE*($_SESSION["BLOG_PAGE"]-1);
 
     if ($PAGES > 1) {
         $tags[pages_list] = "<div class=pages>Страницы: ";
         for ($i = 1; $i <= $PAGES; $i++)
-            $tags[pages_list].=($i == $session["BLOG_PAGE"] ? "[ <b>$i</b> ]&nbsp;" : "[ <a href=" . dirname($server["PHP_SELF"]) . "/page" . $i ."/>$i</a> ]&nbsp;");
+            $tags[pages_list].=($i == $_SESSION["BLOG_PAGE"] ? "[ <b>$i</b> ]&nbsp;" : "[ <a href=" . dirname($server["PHP_SELF"]) . "/page" . $i ."/>$i</a> ]&nbsp;");
         $tags[pages_list].="</div>";
     }
 

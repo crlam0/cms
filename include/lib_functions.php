@@ -7,9 +7,9 @@ Misc functions
 =========================================================================*/
 
 function have_flag($flag){
-	global $session;
+	global $_SESSION;
 	if(!strlen($flag))return 1;
-	return @strstr($session["FLAGS"],$flag);
+	return @strstr($_SESSION["FLAGS"],$flag);
 }
 
 function add_zero($summ){
@@ -145,7 +145,7 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0) {
 }
 
 function show_month($month,$service_id) {
-    global $session, $server;
+    global $_SESSION, $server;
     $month_names = array(1 => 'Январь', 2 => 'Февраль', 3 => 'Март', 4 => 'Апрель', 5 => 'Май', 6 => 'Июнь', 7 => 'Июль', 8 => 'Август', 9 => 'Сентябрь', 10 => 'Октябрь', 11 => 'Ноябрь', 12 => 'Декабрь');
     $day_names = array('Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс');
     $allow_past = false;

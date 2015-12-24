@@ -17,12 +17,12 @@ if (isset($input["uri"])) {
 }
 
 if (isset($input[part_id])) {
-    $session["PART_ID"] = $input[part_id];
-    unset($session["catalog_page"]);
+    $_SESSION["PART_ID"] = $input[part_id];
+    unset($_SESSION["catalog_page"]);
 }
 
-if (!isset($session["PART_ID"]))
-    $session["PART_ID"] = "0";
+if (!isset($_SESSION["PART_ID"]))
+    $_SESSION["PART_ID"] = "0";
 
 $IMG_ITEM_PATH = $DIR . $settings[catalog_item_img_path];
 $IMG_ITEM_URL = $BASE_HREF . $settings[catalog_item_img_path];
@@ -30,7 +30,7 @@ $IMG_PART_PATH = $DIR . $settings[catalog_part_img_path];
 $IMG_PART_URL = $BASE_HREF . $settings[catalog_part_img_path];
 
 if (isset($input["add_buy"])) {
-    $session["BUY"][$input["item_id"]]["count"]+=$input["cnt"];
+    $_SESSION["BUY"][$input["item_id"]]["count"]+=$input["cnt"];
     echo "OK";
     exit;
 }
@@ -55,10 +55,10 @@ function show_price($tmp, $row) {
 }
 
 if(isset($_GET["view_item"])){
-	list($session["PART_ID"])=my_select_row("select part_id from cat_item where id='{$_GET["view_item"]}'",1);
+	list($_SESSION["PART_ID"])=my_select_row("select part_id from cat_item where id='{$_GET["view_item"]}'",1);
 }
 
-if(isset($_GET["show_all"]))$session["PART_ID"]=0;
+if(isset($_GET["show_all"]))$_SESSION["PART_ID"]=0;
 
 
 function prev_part($prev_id, $deep) {
@@ -71,8 +71,8 @@ function prev_part($prev_id, $deep) {
 }
 
 // $tags[nav_str].="<span class=nav_next><a href=\"" . $SUBDIR . "catalog/\" class=top>$tags[Header]</a></span>";
-if ($session["PART_ID"]) {
-    prev_part($session["PART_ID"], 0);
+if ($_SESSION["PART_ID"]) {
+    prev_part($_SESSION["PART_ID"], 0);
     $arr = array_reverse($arr);
     $max_size = sizeof($arr) - 1;
     while (list ($n, $row) = @each($arr)) {
@@ -119,8 +119,8 @@ if ($input['get_popup_content']) {
     exit;
 }
 
-if ($session['PART_ID']) {
-    $row_part = my_select_row("select title from cat_part where id='{$session["PART_ID"]}'", 1);
+if ($_SESSION['PART_ID']) {
+    $row_part = my_select_row("select title from cat_part where id='{$_SESSION["PART_ID"]}'", 1);
     //	if(is_file($IMG_PART_PATH.$row[img]))echo "<img src=$IMG_PART_URL$row[img] border=0 align=left>\n";
     $tags[Header].=$row_part['title'];
 }
@@ -163,7 +163,7 @@ if(strlen($input['item_title'])){
     $content.=get_tpl_by_title("cat_item_detail_view",$tags,$result);
     $content.="
     <div class=cat_back>
-    <center><a href=".$SUBDIR.get_cat_part_href($session["PART_ID"])." class=button> << Назад</a></center>
+    <center><a href=".$SUBDIR.get_cat_part_href($_SESSION["PART_ID"])." class=button> << Назад</a></center>
     </div>";
     
     $tags['head_inc'] =  
@@ -201,7 +201,7 @@ function sub_part($prev_id,$deep,$max_deep){
         if($deep<$max_deep)sub_part($row[id],$deep+1,$max_deep);
     }
 }
-sub_part($session["PART_ID"],0,0);
+sub_part($_SESSION["PART_ID"],0,0);
 $content.="</div>";
 
 /*
@@ -212,18 +212,18 @@ $content.="</div>";
 =======================================================================================================================================
 */
 
-if(!isset($session["catalog_page"]))$session["catalog_page"]=1;
+if(!isset($_SESSION["catalog_page"]))$_SESSION["catalog_page"]=1;
 if(isset($input["page"])){
-	$session["catalog_page"]=$input["page"];
+	$_SESSION["catalog_page"]=$input["page"];
 }
-list($PAGES)=my_select_row("SELECT ceiling(count(id)/$settings[catalog_items_per_page]) from cat_item where part_id='".$session["PART_ID"]."'",1);
+list($PAGES)=my_select_row("SELECT ceiling(count(id)/$settings[catalog_items_per_page]) from cat_item where part_id='".$_SESSION["PART_ID"]."'",1);
 if($PAGES>1){
 	$tags[pages_list]="<div class=cat_pages>";
-	for($i=1;$i<=$PAGES;$i++)$tags[pages_list].=($i==$session["catalog_page"]?"[ <b>$i</b> ]&nbsp;":"[ <a href=".$server["PHP_SELF"]."?page=$i>$i</a> ]&nbsp;");
+	for($i=1;$i<=$PAGES;$i++)$tags[pages_list].=($i==$_SESSION["catalog_page"]?"[ <b>$i</b> ]&nbsp;":"[ <a href=".$server["PHP_SELF"]."?page=$i>$i</a> ]&nbsp;");
 	$tags[pages_list].="</div>";
 }
 $content.=$tags[pages_list];
-$offset=$settings[catalog_items_per_page]*($session["catalog_page"]-1);	
+$offset=$settings[catalog_items_per_page]*($_SESSION["catalog_page"]-1);	
 
 $query="select cat_item.*,fname,cat_item.id as item_id,cat_item_image.id as image_id,cat_item.seo_alias from cat_item 
 left join cat_item_image on (cat_item_image.id=default_img)"
@@ -234,7 +234,7 @@ $result=my_query($query,$conn,1);
 if($result->num_rows){
     $content.='<div id=cat_items>';
     while ($row = $result->fetch_array()){
-        $row['item_a']='<a href="'.$SUBDIR.get_cat_part_href($session["PART_ID"]).$row['seo_alias'].'" title="'.$row['title'].'">';
+        $row['item_a']='<a href="'.$SUBDIR.get_cat_part_href($_SESSION["PART_ID"]).$row['seo_alias'].'" title="'.$row['title'].'">';
         $row['special_offer_ins']=($row['special_offer'] ? "<div class=cat_item_special_offer>Специальное предложение !</div>": "");
         $row['default_image']=(is_file($IMG_ITEM_PATH.$row['fname']) ? $row['item_a']."<img src=\"{$SUBDIR}catalog/image.php?id={$row[image_id]}&windowHeight=500&fix_size=0\" alt=\"{$row['title']}\" title=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
         $row['descr']=nl2br($row['descr']);
@@ -242,24 +242,24 @@ if($result->num_rows){
         $content.=get_tpl_by_title('cat_item_list_view',$row,$result);
     }
     $content.='</div>';
-}elseif( ($session['PART_ID']) && (!$subparts)){
+}elseif( ($_SESSION['PART_ID']) && (!$subparts)){
     $content.=my_msg_to_str('list_empty');
 }
 
-if($session["PART_ID"]){
+if($_SESSION["PART_ID"]){
     if (strlen($row_part[descr]))
         $content.="<div class=part_descr>".nl2br($row_part['descr'])."</div>\n";
     if($subparts){
 	$href_id=0;
     }else{
-	list($href_id)=my_select_row("select prev_id from cat_part where id='".$session["PART_ID"]."'", 1);
+	list($href_id)=my_select_row("select prev_id from cat_part where id='".$_SESSION["PART_ID"]."'", 1);
     }
 //    $content.="<div class=cat_back><center><a href=".$SUBDIR.get_cat_part_href($href_id)." class=button> << Назад</a></center></div>";
 }
 
 
 /*
-if($session["PART_ID"]==0){
+if($_SESSION["PART_ID"]==0){
     $query = "select title,content from article_item where id='35'";
     $result = my_query($query, $conn);
     list($title, $text) = $result->fetch_array();

@@ -34,7 +34,7 @@ class COMMENTS
     }
     
     function show_form($tags = array ()) {
-        global $session,$SUBDIR,$editor,$input,$server;
+        global $_SESSION,$SUBDIR,$editor,$input,$server;
         if ( $this->__new_form ) {
             $this->__editor->SetValue("");
         }elseif (is_array($input[form])) {
@@ -43,7 +43,7 @@ class COMMENTS
         }
         $tags[editor] = $this->__editor->GetContol(400, 200, $SUBDIR . "images/bbcode_editor");
         if(!strlen($tags["action"])) $tags["action"] = $server["PHP_SELF"];        
-        $session["IMG_CODE"] = rand(111111, 999999);        
+        $_SESSION["IMG_CODE"] = rand(111111, 999999);        
         return $this->__get_form_data_result.get_tpl_by_title("comment_add_form", $tags);
     }
 
@@ -60,7 +60,7 @@ class COMMENTS
             } elseif (strlen($this->__editor->GetValue()) < 10) {
                 $output.=my_msg_to_str("form_error_msg_too_short");
                 $err = 1;
-            } elseif ( ($input["img_code"] != $session["IMG_CODE"]) && (!$settings["debug"]) ) {
+            } elseif ( ($input["img_code"] != $_SESSION["IMG_CODE"]) && (!$settings["debug"]) ) {
                 $output.=my_msg_to_str("form_error_code");
                 $err = 1;
             }
@@ -69,7 +69,7 @@ class COMMENTS
             } else {
                 $input[form][ip] = $server["REMOTE_ADDR"];
                 $input[form][date_add] = "now()";
-                $input[form][uid] = $session["UID"];
+                $input[form][uid] = $_SESSION["UID"];
                 $input[form][target_type]=$this->__target_type;
                 $input[form][target_id]=$this->__target_id;
                 $input[form][content]=$this->__editor->GetHTML();

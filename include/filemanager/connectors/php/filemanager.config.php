@@ -25,14 +25,14 @@ function auth() {
 
   include_once "../../../global.php";
 
-  $session["UID"]=0;
-  $session["FLAGS"]='';
+  $_SESSION["UID"]=0;
+  $_SESSION["FLAGS"]='';
 
   session_cache_limiter('nocache');
   session_name($SESSID);
   session_start();
 
-  return strstr($session["FLAGS"],"admin"); 
+  return strstr($_SESSION["FLAGS"],"admin"); 
 }
 
 

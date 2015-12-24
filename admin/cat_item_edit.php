@@ -4,10 +4,10 @@ $tags[Header] = "Каталог";
 include "../include/common.php";
 
 if (isset($input["part_id"])) {
-    $session["PART_ID"] = $input["part_id"];
+    $_SESSION["PART_ID"] = $input["part_id"];
 }
 
-list($part_title) = my_select_row("select title from cat_part where id='{$session["PART_ID"]}'", 1);
+list($part_title) = my_select_row("select title from cat_part where id='{$_SESSION["PART_ID"]}'", 1);
 $tags[Header].=" -> $part_title";
 
 $IMG_PATH = $DIR . $settings[catalog_item_img_path];
@@ -79,7 +79,7 @@ if ($input["add_image"]) {
 
 if ($input["added"]) {
     if(!strlen($input["form"]["num"])){
-        list($input["form"]["num"])=my_select_row("select max(num) from cat_item where part_id='{$session["PART_ID"]}'",0);
+        list($input["form"]["num"])=my_select_row("select max(num) from cat_item where part_id='{$_SESSION["PART_ID"]}'",0);
         $input["form"]["num"]++;
     }
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
@@ -87,7 +87,7 @@ if ($input["added"]) {
     if($num_rows>0){
         $seo_alias_duplicate=1;
     }
-    $input[form][part_id] = $session["PART_ID"];
+    $input[form][part_id] = $_SESSION["PART_ID"];
     if (!isset($input[form][special_offer]))$input[form][special_offer] = 0;
     $query = "insert into cat_item " . db_insert_fields($input[form]);
     my_query($query, $conn);
@@ -102,7 +102,7 @@ if ($input["added"]) {
 }
 
 if ($input["edited"]) {
-    $input[form][part_id] = $session["PART_ID"];
+    $input[form][part_id] = $_SESSION["PART_ID"];
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
 //    $num_rows=my_select_row("select id from cat_item where seo_alias='{$input[form][seo_alias]}'",0);
 //    if($num_rows>1){
@@ -161,7 +161,7 @@ if (($input["edit"]) || ($input["add"])) {
         $tags[Header] = "Добавление товара";
         $tags[price] = "";
     }
-    $row_part = my_select_row("select * from cat_part where id=" . $session["PART_ID"], 1);
+    $row_part = my_select_row("select * from cat_part where id=" . $_SESSION["PART_ID"], 1);
     if ($tags[special_offer])$tags[special_offer] = " checked";
 
     $tags[price_inputs] = "
@@ -182,7 +182,7 @@ if (($input["edit"]) || ($input["add"])) {
 
 $query = "SELECT cat_item.*,fname from cat_item
 left join cat_item_image on (cat_item_image.id=default_img)
-where part_id='{$session["PART_ID"]}' order by num,cat_item.id,title asc";
+where part_id='{$_SESSION["PART_ID"]}' order by num,cat_item.id,title asc";
 $result = my_query($query, $conn);
 
 $content = get_tpl_by_title("cat_item_table", $tags, $result);

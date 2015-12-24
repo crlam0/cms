@@ -49,7 +49,7 @@ if (!$closed_url) {
     $data['day']="date_format(now(),'%Y-%m-%d')";
     $data['unique_visitor']=$unique;
     $uid = 0;
-    if ($session["UID"])$data['uid'] = $session["UID"];
+    if ($_SESSION["UID"])$data['uid'] = $_SESSION["UID"];
     $data['remote_addr']=$server['REMOTE_ADDR'];
     if (!$server["REMOTE_HOST"])$data['remote_host'] = gethostbyaddr($server['REMOTE_ADDR']);
     $data['script_name']=$server["SCRIPT_NAME"];

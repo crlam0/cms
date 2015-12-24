@@ -23,7 +23,7 @@ $loop_content
 */
 
 function tpl_parse_string($content,$tags=array(),$sql_row=array(),$sql_row_summ=array(),$inner_content=""){
-	global $input,$settings,$session,$server,$blocks,$conn,$DIR,$LEFT,$RIGHT;
+	global $input,$settings,$_SESSION,$server,$blocks,$conn,$DIR,$LEFT,$RIGHT;
 	preg_match_all("@\[\%(.*?)\%\]@", $content, $temp, PREG_SET_ORDER);
 	$total=count($temp);$a=0;unset($replace_str);
 	if ($total) while ($temp[$a]){

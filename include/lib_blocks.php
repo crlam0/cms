@@ -8,13 +8,13 @@ function get_block($block_name) {
             list($root_id) = my_select_row("select id from menu_list where root=1", 1);
             if (!$root_id)
                 return "";
-            $query = "select * from menu_item where '" . $session["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$root_id' and active=1 order by position asc";
+            $query = "select * from menu_item where '" . $_SESSION["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$root_id' and active=1 order by position asc";
             $result = my_query($query, $conn, 1);
             if (!$result->num_rows)
                 return "";
             while ($row = $result->fetch_array()) {
                 $tags[menu_content].="<li><a href=\"" . $SUBDIR . get_menu_href($tmp, $row) . "\" class=\"$row[css_class]\"><span>$row[title]</span></a>\n";
-                $query = "select * from menu_item where '" . $session["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$row[submenu_id]' order by position asc";
+                $query = "select * from menu_item where '" . $_SESSION["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$row[submenu_id]' order by position asc";
                 $result_sub = my_query($query, $conn, 1);
                 if ($result_sub->num_rows) {
                     $tags[menu_content].="<ul>\n";
@@ -32,7 +32,7 @@ function get_block($block_name) {
             list($root_id) = my_select_row("select id from menu_list where bottom_menu=1", 1);
             if (!$root_id)
                 return "";
-            $query = "select * from menu_item where '" . $session["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$root_id' and active=1 order by position asc";
+            $query = "select * from menu_item where '" . $_SESSION["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$root_id' and active=1 order by position asc";
             $result = my_query($query, $conn, 1);
             if (!$result->num_rows)
                 return "";
@@ -47,7 +47,7 @@ function get_block($block_name) {
             list($root_id) = my_select_row("select id from menu_list where root=1", 1);
             if (!$root_id)
                 return "";
-            $query = "select * from menu_item where '" . $session["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$root_id' and active=1 order by position asc";
+            $query = "select * from menu_item where '" . $_SESSION["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$root_id' and active=1 order by position asc";
             $result = my_query($query, $conn, 1);
             if (!$result->num_rows)
                 return "";
@@ -77,10 +77,10 @@ function get_block($block_name) {
             $content = "";
             while ($row = mysql_fetch_array($result)) {
                 $content.="<a class=item href=\"" . $SUBDIR . get_cat_part_href($row[id]) . "\" title=\"$row[title]\"><span>$row[title]</span></a>\n";
-                if ($session["PART_ID"] == $row[id]) {
+                if ($_SESSION["PART_ID"] == $row[id]) {
                     $content.=sub_part_bl($row[id], 1);
                 } else {
-                    list($prev_id) = my_select_row("select prev_id from cat_part where id='{$session["PART_ID"]}'", 1);
+                    list($prev_id) = my_select_row("select prev_id from cat_part where id='{$_SESSION["PART_ID"]}'", 1);
                     if ($prev_id == $row[id]) {
                         $content.=sub_part_bl($row[id], 1);
                     }

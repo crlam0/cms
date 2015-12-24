@@ -4,15 +4,15 @@ $tags[Header] = "Мультимедиа";
 include "../include/common.php";
 
 if ($input["view_list"]) {
-    $session["view_files"] = $input["id"];
+    $_SESSION["view_files"] = $input["id"];
 }
 
 if ($input["list_media"]) {
-    $session["view_files"] = "";
+    $_SESSION["view_files"] = "";
 }
 
-if ($session["view_files"]) {
-    list($list_title) = my_select_row("select title from media_list where id='" . $session["view_files"] . "'", 1);
+if ($_SESSION["view_files"]) {
+    list($list_title) = my_select_row("select title from media_list where id='" . $_SESSION["view_files"] . "'", 1);
     $tags[Header].=" -> $list_title";
 }
 
@@ -39,7 +39,7 @@ if ($input["del_file"]) {
 
 if ($input["added_file"]) {
     $input[form][date_add] = "now()";
-    $input[form][list_id] = $session["view_files"];
+    $input[form][list_id] = $_SESSION["view_files"];
     if ($_FILES["uploaded_file"]["size"] > 100) {
       	$f_info = pathinfo($_FILES["uploaded_file"]["name"]);
 	$file_name = encodestring($f_info["filename"]) . "." . $f_info["extension"];
@@ -96,8 +96,8 @@ if (($input["edit_file"]) || ($input["add_file"])) {
     exit();
 }
 
-if ($session["view_files"]) {
-    $query = "SELECT * from media_file where list_id=" . $session["view_files"] . " order by date_add asc";
+if ($_SESSION["view_files"]) {
+    $query = "SELECT * from media_file where list_id=" . $_SESSION["view_files"] . " order by date_add asc";
     $result = my_query($query, $conn, true);
     $content.=get_tpl_by_title("media_file_edit_table", $tags, $result);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);

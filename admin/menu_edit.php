@@ -5,15 +5,15 @@ include "../include/common.php";
 $tags["head_inc"]=$JQUERY_INC;
 
 if ($input["view_menu"]) {
-    $session["view_menu"] = $input["id"];
+    $_SESSION["view_menu"] = $input["id"];
 }
 
 if ($input["view_list"]) {
-    unset($session["view_menu"]);
+    unset($_SESSION["view_menu"]);
 }
 
-if ($session["view_menu"]) {
-    list($list_title) = my_select_row("select title from menu_list where id='" . $session["view_menu"] . "'", 1);
+if ($_SESSION["view_menu"]) {
+    list($list_title) = my_select_row("select title from menu_list where id='" . $_SESSION["view_menu"] . "'", 1);
     $tags[Header].=" -> $list_title";
 }
 
@@ -30,7 +30,7 @@ function get_item_title($target_type,$traget_id){
 
 if ($input["added_menu_item"]) {
     if (!isset($input[form][active]))$input[form][active] = 0;
-    $input[form][menu_id] = $session["view_menu"];
+    $input[form][menu_id] = $_SESSION["view_menu"];
     if(!strlen($input[form][title]))$input[form][title]=get_item_title($input[form][target_type],$input[form][target_id]);
     $query = "insert into menu_item " . db_insert_fields($input[form]);
     my_query($query, $conn);
@@ -142,8 +142,8 @@ if (($input["add_menu_item"]) || ($input["edit_menu_item"])) {
     exit();
 }
 
-if ($session["view_menu"]) {
-    $query = "SELECT * from menu_item where menu_id='" . $session["view_menu"] . "' order by position asc";
+if ($_SESSION["view_menu"]) {
+    $query = "SELECT * from menu_item where menu_id='" . $_SESSION["view_menu"] . "' order by position asc";
     $result = my_query($query, $conn);
     $content.=get_tpl_by_title("menu_item_edit_table", $tags, $result);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);

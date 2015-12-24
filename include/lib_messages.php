@@ -6,13 +6,12 @@ Messages library.
 /* print message from DB table messages */
 function my_msg_to_str($title,$tags=array(),$str=""){
 	global $conn,$settings;
-	if(strlen($str)){
-		$msg[content]=$str;
-	}else{
-		$sql="select * from messages where title='$title'";
-		$msg=my_select_row($sql,1);		
-	}
-	if(!$msg){
+        if(strlen($title)){
+            $sql="select * from messages where title='$title'";
+            $msg=my_select_row($sql,1);		
+        }
+	if(strlen($str)) $msg[content]=$str;
+	if(!strlen($msg[content])){
 		return "";
 	}
 	if(is_array($tags))foreach ($tags as $key => $value) { $msg[content]=str_replace("[%".$key."%]",$value,$msg[content]); }
@@ -52,8 +51,9 @@ function send_mail ($msg_to,$subject,$msg) {
 	global $settings;
 	$headers  = "MIME-Version: 1.0\r\n";
 	$headers .= "Content-type: text/plain; charset=windows-1251\r\n";
-//	$headers .= "To: $msg_to\r\n";
 	$headers .= "From: $settings[email_from_addr]\r\n";
+        $subject = iconv('UTF-8', 'windows-1251', $subject);
+        $msg = iconv('UTF-8', 'windows-1251', $msg);
 	mail($msg_to, $subject, $msg, $headers);
 }
 

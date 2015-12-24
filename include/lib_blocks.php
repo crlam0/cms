@@ -120,7 +120,7 @@ function get_block($block_name) {
                 $SCRIPT = str_replace($SUBDIR, "/", $SCRIPT);
 
             if ($SCRIPT == '/index.php') {
-                $query = "SELECT * from slider_images where length(file_name)>0 order by pos,title asc";
+                $query = "SELECT * from slider_image where length(file_name)>0 order by pos,title asc";
                 $result = my_query($query, $conn, true);
                 return get_tpl_by_title("slider_items", $tags, $result);
             } else {
@@ -134,7 +134,7 @@ function get_block($block_name) {
                 $SCRIPT = str_replace($SUBDIR, "/", $SCRIPT);
 
             if ($SCRIPT == '/index.php') {
-                $query = "SELECT * from slider_images where length(file_name)>0 order by pos,title asc";
+                $query = "SELECT * from slider_image where length(file_name)>0 order by pos,title asc";
                 $result = my_query($query, $conn, true);
                 return get_tpl_by_title("slider_items", $tags, $result);
             } else {

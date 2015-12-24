@@ -46,7 +46,7 @@ while ($row = $result->fetch_array()) {
         'priority' => '0.80',
     );
 }
-$query = 'SELECT * from article order by date_add asc';
+$query = 'SELECT * from article_item order by date_add asc';
 $result = my_query($query, $conn, true);
 while ($row = $result->fetch_array()) {
     $pages[] = array(

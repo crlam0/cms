@@ -3,7 +3,7 @@
 include "../include/common.php";
 
 if (isset($input["id"])) {
-    list($file_name, $file_type) = my_select_row("select fname from cat_item_images where id='$input[id]'", true);
+    list($file_name, $file_type) = my_select_row("select fname from cat_item_image where id='$input[id]'", true);
     $file_name = $DIR . $settings[catalog_item_img_path] . $file_name;
 } else {
     $file_name = $DIR . $settings[catalog_item_img_path] . $input["file_name"];

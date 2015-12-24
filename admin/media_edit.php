@@ -27,12 +27,12 @@ function show_size($tmp, $row) {
 }
 
 if ($input["del_file"]) {
-    list($fname_old) = my_select_row("select file_name from media_files where id='$input[id]'");
+    list($fname_old) = my_select_row("select file_name from media_file where id='$input[id]'");
     if (is_file($DIR . $settings["media_upload_path"] . $fname_old)) {
 	if (!unlink($DIR . $settings["media_upload_path"] . $fname_old)
 	    )$content.=my_msg_to_str("error","","Ошибка удаления файла");
     }
-    $query = "delete from media_files where id='$input[id]'";
+    $query = "delete from media_file where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Файл успешно удален.");
 }
@@ -52,14 +52,14 @@ if ($input["added_file"]) {
 	}
     }
 
-    $query = "insert into media_files " . db_insert_fields($input[form]);
+    $query = "insert into media_file " . db_insert_fields($input[form]);
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Файл успешно добавлен.");
 }
 
 if ($input["edited_file"]) {
     if ($_FILES["uploaded_file"]["size"] > 100) {
-	list($fname_old) = my_select_row("select file_name from media_files where id='$input[id]'");
+	list($fname_old) = my_select_row("select file_name from media_file where id='$input[id]'");
 	if (is_file($DIR . $settings["media_upload_path"] . $fname_old)) {
 	    if (!unlink($DIR . $settings["media_upload_path"] . $fname_old)
 		)$content.=my_msg_to_str("error","","Ошибка удаления файла");
@@ -73,14 +73,14 @@ if ($input["edited_file"]) {
 	    $content.=my_msg_to_str("error","","Ошибка копирования файла !");
 	}
     }
-    $query = "update media_files set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $query = "update media_file set " . db_update_fields($input[form]) . " where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Файл успешно изменен.");
 }
 
 if (($input["edit_file"]) || ($input["add_file"])) {
     if ($_GET["edit_file"]) {
-	$query = "select * from media_files where id='$input[id]'";
+	$query = "select * from media_file where id='$input[id]'";
 	$result = my_query($query, $conn);
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags[type] = "edited_file";
@@ -91,21 +91,21 @@ if (($input["edit_file"]) || ($input["add_file"])) {
     }
     $tags[descr] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>$tags[descr]</textarea>";
     $tags[head_inc] = $EDITOR_SIMPLE_INC;
-    $content.=get_tpl_by_title("media_files_edit_form", $tags);
+    $content.=get_tpl_by_title("media_file_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit();
 }
 
 if ($_SESSION["view_files"]) {
-    $query = "SELECT * from media_files where list_id=" . $_SESSION["view_files"] . " order by date_add asc";
+    $query = "SELECT * from media_file where list_id=" . $_SESSION["view_files"] . " order by date_add asc";
     $result = my_query($query, $conn, true);
-    $content.=get_tpl_by_title("media_files_edit_table", $tags, $result);
+    $content.=get_tpl_by_title("media_file_edit_table", $tags, $result);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit();
 }
 
 if ($input["del_list"]) {
-    $query = "select id from media_files where list_id='$input[id]'";
+    $query = "select id from media_file where list_id='$input[id]'";
     $result = my_query($query, $conn);
     if ($result->num_rows) {
 	$content.=my_msg_to_str("error","","Этот раздел не пустой !");
@@ -149,9 +149,9 @@ if (($input["edit_list"]) || ($input["add_list"])) {
     exit();
 }
 
-$query = "SELECT media_list.*,count(media_files.id) as files
+$query = "SELECT media_list.*,count(media_file.id) as files
 from media_list 
-left join media_files on (media_files.list_id=media_list.id) 
+left join media_file on (media_file.list_id=media_list.id) 
 group by media_list.id order by media_list.date_add desc";
 $result = my_query($query, $conn, true);
 $content.=get_tpl_by_title("media_list_edit_table", $tags, $result);

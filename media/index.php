@@ -85,7 +85,7 @@ function show_size($tmp, $row) {
 }
 
 if ($_SESSION["view_files"]) {
-    list($PAGES) = my_select_row("SELECT ceiling(count(id)/$settings[media_files_per_page]) from media_files where list_id=" . $_SESSION["view_files"], 1);
+    list($PAGES) = my_select_row("SELECT ceiling(count(id)/$settings[media_file_per_page]) from media_file where list_id=" . $_SESSION["view_files"], 1);
     list($title) = my_select_row("select title from media_list where id=" . $_SESSION["view_files"], 1);
     $tags[Header] = $title;
     $tags[nav_str].="<span class=nav_next>$title</span>";
@@ -101,21 +101,21 @@ if ($_SESSION["view_files"]) {
         }
         $tags[pages_list].="</center><br>";
     }
-    $offset = $settings[media_files_per_page] * ($_SESSION["media_page"] - 1);
-    $query = "SELECT * from media_files where list_id=" . $_SESSION["view_files"] . " order by date_add asc limit $offset,$settings[media_files_per_page]";
+    $offset = $settings[media_file_per_page] * ($_SESSION["media_page"] - 1);
+    $query = "SELECT * from media_file where list_id=" . $_SESSION["view_files"] . " order by date_add asc limit $offset,$settings[media_file_per_page]";
     $result = my_query($query, $conn, true);
     if (!$result->num_rows) {
         $content = my_msg_to_str("list_empty", $tags, "");
     } else {
-        $content = get_tpl_by_title("media_files_table", $tags, $result);
+        $content = get_tpl_by_title("media_file_table", $tags, $result);
     }
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit();
 }
 
-$query = "SELECT media_list.*,count(media_files.id) as files
+$query = "SELECT media_list.*,count(media_file.id) as files
 from media_list 
-left join media_files on (media_files.list_id=media_list.id) 
+left join media_file on (media_file.list_id=media_list.id) 
 group by media_list.id order by media_list.date_add desc";
 $result = my_query($query, $conn, 0);
 if (!$result->num_rows) {

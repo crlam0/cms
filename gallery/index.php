@@ -46,12 +46,12 @@ function show_img($tmp, $row) {
         $content="";
         if($settings["gallery_use_popup"]==true){
             $content.="
-                <img src=\"" . $SUBDIR . "gallery/view_image.php?preview=1&id=$row[id]\" border=0 item_id=$row[id] class=gallery_popup alt=\"$row[title]\">
+                <img src=\"" . $SUBDIR . "gallery/image.php?preview=1&id=$row[id]\" border=0 item_id=$row[id] class=gallery_popup alt=\"$row[title]\">
                 ";
         }else{
             $content.="
                 <a href=" . $_SERVER["PHP_SELF"] . "?view_image=1&id=$row[id] title=\"$row[title]\">
-                <img src=\"" . $SUBDIR . "gallery/view_image.php?preview=1&id=$row[id]\" border=0 class=preview alt=\"$row[title]\">
+                <img src=\"" . $SUBDIR . "gallery/image.php?preview=1&id=$row[id]\" border=0 class=preview alt=\"$row[title]\">
                 </a>";
         }    
     } else {
@@ -72,10 +72,10 @@ function show_list_img($tmp, $row) {
     }
  */
     list($image_id) = my_select_row("select default_image_id from gallery_list where id='{$row["id"]}'", false);
-    $row_image = my_select_row("select * from gallery_images where id='{$image_id}'", false);
+    $row_image = my_select_row("select * from gallery_image where id='{$image_id}'", false);
     if (is_file($DIR . $settings["gallery_upload_path"] . $row_image["file_name"])) {
         $content="
-                <img src=\"" . $SUBDIR . "gallery/view_image.php?preview=1&id={$row_image["id"]}\" border=0 alt=\"$row[title]\">
+                <img src=\"" . $SUBDIR . "gallery/image.php?preview=1&id={$row_image["id"]}\" border=0 alt=\"$row[title]\">
                 ";
     } else {
         $content = "<div class=empty_img>Изображение отсутствует: {$row['file_name']}</div>";
@@ -84,11 +84,11 @@ function show_list_img($tmp, $row) {
 }
 
 if (($input["view_image"]) && (!$_SESSION["view_gallery"])) {
-    list($_SESSION["view_gallery"]) = my_select_row("select gallery_id from gallery_images where id='$input[id]'");
+    list($_SESSION["view_gallery"]) = my_select_row("select gallery_id from gallery_image where id='$input[id]'");
 }
 
 if (($input["view_image"]) || (isset($_GET["load"]))) {
-    $query = "SELECT * from gallery_images where id='$input[id]'";
+    $query = "SELECT * from gallery_image where id='$input[id]'";
     $row = my_select_row($query, true);
     $tags = array_merge($row, $tags);
     $tags[Header] = $row[title];
@@ -98,11 +98,11 @@ if (($input["view_image"]) || (isset($_GET["load"]))) {
     $tags["back_url"]=$_SERVER["PHP_SELF"] . "?view_gallery1&id=".$_SESSION["view_gallery"];
     $tags[nav_str].="<a href=" . $tags["back_url"] ." class=nav_next>$title</a><span class=nav_next>$row[title]</span>";
 
-    list($prev_id) = my_select_row("select id from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " and date_add<'$tags[date_add]' order by date_add desc limit 1", true);
+    list($prev_id) = my_select_row("select id from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " and date_add<'$tags[date_add]' order by date_add desc limit 1", true);
     if ($prev_id
         )$tags[prev] = "<a href=$server[PHP_SELF]?view_image=1&id=$prev_id class=button><< Предыдущая</a>";
 
-    list($next_id) = my_select_row("select id from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " and date_add>'$tags[date_add]' order by date_add asc limit 1", true);
+    list($next_id) = my_select_row("select id from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " and date_add>'$tags[date_add]' order by date_add asc limit 1", true);
     if ($next_id
         )$tags[next] = "<a href=$server[PHP_SELF]?view_image=1&id=$next_id class=button>Следующая >></a>";
 
@@ -122,7 +122,7 @@ if (isset($_GET["load"])) {
         <div class=title>$tags[title]</div>
         <br>
         <div class=view_image>
-        <img src=\"{$SUBDIR}gallery/view_image.php?id={$tags['id']}&windowHeight={$input['windowHeight']}\" border=0 id=popup_image>
+        <img src=\"{$SUBDIR}gallery/image.php?id={$tags['id']}&windowHeight={$input['windowHeight']}\" border=0 id=popup_image>
         </div>
         <div class=descr>$tags[descr]</div><div class=date>Добавлена $tags[date_add], просмотров $tags[view_count]</div>
         <br>
@@ -134,7 +134,7 @@ if (isset($_GET["load"])) {
 
 
 if (($_SESSION["view_gallery"])||($input["page"])) {
-    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['gallery_images_per_page']}) from gallery_images where gallery_id=" . $_SESSION["view_gallery"], 0);
+    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['gallery_images_per_page']}) from gallery_image where gallery_id=" . $_SESSION["view_gallery"], 0);
     list($title) = my_select_row("select title from gallery_list where id=" . $_SESSION["view_gallery"], 0);
     $tags[Header] = $title;
     $tags[nav_str].="<span class=nav_next>$title</span>";
@@ -149,9 +149,9 @@ if (($_SESSION["view_gallery"])||($input["page"])) {
         }    
         $tags[pages_list].="</center><br>";
     }
-    $offset = $settings[gallery_images_per_page] * ($_SESSION["gallery_page"] - 1);
-    $query = "SELECT * from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " order by date_add asc limit $offset,$settings[gallery_images_per_page]";
-    $result = my_query($query, $conn, true);
+    $offset = $settings['gallery_images_per_page'] * ($_SESSION['gallery_page'] - 1);
+    $query = "SELECT * from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " order by date_add asc limit {$offset},{$settings['gallery_images_per_page']}";
+    $result = my_query($query, $conn, false);
     if (!$result->num_rows) {
         $content = my_msg_to_str("list_empty", $tags, "");
     } else {
@@ -169,9 +169,9 @@ if (($_SESSION["view_gallery"])||($input["page"])) {
     exit();
 }
 
-$query = "SELECT gallery_list.*,count(gallery_images.id) as images,max(gallery_images.date_add) as last_images_date_add
+$query = "SELECT gallery_list.*,count(gallery_image.id) as images,max(gallery_image.date_add) as last_images_date_add
 from gallery_list
-left join gallery_images on (gallery_images.gallery_id=gallery_list.id)
+left join gallery_image on (gallery_image.gallery_id=gallery_list.id)
 where gallery_list.active='Y'
 group by gallery_list.id order by last_images_date_add desc,gallery_list.date_add desc";
 $result = my_query($query, $conn, true);

@@ -13,13 +13,13 @@ function show_img($tmp, $row) {
 }
 
 if ($input["del_image"]) {
-    list($img_old) = my_select_row("select file_name from slider_images where id='$input[id]'");
+    list($img_old) = my_select_row("select file_name from slider_image where id='$input[id]'");
     if (is_file($DIR . $settings["slider_upload_path"] . $img_old)) {
         if (!unlink($DIR . $settings["slider_upload_path"] . $img_old)
         )
             $content.=my_msg_to_str("error", "", "Ошибка удаления файла");
     }
-    $query = "delete from slider_images where id='$input[id]'";
+    $query = "delete from slider_image where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Фотография успешно удалена.");
 }
@@ -27,7 +27,7 @@ if ($input["del_image"]) {
 // ($_FILES["img_file"]);
 
 if ($input["added_image"]) {
-    $query = "insert into slider_images " . db_insert_fields($input[form]);
+    $query = "insert into slider_image " . db_insert_fields($input[form]);
     my_query($query, $conn);
     if ($_FILES["img_file"]["size"] > 100) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
@@ -36,7 +36,7 @@ if ($input["added_image"]) {
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input[form][title]) . "." . $f_info["extension"];
             if (move_uploaded_image($_FILES["img_file"], $DIR . $settings["slider_upload_path"] . $file_name, 1600)) {
-                $query = "update slider_images set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
+                $query = "update slider_image set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
                 my_query($query, $conn);
                 $content.=my_msg_to_str("", "", "Фотография успешно добавлена.");
             } else {
@@ -51,7 +51,7 @@ if ($input["edited_image"]) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
             $content.=my_msg_to_str("error", "", "Неверный тип файла !");
         } else {
-            list($img_old) = my_select_row("select file_name from slider_images where id='$input[id]'");
+            list($img_old) = my_select_row("select file_name from slider_image where id='$input[id]'");
             if (is_file($DIR . $settings["slider_upload_path"] . $img_old)) {
                 if (!unlink($DIR . $settings["slider_upload_path"] . $img_old))
                     $content.=my_msg_to_str("error", "", "Ошибка удаления файла");
@@ -67,13 +67,13 @@ if ($input["edited_image"]) {
             }
         }
     }
-    $query = "update slider_images set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $query = "update slider_image set " . db_update_fields($input[form]) . " where id='$input[id]'";
     my_query($query, $conn);
 }
 
 if (($input["edit_image"]) || ($input["add_image"])) {
     if ($_GET["edit_image"]) {
-        $query = "select * from slider_images where id='$input[id]'";
+        $query = "select * from slider_image where id='$input[id]'";
         $result = my_query($query, $conn);
         $tags = array_merge($tags, $result->fetch_array());
         $tags[type] = "edited_image";
@@ -84,14 +84,14 @@ if (($input["edit_image"]) || ($input["add_image"])) {
     }
     $tags[descr] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>$tags[descr]</textarea>";
     $tags[head_inc] = $EDITOR_SIMPLE_INC;
-    $content.=get_tpl_by_title("slider_images_edit_form", $tags);
+    $content.=get_tpl_by_title("slider_image_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit();
 }
 
-$query = "SELECT * from slider_images order by pos,title asc";
+$query = "SELECT * from slider_image order by pos,title asc";
 $result = my_query($query, $conn, true);
-$content.=get_tpl_by_title("slider_images_edit_table", $tags, $result);
+$content.=get_tpl_by_title("slider_image_edit_table", $tags, $result);
 echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
 
 ?>

@@ -672,7 +672,7 @@ $(document).ready(function(){
 
 
 
-<!--[title]gallery_images_edit_table[/title]-->
+<!--[title]gallery_image_edit_table[/title]-->
 <!--DESCRIPTION: Список изображений в адм. разделе -->
 <!--[content]-->
 <center><form action=[%PHP_SELF%] method=get>
@@ -719,7 +719,7 @@ $(document).ready(function(){
 
 
 
-<!--[title]gallery_images_edit_form[/title]-->
+<!--[title]gallery_image_edit_form[/title]-->
 <!--DESCRIPTION: Форма редактирования изображений -->
 <!--[content]-->
 <form action=[%PHP_SELF%] method=post enctype="multipart/form-data">

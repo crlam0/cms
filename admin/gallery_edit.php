@@ -19,7 +19,7 @@ if ($_SESSION["view_gallery"]) {
 }
 
 if ($_POST["default_image_id"]) {
-    list($gallery_id) = my_select_row("select gallery_id from gallery_images where id='" . $_POST["default_image_id"] . "'", 1);
+    list($gallery_id) = my_select_row("select gallery_id from gallery_image where id='" . $_POST["default_image_id"] . "'", 1);
     $query = "update gallery_list set default_image_id='" . $_POST["default_image_id"] . "' where id='{$gallery_id}'";
     echo (my_query($query, $conn, 1) ? "OK" : mysql_error() );
     exit;
@@ -34,19 +34,19 @@ function is_default_image($tmp, $row) {
 function show_img($tmp, $row) {
     global $DIR, $settings;
     if (is_file($DIR . $settings["gallery_upload_path"] . $row[file_name])) {
-	return "<a href=../gallery/view_image.php?id=$row[id]><img src=\"../gallery/view_image.php?preview=1&id=$row[id]\" border=0></a>";
+	return "<a href=../gallery/image.php?id=$row[id]><img src=\"../gallery/image.php?preview=1&id=$row[id]\" border=0></a>";
     } else {
 	return "Отсутствует";
     }
 }
 
 if ($input["del_image"]) {
-    list($img_old) = my_select_row("select file_name from gallery_images where id='$input[id]'");
+    list($img_old) = my_select_row("select file_name from gallery_image where id='$input[id]'");
     if (is_file($DIR . $settings["gallery_upload_path"] . $img_old)) {
 	if (!unlink($DIR . $settings["gallery_upload_path"] . $img_old)
 	    )$content.=my_msg_to_str("error","","Ошибка удаления файла");
     }
-    $query = "delete from gallery_images where id='$input[id]'";
+    $query = "delete from gallery_image where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Фотография успешно удалена.");
 }
@@ -56,7 +56,7 @@ if ($input["del_image"]) {
 if ($input["added_image"]) {
     $input[form][date_add] = "now()";
     $input[form][gallery_id] = $_SESSION["view_gallery"];
-    $query = "insert into gallery_images " . db_insert_fields($input[form]);
+    $query = "insert into gallery_image " . db_insert_fields($input[form]);
     my_query($query, $conn);    
     if ($_FILES["img_file"]["size"] > 100) {
 	if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
@@ -65,7 +65,7 @@ if ($input["added_image"]) {
 	    $f_info = pathinfo($_FILES["img_file"]["name"]);
 	    $file_name = encodestring($input[form][title]) . "." . $f_info["extension"];
 	    if (move_uploaded_image($_FILES["img_file"], $DIR . $settings["gallery_upload_path"] . $file_name, 1024)) {
-		$query = "update gallery_images set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
+		$query = "update gallery_image set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
 		my_query($query, $conn);
 		$content.=my_msg_to_str("", "", "Фотография успешно добавлена.");
 	    } else {
@@ -80,7 +80,7 @@ if ($input["edited_image"]) {
 	if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
 	    $content.=my_msg_to_str("error","","Неверный тип файла !");
 	} else {
-	    list($img_old) = my_select_row("select file_name from gallery_images where id='$input[id]'");
+	    list($img_old) = my_select_row("select file_name from gallery_image where id='$input[id]'");
 	    if (is_file($DIR . $settings["gallery_upload_path"] . $img_old)) {
 		if (!unlink($DIR . $settings["gallery_upload_path"] . $img_old)
 		    )$content.=my_msg_to_str("error","","Ошибка удаления файла");
@@ -96,13 +96,13 @@ if ($input["edited_image"]) {
 	    }
 	}
     }
-    $query = "update gallery_images set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $query = "update gallery_image set " . db_update_fields($input[form]) . " where id='$input[id]'";
     my_query($query, $conn);
 }
 
 if (($input["edit_image"]) || ($input["add_image"])) {
     if ($_GET["edit_image"]) {
-	$query = "select * from gallery_images where id='$input[id]'";
+	$query = "select * from gallery_image where id='$input[id]'";
 	$result = my_query($query, $conn);
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags[type] = "edited_image";
@@ -113,22 +113,22 @@ if (($input["edit_image"]) || ($input["add_image"])) {
     }
     $tags[descr] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>$tags[descr]</textarea>";
     $tags[head_inc] = $EDITOR_SIMPLE_INC;
-    $content.=get_tpl_by_title("gallery_images_edit_form", $tags);
+    $content.=get_tpl_by_title("gallery_image_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit();
 }
 
 if ($_SESSION["view_gallery"]) {
-    $query = "SELECT * from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " order by date_add asc";
+    $query = "SELECT * from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " order by date_add asc";
     $result = my_query($query, $conn, true);
-    $content.=get_tpl_by_title("gallery_images_edit_table", $tags, $result);
+    $content.=get_tpl_by_title("gallery_image_edit_table", $tags, $result);
     $tags[head_inc]=$JQUERY_INC;
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit();
 }
 
 if ($input["del_gallery"]) {
-    $query = "select id from gallery_images where gallery_id='$input[id]'";
+    $query = "select id from gallery_image where gallery_id='$input[id]'";
     $result = my_query($query, $conn);
     if ($result->num_rows) {
 	$content.=my_msg_to_str("error","","Этот раздел не пустой !");
@@ -227,9 +227,9 @@ if (($input["edit_gallery"]) || ($input["add_gallery"])) {
     exit();
 }
 
-$query = "SELECT gallery_list.*,count(gallery_images.id) as images
+$query = "SELECT gallery_list.*,count(gallery_image.id) as images
 from gallery_list 
-left join gallery_images on (gallery_images.gallery_id=gallery_list.id) 
+left join gallery_image on (gallery_image.gallery_id=gallery_list.id) 
 group by gallery_list.id order by gallery_list.date_add desc";
 $result = my_query($query, $conn, true);
 

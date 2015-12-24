@@ -3,7 +3,7 @@
 //exit();
 include "../include/common.php";
 
-list($file_name, $file_type) = my_select_row("select file_name,file_type from gallery_images where id='$input[id]'", true);
+list($file_name, $file_type) = my_select_row("select file_name,file_type from gallery_image where id='$input[id]'", true);
 $file_name = $DIR . $settings["gallery_upload_path"] . $file_name;
 $gallery_fix_size= ( $DIR.$settings["gallery_fix_size"]) && ($input["preview"]);
 
@@ -12,7 +12,7 @@ if (!is_file($file_name)) {
 }
 
 if (!$input["preview"]) {
-    my_query("update gallery_images set view_count=view_count+1 where id='$input[id]'", $conn);
+    my_query("update gallery_image set view_count=view_count+1 where id='$input[id]'", $conn);
 }
 
 if (($file_type == "image/jpeg") || ($file_type == "image/pjpeg")) {

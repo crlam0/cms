@@ -23,12 +23,12 @@ function show_img($tmp, $row) {
 }
 
 if ($input["del_image"]) {
-    list($fname) = my_select_row("select fname from cat_item_images where id=" . $input["id"], 1);
+    list($fname) = my_select_row("select fname from cat_item_image where id=" . $input["id"], 1);
     $result = @unlink($IMG_PATH . $fname);
     if (!$result) {
         echo "Error delete file !";
     } else {
-        $query = "delete from cat_item_images where id=" . $input["id"];
+        $query = "delete from cat_item_image where id=" . $input["id"];
         echo (my_query($query, $conn, 1) ? "OK" : mysql_error() );
     }
     exit;
@@ -41,34 +41,34 @@ if ($input["default_img"]) {
 }
 
 if ($input["del"]) {
-    $query = "select * from cat_item_images where item_id=" . $input["id"];
+    $query = "select * from cat_item_image where item_id=" . $input["id"];
     $result = my_query($query, $conn);
     while ($row = $result->fetch_array()) {
         if (!unlink($IMG_PATH . $row[fname]))print_err("Ошибка удаления файла");
     }
-    $query = "delete from cat_item_images where item_id=" . $input["id"];
+    $query = "delete from cat_item_image where item_id=" . $input["id"];
     my_query($query, $conn);
     $query = "delete from cat_item where id=" . $input["id"];
     my_query($query, $conn);
 }
 if ($input["add_image"]) {
     if ($_FILES["img_file"]["size"]) {
-        $query = "insert into cat_item_images(item_id,descr) values('{$input["id"]}','{$input["descr"]}')";
+        $query = "insert into cat_item_image(item_id,descr) values('{$input["id"]}','{$input["descr"]}')";
         my_query($query, $conn);
         $image_id = $mysqli->insert_id;
         $f_info = pathinfo($_FILES["img_file"]["name"]);
         $img = $input["id"] . "_" . $image_id . "." . $f_info["extension"];
         if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings["catalog_item_img_max_width"])) {
-            $query = "update cat_item_images set fname='$img' where id='$image_id'";
+            $query = "update cat_item_image set fname='$img' where id='$image_id'";
             my_query($query, $conn);
-            $query = "select id from cat_item_images where item_id='{$input["id"]}'";
+            $query = "select id from cat_item_image where item_id='{$input["id"]}'";
             $result = my_query($query, $conn);
             if ($result->num_rows==1) {
                 $query = "update cat_item set default_img='$image_id' where id='{$input["id"]}'";
                 my_query($query, $conn);
             }
         } else {
-            $query = "delete from cat_item_images where id='$image_id'";
+            $query = "delete from cat_item_image where id='$image_id'";
             my_query($query, $conn);
             print_err("Ошибка копирования файла !");
         }
@@ -118,7 +118,7 @@ if ($input["edited"]) {
 
 function get_image_list($item_id) {
     global $conn, $IMG_URL, $_SERVER;
-    $query = "select cat_item_images.*,default_img,cat_item.id as item_id from cat_item_images left join cat_item on (cat_item.id=item_id) where item_id='$item_id'";
+    $query = "select cat_item_image.*,default_img,cat_item.id as item_id from cat_item_image left join cat_item on (cat_item.id=item_id) where item_id='$item_id'";
     $result = my_query($query, $conn);
 //	if(!$result->num_rows)return iconv('windows-1251', 'UTF-8',"Изображения отсутствуют");
     $content = "<table width=550 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
@@ -174,14 +174,14 @@ if (($input["edit"]) || ($input["add"])) {
     $tags[head_inc] = $JQUERY_INC . $JQUERY_FORM_INC . $EDITOR_MINI_INC;
     $content = get_tpl_by_title("cat_item_form", $tags);
     if($input["edit"]){
-        $content .= get_tpl_by_title("cat_item_images_form", $tags);
+        $content .= get_tpl_by_title("cat_item_image_form", $tags);
     }
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit;
 };
 
 $query = "SELECT cat_item.*,fname from cat_item
-left join cat_item_images on (cat_item_images.id=default_img)
+left join cat_item_image on (cat_item_image.id=default_img)
 where part_id='{$_SESSION["PART_ID"]}' order by num,cat_item.id,title asc";
 $result = my_query($query, $conn);
 

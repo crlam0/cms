@@ -95,19 +95,19 @@ if ($_SESSION["PART_ID"]) {
 
 if ($input['get_popup_content']) {
     
-    list($default_img,$default_img_fname)=my_select_row("select default_img,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='".$input["item_id"]."'",false);
+    list($default_img,$default_img_fname)=my_select_row("select default_img,fname from cat_item left join cat_item_image on (cat_item_image.id=default_img) where cat_item.id='".$input["item_id"]."'",false);
     
-    list($prev_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id<'" . $input["image_id"] . "' and id<>'{$default_img}' order by id desc limit 1", false);
+    list($prev_id,$fname) = my_select_row("select id,fname from cat_item_image where item_id='" . $input["item_id"] . "' and id<'" . $input["image_id"] . "' and id<>'{$default_img}' order by id desc limit 1", false);
     if ($input["image_id"] != $default_img){
         if ($prev_id){
             $nav_ins.= "<a image_id={$prev_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button button\"><< Предыдущая</a>";
         }else{     
             $nav_ins.= "<a image_id={$default_img} item_id={$input["item_id"]} file_name=\"{$default_img_fname}\" class=\"cat_image_button button\"><< Предыдущая</a>";
         }
-        list($next_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id>'" . $input["image_id"] . "' and id<>'{$default_img}' order by id asc limit 1", false);
+        list($next_id,$fname) = my_select_row("select id,fname from cat_item_image where item_id='" . $input["item_id"] . "' and id>'" . $input["image_id"] . "' and id<>'{$default_img}' order by id asc limit 1", false);
         if ($next_id)$nav_ins.= "<a image_id={$next_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button button\">Следующая >></a>";
     }else{
-        list($next_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id<>'{$default_img}' order by id asc limit 1", false);
+        list($next_id,$fname) = my_select_row("select id,fname from cat_item_image where item_id='" . $input["item_id"] . "' and id<>'{$default_img}' order by id asc limit 1", false);
         if ($next_id)$nav_ins.= "<a image_id={$next_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button button\">Следующая >></a>";
     }
 
@@ -134,17 +134,17 @@ if ($_SESSION['PART_ID']) {
 */
 
 if(strlen($input['item_title'])){
-    $query="select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.seo_alias='".$input["item_title"]."' order by b_code,title asc";
+    $query="select cat_item.*,fname,cat_item_image.descr as image_descr,cat_item_image.id as cat_item_image_id from cat_item left join cat_item_image on (cat_item_image.id=default_img) where cat_item.seo_alias='".$input["item_title"]."' order by b_code,title asc";
     $result=my_query($query);
     $row = $result->fetch_array();
     $item_id=$row['id'];
     $tags=array_merge($tags,$row);
-    if(is_file($IMG_ITEM_PATH.$row[fname]))$tags[default_image]="<img src=\"{$SUBDIR}catalog/image.php?id={$row['cat_item_images_id']}&windowHeight=500\" item_id={$row['id']} file_name={$row[fname]} image_id={$row[cat_item_images_id]} border=0 align=left class=cat_item_image_popup>";
+    if(is_file($IMG_ITEM_PATH.$row[fname]))$tags[default_image]="<img src=\"{$SUBDIR}catalog/image.php?id={$row['cat_item_image_id']}&windowHeight=500\" item_id={$row['id']} file_name={$row[fname]} image_id={$row[cat_item_image_id]} border=0 align=left class=cat_item_image_popup>";
 
     $tags['Header']=$row['title'];
     $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";
 
-    $query="select * from cat_item_images where item_id='{$item_id}' and id<>'{$row['default_img']}' order by id asc";
+    $query="select * from cat_item_image where item_id='{$item_id}' and id<>'{$row['default_img']}' order by id asc";
     $result=my_query($query);
     $tags[images].="<div style=\"width:100%;height:1px;float:left;\">&nbsp;</div>";
     if($result->num_rows){
@@ -225,8 +225,8 @@ if($PAGES>1){
 $content.=$tags[pages_list];
 $offset=$settings[catalog_items_per_page]*($_SESSION["catalog_page"]-1);	
 
-$query="select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id,cat_item.seo_alias from cat_item 
-left join cat_item_images on (cat_item_images.id=default_img)"
+$query="select cat_item.*,fname,cat_item.id as item_id,cat_item_image.id as image_id,cat_item.seo_alias from cat_item 
+left join cat_item_image on (cat_item_image.id=default_img)"
 .(isset($_GET["show_all"])?"":" where part_id='".$input[part_id]."'")." 
 group by cat_item.id
 order by cat_item.num,b_code,title asc limit $offset,$settings[catalog_items_per_page]";

@@ -103,7 +103,7 @@ function get_block($block_name) {
 
         case "last_posts":
             $TABLE = "blog_posts";
-            $query = "SELECT {$TABLE}.*,date_format(date_add,'%d.%m.%Y') as date from {$TABLE} order by {$TABLE}.id desc limit {$settings['news_block_count']}";
+            $query = "SELECT {$TABLE}.*,date_format(date_add,'%d.%m.%Y') as date from {$TABLE} where active='Y' order by {$TABLE}.id desc limit {$settings['news_block_count']}";
             $result = my_query($query, $conn, true);
             if ($result->num_rows) {
                 function get_news_short_content($tmp, $row) {

@@ -3,8 +3,8 @@ $(document).ready(function () {
         var id = $(this).attr("item_id");
         var windowHeight = document.documentElement.clientHeight;
         $('#popupContent').load("index.php?load=1&id=" + id + "&windowHeight="+windowHeight, function () {
-            loadPopup();
             $("#popupContent").waitForImages(function () {
+                loadPopup();
                 centerPopup();
             });
         });
@@ -12,12 +12,15 @@ $(document).ready(function () {
 
     $("a.gallery_button").live('click', function () {
         var id = $(this).attr("item_id");
-        var windowHeight = document.documentElement.clientHeight;
-        $('#popupContent').load("index.php?load=1&id=" + id + "&windowHeight="+windowHeight, function () {
-            $("#popupContent").waitForImages(function () {
-                centerPopup();
+        $("#popupItem").fadeOut("slow",function(){
+            var windowHeight = document.documentElement.clientHeight;
+            $('#popupContent').load("index.php?load=1&id=" + id + "&windowHeight="+windowHeight, function () {
+                $("#popupContent").waitForImages(function () {
+                    $("#popupItem").fadeIn("slow");
+                    centerPopup();
+                });
             });
-        });
+        });    
     });
 });
 

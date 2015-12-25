@@ -7,16 +7,16 @@ function loadPopup() {
         $("#backgroundPopup").css({
             "opacity": "0.7"
         });
-        $("#backgroundPopup").fadeIn("fast");
-        $("#popupItem").fadeIn("fast");
+        $("#backgroundPopup").fadeIn("slow");
+        $("#popupItem").fadeIn("slow");
         popupStatus = 1;
     }
 }
 
 function disablePopup() {
     if (popupStatus == 1) {
-        $("#backgroundPopup").fadeOut("fast");
-        $("#popupItem").fadeOut("fast");
+        $("#backgroundPopup").fadeOut("slow");
+        $("#popupItem").fadeOut("slow");
         popupStatus = 0;
     }
 }

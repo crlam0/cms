@@ -80,8 +80,8 @@ class COMMENTS
                 $remote_host=($server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
                 $message="Автор: {$input['form']['author']} ( {$input['form']['email']} )\n";
                 $message.="IP: {$input['form']['ip']} ( {$remote_host} )\n";
-                $message.='Сообщение:\n';
-                $message.=$input['form']['content'].'\n';
+                $message.="Сообщение:\n";
+                $message.=str_replace('\r\n',"\n",$input['form']['content']) . "\n";
                 if(!$settings['debug'])send_mail($settings['email_to_addr'], 'На сайте http://'.$server['HTTP_HOST'].$SUBDIR.' оставлен новый комментарий.', $message);
                 
                 $this->__new_form = true;

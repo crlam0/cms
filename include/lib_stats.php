@@ -63,7 +63,7 @@ if (!$deny) {
     $uid = 0;
     if ($_SESSION["UID"])$data['uid'] = $_SESSION["UID"];
     $data['remote_addr']=$server['REMOTE_ADDR'];
-    if (!$server["REMOTE_HOST"])$data['remote_host'] = gethostbyaddr($server['REMOTE_ADDR']);
+    $data['remote_host']=($server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
     $data['script_name']=$server["SCRIPT_NAME"];
     $data['request_uri'] = $server['REQUEST_URI'];
     if (strlen($SUBDIR) > 1)$data['script_name'] = str_replace($SUBDIR, "/", $data['script_name']);    

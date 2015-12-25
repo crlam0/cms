@@ -14,7 +14,6 @@ include_once $INC_DIR."lib_sql.php";
 
 if(is_array($_GET))foreach ($_GET as $key => $value) $input[$key]=db_test_param($value,$key);
 if(is_array($_POST))foreach ($_POST as $key => $value) $input[$key]=db_test_param($value,$key);
-if(is_array($_SESSION))foreach ($_SESSION as $key => $value) $_SESSION[$key]=$value;
 if(is_array($_SERVER))foreach ($_SERVER as $key => $value) $server[$key]=$value;
 
 include_once $INC_DIR."lib_blocks.php";

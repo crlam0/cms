@@ -35,7 +35,7 @@ function db_test_param($str,$param="") {
 
 /* replace for my_query */
 
-function my_query($sql, $conn=NULL, $dont_debug=0) {
+function my_query($sql, $conn=null, $dont_debug=0) {
     global $mysqli;
     if (!$dont_debug)print_debug($sql);
     $result = $mysqli->query($sql);
@@ -66,9 +66,8 @@ function db_insert_fields($fields) {
         $a = 0;
         while (list($key, $value) = each($fields)) {
             $a++;
-            $value = db_test_param($value);
-            if (is_array($value)
-                )$value = implode(";", $value);
+//            $value = db_test_param($value);
+            if (is_array($value))$value = implode(";", $value);
             if ($a == $total) {
                 $str = "";
             } else {
@@ -93,9 +92,8 @@ function db_update_fields($fields) {
     $a = 0;
     while (list($key, $value) = each($fields)) {
         $a++;
-        $value = db_test_param($value);
-        if (is_array($value)
-            )$value = implode(";", $value);
+//        $value = db_test_param($value);
+        if (is_array($value))$value = implode(";", $value);
         if ($a == $total) {
             $str = "";
         } else {

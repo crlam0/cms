@@ -1,12 +1,12 @@
 <?php
-
 $tags['Header'] = 'Вопрос/ответ';
-include '../include/common.php';
+$tags['Add_CSS'].=';article_news_faq';
+require '../include/common.php';
 
-include $INC_DIR . 'lib_bbcode.php';
+require $INC_DIR . 'lib_bbcode.php';
 $editor = new BBCODE_EDITOR ();
 
-$tags[nav_str].="<span class=nav_next>{$tags['Header']}</span>";
+$tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 
 $code_ok = 0;
 if (isset($input['send_img_code'])) {

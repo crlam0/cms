@@ -32,7 +32,7 @@ function print_err($str){
 }
 function print_debug($str){
 	global $settings;
-	if($settings[debug])print("<center><font class=debug>{$str}</font></center>");
+	if($settings['debug'])print("<center><font class=debug>{$str}</font></center>");
 }
 function print_arr($arr){
 	echo "<pre>";

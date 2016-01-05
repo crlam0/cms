@@ -171,7 +171,7 @@ if (($input["edit"]) || ($input["add"])) {
 
 //	$tags[images]=get_image_list($input["id"]);
 
-    $tags[head_inc] = $JQUERY_INC . $JQUERY_FORM_INC . $EDITOR_MINI_INC;
+    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $JQUERY_FORM_INC . $EDITOR_MINI_INC;
     $content = get_tpl_by_title("cat_item_form", $tags);
     if($input["edit"]){
         $content .= get_tpl_by_title("cat_item_image_form", $tags);

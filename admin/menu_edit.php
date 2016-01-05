@@ -2,7 +2,7 @@
 $tags[Header] = "Пункты меню";
 include "../include/common.php";
 
-$tags["head_inc"]=$JQUERY_INC;
+$tags["'INCLUDE_HEAD'"]=$JQUERY_INC;
 
 if ($input["view_menu"]) {
     $_SESSION["view_menu"] = $input["id"];

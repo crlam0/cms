@@ -1,7 +1,8 @@
 <?php
-$tags[Header] = "Блог";
-include "../include/common.php";
-include $INC_DIR . "lib_comments.php";
+$tags['Header'] = 'Блог';
+$tags['Add_CSS'].=';blog_comments';
+include '../include/common.php';
+include $INC_DIR . 'lib_comments.php';
 
 $MSG_PER_PAGE = $settings["blog_msg_per_page"];
 $TABLE="blog_posts";

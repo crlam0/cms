@@ -90,7 +90,7 @@ if (($input["edit_file"]) || ($input["add_file"])) {
 	$tags[form_title] = "Добавление";
     }
     $tags[descr] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>$tags[descr]</textarea>";
-    $tags[head_inc] = $EDITOR_SIMPLE_INC;
+    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_title("media_file_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit();
@@ -143,7 +143,7 @@ if (($input["edit_list"]) || ($input["add_list"])) {
 	$tags[form_title] = "Добавление";
     }
     $tags[descr] = "<textarea name=form[descr] rows=15 cols=80 maxlength=64000>$tags[descr]</textarea>";
-    $tags[head_inc] = $EDITOR_SIMPLE_INC;
+    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_title("media_list_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit();

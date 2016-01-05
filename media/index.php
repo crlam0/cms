@@ -1,6 +1,6 @@
 <?php
-
-$tags[Header] = "Файлы";
+$tags['Header'] = "Файлы";
+$tags['Add_CSS'].=';media';
 include "../include/common.php";
 
 $tags[nav_str].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>$tags[Header]</a>";

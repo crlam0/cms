@@ -1,5 +1,5 @@
 <?php
-
+$tags['Add_CSS'].=';article_news_faq';
 include "../include/common.php";
 
 if (isset($input["uri"])) {

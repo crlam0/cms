@@ -64,7 +64,7 @@ if (($input["edit_article"]) || ($input["add_article"])) {
 	$tags[form_title] = "Добавление";
 	$tags[Header] = "Добавление статьи";
     }
-    $tags[head_inc] = $JQUERY_INC . $EDITOR_INC;
+    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
     $tags["content"]=replace_base_href($tags["content"],false);
     $content.=get_tpl_by_title("article_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
@@ -119,7 +119,7 @@ if (($input["edit_list"]) || ($input["add_list"])) {
 	$tags[form_title] = "Добавление";
 	$tags[Header] = "Добавление раздела";
     }
-    $tags[head_inc] = $EDITOR_SIMPLE_INC;
+    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_title("article_list_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit();

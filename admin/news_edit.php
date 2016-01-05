@@ -39,7 +39,7 @@ if (($input["view"]) || ($input["adding"])) {
         $tags[date] = date("Y-m-d H:i:s");
     }
     $tags[content] = "<textarea id=editor name=form[content] rows=25 cols=120 maxlength=64000>$tags[content]</textarea>";
-    $tags[head_inc] = $EDITOR_INC;
+    $tags['INCLUDE_HEAD'] = $EDITOR_INC;
     $tags["content"] = replace_base_href($tags["content"], false);
     $content.=get_tpl_by_title("news_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);

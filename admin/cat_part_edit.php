@@ -106,7 +106,7 @@ if (($_GET["edit"]) || ($_GET["adding"])) {
 	$tags[type] = "added";
 	$tags[Header] = "Добавление раздела";
     }
-    $tags[head_inc] = $EDITOR_SIMPLE_INC;
+    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $query = "select * from cat_part where id<>'$tags[id]' order by prev_id,title asc";
     $result = my_query($query, $conn, 1);
     while ($row = $result->fetch_array()) {

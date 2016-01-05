@@ -1,5 +1,6 @@
 <?php
 $tags[Header]="Новости";
+$tags['Add_CSS'].=';article_news_faq';
 include "../include/common.php";
 
 $query="select * from news ".($input["show"]?" where id='".$input["show"]."' ":"")."order by date desc".($input["show_all"]?"":" limit ".$settings[news_count]);

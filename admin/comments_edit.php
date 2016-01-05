@@ -49,7 +49,7 @@ if (($input["edit_comment"]) || ($input["add_comment"])) {
 $query = "SELECT * from $TABLE order by id desc";
 $result = my_query($query, $conn, 1);
 
-$tags[head_inc] = $JQUERY_INC;
+$tags['INCLUDE_HEAD'] = $JQUERY_INC;
 
 $content.=get_tpl_by_title("comments_edit_table", $tags, $result);
 echo get_tpl_by_title($part[tpl_name], $tags, "", $content);

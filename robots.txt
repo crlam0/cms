@@ -1,6 +1,8 @@
 User-agent: *
 Disallow: /admin/
 Disallow: /css/
-Disallow: /inc/
+Disallow: /include/
 Disallow: /login/
+Disallow: /logout/
+Disallow: /misc/
 Disallow: /media/

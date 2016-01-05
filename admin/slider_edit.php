@@ -83,7 +83,7 @@ if (($input["edit_image"]) || ($input["add_image"])) {
         $tags[form_title] = "Добавление";
     }
     $tags[descr] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>$tags[descr]</textarea>";
-    $tags[head_inc] = $EDITOR_SIMPLE_INC;
+    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_title("slider_image_edit_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit();

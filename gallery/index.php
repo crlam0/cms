@@ -1,5 +1,6 @@
 <?php
-$tags[Header] = "Галерея";
+$tags['Header'] = "Галерея";
+$tags['Add_CSS'].=';gallery;blog_comments';
 include "../include/common.php";
 include $INC_DIR . "lib_comments.php";
 
@@ -18,7 +19,7 @@ if ( (isset($input["uri"])) && (!isset($input["load"]))) {
 }
 
 if($settings["gallery_use_popup"]){
-    $tags[head_inc] .= $JQUERY_INC .
+    $tags['INCLUDE_HEAD'] .= $JQUERY_INC .
             '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
             '<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>'."\n".
             '<script type="text/javascript" src="'.$BASE_HREF.'gallery/gallery.js"></script>'."\n";

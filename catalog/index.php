@@ -1,6 +1,7 @@
 <?php
-$tags[Header]="";
-include "../include/common.php";
+$tags['Header']='';
+$tags['Add_CSS'].=';catalog';
+include '../include/common.php';
 
 if (!count($input))
     $input[part_id] = 0;
@@ -166,7 +167,7 @@ if(strlen($input['item_title'])){
     <center><a href=".$SUBDIR.get_cat_part_href($_SESSION["PART_ID"])." class=button> << Назад</a></center>
     </div>";
     
-    $tags['head_inc'] =  
+    $tags['INCLUDE_HEAD'] .=  
         '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>
         <script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>
         <script type="text/javascript" src="'.$BASE_HREF.'catalog/catalog.js"></script>
@@ -267,7 +268,7 @@ if($_SESSION["PART_ID"]==0){
 }
 */
 
-$tags['head_inc'] =  
+$tags['INCLUDE_HEAD'] .=  
     '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>
     <script type="text/javascript" src="'.$BASE_HREF.'catalog/catalog.js"></script>
     ';

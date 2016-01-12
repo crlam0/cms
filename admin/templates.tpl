@@ -1,3 +1,70 @@
+<!--[title]admin_last_comments[/title]-->
+<!--DESCRIPTION: Последние комментарии -->
+<!--[content]-->
+<h3>Последние комментарии</h3>
+<table width=800 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+	<td width=15%>Дата</td>
+        <td width=15%>Раздел</td>
+	<td width=40%>Сообщение</td>
+	<td width=20%>Автор</td>
+</tr>
+[%loop_begin%]
+	<tr class=content align=left>
+        <td><b>[%row(date_add)%]</b></td>
+	<td align="center">[%row(target_type)%]</td>
+	<td align=center>[%row(content)%]</td>
+	<td align=center>[%row(author)%]</td>
+	</tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
+
+
+<!--[title]admin_last_requests[/title]-->
+<!--DESCRIPTION: Последние заказы -->
+<!--[content]-->
+<h3>Последние заказы</h3>
+<table width=800 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+	<td width=20%>Дата</td>
+	<td width=40%>Контакты</td>
+	<td width=40%>Сообщение</td>
+</tr>
+[%loop_begin%]
+	<tr class=content align=left>
+        <td align="center"><b>[%row(date)%]</b></td>
+	<td>[%row(contact_info,nl2br)%]</td>
+	<td>[%row(item_list,nl2br)%][%row(message,nl2br)%]</td>
+	</tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
+
+
+<!--[title]stats_last_visitors_table[/title]-->
+<!--DESCRIPTION: Последние поситители -->
+<!--[content]-->
+<center><h3>Последние 20 уникальных посетителей</h3></center>
+<table width=800 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+<td width=15%>Дата</td>
+<td width=15%>Хост</td>
+<td width=55%>Браузер</td>
+<td width=15%>Страница</td>
+</tr>
+[%loop_begin%]
+        <tr class=content>
+        <td align=center><b>[%row(date)%]</b></td>
+        <td align=center>[%row(remote_host)%]</td>
+        <td align=center>[%row(user_agent)%]</td>
+        <td align=center>[%row(request_uri)%]</td>
+        </tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
+
+
 <!--[title]article_list_edit_table[/title]-->
 <!--DESCRIPTION: Список разделов в статьях -->
 <!--[content]-->
@@ -167,13 +234,17 @@ $(document).ready(function(){
 <!--[title]blog_post_edit_form[/title]-->
 <!--DESCRIPTION: Форма редактирования поста в блоге -->
 <!--[content]-->
-<form action=[%PHP_SELF%] method=post>
+<form action=[%PHP_SELF%] method=post enctype="multipart/form-data">
 <input type=hidden name=id value=[%id%]>
 <input type=hidden name=[%type%] value=1>
 <table align=center width=500 border=0 cellspacing=1 cellpadding=1 class=admin>
 	<tr class=header><td colspan=2>[%form_title%]</td></tr>
 	<tr class=content align=left><td>Название:</td><td><input type=edit maxlength=255 size=64 name=form[title] value="[%title%]"></td></tr>
 	<tr class=content align=left><td>Алиас:</td><td><input type=edit maxlength=255 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
+	<tr class=content>
+		<td>Картинка:</td>
+		<td align=center>[%img_tag%][%del_button%]<br>Загрузить: <input name=img_file type=file><br></td>
+	</tr>
  	<tr class=content align=left><td>Ссылается на:</td><td>[%target_type_select%]</td></tr>
         <tr class=content align=left id="target_select"></tr>
 	<tr class=content><td align=left colspan=2>

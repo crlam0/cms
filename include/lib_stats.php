@@ -25,7 +25,7 @@ CREATE TABLE `visitor_log` (
  */
 
 $deny_urls=array('img','image','admin/','favicon');
-$deny_remote_hosts=array('bot','spider','yandex','google','mail.ru');
+$deny_remote_hosts=array('bot','spider','yandex','google','mail.ru','crawl');
 $deny_user_agents=array('bot','spider','YandexMetrika','Yahoo');
 
 $deny=0;

@@ -40,6 +40,11 @@ if ($input["view_post"]) {
     $row["post_title"]=$row["title"];
     $row["content"] = replace_base_href($row["content"], false);
 
+    if(strlen($row["target_type"])){
+        $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );
+        $row["target_link"]="<a href=\"{$href}\" class=button>Перейти >></a>";
+    }
+
     if(is_file($DIR.$settings['blog_img_path'].$row['image_name'])){
         $row["image"]='  
         <div id="featured_image">

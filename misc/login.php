@@ -7,8 +7,7 @@ $tags[nav_str].="<span class=nav_next>{$tags[Header]}</span>";
 if ($_POST["logon"]) {
     $query = "SELECT id,flags,passwd FROM users WHERE login='" . db_test_param($_POST["login"]) . "' and flags like '%active%'";
     $result = my_query($query, $conn, true);
-    $num = $result->num_rows;
-    if ($num) {
+    if ($result->num_rows) {
         $row = $result->fetch_array();
         if(strcmp(md5(db_test_param($_POST['passwd'])),$row['passwd'])==0){
             $_SESSION['UID']=$row['id'];

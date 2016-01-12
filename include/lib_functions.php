@@ -108,12 +108,11 @@ function encodestring($string){
 $validImageTypes = array("image/pjpeg", "image/jpeg", "image/gif", "image/png", "image/x-png");
 
 function move_uploaded_image($src_file, $dst_file, $max_width = 0) {
-    global $settings;
+    global $settings, $validImageTypes;
     if (!is_file($src_file["tmp_name"])) {
         print_err("Файл отсутствует !");
         return false;
     }
-    $validImageTypes = array('image/pjpeg', 'image/jpeg', 'image/gif', "image/png", "image/x-png");
     if(!in_array($src_file['type'],$validImageTypes)){
         print_err("Неверный тип файла !");
         return false;
@@ -273,9 +272,8 @@ function get_gallery_list_href($list_id,$row = array()){
         return "gallery/index.php?view_gallery=1&id=".$list_id;        
     }
 }
-function get_post_href($post_id,$row){
+function get_post_href($tmp,$row){
     global $SUBDIR;
-    if($row['id'])$post_id=$row['id'];
     if(strlen($row['seo_alias'])) {
         return "blog/".$row['seo_alias']."/";
     }else{

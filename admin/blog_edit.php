@@ -1,6 +1,6 @@
 <?php
 
-$tags[Header] = "Новости";
+$tags[Header] = "Блог";
 include "../include/common.php";
 
 $IMG_PATH = $DIR.$settings['blog_img_path'];
@@ -14,10 +14,10 @@ if ($input["get_target_select"]) {
             $output = "<td>Прямая ссылка:</td><td><input type=edit maxlength=255 size=64 name=form[href] value=\"$href\"></td>";
             break;
         case "article":
-            $query = "select * from article order by title";
+            $query = "select * from article_item order by title";
             $result = my_query($query, $conn, 1);
             $output = "<td>Статья:</td><td><select name=form[target_id]>";
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = $result->fetch_array()) {
                 $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
             }
             $output.="</select></td>";
@@ -26,7 +26,7 @@ if ($input["get_target_select"]) {
             $query = "select * from article_list order by title";
             $result = my_query($query, $conn, 1);
             $output = "<td>Раздел статей:</td><td><select name=form[target_id]>";
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = $result->fetch_array()) {
                 $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
             }
             $output.="</select></td>";
@@ -35,7 +35,7 @@ if ($input["get_target_select"]) {
             $query = "select * from media_list order by title";
             $result = my_query($query, $conn, 1);
             $output = "<td>Раздел файлов:</td><td><select name=form[target_id]>";
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = $result->fetch_array()) {
                 $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
             }
             $output.="</select></td>";
@@ -44,7 +44,7 @@ if ($input["get_target_select"]) {
             $query = "select * from cat_part where prev_id=0 order by title";
             $result = my_query($query, $conn, 1);
             $output = "<td>Раздел каталога:</td><td><select name=form[target_id]>";
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = $result->fetch_array()) {
                 $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
             }
             $output.="</select></td>";
@@ -53,7 +53,7 @@ if ($input["get_target_select"]) {
             $query = "select * from gallery_list order by title";
             $result = my_query($query, $conn, 1);
             $output = "<td>Раздел галереи:</td><td><select name=form[target_id]>";
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = $result->fetch_array()) {
                 $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
             }
             $output.="</select></td>";
@@ -99,7 +99,7 @@ if ($_GET["del_img"]) {
 if ($input["added_post"]) {
     $input[form][date_add] = "now()";
     $input[form][uid] = $_SESSION["UID"];
-    $input[form][content] = $input["form"]["content"];
+    // $input[form][content] = $input["form"]["content"];
     $input[form][content] = replace_base_href($input[form][content], true);
     if (!strlen($input[form][seo_alias]))
         $input[form][seo_alias] = encodestring($input[form][title]);
@@ -156,7 +156,7 @@ if (($input["edit_post"]) || ($input["add_post"])) {
     if ($input["edit_post"]) {
         $query = "select * from blog_posts where id='$input[id]'";
         $result = my_query($query, $conn);
-        $tags = array_merge($tags, mysql_fetch_array($result));
+        $tags = array_merge($tags, $result->fetch_array());
         $tags[type] = "edited_post";
         $tags[form_title] = "Редактирование";
         $tags[Header] = "Редактирование поста";

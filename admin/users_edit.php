@@ -62,7 +62,7 @@ if ( ($_GET["edit"]) || ($_GET["add"])){
         <tr class=content align=left><td>Флаги:</td><td>";
 		$query="select * from users_flags order by title asc";
 		$result_flags=my_query($query,$conn,1);
-		while($row_flags=mysql_fetch_array($result_flags)){
+		while($row_flags=$result_flags->fetch_array()){
 			echo "<input type=checkbox name=flags[] ".(in_array($row_flags[value], $flags) ? "checked" : "")." value=\"$row_flags[value]\">$row_flags[title]<br>";
 		}
         echo "</td></tr>

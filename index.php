@@ -28,7 +28,7 @@ $comments = new COMMENTS ("blog");
 $TABLE='blog_posts';
 $query = "SELECT {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid)
         where {$TABLE}.active='Y'
-        group by {$TABLE}.id  order by {$TABLE}.id desc limit 5";
+        group by {$TABLE}.id  order by {$TABLE}.id desc limit {$settings['blog_msg_per_page']}";
 $result = my_query($query, $conn, true);
 
 if ($result->num_rows) {
@@ -40,6 +40,12 @@ if ($result->num_rows) {
                 $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );
                 $row["target_link"]="<br><a href=\"{$href}\">Перейти >></a>";
             }
+            if(is_file($DIR.$settings['blog_img_path'].$row['image_name'])){
+                $row["image"]='  
+                <div id="featured_image">
+                    <img width="150" height="150" src="'.$SUBDIR.$settings['blog_img_path'].$row['image_name'].'" class="attachment-150x150 wp-post-image" alt="'.$row['title'].'">    
+                </div>';
+            }            
             $row['comment_line'] = 
                     " [ <a href=\"".get_post_href(null,$row)."#comment_form\" title=\"{$row["title"]}\">Добавить комментарий</a> ] ".
                     " [ <a href=\"".get_post_href(null,$row)."#comments\" title=\"{$row["title"]}\">".

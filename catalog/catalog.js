@@ -32,16 +32,16 @@ $(document).ready(function() {
         var item_id = $(this).attr("item_id");
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
-        $("#popupContent").fadeOut("fast");
-        var height = $("#popupContent").height();
-        height=height + 'px';
-        $("#popupContent").css({
-            "height": height
-        });
+        $("#popupContent").fadeOut("slow");
+//        var height = $("#popupContent").height();
+//        height=height + 'px';
+//        $("#popupContent").css({
+//            "height": height
+//        });
         $('#popupContent').load("index.php?get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,function(){
             $("#popupContent").waitForImages(function() {
                 centerPopup();
-                $("#popupContent").fadeIn("fast");
+                $("#popupContent").fadeIn("slow");
             });
         });
     });  

@@ -26,7 +26,7 @@ function db_test_param($str,$param="") {
 //    echo $str."<br>";
     if ((stristr($str, "union")) || (stristr($str, "insert")) || (stristr($str, "update ")) || (stristr($str, "delete ") || (stristr($str, "alter ") || (stristr($str, "drop "))
             || (strstr($str, "\$_[")) || (stristr($str, "<?php")) || ( stristr($str, "'")) && !stristr($str, "\'")) )  ) {
-        my_msg("sql_field_eror");
+        // my_msg("sql_field_eror");
         exit();
     }
 	$str=str_replace("\\r\\n","",$str);
@@ -36,12 +36,12 @@ function db_test_param($str,$param="") {
 /* replace for my_query */
 
 function my_query($sql, $conn=null, $dont_debug=0) {
-    global $mysqli;
+    global $mysqli,$settings;
     if (!$dont_debug)print_debug($sql);
     $result = $mysqli->query($sql);
     if (!$result) {
         echo "SQL Error: ".$mysqli->error;
-        echo "<br />Query is: ".$sql;
+        if($settings['debug'])echo "<br />Query is: ".$sql;
         exit();
     }
     return $result;

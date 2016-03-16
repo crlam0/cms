@@ -24,6 +24,7 @@ if ($_POST["default_image_id"]) {
     echo (my_query($query, $conn, 1) ? "OK" : mysql_error() );
     exit;
 }
+
 function is_default_image($tmp, $row) {
     global $conn;
     list($default_image_id) = my_select_row("select default_image_id from gallery_list where id='{$row["gallery_id"]}'", false);
@@ -38,6 +39,52 @@ function show_img($tmp, $row) {
     } else {
 	return "Отсутствует";
     }
+}
+
+function reArrayFiles(&$file_post) {
+
+    $file_ary = array();
+    $file_count = count($file_post['name']);
+    $file_keys = array_keys($file_post);
+
+    for ($i=0; $i<$file_count; $i++) {
+        foreach ($file_keys as $key) {
+            $file_ary[$i][$key] = $file_post[$key][$i];
+        }
+    }
+
+    return $file_ary;
+}
+
+
+if ($input['add_multiple']){
+    if ($_FILES['files']) {
+        $file_ary = reArrayFiles($_FILES['files']);
+
+        foreach ($file_ary as $file) {
+            $input[form][date_add] = "now()";
+            $input[form][gallery_id] = $_SESSION["view_gallery"];
+            $query = "insert into gallery_image " . db_insert_fields($input[form]);
+            my_query($query, $conn);    
+            if ($file["size"] > 100) {
+                if (!in_array($file["type"], $validImageTypes)) {
+                    $content.=my_msg_to_str("error","","Неверный тип файла !");
+                } else {
+                    $image_id = $mysqli->insert_id;
+                    $f_info = pathinfo($file["name"]);
+                    $file_name = $f_info['basename'];
+                    $file_name = encodestring($file_name) . "." . $f_info["extension"];
+                    if (move_uploaded_image($file, $DIR . $settings["gallery_upload_path"] . $file_name, 1024)) {
+                        $query = "update gallery_image set file_name='$file_name',file_type='" . $file["type"] . "' where id='$image_id'";
+                        my_query($query, $conn);
+                        $content.=my_msg_to_str("", "", "Фотография успешно добавлена.");
+                    } else {
+                        $content.=my_msg_to_str("error","","Ошибка копирования файла !");
+                    }
+                }
+            }
+        }
+    }    
 }
 
 if ($input["del_image"]) {

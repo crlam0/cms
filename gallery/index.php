@@ -95,14 +95,14 @@ if (($input["view_image"]) || (isset($input["load"]))) {
     $tags[Header] = $row[title];
     $tags[gallery_id] = $_SESSION["view_gallery"];
 
-    list($title) = my_select_row("select title from gallery_list where id=" . $_SESSION["view_gallery"], 1);
+    list($title) = my_select_row("select title from gallery_list where id=" . $_SESSION["view_gallery"], true);
     $tags["back_url"]=$server["PHP_SELF"] . "?view_gallery1&id=".$_SESSION["view_gallery"];
     $tags[nav_str].="<a href=" . $tags["back_url"] ." class=nav_next>$title</a><span class=nav_next>$row[title]</span>";
 
-    list($prev_id) = my_select_row("select id from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " and date_add<'$tags[date_add]' order by date_add desc limit 1", true);
+    list($prev_id) = my_select_row("select id from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " and id<'$tags[id]' order by id desc limit 1", true);
     if ($prev_id)$tags[prev] = "<a href={$server['PHP_SELF']}?view_image=1&id=$prev_id class=button><< Предыдущая</a>";
 
-    list($next_id) = my_select_row("select id from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " and date_add>'$tags[date_add]' order by date_add asc limit 1", true);
+    list($next_id) = my_select_row("select id from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " and id>'$tags[id]' order by id asc limit 1", true);
     if ($next_id)$tags[next] = "<a href={$server['PHP_SELF']}?view_image=1&id=$next_id class=button>Следующая >></a>";
 
     if ($input["view_image"]){
@@ -133,8 +133,8 @@ if (isset($input["load"])) {
 
 
 if (($_SESSION['view_gallery'])||($input['page'])) {
-    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['gallery_images_per_page']}) from gallery_image where gallery_id=" . $_SESSION['view_gallery'], 0);
-    list($title) = my_select_row("select title from gallery_list where id=" . $_SESSION['view_gallery'], 0);
+    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['gallery_images_per_page']}) from gallery_image where gallery_id=" . $_SESSION['view_gallery'], false);
+    list($title) = my_select_row("select title from gallery_list where id=" . $_SESSION['view_gallery'], false);
     $tags[Header] = $title;
     $tags[nav_str].="<span class=nav_next>$title</span>";
     if ($PAGES > 1) {
@@ -149,7 +149,7 @@ if (($_SESSION['view_gallery'])||($input['page'])) {
         $tags[pages_list].="</center><br>";
     }
     $offset = $settings['gallery_images_per_page'] * ($_SESSION['gallery_page'] - 1);
-    $query = "SELECT * from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " order by date_add asc limit {$offset},{$settings['gallery_images_per_page']}";
+    $query = "SELECT * from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " order by id asc limit {$offset},{$settings['gallery_images_per_page']}";
     $result = my_query($query, $conn, false);
     if (!$result->num_rows) {
         $content = my_msg_to_str("list_empty", $tags, "");

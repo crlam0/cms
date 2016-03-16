@@ -35,7 +35,7 @@ function db_test_param($str,$param="") {
 
 /* replace for my_query */
 
-function my_query($sql, $conn=null, $dont_debug=0) {
+function my_query($sql, $conn=null, $dont_debug=false) {
     global $mysqli,$settings;
     if (!$dont_debug)print_debug($sql);
     $result = $mysqli->query($sql);
@@ -49,7 +49,7 @@ function my_query($sql, $conn=null, $dont_debug=0) {
 
 /* return first row */
 
-function my_select_row($sql, $dont_debug=0) {
+function my_select_row($sql, $dont_debug=false) {
     global $conn;
     $result = my_query($sql, $conn, $dont_debug);    
     if ($result->num_rows) {

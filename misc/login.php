@@ -32,9 +32,8 @@ if ($input['logon']) {
 if (!$_SESSION['UID']) {
     $tags['login'] = $input['login'];
     $content.=get_tpl_by_title('user_login_promt', $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 } else {
     $content = my_msg_to_str('user_already_logged_on');
-    echo get_tpl_by_title($part['tpl_name'], '', '', $content);
 }
-?>
+echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+

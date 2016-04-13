@@ -187,6 +187,31 @@ function show_month($month,$service_id) {
     }
 }
 
+function user_generate_salt() {
+    $salt = '';
+    for ($i = 0; $i < 22; $i++) {
+        do {
+            $chr = rand(48, 122);
+        } while (in_array($chr, range(58, 64)) or in_array($chr, range(91, 96)));
+
+        $salt .= chr($chr);
+    }
+    return $salt;
+}
+
+function user_get_salt($uid){
+    list($salt) =  my_select_row("select salt from users where id='{$uid}'");
+    return $salt;
+}
+
+function user_encrypt_password ($passwd,$salt) {
+    if (mb_strlen($salt) === 22) {
+        return crypt($passwd, '$2a$13$' . $salt);
+    } else {
+        return md5($passwd);
+    }
+}
+
 /*=========================================================================
 
 Menu functions

@@ -20,11 +20,12 @@ RewriteRule ^media/(.*)/player.swf$ media/player.swf [L]
 
 RewriteRule ^news/(.*)/$ news/index.php?uri=$1 [L]
 
+RewriteRule ^login/$ misc/login.php?uri=$1 [L]
+RewriteRule ^logout/$ misc/logout.php?uri=$1 [L]
+RewriteRule ^passwd_change/$ misc/passwd_change.php?uri=$1 [L]
 RewriteRule ^search/$ misc/search.php?uri=$1 [L]
 RewriteRule ^request/$ misc/request.php?uri=$1 [L]
 RewriteRule ^vote/$ misc/vote.php?uri=$1 [L]
-RewriteRule ^login/$ misc/login.php?uri=$1 [L]
-RewriteRule ^logout/$ misc/logout.php?uri=$1 [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

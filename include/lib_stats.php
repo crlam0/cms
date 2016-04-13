@@ -72,5 +72,6 @@ if (!$deny) {
 
     $query = "insert into visitor_log" . db_insert_fields($data);
     my_query($query, $conn, 1);
+    unset($data);
 }
 ?>

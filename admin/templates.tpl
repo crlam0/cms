@@ -1,3 +1,47 @@
+<!--[title]admin_last_comments[/title]-->
+<!--DESCRIPTION: Последние комментарии -->
+<!--[content]-->
+<h3>Последние комментарии</h3>
+<table width=800 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+        <td width=15%>Дата</td>
+        <td width=15%>Раздел</td>
+        <td width=40%>Сообщение</td>
+        <td width=20%>Автор</td>
+</tr>
+[%loop_begin%]
+        <tr class=content align=left>
+        <td><b>[%row(date_add)%]</b></td>
+        <td align="center">[%row(target_type)%]</td>
+        <td align=center>[%row(content)%]</td>
+        <td align=center>[%row(author)%]</td>
+        </tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
+
+
+<!--[title]admin_last_requests[/title]-->
+<!--DESCRIPTION: Последние заказы -->
+<!--[content]-->
+<h3>Последние заказы</h3>
+<table width=800 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+        <td width=20%>Дата</td>
+        <td width=40%>Контакты</td>
+        <td width=40%>Сообщение</td>
+</tr>
+[%loop_begin%]
+        <tr class=content align=left>
+        <td align="center"><b>[%row(date)%]</b></td>
+        <td>[%row(contact_info,nl2br)%]</td>
+        <td>[%row(item_list,nl2br)%][%row(message,nl2br)%]</td>
+        </tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
+
+
 <!--[title]article_list_edit_table[/title]-->
 <!--DESCRIPTION: Список разделов в статьях -->
 <!--[content]-->
@@ -1325,6 +1369,101 @@ $(document).ready(function(){
 <!--[/content]-->
 
 
+<!--[title]stats_addr_table[/title]-->
+<!--DESCRIPTION: Статистика по IP -->
+<!--[content]-->
+<center><h5>Статистика по IP</h5></center>
+<table width=400 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+<td width=70%>Хост</td>
+<td width=30%>Посещений</td>
+</tr>
+[%loop_begin%]
+        <tr class=content>
+        <td align=center><b>[%row(remote_addr)%]</b></td>
+        <td align=center>[%row(hits)%]</td>
+        </tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
+
+
+<!--[title]stats_day_table[/title]-->
+<!--DESCRIPTION: Статистика по дням -->
+<!--[content]-->
+<center><h3>Статистика по дням</h3></center>
+<table width=400 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+<td width=33%>День</td>
+<td width=33%>Посетителей</td>
+<td width=33%>Уникальных</td>
+</tr>
+[%loop_begin%]
+        <tr class=content>
+        <td align=center><b>[%row(day)%]</b></td>
+        <td align=center>[%row(hits)%]</td>
+        <td align=center>[%row(unique_hits)%]</td>
+        </tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
+
+
+<!--[title]stats_hosts_table[/title]-->
+<!--DESCRIPTION: Статистика по хостам -->
+<!--[content]-->
+<center><h5>Статистика по хостам</h5></center>
+<table width=400 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+<td width=70%>Хост</td>
+<td width=30%>Посещений</td>
+</tr>
+[%loop_begin%]
+        <tr class=content>
+        <td align=center><b>[%row(remote_host)%]</b></td>
+        <td align=center>[%row(hits)%]</td>
+        </tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
+
+
+<!--[title]stats_script_name_table[/title]-->
+<!--DESCRIPTION: Статистика по страницам -->
+<!--[content]-->
+<center><h5>Статистика по страницам</h5></center>
+<table width=400 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+<td width=70%>Страница</td>
+<td width=30%>Посещений</td>
+</tr>
+[%loop_begin%]
+        <tr class=content>
+        <td align=center><b>[%row(script_name)%]</b></td>
+        <td align=center>[%row(hits)%]</td>
+        </tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
+
+
+<!--[title]stats_user_agent_table[/title]-->
+<!--DESCRIPTION: Статистика по браузерам -->
+<!--[content]-->
+<center><h5>Статистика по браузерам</h5></center>
+<table width=400 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+<td width=70%>Браузер</td>
+<td width=30%>Посещений</td>
+</tr>
+[%loop_begin%]
+        <tr class=content>
+        <td align=center><b>[%row(user_agent)%]</b></td>
+        <td align=center>[%row(hits)%]</td>
+        </tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
 
 
 
@@ -1387,6 +1526,59 @@ $(document).ready(function(){
 </form>		
 <center><a href="[%PHP_SELF%]" class=button> << Назад</a></center>
 [%file(tpl_help.txt)%]
+<!--[/content]-->
+
+
+<!--[title]users_edit_table[/title]-->
+<!--DESCRIPTION: Таблица пользователей -->
+<!--[content]-->
+<center><form action=[%PHP_SELF%] method=get>
+<input type=hidden name=adding value=1>
+<input type=submit value="Добавить"></form>
+</center><br>
+<table width=500 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+	<td width=45%>Логин</td>
+	<td width=45%>Полное имя</td>
+	<td width=5% align=center>&nbsp;</td>
+	<td width=5% align=center>&nbsp;</td>
+</tr>
+[%loop_begin%]
+	<tr class=content align=left>
+	<td><b>[%row(login)%]</b></td>
+	<td>[%row(fullname)%]</td>
+	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border=0></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border=0 onClick="return test()"></a></td>
+	</tr>
+[%loop_end%]
+</table>
+<br>
+<center><form action=[%PHP_SELF%] method=get>
+<input type=hidden name=adding value=1>
+<input type=submit value="Добавить"></form>
+</center>
+<!--[/content]-->
+
+
+
+<!--[title]users_edit_form[/title]-->
+<!--DESCRIPTION: Редактирование пользователей -->
+<!--[content]-->
+<form action=[%PHP_SELF%] method=post>
+<input type=hidden name=id value=[%id%]>
+<input type=hidden name=[%type%] value=1>
+<table width=500 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+        <tr class=header><td class=header colspan=2>[%form_title%]</td></tr>
+        <tr class=content align=left><td>Имя:</td><td><input type=edit maxlength=16 name=form[login] value="[%login%]"></td></tr>
+        <tr class=content align=left><td>Новый пароль:</td><td><input type=password maxlength=16 name=form[passwd] value=""></td></tr>
+        <tr class=content align=left><td>Полное имя:</td><td><input type=edit maxlength=254 name=form[fullname] value="[%fullname%]"></td></tr>
+        <tr class=content align=left><td>E-Mail:</td><td><input type=edit maxlength=32 name=form[email] value="[%email%]"></td></tr>
+        <tr class=content align=left><td>Флаги:</td><td>[%flags%]</td></tr>
+        <tr class=content align=left><td>Дата регистрации:</td><td>[%regdate%]</td></tr>
+	<tr class=header align=left><td align=center colspan=2><input type=submit value="  Сохранить  "></td></tr>
+</table>
+</form>
+<center><a href="[%PHP_SELF%]" class=button> << Назад</a></center>
 <!--[/content]-->
 
 

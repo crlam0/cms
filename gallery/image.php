@@ -1,61 +1,57 @@
 <?php
 
-//exit();
-include "../include/common.php";
+include '../include/common.php';
 
-list($file_name, $file_type) = my_select_row("select file_name,file_type from gallery_image where id='$input[id]'", true);
-$file_name = $DIR . $settings["gallery_upload_path"] . $file_name;
-$gallery_fix_size= ( $DIR.$settings["gallery_fix_size"]) && ($input["preview"]);
+list($file_name, $file_type) = my_select_row("select file_name,file_type from gallery_images where id='{$input['id']}'", true);
+$file_name = $DIR . $settings['gallery_upload_path'] . $file_name;
+$gallery_fix_size= ( $DIR.$settings['gallery_fix_size']) && ($input["preview"]);
 
 if (!is_file($file_name)) {
     exit();
 }
 
-if (!$input["preview"]) {
-    my_query("update gallery_image set view_count=view_count+1 where id='$input[id]'", $conn, true);
+if (!$input['preview']) {
+    my_query("update gallery_images set view_count=view_count+1 where id='{$input['id']}'", $conn, true);
 }
 
-if(!$input['windowHeight']){
-    $input['windowHeight']=800;
+if(!$input['clientHeight']){
+    $input['clientHeight']=800;
 }
 
-if (($file_type == "image/jpeg") || ($file_type == "image/pjpeg")) {
+unset($src);
+if (($file_type == 'image/jpeg') || ($file_type == 'image/pjpeg')) {
     $src = imagecreatefromjpeg($file_name);
+} elseif (($file_type == 'image/png')||($file_type == 'image/x-png')) {
+    $src = imagecreatefrompng($file_name);
+}
+if ($src) {    
     list($width_src, $height_src) = getimagesize($file_name);
-    if ($input["preview"]) {
-        $max_width = $settings["gallery_max_width_preview"];
+    if ($input['preview']) {
+        $max_width = $settings['gallery_max_width_preview'];
     } else {
-        $max_width = $settings["gallery_max_width"];
+        $max_width = $settings['gallery_max_width'];
     }
-    if ($input["icon"]) {
+    if ($input['icon']) {
         $gallery_fix_size=true;
-        $max_width = $settings["gallery_icon_width"];
+        $max_width = $settings['gallery_icon_width'];
     }
     if ($max_width && (($width_src > $max_width) || ($height_src > $max_width))) {
         $width = $max_width;
         $height = $max_width;
-        if ($width_src < $height_src) {
-            if($gallery_fix_size){
-                $width = $max_width;
-                $height = $max_width;
-            } else {
-                if($height>$input['windowHeight']-210){
-                    $height=$input['windowHeight']-210;
+        if(!$gallery_fix_size) { 
+            if ($width_src < $height_src) {
+                if($height>$input['clientHeight']-210){
+                    $height=$input['clientHeight']-210;
                 }
                 $width = ($height / $height_src) * $width_src;
-            }
-        } else {
-            if($gallery_fix_size){
-                $height = $max_width;
-                $width = $max_width;
             } else {
-                $height = ($width / $width_src) * $height_src;
-                if($height>$input['windowHeight']-210){
-                    $height=$input['windowHeight']-210;
+                if($height>$input['clientHeight']-210){
+                    $height=$input['clientHeight']-210;
                     $width = ($height / $height_src) * $width_src;
                 }
+                $height = ($width / $width_src) * $height_src;
             }
-        }
+        }    
 	// echo "$width_src $height_src $width $height $height_full";exit();
         $dst = imagecreatetruecolor($width, $height);
 
@@ -85,6 +81,5 @@ if (($file_type == "image/jpeg") || ($file_type == "image/pjpeg")) {
     }
 }
 $img = file_get_contents($file_name);
-Header("Content-type: $file_type");
+Header("Content-type: {$file_type}");
 print $img;
-?>

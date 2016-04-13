@@ -80,7 +80,7 @@ $config['unallowed_dirs']= array('_thumbs','.CDN_ACCESS_LOGS', 'cloudservers');
  *	for Vhost or outside files folder
  */
 // $config['doc_root'] = '/home/user/userfiles'; // No end slash
-// $config['doc_root'] = $server['DOCUMENT_ROOT']; // No end slash
+// $config['doc_root'] = $_SERVER['DOCUMENT_ROOT']; // No end slash
 
 
 /**

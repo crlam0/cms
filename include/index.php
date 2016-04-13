@@ -1,4 +1,4 @@
 <?php
-include "../inc/global.php";
+include "global.php";
 header("Location: $BASE_HREF");
 ?>

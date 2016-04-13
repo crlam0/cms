@@ -73,7 +73,7 @@ function show_list_img($tmp, $row) {
     }
  */
     list($image_id) = my_select_row("select default_image_id from gallery_list where id='{$row["id"]}'", false);
-    $row_image = my_select_row("select * from gallery_image where id='{$image_id}'", false);
+    $row_image = my_select_row("select * from gallery_images where id='{$image_id}'", false);
     if (is_file($DIR . $settings["gallery_upload_path"] . $row_image["file_name"])) {
         $content="
                 <img src=\"" . $SUBDIR . "gallery/image.php?preview=1&id={$row_image["id"]}\" border=0 alt=\"$row[title]\">
@@ -85,11 +85,11 @@ function show_list_img($tmp, $row) {
 }
 
 if (($input["view_image"]) && (!$_SESSION["view_gallery"])) {
-    list($_SESSION["view_gallery"]) = my_select_row("select gallery_id from gallery_image where id='$input[id]'");
+    list($_SESSION["view_gallery"]) = my_select_row("select gallery_id from gallery_images where id='$input[id]'");
 }
 
 if (($input["view_image"]) || (isset($input["load"]))) {
-    $query = "SELECT * from gallery_image where id='$input[id]'";
+    $query = "SELECT * from gallery_images where id='$input[id]'";
     $row = my_select_row($query, true);
     $tags = array_merge($row, $tags);
     $tags[Header] = $row[title];
@@ -99,10 +99,10 @@ if (($input["view_image"]) || (isset($input["load"]))) {
     $tags["back_url"]=$server["PHP_SELF"] . "?view_gallery1&id=".$_SESSION["view_gallery"];
     $tags[nav_str].="<a href=" . $tags["back_url"] ." class=nav_next>$title</a><span class=nav_next>$row[title]</span>";
 
-    list($prev_id) = my_select_row("select id from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " and id<'$tags[id]' order by id desc limit 1", true);
+    list($prev_id) = my_select_row("select id from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " and id<'$tags[id]' order by id desc limit 1", true);
     if ($prev_id)$tags[prev] = "<a href={$server['PHP_SELF']}?view_image=1&id=$prev_id class=button><< Предыдущая</a>";
 
-    list($next_id) = my_select_row("select id from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " and id>'$tags[id]' order by id asc limit 1", true);
+    list($next_id) = my_select_row("select id from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " and id>'$tags[id]' order by id asc limit 1", true);
     if ($next_id)$tags[next] = "<a href={$server['PHP_SELF']}?view_image=1&id=$next_id class=button>Следующая >></a>";
 
     if ($input["view_image"]){
@@ -133,7 +133,7 @@ if (isset($input["load"])) {
 
 
 if (($_SESSION['view_gallery'])||($input['page'])) {
-    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['gallery_images_per_page']}) from gallery_image where gallery_id=" . $_SESSION['view_gallery'], false);
+    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['gallery_images_per_page']}) from gallery_images where gallery_id=" . $_SESSION['view_gallery'], false);
     list($title) = my_select_row("select title from gallery_list where id=" . $_SESSION['view_gallery'], false);
     $tags[Header] = $title;
     $tags[nav_str].="<span class=nav_next>$title</span>";
@@ -149,7 +149,7 @@ if (($_SESSION['view_gallery'])||($input['page'])) {
         $tags[pages_list].="</center><br>";
     }
     $offset = $settings['gallery_images_per_page'] * ($_SESSION['gallery_page'] - 1);
-    $query = "SELECT * from gallery_image where gallery_id=" . $_SESSION["view_gallery"] . " order by id asc limit {$offset},{$settings['gallery_images_per_page']}";
+    $query = "SELECT * from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " order by id asc limit {$offset},{$settings['gallery_images_per_page']}";
     $result = my_query($query, $conn, false);
     if (!$result->num_rows) {
         $content = my_msg_to_str("list_empty", $tags, "");
@@ -168,9 +168,22 @@ if (($_SESSION['view_gallery'])||($input['page'])) {
     exit();
 }
 
-$query = "SELECT gallery_list.*,count(gallery_image.id) as images,max(gallery_image.date_add) as last_images_date_add
+function get_icons($tmp,$input_row){
+    global $DIR, $settings, $SUBDIR, $conn;
+    $content="";
+    $query="select * from gallery_images where gallery_id='{$input_row['id']}' limit 6";
+    $result = my_query($query, $conn, true);
+    while($row=  $result->fetch_array()){
+        if (is_file($DIR . $settings['gallery_upload_path'] . $row['file_name'])) {
+            $content.='<img src="' . $SUBDIR . 'gallery/image.php?icon=1&id='.$row['id'].'" class="list_icon" border="0" alt="'.$row['title'].'" />';
+        }
+    }
+    return $content;
+}
+
+$query = "SELECT gallery_list.*,count(gallery_images.id) as images,max(gallery_images.date_add) as last_images_date_add
 from gallery_list
-left join gallery_image on (gallery_image.gallery_id=gallery_list.id)
+left join gallery_images on (gallery_images.gallery_id=gallery_list.id)
 where gallery_list.active='Y'
 group by gallery_list.id order by last_images_date_add desc,gallery_list.date_add desc";
 $result = my_query($query, $conn, true);

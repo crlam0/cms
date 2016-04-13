@@ -72,7 +72,7 @@ $tags['nav_str']="<a href={$SUBDIR} class=nav_home>Главная</a>";
 
 $server['PHP_SELF_DIR']=dirname($server['PHP_SELF']).'/';
 
-$css_array=split(';',$settings['css_list'].$tags['Add_CSS']);
+$css_array=explode(';',$settings['css_list'].$tags['Add_CSS']);
 foreach ($css_array as $css){
     $css='css/'.$css.'.css';
     if(file_exists($DIR.$css))

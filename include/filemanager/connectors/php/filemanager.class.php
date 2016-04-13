@@ -36,7 +36,7 @@ class Filemanager {
     if (isset($this->config['doc_root'])) {
       $this->doc_root = $this->config['doc_root'];
     } else {
-      $this->doc_root = $server['DOCUMENT_ROOT'];
+      $this->doc_root = $_SERVER['DOCUMENT_ROOT'];
     }
 
     $this->setParams();
@@ -319,7 +319,7 @@ class Filemanager {
   }
 
   private function setParams() {
-    $tmp = (isset($server['HTTP_REFERER']) ? $server['HTTP_REFERER'] : '/');
+    $tmp = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/');
     $tmp = explode('?',$tmp);
     $params = array();
     if(isset($tmp[1]) && $tmp[1]!='') {

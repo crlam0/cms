@@ -3,8 +3,8 @@
 $tags[Header] = "Каталог";
 include "../include/common.php";
 
-if (isset($input["part_id"])) {
-    $_SESSION["PART_ID"] = $input["part_id"];
+if (isset($_GET["part_id"])) {
+    $_SESSION["PART_ID"] = $_GET["part_id"];
 }
 
 list($part_title) = my_select_row("select title from cat_part where id='{$_SESSION["PART_ID"]}'", 1);
@@ -22,103 +22,94 @@ function show_img($tmp, $row) {
     }
 }
 
-if ($input["del_image"]) {
-    list($fname) = my_select_row("select fname from cat_item_image where id=" . $input["id"], 1);
-    $result = @unlink($IMG_PATH . $fname);
+if ($_POST["del_image"]) {
+    list($fname) = my_select_row("select fname from cat_item_images where id=" . $_POST["id"], 1);
+    if(is_file($IMG_PATH . $fname)){
+        $result = @unlink($IMG_PATH . $fname);
+    }else{
+        $result=true;
+    }
     if (!$result) {
-        echo "Error delete file !";
+        echo "Error delete file {$IMG_PATH}{$fname}!";
     } else {
-        $query = "delete from cat_item_image where id=" . $input["id"];
+        $query = "delete from cat_item_images where id=" . $_POST["id"];
         echo (my_query($query, $conn, 1) ? "OK" : mysql_error() );
     }
     exit;
 }
 
-if ($input["default_img"]) {
-    $query = "update cat_item set default_img='" . $input["default_img"] . "' where id=" . $input["item_id"];
+if ($_POST["default_img"]) {
+    $query = "update cat_item set default_img='" . $_POST["default_img"] . "' where id=" . $_POST["item_id"];
     echo (my_query($query, $conn, 1) ? "OK" : mysql_error() );
     exit;
 }
 
-if ($input["del"]) {
-    $query = "select * from cat_item_image where item_id=" . $input["id"];
+if ($_GET["del"]) {
+    $query = "select * from cat_item_images where item_id=" . $_GET["id"];
     $result = my_query($query, $conn);
     while ($row = $result->fetch_array()) {
-        if (!unlink($IMG_PATH . $row[fname]))print_err("Ошибка удаления файла");
+        if (!unlink($IMG_PATH . $row[fname])
+
+            )print_err("Ошибка удаления файла");
     }
-    $query = "delete from cat_item_image where item_id=" . $input["id"];
+    $query = "delete from cat_item_images where item_id=" . $_GET["id"];
     my_query($query, $conn);
-    $query = "delete from cat_item where id=" . $input["id"];
+    $query = "delete from cat_item where id=" . $_GET["id"];
     my_query($query, $conn);
 }
-if ($input["add_image"]) {
+if ($_POST["add_image"]) {
     if ($_FILES["img_file"]["size"]) {
-        $query = "insert into cat_item_image(item_id,descr) values('{$input["id"]}','{$input["descr"]}')";
+        $query = "insert into cat_item_images(item_id,descr) values('{$_POST["id"]}','{$_POST["descr"]}')";
         my_query($query, $conn);
         $image_id = $mysqli->insert_id;
         $f_info = pathinfo($_FILES["img_file"]["name"]);
-        $img = $input["id"] . "_" . $image_id . "." . $f_info["extension"];
+        $img = $_POST["id"] . "_" . $image_id . "." . $f_info["extension"];
         if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings["catalog_item_img_max_width"])) {
-            $query = "update cat_item_image set fname='$img' where id='$image_id'";
+            $query = "update cat_item_images set fname='$img' where id='$image_id'";
             my_query($query, $conn);
-            $query = "select id from cat_item_image where item_id='{$input["id"]}'";
+            $query = "select id from cat_item_images where item_id='{$_POST["id"]}'";
             $result = my_query($query, $conn);
             if ($result->num_rows==1) {
-                $query = "update cat_item set default_img='$image_id' where id='{$input["id"]}'";
+                $query = "update cat_item set default_img='$image_id' where id='{$_POST["id"]}'";
                 my_query($query, $conn);
             }
         } else {
-            $query = "delete from cat_item_image where id='$image_id'";
+            $query = "delete from cat_item_images where id='$image_id'";
             my_query($query, $conn);
             print_err("Ошибка копирования файла !");
         }
-        $input["edit"]=1;
-        $input["id"]=$input["id"];
+        $_GET["edit"]=1;
+        $_GET["id"]=$_POST["id"];
     }
 }
 
-if ($input["added"]) {
+if ($_POST["added"]) {
     if(!strlen($input["form"]["num"])){
         list($input["form"]["num"])=my_select_row("select max(num) from cat_item where part_id='{$_SESSION["PART_ID"]}'",0);
         $input["form"]["num"]++;
     }
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $num_rows=my_select_row("select id from cat_item where seo_alias='{$input[form][seo_alias]}'",1);
-    if($num_rows>0){
-        $seo_alias_duplicate=1;
-    }
     $input[form][part_id] = $_SESSION["PART_ID"];
-    if (!isset($input[form][special_offer]))$input[form][special_offer] = 0;
     $query = "insert into cat_item " . db_insert_fields($input[form]);
     my_query($query, $conn);
-    $insert_id=$mysqli->insert_id;
-    if($seo_alias_duplicate){
-        $input[form][seo_alias].='_'.$insert_id;
-        my_query("update cat_item set seo_alias='{$input[form][seo_alias]}' where id='{$insert_id}'", $conn);
-    }
     print_ok("Наменование добавлено");
-    $input["id"]=$insert_id;
-    $input["edit"]=1;
+    $_GET["id"]=$mysqli->insert_id;
+    $_GET["edit"]=1;
 }
 
-if ($input["edited"]) {
+if ($_POST["edited"]) {
     $input[form][part_id] = $_SESSION["PART_ID"];
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-//    $num_rows=my_select_row("select id from cat_item where seo_alias='{$input[form][seo_alias]}'",0);
-//    if($num_rows>1){
-//        $input[form][seo_alias].='_'.$input[id];
-//    }
-    if (!isset($input[form][special_offer]))$input[form][special_offer] = 0;
     $query = "update cat_item set " . db_update_fields($input[form]) . " where id='$input[id]'";
     my_query($query, $conn);
     print_ok("Изменения сохранены");
-//    $input["id"]=$input[id];
-    $input["edit"]=1;
+    $_GET["id"]=$input[id];
+    $_GET["edit"]=1;
 }
 
 function get_image_list($item_id) {
-    global $conn, $IMG_URL, $server;
-    $query = "select cat_item_image.*,default_img,cat_item.id as item_id from cat_item_image left join cat_item on (cat_item.id=item_id) where item_id='$item_id'";
+    global $conn, $IMG_URL, $_SERVER;
+    $query = "select cat_item_images.*,default_img,cat_item.id as item_id from cat_item_images left join cat_item on (cat_item.id=item_id) where item_id='$item_id'";
     $result = my_query($query, $conn);
 //	if(!$result->num_rows)return iconv('windows-1251', 'UTF-8',"Изображения отсутствуют");
     $content = "<table width=550 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
@@ -146,9 +137,9 @@ if ($input["get_image_list"]) {
     exit;
 }
 
-if (($input["edit"]) || ($input["add"])) {
-    if ($input["edit"]) {
-        $query = "select * from cat_item where id='{$input["id"]}'";
+if (($_GET["edit"]) || ($_GET["add"])) {
+    if ($_GET["edit"]) {
+        $query = "select * from cat_item where id=" . $_GET["id"];
         $result = my_query($query, $conn);
         $tags=array_merge($tags,$result->fetch_array());
         $tags[form_title] = "Редактирование";
@@ -162,26 +153,29 @@ if (($input["edit"]) || ($input["add"])) {
         $tags[price] = "";
     }
     $row_part = my_select_row("select * from cat_part where id=" . $_SESSION["PART_ID"], 1);
-    if ($tags[special_offer])$tags[special_offer] = " checked";
 
     $tags[price_inputs] = "
 	<tr class=content align=left><td>$row_part[price1_title]</td><td><input type=edit maxlength=45 size=64 name=form[price] value=\"$tags[price]\"></td></tr>";
-    if ($row_part[price_cnt] >= 2)$tags[price_inputs].="<tr class=content align=left><td>$row_part[price2_title]</td><td><input type=edit maxlength=45 size=64 name=form[price2] value=\"$tags[price2]\"></td></tr>";
-    if ($row_part[price_cnt] >= 3)$tags[price_inputs].="<tr class=content align=left><td>$row_part[price3_title]</td><td><input type=edit maxlength=45 size=64 name=form[price3] value=\"$tags[price3]\"></td></tr>";
+    if ($row_part[price_cnt] >= 2
 
-//	$tags[images]=get_image_list($input["id"]);
+        )$tags[price_inputs].="<tr class=content align=left><td>$row_part[price2_title]</td><td><input type=edit maxlength=45 size=64 name=form[price2] value=\"$tags[price2]\"></td></tr>";
+    if ($row_part[price_cnt] >= 3
 
-    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $JQUERY_FORM_INC . $EDITOR_MINI_INC;
+        )$tags[price_inputs].="<tr class=content align=left><td>$row_part[price3_title]</td><td><input type=edit maxlength=45 size=64 name=form[price3] value=\"$tags[price3]\"></td></tr>";
+
+//	$tags[images]=get_image_list($_GET["id"]);
+
+    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $JQUERY_FORM_INC . $EDITOR_INC;
     $content = get_tpl_by_title("cat_item_form", $tags);
-    if($input["edit"]){
-        $content .= get_tpl_by_title("cat_item_image_form", $tags);
+    if($_GET["edit"]){
+        $content .= get_tpl_by_title("cat_item_images_form", $tags);
     }
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
     exit;
 };
 
 $query = "SELECT cat_item.*,fname from cat_item
-left join cat_item_image on (cat_item_image.id=default_img)
+left join cat_item_images on (cat_item_images.id=default_img)
 where part_id='{$_SESSION["PART_ID"]}' order by num,cat_item.id,title asc";
 $result = my_query($query, $conn);
 

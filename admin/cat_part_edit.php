@@ -106,7 +106,7 @@ if (($_GET["edit"]) || ($_GET["adding"])) {
 	$tags[type] = "added";
 	$tags[Header] = "Добавление раздела";
     }
-    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
+    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
     $query = "select * from cat_part where id<>'$tags[id]' order by prev_id,title asc";
     $result = my_query($query, $conn, 1);
     while ($row = $result->fetch_array()) {
@@ -114,7 +114,7 @@ if (($_GET["edit"]) || ($_GET["adding"])) {
     }
 
     $tags[img_tag] = (is_file($IMG_PATH . $tags[img]) ? "<img src=../$settings[catalog_part_img_path]$tags[img] class=margin><br>" : "[ Отсутствует ]<br>");
-    $tags[del_button] = (is_file($IMG_PATH . $tags[img]) ? "<a href=" . $server["PHP_SELF"] . "?del_img=1&id=$tags[id]>Удалить</a><br>" : "");
+    $tags[del_button] = (is_file($IMG_PATH . $tags[img]) ? "<a href=" . $_SERVER["PHP_SELF"] . "?del_img=1&id=$tags[id]>Удалить</a><br>" : "");
 
     $content = get_tpl_by_title("cat_part_form", $tags);
     echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
@@ -134,8 +134,8 @@ function sub_part($prev_id, $deep) {
 			<td>$spaces<a href=cat_item_edit.php?part_id=$row[id]>$row[num] $row[title]</a></td>
 			<td>$row[seo_alias]</a></td>
 			<td align=center>" . (is_file($IMG_PATH . $row[img]) ? "<img src=$IMG_URL$row[img] border=0>" : "&nbsp;") . "</td>
-			<td width=16><a href=" . $server["PHP_SELF"] . "?edit=1&id=$row[id]><img src=\"../images/open.gif\" width=16 height=16 alt=\"Редактировать\" border=0></a></td>
-			<td width=16><a href=" . $server["PHP_SELF"] . "?del=1&id=$row[id]><img src=\"../images/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
+			<td width=16><a href=" . $_SERVER["PHP_SELF"] . "?edit=1&id=$row[id]><img src=\"../images/open.gif\" width=16 height=16 alt=\"Редактировать\" border=0></a></td>
+			<td width=16><a href=" . $_SERVER["PHP_SELF"] . "?del=1&id=$row[id]><img src=\"../images/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
 		</tr>
 		";
 	sub_part($row[id], $deep + 1);

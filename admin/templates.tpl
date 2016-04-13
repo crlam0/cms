@@ -1,70 +1,3 @@
-<!--[title]admin_last_comments[/title]-->
-<!--DESCRIPTION: Последние комментарии -->
-<!--[content]-->
-<h3>Последние комментарии</h3>
-<table width=800 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
-<tr class=header align=center>
-	<td width=15%>Дата</td>
-        <td width=15%>Раздел</td>
-	<td width=40%>Сообщение</td>
-	<td width=20%>Автор</td>
-</tr>
-[%loop_begin%]
-	<tr class=content align=left>
-        <td><b>[%row(date_add)%]</b></td>
-	<td align="center">[%row(target_type)%]</td>
-	<td align=center>[%row(content)%]</td>
-	<td align=center>[%row(author)%]</td>
-	</tr>
-[%loop_end%]
-</table>
-<!--[/content]-->
-
-
-<!--[title]admin_last_requests[/title]-->
-<!--DESCRIPTION: Последние заказы -->
-<!--[content]-->
-<h3>Последние заказы</h3>
-<table width=800 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
-<tr class=header align=center>
-	<td width=20%>Дата</td>
-	<td width=40%>Контакты</td>
-	<td width=40%>Сообщение</td>
-</tr>
-[%loop_begin%]
-	<tr class=content align=left>
-        <td align="center"><b>[%row(date)%]</b></td>
-	<td>[%row(contact_info,nl2br)%]</td>
-	<td>[%row(item_list,nl2br)%][%row(message,nl2br)%]</td>
-	</tr>
-[%loop_end%]
-</table>
-<!--[/content]-->
-
-
-<!--[title]stats_last_visitors_table[/title]-->
-<!--DESCRIPTION: Последние поситители -->
-<!--[content]-->
-<center><h3>Последние 20 уникальных посетителей</h3></center>
-<table width=800 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
-<tr class=header align=center>
-<td width=15%>Дата</td>
-<td width=15%>Хост</td>
-<td width=55%>Браузер</td>
-<td width=15%>Страница</td>
-</tr>
-[%loop_begin%]
-        <tr class=content>
-        <td align=center><b>[%row(date)%]</b></td>
-        <td align=center>[%row(remote_host)%]</td>
-        <td align=center>[%row(user_agent)%]</td>
-        <td align=center>[%row(request_uri)%]</td>
-        </tr>
-[%loop_end%]
-</table>
-<!--[/content]-->
-
-
 <!--[title]article_list_edit_table[/title]-->
 <!--DESCRIPTION: Список разделов в статьях -->
 <!--[content]-->
@@ -234,17 +167,13 @@ $(document).ready(function(){
 <!--[title]blog_post_edit_form[/title]-->
 <!--DESCRIPTION: Форма редактирования поста в блоге -->
 <!--[content]-->
-<form action=[%PHP_SELF%] method=post enctype="multipart/form-data">
+<form action=[%PHP_SELF%] method=post>
 <input type=hidden name=id value=[%id%]>
 <input type=hidden name=[%type%] value=1>
 <table align=center width=500 border=0 cellspacing=1 cellpadding=1 class=admin>
 	<tr class=header><td colspan=2>[%form_title%]</td></tr>
 	<tr class=content align=left><td>Название:</td><td><input type=edit maxlength=255 size=64 name=form[title] value="[%title%]"></td></tr>
 	<tr class=content align=left><td>Алиас:</td><td><input type=edit maxlength=255 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
-	<tr class=content>
-		<td>Картинка:</td>
-		<td align=center>[%img_tag%][%del_button%]<br>Загрузить: <input name=img_file type=file><br></td>
-	</tr>
  	<tr class=content align=left><td>Ссылается на:</td><td>[%target_type_select%]</td></tr>
         <tr class=content align=left id="target_select"></tr>
 	<tr class=content><td align=left colspan=2>
@@ -315,7 +244,7 @@ $(document).ready(function(){
 	<tr class=content align=left><td>Алиас:</td><td><input type=edit maxlength=45 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
 	<tr class=header><td colspan=2>Описание :</td></tr>
 	<tr class=content><td align=left colspan=2>
-		<textarea rows=15 cols=100 maxlength=64000 name=form[descr]>[%descr%]</textarea>
+		<textarea rows=15 cols=100 id=editor maxlength=64000 name=form[descr]>[%descr%]</textarea>
 	</td></tr>
 	<tr class=header><td colspan=2>Прочее :</td></tr>
 	<tr class=content align=left><td>Находится в разделе:</td><td>
@@ -344,38 +273,38 @@ $(document).ready(function(){
 <!--DESCRIPTION: Список товаров в каталоге -->
 <!--[content]-->
 <center><form action=[%PHP_SELF%] method=get>
-        <input type=hidden name=add value=1>
-        <input type=submit value="Добавить">
-    </form></center>
+<input type=hidden name=add value=1>
+<input type=submit value="Добавить">
+</form></center>
 <br>
 <table width=900 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
-    <tr class=header align=center>
-        <td width=5%>Номер</td>
-        <td width=20%>Название</td>
-        <td width=25%>Описание</td>
-        <td width=10%>Адрес</td>
-        <td width=10%>Цена по наличному расчету</td>
-        <td width=10%>Изображение</td>
-        <td width=5%>&nbsp;</td>
-        <td width=5%>&nbsp;</td>
-    </tr>
-    [%loop_begin%]
-    <tr class=content>
-        <td align=center>[%row(num)%]</td>
-        <td align=left><b>[%row(title)%]</b></td>
-        <td align=left>[%row(descr)%]</td>
-        <td align=center>[%row(address)%]</td>
-        <td align=center>[%row(price)%]</td>
-        <td align=center>[%func(show_img)%]</td>
-        <td><a href=[%PHP_SELF%]?edit=1&id=[%row(id)%]><img src="../images/open.gif" alt="Редактировать" border=0></a></td>
-        <td><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border=0 onClick="return test()"></a></td>
-    </tr>
-    [%loop_end%]
+<tr class=header align=center>
+	<td width=5%>Номер</td>
+	<td width=20%>Название</td>
+	<td width=25%>Описание</td>
+	<td width=10%>Цена  с НДС по безналичному расчету руб/час</td>
+	<td width=10%>Минимальное время заказа</td>
+	<td width=10%>Изображение</td>
+	<td width=5%>&nbsp;</td>
+	<td width=5%>&nbsp;</td>
+</tr>
+[%loop_begin%]
+	<tr class=content>
+	<td align=center>[%row(num)%]</td>
+	<td align=left><b>[%row(title)%]</b></td>
+	<td align=left>[%row(descr)%]</td>
+	<td align=center>[%row(price)%]</td>
+	<td align=center>[%row(minimum_time)%]</td>
+	<td align=center>[%func(show_img)%]</td>
+	<td><a href=[%PHP_SELF%]?edit=1&id=[%row(id)%]><img src="../images/open.gif" alt="Редактировать" border=0></a></td>
+	<td><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border=0 onClick="return test()"></a></td>
+	</tr>
+[%loop_end%]
 </table>
 <center><form action=[%PHP_SELF%] method=get>
-        <input type=hidden name=add value=1>
-        <input type=submit value="Добавить">
-    </form></center>
+<input type=hidden name=add value=1>
+<input type=submit value="Добавить">
+</form></center>
 <center><a href=cat_part_edit.php class=button> << Назад</a></center>
 <!--[/content]-->
 
@@ -385,27 +314,29 @@ $(document).ready(function(){
 <!--DESCRIPTION: форма редактирования наименований -->
 <!--[content]-->
 <form action=[%PHP_SELF%] method=post>
-    <input type=hidden name=id value=[%id%]>
-    <input type=hidden name=MAX_FILE_SIZE value=3000000>
-    <input type=hidden name=[%type%] value=1>
-    <table width=500 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
-        <tr class=header><td colspan=2>[%form_title%]</td></tr>
-        <tr class=content align=left><td>Название:</td><td><input type=edit maxlength=255 size=64 name=form[title] value="[%title%]"></td></tr>
-        <tr class=content align=left><td>Позиция:</td><td><input type=edit maxlength=45 size=64 name=form[num] value="[%num%]"></td></tr>
-        <tr class=content align=left><td>Специальное предложение:</td><td><input type=checkbox maxlength=255 size=64 name=form[special_offer] value="1" [%special_offer%]></td></tr>
-        <tr class=content align=left><td>Адрес:</td><td><input type=edit maxlength=45 size=64 name=form[address] value="[%address%]"></td></tr>
-        <tr class=content align=left><td>Алиас:</td><td><input type=edit maxlength=45 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
-        [%price_inputs%]
-        <tr class=header><td colspan=2>Краткое описание</td></tr>
-        <tr class=content><td align=center colspan=2>
-                <textarea name=form[descr] rows=7 cols=90 maxlength=64000>[%descr%]</textarea>
-            </td></tr>
-        <tr class=header><td colspan=2>Полное описание</td></tr>
-        <tr class=content><td align=center colspan=2>
-                <textarea id=editor name=form[descr_full] rows=3 cols=90 maxlength=64000>[%descr_full%]</textarea>
-            </td></tr>
-        <tr class=header align=left><td align=center colspan=2><input type=submit value="  Сохранить  "></td></tr>
-    </table>
+<input type=hidden name=id value=[%id%]>
+<input type=hidden name=MAX_FILE_SIZE value=3000000>
+<input type=hidden name=[%type%] value=1>
+<table width=900 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+	<tr class=header><td colspan=2>[%form_title%]</td></tr>
+	<tr class=content align=left><td>Название:</td><td><input type=edit maxlength=255 size=64 name=form[title] value="[%title%]"></td></tr>
+	<tr class=content align=left><td>Позиция:</td><td><input type=edit maxlength=45 size=64 name=form[num] value="[%num%]"></td></tr>
+	<tr class=content align=left><td>Алиас:</td><td><input type=edit maxlength=45 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
+	[%price_inputs%]
+	<tr class=content align=left><td>Минимальное время заказа:</td><td><input type=edit maxlength=45 size=64 name=form[minimum_time] value="[%minimum_time%]"></td></tr>
+	<tr class=header><td colspan=2>Краткое описание</td></tr>
+	<tr class=content><td align=center colspan=2>
+		<textarea name=form[descr] rows=7 cols=90 maxlength=64000>[%descr%]</textarea>
+	</td></tr>
+	<tr class=content><td align=center colspan=2>
+                <center><a href=[%PHP_SELF%] class=button> << Назад</a></center>
+	</td></tr>
+	<tr class=header><td colspan=2>Полное описание</td></tr>
+	<tr class=content><td align=center colspan=2>
+		<textarea id=editor name=form[descr_full] rows=7 cols=90 maxlength=64000>[%descr_full%]</textarea>
+	</td></tr>
+	<tr class=header align=left><td align=center colspan=2><input type=submit value="  Сохранить  "></td></tr>
+</table>
 </form>
 <center><a href=[%PHP_SELF%] class=button> << Назад</a></center>
 
@@ -465,11 +396,10 @@ $(document).ready(function(){
             target: '#image_list',
             success: update_image_list
         }; 
-        $('#upload_form').submit(function(){
-                $(this).ajaxSubmit(options);
-                // update_image_list();
-                return false;
-        });
+//        $('#upload_form').submit(function(){
+//                $(this).ajaxSubmit(options);
+//                return false;
+//        });
 });
 </script>
 <!--[/content]-->
@@ -754,7 +684,8 @@ $(document).ready(function(){
 <table width=700 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
 <tr class=header align=center>
 	<td width=15%>Дата</td>
-	<td width=35%>Название</td>
+        <td width=15%>По умолчанию</td>
+	<td width=20%>Название</td>
 	<td width=40%>Изображение</td>
 	<td width=5% align=center>&nbsp;</td>
 	<td width=5% align=center>&nbsp;</td>
@@ -762,6 +693,7 @@ $(document).ready(function(){
 [%loop_begin%]
 	<tr class=content align=left>
 	<td align="center">[%row(date_add)%]</td>
+	<td align=center><input type=radio name=ch_default class=default_image image_id=[%row(id)%][%func(is_default_image)%]></td>
 	<td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
 	<td align=center>[%func(show_img)%]</td>
 	<td width=16><a href=[%PHP_SELF%]?edit_image=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border=0></a></td>
@@ -783,6 +715,21 @@ $(document).ready(function(){
   <input type="submit" value="Добавить несколько" />
 </form>
 </center>    
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.default_image').live('change',function(){
+        var id=$(this).attr("image_id");
+        $.ajax({
+           type: "POST", url: "[%PHP_SELF%]", data: "default_image_id="+id,
+           success: function(msg){
+                if(msg != 'OK') alert(msg);
+                $(this).prop("checked",true);
+           }
+        });
+    });
+});
+</script>
 
 <center><a href=[%PHP_SELF%]?list_gallery=1 class=button><<  Назад</a></center>
 
@@ -1355,6 +1302,32 @@ $(document).ready(function(){
 
 
 
+<!--[title]stats_last_visitors_table[/title]-->
+<!--DESCRIPTION: Последние поситители -->
+<!--[content]-->
+<center><h3>Последние 20 уникальных посетителей</h3></center>
+<table width=800 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+<tr class=header align=center>
+<td width=15%>Дата</td>
+<td width=15%>Хост</td>
+<td width=55%>Браузер</td>
+<td width=15%>Страница</td>
+</tr>
+[%loop_begin%]
+        <tr class=content>
+        <td align=center><b>[%row(date)%]</b></td>
+        <td align=center>[%row(remote_host)%]</td>
+        <td align=center>[%row(user_agent)%]</td>
+        <td align=center>[%row(request_uri)%]</td>
+        </tr>
+[%loop_end%]
+</table>
+<!--[/content]-->
+
+
+
+
+
 <!--[title]templates_edit_table[/title]-->
 <!--DESCRIPTION:  Таблица шаблонов -->
 <!--[content]-->
@@ -1571,15 +1544,15 @@ $(document).ready(function(){
 <br><center><table width=800 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
 <tr class=header align=center>
 <td>Дата</td>
+<td>Заказ</td>
 <td>Контактная информация</td>
-<td>Сообщение</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 [%loop_begin%]
         <tr [%row(active,if,bgcolor=#ffffff,bgcolor=#dddddd)%] align=left>
         <td align=center><b>[%row(date)%]</b></td>
+        <td>[%row(item_list,nl2br)%]</td>
         <td>[%row(contact_info,nl2br)%]</td>
-        <td>[%row(message,nl2br)%]</td>
         <td width=16><a href="[%PHP_SELF%]?active=Y&id=[%row(id)%]"><img src="../images/add.gif" alt="Активно" border=0 onClick="return test()"></a></td>
         <td width=16><a href="[%PHP_SELF%]?active=N&id=[%row(id)%]"><img src="../images/sub.gif" alt="Неактивно" border=0 onClick="return test()"></a></td>
         </tr>

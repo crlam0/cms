@@ -22,7 +22,7 @@ require_once $INC_DIR.'lib_templates.php';
 require_once $INC_DIR.'lib_functions.php';
 
 // Load settings into $settings[]
-$query='select * from settings';
+$query='SELECT * FROM settings';
 $result=my_query($query,$conn,true);
 while ($row = $result->fetch_array()) {
     $settings[$row['title']] = $row['value'];
@@ -30,14 +30,14 @@ while ($row = $result->fetch_array()) {
 
 require_once $INC_DIR.'lib_stats.php';
 
-$query = "select * from parts where uri='" . $server["REQUEST_URI"] . "'";
+$query = "SELECT * FROM parts WHERE uri='" . $server["REQUEST_URI"] . "'";
 $part = my_select_row($query, 1);
 if (!$part[id]) {
-    $query = "select * from parts where '" . $server["REQUEST_URI"] . "' like concat('%',uri,'%') and title<>'default'";
+    $query = "SELECT * FROM parts WHERE '" . $server["REQUEST_URI"] . "' LIKE concat('%',uri,'%') AND title<>'default'";
     $part = my_select_row($query, 1);
 }
 if (!$part[id]) {
-    $query = "select * from parts where title='default'";
+    $query = "SELECT * FROM parts WHERE title='default'";
     $part = my_select_row($query, 1);
 }
 if (!$part[id]) {

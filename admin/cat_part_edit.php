@@ -5,10 +5,10 @@ include "../include/common.php";
 
 /*
 $query = "select * from cat_part";
-$result = my_query($query, $conn, 1);
+$result = my_query($query, NULL, true);
 while ($row = $result->fetch_array()) {
     $query="update cat_part set seo_alias='".encodestring($row["title"])."' where id='{$row["id"]}'";
-    my_query($query, $conn, 1);
+    my_query($query, NULL, true);
 }
 */
 
@@ -20,12 +20,12 @@ if ($_GET["del"]) {
 	union select count(id) as cnt from cat_item where part_id=" . $_GET["id"] . " having cnt>0";
     $result = my_query($query, $conn);
     if ($result->num_rows) {
-	print_err("Этот раздел не пустой !");
+	print_error("Этот раздел не пустой !");
     } else {
 	list($img) = my_select_row("select img from cat_part where id=" . $_GET["id"]);
 	if (is_file($IMG_PATH . $img)) {
 	    if (!unlink($IMG_PATH . $img)
-		)print_err("Ошибка удаления файла");
+		)print_error("Ошибка удаления файла");
 	}
 	$query = "delete from cat_part where id=" . $_GET["id"];
 	my_query($query, $conn);
@@ -36,7 +36,7 @@ if ($_GET["del_img"]) {
     list($img) = my_select_row("select img from cat_part where id=" . $_GET["id"]);
     if (is_file($IMG_PATH . $img)) {
 	if (!unlink($IMG_PATH . $img)
-	    )print_err("Ошибка удаления файла");
+	    )print_error("Ошибка удаления файла");
     }
     $query = "update cat_part set img='-' where id=" . $_GET["id"];
     my_query($query, $conn);
@@ -61,7 +61,7 @@ if ($_POST["added"]) {
 	    $query = "update cat_part set img='$img' where id=$part_id";
 	    my_query($query, $conn);
 	} else {
-	    print_err("Ошибка копирования файла !");
+	    print_error("Ошибка копирования файла !");
 	}
     }
 }
@@ -69,13 +69,13 @@ if ($_POST["added"]) {
 if ($_POST["edited"]) {
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
     $query = "update cat_part set " . db_update_fields($input[form]) . " where id=" . $_POST["id"];
-    my_query($query, $conn, 1);
+    my_query($query, NULL, true);
     print_ok("Раздел успешно изменен.");
     if ($_FILES["img_file"]["size"] > 100) {
 	list($img) = my_select_row("select img from cat_part where id=" . $_POST["id"]);
 	if (is_file($IMG_PATH . $img)) {
 	    if (!unlink($IMG_PATH . $img)
-		)print_err("Ошибка удаления файла");
+		)print_error("Ошибка удаления файла");
 	}
 	$f_info = pathinfo($_FILES["img_file"]["name"]);
 	$img = $_POST["id"] . "." . $f_info["extension"];
@@ -84,7 +84,7 @@ if ($_POST["edited"]) {
 	    $query = "update cat_part set img='$img' where id=" . $_POST["id"];
 	    my_query($query, $conn);
 	} else {
-	    print_err("Ошибка копирования файла !");
+	    print_error("Ошибка копирования файла !");
 	}
     }
 }
@@ -108,7 +108,7 @@ if (($_GET["edit"]) || ($_GET["adding"])) {
     }
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
     $query = "select * from cat_part where id<>'$tags[id]' order by prev_id,title asc";
-    $result = my_query($query, $conn, 1);
+    $result = my_query($query, NULL, true);
     while ($row = $result->fetch_array()) {
 	$tags[prev_id_select].="<option value=$row[id]" . ($tags[prev_id] == $row[id] ? " selected" : "") . ">$row[title]</option>";
     }

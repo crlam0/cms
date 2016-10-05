@@ -5,17 +5,17 @@ include '../include/common.php';
 
 if ($input['del']) {
     $query = "delete from users_flags where id='{$input['id']}'";
-    my_query($query, $conn, 1);
+    my_query($query, NULL, true);
 }
 
 if ($input['add']) {
     $query = "insert into users_flags " . db_insert_fields($input[form]);
-    my_query($query, $conn, 1);
+    my_query($query, NULL, true);
 }
 
 if ($input['edit']) {
     $query = "update users_flags set " . db_update_fields($input[form]) . " where id='{$input['id']}'";
-    my_query($query, $conn, 1);
+    my_query($query, NULL, true);
 }
 
 if (($input['view']) || ($input['adding'])) {

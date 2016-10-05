@@ -108,7 +108,7 @@ if ($input["del_image"]) {
     $content.=my_msg_to_str("", "", "Фотография успешно удалена.");
 }
 
-// print_arr($_FILES["img_file"]);
+// print_array($_FILES["img_file"]);
 
 if ($input["added_image"]) {
     $input[form][date_add] = "now()";
@@ -193,7 +193,7 @@ if ($input["del_gallery"]) {
     } else {
         list($img) = my_select_row("select image_name from gallery_list where id=" . $_GET["id"]);
         if (is_file($IMG_PATH . $img)) {
-            if (!unlink($IMG_PATH . $img))print_err("Ошибка удаления файла");
+            if (!unlink($IMG_PATH . $img))print_error("Ошибка удаления файла");
         }
 	$query = "delete from gallery_list where id='$input[id]'";
 	my_query($query, $conn);
@@ -204,7 +204,7 @@ if ($input["del_gallery"]) {
 if ($_GET["del_gallery_list_image"]) {
     list($img) = my_select_row("select image_name from gallery_list where id=" . $_GET["id"]);
     if (is_file($IMG_PATH . $img)) {
-        if (!unlink($IMG_PATH . $img))print_err("Ошибка удаления файла");
+        if (!unlink($IMG_PATH . $img))print_error("Ошибка удаления файла");
     }
     $query = "update gallery_list set image_name='-' where id=" . $_GET["id"];
     my_query($query, $conn);
@@ -225,7 +225,7 @@ if ($input["added_gallery"]) {
             $query = "update gallery_list set image_name='$img' where id=$part_id";
             my_query($query, $conn);
         } else {
-            print_err("Ошибка копирования файла !");
+            print_error("Ошибка копирования файла !");
         }
     }
     $content.=my_msg_to_str("", "", "Галерея успешно добавлена.");
@@ -239,7 +239,7 @@ if ($input["edited_gallery"]) {
         list($img) = my_select_row("select image_name from gallery_list where id=" . $input["id"]);
         if (is_file($IMG_PATH . $img)) {
             if (!unlink($IMG_PATH . $img))
-                print_err("Ошибка удаления файла");
+                print_error("Ошибка удаления файла");
         }
         $f_info = pathinfo($_FILES["img_file"]["name"]);
         $img = encodestring($input["form"]["title"]) . "." . $f_info["extension"];
@@ -248,7 +248,7 @@ if ($input["edited_gallery"]) {
             $query = "update gallery_list set image_name='$img' where id=" . $input["id"];
             my_query($query, $conn);
         } else {
-            print_err("Ошибка копирования файла !");
+            print_error("Ошибка копирования файла !");
         }
     }
     $content.=my_msg_to_str("", "", "Галерея успешно изменена.");

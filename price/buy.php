@@ -41,7 +41,7 @@ if ($input["get_summary"]) {
             $where.=(!strlen($where) ? " id='$item_id'" : " or id='$item_id'");
         }
         $query = "select * from cat_item where $where order by b_code,title asc";
-        $result = my_query($query, $conn, 1);
+        $result = my_query($query, NULL, true);
         $summ = 0;
         $cnt = 0;
         $price_add = '';
@@ -90,11 +90,11 @@ if (isset($_POST["request_done"])) {
     $err = 0;
 //        if(!preg_match("/^[\w-]+$/",$_POST["firstname"])){
     if (!strlen($_POST["firstname"])) {
-        print_err("Неверно заполнено поле \"Имя\"");
+        print_error("Неверно заполнено поле \"Имя\"");
         $err = 1;
     }
     if ((strlen($_POST["phone"])) && (!preg_match("/^\+?[\d\(\)-]{7,20}$/", $_POST["phone"]))) {
-        print_err("Анкета заполнена неверно ! Неверный номер телефона");
+        print_error("Анкета заполнена неверно ! Неверный номер телефона");
         $err = 1;
     }
     if ($err) {
@@ -157,7 +157,7 @@ if (count($_SESSION["BUY"])) {
         $count = $count + cnt;
     }
     $query = "select cat_item.*,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
-    $result = my_query($query, $conn, 1);
+    $result = my_query($query, NULL, true);
     if ((isset($_POST["request_x"])) || (isset($_GET["request"]))) {
         echo "<form action=" . $_SERVER['PHP_SELF'] . " method=post>
                 <input type=hidden name=request_done value=1>

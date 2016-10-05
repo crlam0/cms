@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Parse BBCode to HTML
+ *
+ * @param string $string Input string
+ *
+ * @return string Output string
+ */
+
 function bb_parse($string) {
     global $mysqli;
     $string = strip_tags($string);
@@ -45,6 +53,13 @@ function bb_parse($string) {
     return $string;
 }
 
+/**
+ * Class BBCODE_EDITOR
+ * 
+ * Textarea with BBCode support
+ * 
+ */
+
 class BBCODE_EDITOR {
 
     private $__controlId;
@@ -62,6 +77,15 @@ class BBCODE_EDITOR {
         $this->__cols = 0;
     }
 
+    /**
+     * Show textarea with BBCode controls.
+     *
+     * @param integer $Width Textarea width
+     * @param integer $Height Textarea heught
+     * @param string $ImagePath Path to controls images
+     *
+     * @return string Output string
+     */
     function ShowControl($Width, $Height, $ImagePath) {
         $this->__width = $Width;
         $this->__height = $Height;
@@ -343,6 +367,15 @@ class BBCODE_EDITOR {
         <?php
     }
 
+    /**
+     * Get HTML and JS code of textarea with BBCode controls.
+     *
+     * @param integer $Width Textarea width
+     * @param integer $Height Textarea heught
+     * @param string $ImagePath Path to controls images
+     *
+     * @return string Output string
+     */
     function GetContol($Width, $Height, $ImagePath) {
         ob_start();
         $this->ShowControl($Width, $Height, $ImagePath);
@@ -351,17 +384,33 @@ class BBCODE_EDITOR {
         return $content;
     }
 
+    /**
+     * Set control value.
+     *
+     * @param string $ImagePath Path to controls images
+     */
     function SetValue($NewValue) {
         $this->__value = $NewValue;
     }
 
+    /**
+     * Get control value.
+     *
+     * @return string Output string
+     */
     function GetValue() {
-        return $_POST["bbcode_textarea"];
+        global $input;
+        return $input['bbcode_textarea'];
     }
 
+    /**
+     * Get control value as HTML
+     *
+     * @return string Output string
+     */
     function GetHTML() {
-        return bb_parse($_POST["bbcode_textarea"]);
+        global $input;
+        return bb_parse($input['bbcode_textarea']);
     }
 
 }
-?>

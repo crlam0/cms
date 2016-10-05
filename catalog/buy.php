@@ -76,37 +76,37 @@ if(isset($_POST["request_done"])){
         $err=0;
 //        if(!preg_match("/^[\w-]+$/",$_POST["lastname"])){
         if(!strlen($_POST["lastname"])){
-                print_err("Неверно заполнено поле \"Фамилия\"");
+                print_error("Неверно заполнено поле \"Фамилия\"");
                 $err=1;
         }
 //        if(!preg_match("/^[\w-]+$/",$_POST["firstname"])){
         if(!strlen($_POST["firstname"])){
-                print_err("Неверно заполнено поле \"Имя\"");
+                print_error("Неверно заполнено поле \"Имя\"");
                 $err=1;
         }
 //        if(!preg_match("/^[\w-]+$/",$_POST["middlename"])){
         if(!strlen($_POST["middlename"])){
-                print_err("Неверно заполнено поле \"Отчество\"");
+                print_error("Неверно заполнено поле \"Отчество\"");
                 $err=1;
         }
         if(strlen($_POST["address"])<10){
-                print_err("Не заполнено поле \"Почтовый адрес\"");
+                print_error("Не заполнено поле \"Почтовый адрес\"");
                 $err=1;
         }
         if(!preg_match("/^[A-Za-z0-9-_\.]+@[A-Za-z0-9-\.]+\.[A-Za-z0-9-\.]{2,3}$/",$_POST["email"])){
-                print_err("Анкета заполнена неверно ! Неверный адрес E-Mail");
+                print_error("Анкета заполнена неверно ! Неверный адрес E-Mail");
                 $err=1;
         }
         if((strlen($_POST["phone"]))&&(!preg_match("/^\+?[\d\(\)-]{7,20}$/",$_POST["phone"]))){
-                print_err("Анкета заполнена неверно ! Неверный номер телефона");
+                print_error("Анкета заполнена неверно ! Неверный номер телефона");
                 $err=1;
         }
         if((strlen($_POST["phone_cel"]))&&(!preg_match("/^\+?[\d\(\)-]{7,20}$/",$_POST["phone_cel"]))){
-                print_err("Анкета заполнена неверно ! Неверный номер мобильного телефона");
+                print_error("Анкета заполнена неверно ! Неверный номер мобильного телефона");
                 $err=1;
         }
         if((!strlen($_POST["phone"]))&&(!strlen($_POST["phone_cel"]))){
-                print_err("Анкета заполнена неверно ! Необходимо указать как минимум один контактный телефон.");
+                print_error("Анкета заполнена неверно ! Необходимо указать как минимум один контактный телефон.");
                 $err=1;
         }
         if($err){

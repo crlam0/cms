@@ -1,158 +1,123 @@
 <?php
 
+/**
+ * Return menu content
+ *
+ * @param integer $menu_id Menu ID
+ * @param string $attr_ul UL CSS attributes
+ * @param string $attr_li LI CSS attributes
+ *
+ * @return string Menu content
+ */
+function get_menu_items($menu_id, $attr_ul = '', $attr_li = '') {
+    global $_SESSION, $SUBDIR;
+    if (!$menu_id){
+        return '';
+    }    
+    $query = "SELECT * FROM menu_item WHERE '" . $_SESSION["FLAGS"] . "' LIKE concat('%',flag,'%') AND menu_id='$menu_id' AND active=1 ORDER BY position ASC";
+    $result = my_query($query, NULL, true);
+    $output = '';
+    if ($result->num_rows) {
+        $output.="<ul {$attr_ul}>\n";
+        while ($row = $result->fetch_array()) {
+            $href = get_menu_href($tmp, $row);
+            if (preg_match('/^http.?:\/\/.+$/', $href)) {
+                $target_inc = ' target="_blank"';
+            } else {
+                $href = $SUBDIR . $href;
+                $target_inc = '';
+            }
+            $output.="<li {$attr_li}><a href=\"$href\" {$target_inc}title=\"{$row["title"]}\">{$row["title"]}</a>";
+            $output.=get_menu_items($row['submenu_id']);
+            $output.="</li>\n";
+        }
+        $output.="</ul>\n";
+    }
+    return $output;
+}
+
+/**
+ * Return block content
+ *
+ * @param string $block_name Block name
+ *
+ * @return string Block content
+ */
 function get_block($block_name) {
-    global $DIR, $SUBDIR, $BASE_HREF, $conn, $settings, $input;
+    global $DEBUG, $DIR, $SUBDIR, $BASE_HREF, $_SESSION, $conn, $settings, $input, $server;
     switch ($block_name) {
 
-        case "menu":
-            list($root_id) = my_select_row("select id from menu_list where root=1", 1);
-            if (!$root_id)
-                return "";
-            $query = "select * from menu_item where '" . $_SESSION["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$root_id' and active=1 order by position asc";
-            $result = my_query($query, $conn, 1);
-            if (!$result->num_rows)
-                return "";
-            while ($row = $result->fetch_array()) {
-                $tags[menu_content].="<li><a href=\"" . $SUBDIR . get_menu_href($tmp, $row) . "\" class=\"$row[css_class]\"><span>$row[title]</span></a>\n";
-                $query = "select * from menu_item where '" . $_SESSION["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$row[submenu_id]' order by position asc";
-                $result_sub = my_query($query, $conn, 1);
-                if ($result_sub->num_rows) {
-                    $tags[menu_content].="<ul>\n";
-                    while ($row_sub = mysql_fetch_array($result_sub)) {
-                        $tags[menu_content].="<li><a href=\"" . $SUBDIR . get_menu_href($tmp, $row_sub) . "\" class=\"$row_sub[css_class]\"><span>$row_sub[title]</span></a></li>\n";
-                    }
-                    $tags[menu_content].="</ul>\n";
-                }
-                $tags[menu_content].="</li>\n";
-            }
-            return get_tpl_by_title("block_menu", $tags, $result);
-            break;
+        case 'menu_main':
+            list($menu_id) = my_SELECT_row("SELECT id FROM menu_list WHERE root=1", 1);
+            $tags['menu_content'] = get_menu_items($menu_id, 'id="mainmenu"', '');
+            return get_tpl_by_title('block_menu', $tags);
 
-        case "menu_bottom":
-            list($root_id) = my_select_row("select id from menu_list where bottom_menu=1", 1);
-            if (!$root_id)
-                return "";
-            $query = "select * from menu_item where '" . $_SESSION["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$root_id' and active=1 order by position asc";
-            $result = my_query($query, $conn, 1);
-            if (!$result->num_rows)
-                return "";
-            while ($row = $result->fetch_array()) {
-                $tags[menu_content].="<li class=\"menu-item menu-item-type-post_type menu-item-object-page\"><a href=\"" . $SUBDIR . get_menu_href($tmp, $row) . "\" title=\"{$row["title"]}\">{$row["title"]}</a></li>";
-            }
-            return $tags[menu_content];
-            break;
+        case 'menu_top':
+            list($menu_id) = my_SELECT_row("SELECT id FROM menu_list WHERE top_menu=1", 1);
+            return get_menu_items($menu_id, 'class="menu"', 'class="menu-item"');
 
+        case 'menu_bottom':
+            list($menu_id) = my_SELECT_row("SELECT id FROM menu_list WHERE bottom_menu=1", 1);
+            return get_menu_items($menu_id, 'id="menu-footer" class="menu"', 'class="menu-item"');
 
-        case "menu_main":
-            list($root_id) = my_select_row("select id from menu_list where root=1", 1);
-            if (!$root_id)
-                return "";
-            $query = "select * from menu_item where '" . $_SESSION["FLAGS"] . "' like concat('%',flag,'%') and menu_id='$root_id' and active=1 order by position asc";
-            $result = my_query($query, $conn, 1);
-            if (!$result->num_rows)
-                return "";
-            while ($row = $result->fetch_array()) {
-                $tags[menu_content].="<li><a href=\"" . $SUBDIR . get_menu_href($tmp, $row) . "\" title=\"{$row["title"]}\">{$row["title"]}</a></li>";
-            }
-            return $tags[menu_content];
-            break;
-
-
-        case "cat_menu":
-
-            function sub_part_bl($prev_id, $deep) {
-                global $conn, $SUBDIR;
-                $query = "SELECT * from cat_part where prev_id=$prev_id order by num,title asc";
-                $result = mysql_query($query, $conn);
-                $content = "";
-                while ($row = mysql_fetch_array($result)) {
-                    $content.="<a class=item2 href=\"" . $SUBDIR . get_cat_part_href($row[id]) . "\" title=\"$row[title]\"><span> - $row[title]</span></a>\n";
-                    //		sub_part_bl($row[id],$deep+1);
-                }
-                return $content;
-            }
-
-            $query = "SELECT * from cat_part where prev_id='0' order by num,title asc";
-            $result = mysql_query($query, $conn);
-            $content = "";
-            while ($row = mysql_fetch_array($result)) {
-                $content.="<a class=item href=\"" . $SUBDIR . get_cat_part_href($row[id]) . "\" title=\"$row[title]\"><span>$row[title]</span></a>\n";
-                if ($_SESSION["PART_ID"] == $row[id]) {
-                    $content.=sub_part_bl($row[id], 1);
-                } else {
-                    list($prev_id) = my_select_row("select prev_id from cat_part where id='{$_SESSION["PART_ID"]}'", 1);
-                    if ($prev_id == $row[id]) {
-                        $content.=sub_part_bl($row[id], 1);
-                    }
-                }
-            }
-            $tags[menu_content].=$content;
-            return get_tpl_by_title("block_cat_menu", $tags, $result);
-            break;
-
-        case "news":
+        case 'news':
             $query = "select *,date_format(date,'%d.%m.%Y') as date from news order by id desc limit {$settings['news_block_count']}";
             $result = my_query($query);
             if ($result->num_rows) {
+
                 function get_news_short_content($tmp, $row) {
-                    return cut_str($row[content], 100);
+                    return cut_stringing($row[content], 100);
                 }
-                return get_tpl_by_title("block_news", $tags, $result);
-            }    
+
+                return get_tpl_by_title('block_news', $tags, $result);
+            }
             break;
 
-        case "last_posts":
-            $TABLE = "blog_posts";
+        case 'last_posts':
+            $TABLE = 'blog_posts';
             $query = "SELECT {$TABLE}.*,date_format(date_add,'%d.%m.%Y') as date from {$TABLE} where active='Y' order by {$TABLE}.id desc limit {$settings['news_block_count']}";
             $result = my_query($query, $conn, true);
             if ($result->num_rows) {
                 function get_news_short_content($tmp, $row) {
-                    return cut_str($row[content], 100);
+                    return cut_stringing($row[content], 100);
                 }
                 return get_tpl_by_title("block_last_posts", $tags, $result);
             }
 
             break;
 
-        case "partners":
+
+        case 'slider':
             $SCRIPT = $server['SCRIPT_NAME'];
             if (strlen($SUBDIR) > 1)
                 $SCRIPT = str_replace($SUBDIR, "/", $SCRIPT);
 
             if ($SCRIPT == '/index.php') {
-                $query = "SELECT * from slider_image where length(file_name)>0 order by pos,title asc";
+                $query = "SELECT * FROM slider_images WHERE length(file_name)>0 ORDER BY pos,title ASC";
                 $result = my_query($query, $conn, true);
-                return get_tpl_by_title("slider_items", $tags, $result);
+                return get_tpl_by_title('slider_items', $tags, $result);
             } else {
-                return "";
+                return '';
             }
             break;
 
-        case "slider":
-            $SCRIPT = $server['SCRIPT_NAME'];
-            if (strlen($SUBDIR) > 1)
-                $SCRIPT = str_replace($SUBDIR, "/", $SCRIPT);
+        case 'partners':
+            $query = "SELECT * FROM partners order by pos asc";
+            $result = my_query($query, $conn);
+            return get_tpl_by_title('bl_partners', $tags, $result);
 
-            if ($SCRIPT == '/index.php') {
-                $query = "SELECT * from slider_image where length(file_name)>0 order by pos,title asc";
-                $result = my_query($query, $conn, true);
-                return get_tpl_by_title("slider_items", $tags, $result);
-            } else {
-                return "";
-            }
-            break;
-
-        case "vote":
-            $query = "select id,title,type from vote_list where active=1 limit 1";
-            $result = my_query($query, $conn, 1);
+        case 'vote':
+            $query = "SELECT id,title,type FROM vote_list WHERE active=1 limit 1";
+            $result = my_query($query, NULL, true);
             if ($result->num_rows) {
                 list($vote_id, $title, $type) = $result->fetch_array();
-                $tags[vote_title] = $title;
-                $tags[variants] = "";
-                $query = "select * from vote_variants where vote_id='$vote_id'";
-                $result = my_query($query, $conn, 1);
-                if (!$result->num_rows)
-                    return "";
+                $tags['vote_title'] = $title;
+                $tags['variants'] = '';
+                $query = "SELECT * FROM vote_variants WHERE vote_id='$vote_id'";
+                $result = my_query($query, NULL, true);
+                if (!$result->num_rows){
+                    return '';
+                }    
                 $i = 0;
                 while ($row = $result->fetch_array()) {
                     $tags[variants].="
@@ -161,45 +126,50 @@ function get_block($block_name) {
                             </div>\n";
                     $i++;
                 }
-                return get_tpl_by_title("block_vote", $tags);
+                return get_tpl_by_title('block_vote', $tags);
             }
             break;
 
-        case "contacts":
-            $query = "select content from article_item where seo_alias = 'contacts_block'";
-            $result = my_query($query);
-            list($content) = $result->fetch_array();
+        case 'banners':
+            ob_start();
+            include_once($DIR . 'bannners.php');
+            $content = ob_get_contents();
+            ob_end_clean();
             return $content;
-            break;
 
-        case "calendar":
+        case 'calendar':
             ob_start();
             show_month(date('n'), 0);
             $content = ob_get_contents();
             ob_end_clean();
             return $content;
-            break;
 
-        case "banners":
+        case 'chat':
             ob_start();
-            include_once($DIR . "bannners.php");
+            include_once($DIR . 'bot/chat.php');
             $content = ob_get_contents();
             ob_end_clean();
             return $content;
-            break;
 
-        case "menu_admin":
+        case 'menu_admin':
             ob_start();
-            include_once($DIR . "admin/nav.php");
+            include_once($DIR . 'admin/nav.php');
             $content = ob_get_contents();
             ob_end_clean();
             return $content;
+        
+        case 'debug':
+            if ($settings['debug']) {
+                ob_start();
+                print_arrayay($DEBUG);
+                $content = ob_get_contents();
+                ob_end_clean();
+                return $content;
+            }
             break;
-
+            
         default:
             $tags[title] = $block_name;
             return my_msg_to_str("block_not_found", $tags);
     }
 }
-
-?>

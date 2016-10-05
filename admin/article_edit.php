@@ -29,7 +29,7 @@ if ($input["added_article"]) {
     $input[form][content]=replace_base_href($input[form][content],true);
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
     $query = "insert into article_item" . db_insert_fields($input[form]);
-    my_query($query, $conn, 1);
+    my_query($query, NULL, true);
     $content.=my_msg_to_str("", "", "Статья успешно добавлена.");
 }
 
@@ -44,7 +44,7 @@ if ($input["edited_article"]) {
     $input[form][content]=replace_base_href($input[form][content],true);
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
     $query = "update article_item set " . db_update_fields($input[form]) . " where id='$input[id]'";
-    my_query($query, $conn, 1);
+    my_query($query, NULL, true);
     $content.=my_msg_to_str("", "", "Статья успешно изменена.");
     if($input["update"]){
         $input["edit_article"]=1;

@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Sitemap generator.
+ *
+ * @property string $static_pages Data for static pages.
+ * @property string $pages array of pages to generate
+ *
+ */
+
 class SITEMAP {
     public $static_pages = array(
         array(
@@ -12,11 +20,6 @@ class SITEMAP {
             'changefreq' => "weekly",
             'priority' => '0.90',
         ),
-        array(
-            'url' => "faq/",
-            'changefreq' => 'monthly',
-            'priority' => '0.50',
-        )
     );
     public $pages;
     
@@ -24,6 +27,15 @@ class SITEMAP {
         $this->pages=$this->static_pages;
     }
     
+    /**
+     * Add page to $pages
+     *
+     * @param string $url URL of the page
+     * @param string $changefreq Frequency of changes
+     * @param string $priority Priority to crawl
+     *
+     * @return string Output string
+     */
     public function add_page($url,$changefreq,$priority){
         $this->pages[]=array(
             'url' => $url,
@@ -32,6 +44,13 @@ class SITEMAP {
         );
     }
 
+    /**
+     * Add URL list from database to $pages 
+     *
+     * @param array $types Types of content
+     *
+     * @return string Output string
+     */
     public function build_pages_array($types){
         if(in_array('article', $types)){
             $this->add_page('article/', 'monthly', '0.50');
@@ -78,6 +97,11 @@ class SITEMAP {
         }
     }
     
+    /**
+     * Write Sitemap.xml basing on $pages
+     *
+     * @return array ['output','count']
+     */
     public function write(){
         global $server,$SUBDIR;
         
@@ -120,10 +144,7 @@ class SITEMAP {
         }
 
         $xml = $dom->saveXML();
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . $SUBDIR . 'sitemap.xml', $xml);
+        file_put_contents($server['DOCUMENT_ROOT'] . $SUBDIR . 'sitemap.xml', $xml);
         return array('output'=>$output,'count'=>count($this->pages));
     }
 }
-
-?>
-

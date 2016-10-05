@@ -54,7 +54,7 @@ if (!$deny) {
       }
      */
     $unique=0;
-    $query="select id from visitor_log where remote_addr='" . $server["REMOTE_ADDR"] . "'";
+    $query="SELECT id FROM visitor_log WHERE remote_addr='" . $server["REMOTE_ADDR"] . "'";
     $result=my_query($query, $conn, true);
     if(!$result->num_rows)$unique=1;    
     $data['date']='now()';
@@ -71,7 +71,7 @@ if (!$deny) {
     $data['user_agent']=$server["HTTP_USER_AGENT"];
 
     $query = "insert into visitor_log" . db_insert_fields($data);
-    my_query($query, $conn, 1);
+    my_query($query, NULL, true);
     unset($data);
 }
 ?>

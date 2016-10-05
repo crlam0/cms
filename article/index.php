@@ -51,7 +51,7 @@ if ($input["view_article"]) {
 
 if ($_SESSION["view_items"]) {
     $query = "select * from article_item where list_id=" . $_SESSION["view_items"];
-    $result = my_query($query, $conn, 1);
+    $result = my_query($query, NULL, true);
 
     $tags[nav_str].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
     list($title) = my_select_row("select title from article_list where id='{$_SESSION["view_items"]}'", 1);
@@ -66,7 +66,7 @@ if ($_SESSION["view_items"]) {
 
 if (!$_SESSION["view_items"]) {
     $query = "select * from article_list";
-    $result = my_query($query, $conn, 1);
+    $result = my_query($query, NULL, true);
 
     $tags[nav_str].="<span class=nav_next>Статьи</span>";
 

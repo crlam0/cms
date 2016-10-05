@@ -33,14 +33,14 @@ if ($_POST["del_image"]) {
         echo "Error delete file {$IMG_PATH}{$fname}!";
     } else {
         $query = "delete from cat_item_images where id=" . $_POST["id"];
-        echo (my_query($query, $conn, 1) ? "OK" : mysql_error() );
+        echo (my_query($query, NULL, true) ? "OK" : mysql_error() );
     }
     exit;
 }
 
 if ($_POST["default_img"]) {
     $query = "update cat_item set default_img='" . $_POST["default_img"] . "' where id=" . $_POST["item_id"];
-    echo (my_query($query, $conn, 1) ? "OK" : mysql_error() );
+    echo (my_query($query, NULL, true) ? "OK" : mysql_error() );
     exit;
 }
 
@@ -50,7 +50,7 @@ if ($_GET["del"]) {
     while ($row = $result->fetch_array()) {
         if (!unlink($IMG_PATH . $row[fname])
 
-            )print_err("Ошибка удаления файла");
+            )print_error("Ошибка удаления файла");
     }
     $query = "delete from cat_item_images where item_id=" . $_GET["id"];
     my_query($query, $conn);
@@ -76,7 +76,7 @@ if ($_POST["add_image"]) {
         } else {
             $query = "delete from cat_item_images where id='$image_id'";
             my_query($query, $conn);
-            print_err("Ошибка копирования файла !");
+            print_error("Ошибка копирования файла !");
         }
         $_GET["edit"]=1;
         $_GET["id"]=$_POST["id"];

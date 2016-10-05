@@ -66,7 +66,7 @@ if ($input["view_post"]) {
     $tags[nav_str].="<span class=nav_next>$tags[Header]</span>";
     
     $query = "SELECT ceiling(count(id)/$MSG_PER_PAGE) from {$TABLE} where active='Y'";
-    list($PAGES) = my_select_row($query, $conn, 1);
+    list($PAGES) = my_select_row($query, NULL, true);
     $offset=$MSG_PER_PAGE*($_SESSION["BLOG_PAGE"]-1);
 
     if ($PAGES > 1) {

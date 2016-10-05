@@ -33,7 +33,7 @@ if(strlen($input["search_str"])>3){
             }
             $content.="<a class=search_result href=\"{$href}\" title=\"{$row["title"]}\">{$row["title"]}</a><br />";
             $content_str = strip_tags($row["content"]);
-            $content_str = cut_str($content_str,100);
+            $content_str = cut_string($content_str,100);
             $content.="<span class=search_content>".$content_str."</span><br />";
         }
     }else{

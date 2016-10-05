@@ -1,8 +1,11 @@
 <?php
 
-/*
-  SQL library.
- */
+/* =========================================================================
+
+  SQL library
+
+  ========================================================================= */
+
 
 $mysqli = new mysqli($DBHOST, $DBUSER, $DBPASSWD, $DB);
 
@@ -10,44 +13,85 @@ if (mysqli_connect_error()) {
     die('DB connect error ' . mysqli_connect_errno() . ': ' . mysqli_connect_error());
 }
 
-/* test field marameter for deny sql injections */
+/**
+ * @var Array Array of denied words for input strings
+ */
+
+$DENIED_WORDS=array('union','insert','update ','delete ','alter ','drop ','\$_[','<?php','javascript');
+
+/**
+ * @var Array Array of all SQL query
+ */
+
+$DEBUG['sql_query_array']='';
+
+/**
+ * Test field marameter for deny sql injections
+ *
+ * @param string $sql Input string
+ *
+ * @return string Output string
+ */
 
 function db_test_param($str,$param="") {
-    global $server;
+    global $server,$DENIED_WORDS;
     if (is_array($str))return $str;
     if (get_magic_quotes_gpc()){
 	$str=stripslashes($str);
     }
-    if(!strstr($server["PHP_SELF"], "admin/"))$str=htmlspecialchars($str);
-    if($param=="title")$str=str_replace("\"","&quot;",$str);
-    $str=str_replace("'","\'",$str);
+    if(!strstr($server['PHP_SELF'], 'admin/'))$str=htmlspecialchars($str);
+    if($param=="title")$str=str_replace("\"",'&quot;',$str);
+    $str=str_replace("'","\\'",$str);
     $str=str_replace("\"","\\\"",$str);
 //    $str=mysql_real_escape_string($str);
 //    echo $str."<br>";
-    if ((stristr($str, "union")) || (stristr($str, "insert")) || (stristr($str, "update ")) || (stristr($str, "delete ") || (stristr($str, "alter ") || (stristr($str, "drop "))
-            || (strstr($str, "\$_[")) || (stristr($str, "<?php")) || ( stristr($str, "'")) && !stristr($str, "\'")) )  ) {
-        // my_msg("sql_field_eror");
-        exit();
+    
+    foreach($DENIED_WORDS as $word) {
+        if(stristr($str, $word)){
+            header($server['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
+            exit();
+        }
     }
-	$str=str_replace("\\r\\n","",$str);
+    
+    $str=str_replace("\\r\\n","",$str);
     return $str;
 }
 
-/* replace for my_query */
+/**
+ * Replace for mysql_query
+ *
+ * @param string $sql SQL Query
+ * @param null $conn NULL
+ * @param boolean $dont_debug Dont echo debug info
+ *
+ * @return array mysqli result
+ */
 
 function my_query($sql, $conn=null, $dont_debug=false) {
-    global $mysqli,$settings;
+    global $mysqli,$settings,$DEBUG;
     if (!$dont_debug)print_debug($sql);
+    if($settings['debug']){
+        $DEBUG['sql_query_array'][] = $sql;
+    }
     $result = $mysqli->query($sql);
     if (!$result) {
-        echo "SQL Error: ".$mysqli->error;
-        if($settings['debug'])echo "<br />Query is: ".$sql;
+        echo 'SQL Error: '.$mysqli->error;
+        if($settings['debug']){
+            echo '<br />Query is: '.$sql;
+        }
         exit();
     }
     return $result;
 }
 
-/* return first row */
+/**
+ * Return one row from query
+ *
+ * @param string $sql SQL Query
+ * @param boolean $dont_debug Dont echo debug info
+ *
+ * @return array One row
+ */
 
 function my_select_row($sql, $dont_debug=false) {
     global $conn;
@@ -60,13 +104,21 @@ function my_select_row($sql, $dont_debug=false) {
     }
 }
 
+/**
+ * Return string for insert query
+ *
+ * @param array $fields Fields and data for query
+ *
+ * @return string Complete string for query
+ */
+
 function db_insert_fields($fields) {
+    global $mysqli;
     $total = count($fields);
     if ($total > 0) {
         $a = 0;
         while (list($key, $value) = each($fields)) {
             $a++;
-//            $value = db_test_param($value);
             if (is_array($value))$value = implode(";", $value);
             if ($a == $total) {
                 $str = "";
@@ -77,42 +129,49 @@ function db_insert_fields($fields) {
             if(strstr($value,'date_format')){
                 $str_values.=stripcslashes($value) . "$str";
             }else{
-                $str_values.= ( $value == "now()" ? "$value" . "$str" : "'$value'$str");
+                $value=$mysqli->escape_string($value);
+                $str_values.= ( $value == 'now()' ? "$value" . "$str" : "'$value'$str");
             }    
         }
-        $output = "($str_fields) VALUES($str_values)";
+        $output = "({$str_fields}) VALUES({$str_values})";
         return $output;
     } else {
         return 0;
     }
 }
 
+/**
+ * Return string for update query
+ *
+ * @param array $fields Fields and data for query
+ *
+ * @return string Complete string for query
+ */
+
 function db_update_fields($fields) {
+    global $mysqli;
     $total = count($fields);
     $a = 0;
     while (list($key, $value) = each($fields)) {
         $a++;
-//        $value = db_test_param($value);
-        if (is_array($value))$value = implode(";", $value);
+        if (is_array($value))$value = implode(';', $value);
         if ($a == $total) {
-            $str = "";
+            $str = '';
         } else {
-            $str = ",";
+            $str = ',';
         }
         if(strstr($value,'date_format')){
             $output.="$key=".stripcslashes($value) . $str;
         }else{
-            $output.= ( $value == "now()" ? "$key=$value" . $str : "$key='$value'$str");
+            $value=$mysqli->escape_string($value);
+            $output.= ( $value == 'now()' ? "$key=$value" . $str : "$key='$value'$str");
         }    
     }
     return $output;
 }
 
-$query = "SET character_set_client = utf8";
-my_query($query, $conn, 1);
-$query = "SET character_set_results = utf8";
-my_query($query, $conn, 1);
-$query = "SET character_set_connection = utf8";
-my_query($query, $conn, 1);
+my_query('SET character_set_client = utf8', NULL, true);
+my_query('SET character_set_results = utf8', NULL, true);
+my_query('SET character_set_connection = utf8', NULL, true);
 
 ?>

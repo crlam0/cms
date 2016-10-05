@@ -77,7 +77,7 @@ if ($input["add"]) {
 }
 
 $query = "SELECT ceiling(count(id)/$MSG_PER_PAGE) from $TABLE where active='Y'";
-$result = my_query($query, $conn, 1);
+$result = my_query($query, NULL, true);
 list($PAGES) = $result->fetch_array();
 
 if ($PAGES > 1) {

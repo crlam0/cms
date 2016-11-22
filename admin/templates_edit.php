@@ -5,13 +5,13 @@ include '../include/common.php';
 
 if ($input['del']) {
     $query = "delete from templates where id='{$input['id']}'";
-    my_query($query, NULL, true);
+    my_query($query, null, true);
 }
 
 if ($input['add']) {
     $input['content'] = str_replace('text_area', 'textarea', $input['content']);
     $query = "insert into templates " . db_insert_fields($input['form']);
-    my_query($query, NULL, true);
+    my_query($query, null, true);
 }
 
 if($input['revert']){
@@ -22,7 +22,7 @@ if($input['revert']){
 if ($input['edit']) {
     $input['form']['content'] = str_replace('text_area', 'textarea', $input['form']['content']);
     $query = "update templates set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, NULL, true);
+    my_query($query, null, true);
     if($input['update']){
         $input['view']=1;
     }

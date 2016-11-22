@@ -17,14 +17,14 @@ if ($input["active"]) {
 
 if ($input["del_comment"]) {
     $query = "delete from $TABLE where id=" . $input["id"];
-    $result = my_query($query, NULL, true);
+    $result = my_query($query, null, true);
     $list = 1;
     $content.=my_msg_to_str("", "", "Комментарий успешно удален.");
 }
 
 if ($input["edited_comment"]) {
     $query = "update $TABLE set " . db_update_fields($input[form]) . " where id='$input[id]'";
-    my_query($query, NULL, true);
+    my_query($query, null, true);
     $content.=my_msg_to_str("", "", "Комментарий успешно изменен.");
 }
 
@@ -47,7 +47,7 @@ if (($input["edit_comment"]) || ($input["add_comment"])) {
 }
 
 $query = "SELECT * from $TABLE order by id desc";
-$result = my_query($query, NULL, true);
+$result = my_query($query, null, true);
 
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 

@@ -5,7 +5,7 @@ include "../include/common.php";
 
 if ($input["del"]) {
     $query = "delete from news where id='$input[id]'";
-    my_query($query, NULL, true);
+    my_query($query, null, true);
     $content.=my_msg_to_str("", "", "Новость успешно удалена.");
 }
 
@@ -13,7 +13,7 @@ if ($input["add"]) {
     $input[form][date] = "now()";
     $input[form][content] = replace_base_href($input[form][content], true);
     $query = "insert into news " . db_insert_fields($input[form]);
-    my_query($query, NULL, true);
+    my_query($query, null, true);
     $content.=my_msg_to_str("", "", "Новость успешно добавлена.");
 }
 
@@ -22,7 +22,7 @@ if ($input["edit"]) {
     $input[form][date] = "now()";
     $input[form][content] = replace_base_href($input[form][content], true);
     $query = "update news set " . db_update_fields($input[form]) . " where id=" . $_POST["id"];
-    my_query($query, NULL, true);
+    my_query($query, null, true);
     $content.=my_msg_to_str("", "", "Новость успешно изменена.");
 }
 

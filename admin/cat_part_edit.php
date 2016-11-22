@@ -5,10 +5,10 @@ include "../include/common.php";
 
 /*
 $query = "select * from cat_part";
-$result = my_query($query, NULL, true);
+$result = my_query($query, null, true);
 while ($row = $result->fetch_array()) {
     $query="update cat_part set seo_alias='".encodestring($row["title"])."' where id='{$row["id"]}'";
-    my_query($query, NULL, true);
+    my_query($query, null, true);
 }
 */
 
@@ -69,7 +69,7 @@ if ($_POST["added"]) {
 if ($_POST["edited"]) {
     if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
     $query = "update cat_part set " . db_update_fields($input[form]) . " where id=" . $_POST["id"];
-    my_query($query, NULL, true);
+    my_query($query, null, true);
     print_ok("Раздел успешно изменен.");
     if ($_FILES["img_file"]["size"] > 100) {
 	list($img) = my_select_row("select img from cat_part where id=" . $_POST["id"]);
@@ -108,7 +108,7 @@ if (($_GET["edit"]) || ($_GET["adding"])) {
     }
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
     $query = "select * from cat_part where id<>'$tags[id]' order by prev_id,title asc";
-    $result = my_query($query, NULL, true);
+    $result = my_query($query, null, true);
     while ($row = $result->fetch_array()) {
 	$tags[prev_id_select].="<option value=$row[id]" . ($tags[prev_id] == $row[id] ? " selected" : "") . ">$row[title]</option>";
     }

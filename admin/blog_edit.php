@@ -7,7 +7,7 @@ $IMG_PATH = $DIR.$settings['blog_img_path'];
 
 if ($input["get_target_select"]) {
     $query = "select target_id,href from blog_posts where id='{$input["item_id"]}'";
-    $result = my_query($query, NULL, true);
+    $result = my_query($query, null, true);
     list($target_id, $href) = $result->fetch_array();
     switch ($input["target_type"]) {
         case "link":
@@ -15,7 +15,7 @@ if ($input["get_target_select"]) {
             break;
         case "article":
             $query = "select * from article_item order by title";
-            $result = my_query($query, NULL, true);
+            $result = my_query($query, null, true);
             $output = "<td>Статья:</td><td><select name=form[target_id]>";
             while ($row = $result->fetch_array()) {
                 $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
@@ -24,7 +24,7 @@ if ($input["get_target_select"]) {
             break;
         case "article_list":
             $query = "select * from article_list order by title";
-            $result = my_query($query, NULL, true);
+            $result = my_query($query, null, true);
             $output = "<td>Раздел статей:</td><td><select name=form[target_id]>";
             while ($row = $result->fetch_array()) {
                 $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
@@ -33,7 +33,7 @@ if ($input["get_target_select"]) {
             break;
         case "media_list":
             $query = "select * from media_list order by title";
-            $result = my_query($query, NULL, true);
+            $result = my_query($query, null, true);
             $output = "<td>Раздел файлов:</td><td><select name=form[target_id]>";
             while ($row = $result->fetch_array()) {
                 $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
@@ -42,7 +42,7 @@ if ($input["get_target_select"]) {
             break;
         case "cat_part":
             $query = "select * from cat_part where prev_id=0 order by title";
-            $result = my_query($query, NULL, true);
+            $result = my_query($query, null, true);
             $output = "<td>Раздел каталога:</td><td><select name=form[target_id]>";
             while ($row = $result->fetch_array()) {
                 $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
@@ -51,7 +51,7 @@ if ($input["get_target_select"]) {
             break;
         case "gallery_list":
             $query = "select * from gallery_list order by title";
-            $result = my_query($query, NULL, true);
+            $result = my_query($query, null, true);
             $output = "<td>Раздел галереи:</td><td><select name=form[target_id]>";
             while ($row = $result->fetch_array()) {
                 $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
@@ -104,7 +104,7 @@ if ($input["added_post"]) {
     if (!strlen($input[form][seo_alias]))
         $input[form][seo_alias] = encodestring($input[form][title]);
     $query = "insert into blog_posts " . db_insert_fields($input[form]);
-    my_query($query, NULL, true);
+    my_query($query, null, true);
     if ($_FILES["img_file"]["size"]) {
         $f_info = pathinfo($_FILES["img_file"]["name"]);
         $img = encodestring($input["form"]["title"]) . "." . $f_info["extension"];
@@ -130,7 +130,7 @@ if ($input["edited_post"]) {
     if (!strlen($input[form][seo_alias]))
         $input[form][seo_alias] = encodestring($input[form][title]);
     $query = "update blog_posts set " . db_update_fields($input[form]) . " where id='$input[id]'";
-    my_query($query, NULL, true);
+    my_query($query, null, true);
     if ($_FILES["img_file"]["size"] > 100) {
         list($img) = my_select_row("select image_name from blog_posts where id=" . $input["id"]);
         if (is_file($IMG_PATH . $img)) {
@@ -187,7 +187,7 @@ if (($input["edit_post"]) || ($input["add_post"])) {
 }
 
 $query = "SELECT * from blog_posts order by id desc";
-$result = my_query($query, NULL, true);
+$result = my_query($query, null, true);
 
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 

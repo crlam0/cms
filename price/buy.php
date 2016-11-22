@@ -41,7 +41,7 @@ if ($input["get_summary"]) {
             $where.=(!strlen($where) ? " id='$item_id'" : " or id='$item_id'");
         }
         $query = "select * from cat_item where $where order by b_code,title asc";
-        $result = my_query($query, NULL, true);
+        $result = my_query($query, null, true);
         $summ = 0;
         $cnt = 0;
         $price_add = '';
@@ -157,7 +157,7 @@ if (count($_SESSION["BUY"])) {
         $count = $count + cnt;
     }
     $query = "select cat_item.*,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
-    $result = my_query($query, NULL, true);
+    $result = my_query($query, null, true);
     if ((isset($_POST["request_x"])) || (isset($_GET["request"]))) {
         echo "<form action=" . $_SERVER['PHP_SELF'] . " method=post>
                 <input type=hidden name=request_done value=1>

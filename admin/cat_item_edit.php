@@ -33,14 +33,14 @@ if ($_POST["del_image"]) {
         echo "Error delete file {$IMG_PATH}{$fname}!";
     } else {
         $query = "delete from cat_item_images where id=" . $_POST["id"];
-        echo (my_query($query, NULL, true) ? "OK" : mysql_error() );
+        echo (my_query($query, null, true) ? "OK" : mysql_error() );
     }
     exit;
 }
 
 if ($_POST["default_img"]) {
     $query = "update cat_item set default_img='" . $_POST["default_img"] . "' where id=" . $_POST["item_id"];
-    echo (my_query($query, NULL, true) ? "OK" : mysql_error() );
+    echo (my_query($query, null, true) ? "OK" : mysql_error() );
     exit;
 }
 

@@ -15,7 +15,7 @@ function get_menu_items($menu_id, $attr_ul = '', $attr_li = '') {
         return '';
     }    
     $query = "SELECT * FROM menu_item WHERE '" . $_SESSION["FLAGS"] . "' LIKE concat('%',flag,'%') AND menu_id='$menu_id' AND active=1 ORDER BY position ASC";
-    $result = my_query($query, NULL, true);
+    $result = my_query($query, null, true);
     $output = '';
     if ($result->num_rows) {
         $output.="<ul {$attr_ul}>\n";
@@ -48,16 +48,16 @@ function get_block($block_name) {
     switch ($block_name) {
 
         case 'menu_main':
-            list($menu_id) = my_SELECT_row("SELECT id FROM menu_list WHERE root=1", 1);
+            list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE root=1", 1);
             $tags['menu_content'] = get_menu_items($menu_id, 'id="mainmenu"', '');
             return get_tpl_by_title('block_menu', $tags);
 
         case 'menu_top':
-            list($menu_id) = my_SELECT_row("SELECT id FROM menu_list WHERE top_menu=1", 1);
+            list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE top_menu=1", 1);
             return get_menu_items($menu_id, 'class="menu"', 'class="menu-item"');
 
         case 'menu_bottom':
-            list($menu_id) = my_SELECT_row("SELECT id FROM menu_list WHERE bottom_menu=1", 1);
+            list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE bottom_menu=1", 1);
             return get_menu_items($menu_id, 'id="menu-footer" class="menu"', 'class="menu-item"');
 
         case 'news':
@@ -108,13 +108,13 @@ function get_block($block_name) {
 
         case 'vote':
             $query = "SELECT id,title,type FROM vote_list WHERE active=1 limit 1";
-            $result = my_query($query, NULL, true);
+            $result = my_query($query, null, true);
             if ($result->num_rows) {
                 list($vote_id, $title, $type) = $result->fetch_array();
                 $tags['vote_title'] = $title;
                 $tags['variants'] = '';
                 $query = "SELECT * FROM vote_variants WHERE vote_id='$vote_id'";
-                $result = my_query($query, NULL, true);
+                $result = my_query($query, null, true);
                 if (!$result->num_rows){
                     return '';
                 }    

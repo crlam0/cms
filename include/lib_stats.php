@@ -71,7 +71,7 @@ if (!$deny) {
     $data['user_agent']=$server["HTTP_USER_AGENT"];
 
     $query = "insert into visitor_log" . db_insert_fields($data);
-    my_query($query, NULL, true);
+    my_query($query, null, true);
     unset($data);
 }
 ?>

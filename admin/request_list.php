@@ -10,7 +10,7 @@ if($_GET["active"]){
 
 if ($input["del"]) {
     $query = "delete from request where id='$input[id]'";
-    my_query($query, NULL, true);
+    my_query($query, null, true);
 }
 
 $query="SELECT * from request order by id desc";

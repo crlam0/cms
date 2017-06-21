@@ -28,10 +28,22 @@ function my_msg_to_str($title, $tags = array(), $str = '') {
         foreach ($tags as $key => $value) {
             $message[content] = str_replace('[%' . $key . '%]', $value, $message[content]);
         }
-    if (!$message['type'])
-        $message['type'] = 'info';
     if ($message) {
-        return "<div align=center><div class=msg_{$message['type']} bgcolor=$bgcolor><font class={$message['type']}>{$message['content']}</font></div></div>";
+        // return "<div align=center><div class=msg_{$message['type']} bgcolor=$bgcolor><font class={$message['type']}>{$message['content']}</font></div></div>";
+        switch ($message['type']) {
+            case 'info':
+                $class='info';
+                break;
+            case 'notice':
+                $class='warning';
+                break;
+            case 'error':
+                $class='danger';
+                break;           
+            default:
+                $class='success';                                
+        }   
+        return '<p class="alert normal-form alert-' . $class .'">' . $message['content'] . '</p>';
     }
 }
 
@@ -63,7 +75,7 @@ function print_ok($string) {
  * @param string $string Message content
  *
  */
-function print_erroror($string) {
+function print_error($string) {
     my_msg('error', '', $string);
 }
 
@@ -85,7 +97,7 @@ function print_debug($string) {
  * @param array $array Input array
  *
  */
-function print_arrayay($array) {
+function print_array($array) {
     echo "<pre>";
     print_r($array);
     echo "</pre>";

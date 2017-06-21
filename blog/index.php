@@ -30,7 +30,7 @@ $comments = new COMMENTS ("blog",$input["view_post"]);
 if ($input["view_post"]) {
     $query = "select {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid) where {$TABLE}.id='{$input["view_post"]}'";
     $result = my_query($query, $conn, true);
-    $row =$result->fetch_array();
+    $row = $result->fetch_array();
 
     $tags[nav_str].="<span class=nav_next><a href=\"{$server["PHP_SELF_DIR"]}\">$tags[Header]</a></span>";
     $tags[nav_str].="<span class=nav_next>{$row["title"]}</span>";
@@ -52,7 +52,7 @@ if ($input["view_post"]) {
         </div>';
     }            
     $row["comment_line"] = "Комментариев: " . $comments->show_count($row[id]);
-    unset($row['post_title']);
+    // unset($row['post_title']);
     $content.=get_tpl_by_title("blog_post", $row, $result);
     $content.="</div>";
 

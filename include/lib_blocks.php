@@ -161,7 +161,7 @@ function get_block($block_name) {
         case 'debug':
             if ($settings['debug']) {
                 ob_start();
-                print_arrayay($DEBUG);
+                print_array($DEBUG);
                 $content = ob_get_contents();
                 ob_end_clean();
                 return $content;

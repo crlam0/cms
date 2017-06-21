@@ -65,7 +65,7 @@ if ($input["get_target_select"]) {
 
 if ($input["active"]) {
     $query = "update blog_posts set active='" . $input["active"] . "' where id=" . $input["id"];
-    if (my_query($query, $conn)) {
+    if (my_query($query, $conn, true)) {
         echo $input["active"];
     } else {
         echo mysql_error();
@@ -168,7 +168,7 @@ if (($input["edit_post"]) || ($input["add_post"])) {
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
     $tags["content"] = replace_base_href($tags["content"], false);
     $tags["target_type_select"] = "
-        <select name=\"form[target_type]\" id=\"target_type\">
+        <select name=\"form[target_type]\" id=\"target_type\" class=\"form-control\">
             <option " . ($tags["target_type"] == "" ? "selected" : "") . " value=\"\">-</option>
             <option " . ($tags["target_type"] == "link" ? "selected" : "") . " value=\"link\">Ссылка</option>
             <option " . ($tags["target_type"] == "article_list" ? "selected" : "") . " value=\"article_list\">Раздел статей</option>

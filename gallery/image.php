@@ -4,7 +4,7 @@ include '../include/common.php';
 
 list($file_name, $file_type) = my_select_row("select file_name,file_type from gallery_images where id='{$input['id']}'", true);
 $file_name = $DIR . $settings['gallery_upload_path'] . $file_name;
-$gallery_fix_size= ( $DIR.$settings['gallery_fix_size']) && ($input["preview"]);
+$gallery_fix_size= ( $settings['gallery_fix_size']) && ($input["preview"]);
 
 if (!is_file($file_name)) {
     exit();
@@ -40,18 +40,18 @@ if ($src) {
         $height = $max_width;
         if(!$gallery_fix_size) { 
             if ($width_src < $height_src) {
-                if($height>$input['clientHeight']-210){
+                if( (!empty($input['clientHeight'])) && ($height>$input['clientHeight']-210) ){
                     $height=$input['clientHeight']-210;
                 }
                 $width = ($height / $height_src) * $width_src;
             } else {
-                if($height>$input['clientHeight']-210){
+                if( (!empty($input['clientHeight'])) && ($height>$input['clientHeight']-210) ){
                     $height=$input['clientHeight']-210;
                     $width = ($height / $height_src) * $width_src;
                 }
                 $height = ($width / $width_src) * $height_src;
             }
-        }    
+        } 
 	// echo "$width_src $height_src $width $height $height_full";exit();
         $dst = imagecreatetruecolor($width, $height);
 

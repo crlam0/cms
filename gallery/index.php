@@ -121,7 +121,7 @@ if (isset($input["load"])) {
         <div class=title>$tags[title]</div>
         <br>
         <div class=view_image>
-        <img src=\"{$SUBDIR}gallery/image.php?id={$tags['id']}&windowHeight={$input['windowHeight']}\" border=0 id=popup_image>
+        <img src=\"{$SUBDIR}gallery/image.php?id={$tags['id']}&clientHeight={$input['clientHeight']}\" border=0 id=popup_image>
         </div>
         <div class=descr>{$tags['descr']}</div><div class=date>Добавлена {$tags['date_add']}, просмотров {$tags['view_count']}</div>
         <br>

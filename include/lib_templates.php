@@ -101,7 +101,7 @@ function tpl_parse_string($content, $tags = array(), $sql_row = array(), $sql_ro
                     return '';
                 }
             } elseif ($tagclass == 'template') {
-                $replace_str = get_tpl_by_title($tagparam);
+                $replace_str = get_tpl_by_title($tagparam,$tags, null, $inner_content);
                 if (!$replace_str) {
                     $tags[title] = $tagparam;
                     my_msg('tpl_not_found', $tags);
@@ -148,13 +148,15 @@ function tpl_parse($content, $tags = array(), $sql_result = array(), $inner_cont
             $loop_start = 1;
         } elseif (strstr($value, '[%loop_end%]')) {
             unset($mysql_row_summ);
-            if ($sql_result)
+            if ($sql_result){
                 while ($row = $sql_result->fetch_array()) {
                     $result.=tpl_parse_string($loop_content, $tags, $row, $inner_content) . "\n";
                     foreach ($row as $key => $value)
-                        if ((is_double($value))or ( is_numeric($value)))
+                        if ((is_double($value))or ( is_numeric($value))){
                             $mysql_row_summ[$key] = +$value;
+                        }    
                 }
+            }    
             $loop_start = 0;
         }elseif ($loop_start) {
             $loop_content.=$value;
@@ -209,13 +211,18 @@ function load_tpl_from_file($file_name, $title) {
  * @return string Output content
  */
 function get_tpl_by_title($title, $tags = array(), $sql_result = array(), $inner_content = '') {
-    global $server, $settings, $DIR;
+    global $server, $settings, $DIR, $DEBUG;
+
     if (file_exists(dirname($server['SCRIPT_FILENAME']) . '/templates.tpl')) {
         $temp = load_tpl_from_file(dirname($server['SCRIPT_FILENAME']) . '/templates.tpl', $title);
         if ($temp) {
             $template['content'] = $temp;
             $template['do_parse'] = 1;
         }
+    }
+    if(strstr($title,'.tpl')) {
+        $template['file_name']=$title;
+        $template['do_parse'] = true;
     }
     if (!$template) {
         $template = my_select_row("SELECT * FROM templates WHERE title='$title' AND '" . $server["REQUEST_URI"] . "' LIKE concat('%',uri,'%')", true);
@@ -245,7 +252,7 @@ function get_tpl_by_title($title, $tags = array(), $sql_result = array(), $inner
     if ((!$template[do_parse]) || (!strstr($template[content], '[%'))) {
         return($template[content]);
     }
+    add_to_debug("Parse template '{$title}' done");
     return tpl_parse($template[content], $tags, $sql_result, $inner_content);
 }
 
-?>

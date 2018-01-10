@@ -60,4 +60,3 @@ if ($result->num_rows) {
 
 echo get_tpl_by_title($part[tpl_name],$tags,"",$content);
 
-?>

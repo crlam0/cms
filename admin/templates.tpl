@@ -807,7 +807,8 @@ $(document).ready(function(){
 <table width=500 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
 <tr class=header align=center>
 	<td width=15%>Дата</td>
-	<td width=60%>Тема</td>
+	<td width=30%>Тема</td>
+	<td width=30%>Алиас</td>
 	<td width=15%>Файлов</td>
 	<td width=5% align=center>&nbsp;</td>
 	<td width=5% align=center>&nbsp;</td>
@@ -816,6 +817,7 @@ $(document).ready(function(){
 	<tr class=content align=left>
 	<td>[%row(date_add)%]</td>
 	<td><b><a href=[%PHP_SELF%]?view_list=1&id=[%row(id)%]>[%row(title)%]</a></b></td>
+	<td align=center>[%row(seo_alias)%]</td>
 	<td align=center>[%row(files)%]</td>
 	<td width=16><a href=[%PHP_SELF%]?edit_list=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border=0></a></td>
 	<td width=16><a href=[%PHP_SELF%]?del_list=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border=0 onClick="return test()"></a></td>
@@ -840,6 +842,7 @@ $(document).ready(function(){
 <table width=500 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
 	<tr class=header><td colspan=2>[%form_title%]</td></tr>
 	<tr class=content align=left><td>Название:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[title] value="[%title%]"></td></tr>
+	<tr class=content align=left><td>Алиас:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
 	<tr class=content><td align=left colspan=2>
 	[%descr%]
 	</td></tr>

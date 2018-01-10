@@ -29,7 +29,7 @@ function my_msg_to_str($title, $tags = array(), $str = '') {
             $message[content] = str_replace('[%' . $key . '%]', $value, $message[content]);
         }
     if ($message) {
-        // return "<div align=center><div class=msg_{$message['type']} bgcolor=$bgcolor><font class={$message['type']}>{$message['content']}</font></div></div>";
+        return "<div align=center><div class=msg_{$message['type']} bgcolor=$bgcolor><font class={$message['type']}>{$message['content']}</font></div></div>";
         switch ($message['type']) {
             case 'info':
                 $class='info';
@@ -110,7 +110,6 @@ function print_array($array) {
  *
  */
 function admin_log($message) {
-    global $_SESSION;
     $query = "insert into admin_log(user_id,date,msg) values('" . $_SESSION['UID'] . "',now(),'{$message}')";
     my_query($query);
 }

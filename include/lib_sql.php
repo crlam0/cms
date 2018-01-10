@@ -23,7 +23,7 @@ $DENIED_WORDS=array('union','insert','update ','delete ','alter ','drop ','\$_['
  * @var Array Array of all SQL query
  */
 
-$DEBUG['sql_query_array']='';
+empty($DEBUG['sql_query_array']);
 
 /**
  * Test field marameter for deny sql injections
@@ -69,11 +69,17 @@ function db_test_param($str,$param="") {
 
 function my_query($sql, $conn=null, $dont_debug=false) {
     global $mysqli,$settings,$DEBUG;
-    if (!$dont_debug)print_debug($sql);
+    if (!$dont_debug) {
+        print_debug($sql);
+    }    
     if($settings['debug']){
-        $DEBUG['sql_query_array'][] = $sql;
-    }
+        $start_time = microtime(true);
+    }    
     $result = $mysqli->query($sql);
+    if($settings['debug']){
+        $time = sprintf('%.4F', microtime(true) - $start_time);
+        $DEBUG['sql_query_array'][] = $time . "\t" . $sql;
+    }
     if (!$result) {
         echo 'SQL Error: '.$mysqli->error;
         if($settings['debug']){
@@ -94,13 +100,12 @@ function my_query($sql, $conn=null, $dont_debug=false) {
  */
 
 function my_select_row($sql, $dont_debug=false) {
-    global $conn;
-    $result = my_query($sql, $conn, $dont_debug);    
+    $result = my_query($sql, null, $dont_debug);    
     if ($result->num_rows) {
         $row = $result->fetch_array();
         return $row;
     } else {
-        return 0;
+        return false;
     }
 }
 
@@ -119,7 +124,9 @@ function db_insert_fields($fields) {
         $a = 0;
         while (list($key, $value) = each($fields)) {
             $a++;
-            if (is_array($value))$value = implode(";", $value);
+            if (is_array($value)){ 
+                $value = implode(";", $value);
+            }    
             if ($a == $total) {
                 $str = "";
             } else {
@@ -154,7 +161,9 @@ function db_update_fields($fields) {
     $a = 0;
     while (list($key, $value) = each($fields)) {
         $a++;
-        if (is_array($value))$value = implode(';', $value);
+        if (is_array($value)){
+            $value = implode(';', $value);
+        }    
         if ($a == $total) {
             $str = '';
         } else {
@@ -173,5 +182,3 @@ function db_update_fields($fields) {
 my_query('SET character_set_client = utf8', NULL, true);
 my_query('SET character_set_results = utf8', NULL, true);
 my_query('SET character_set_connection = utf8', NULL, true);
-
-?>

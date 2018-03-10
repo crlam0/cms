@@ -1,9 +1,63 @@
 <?php
 $tags['Add_CSS'].=';article_news_faq';
-include "../include/common.php";
+// include_once '../include/common.php';
 
-if (isset($input["uri"])) {
-    $params=  explode("/", $input["uri"]);
+require_once $INC_DIR . 'dompdf/lib/html5lib/Parser.php';
+require_once $INC_DIR . 'dompdf/lib/php-font-lib/src/FontLib/Autoloader.php';
+require_once $INC_DIR . 'dompdf/lib/php-svg-lib/src/autoload.php';
+require_once $INC_DIR . 'dompdf/src/Autoloader.php';
+Dompdf\Autoloader::register();
+
+// reference the Dompdf namespace
+use Dompdf\Dompdf;
+
+if (isset($input['pdf'])) {
+    $params = explode('/', $input['uri']);
+    if(strlen($params[1])){
+        $input['view']=$params[1];
+        $query = "select * from article_item where seo_alias like '" . $input['view'] . "'";
+        $result = my_query($query, null, true);
+        if(!$result->num_rows) {
+            header('Location: ' . $SUBDIR . '');
+            exit ();
+        }
+        $row = $result->fetch_array();
+        $row['content'] = replace_base_href($row['content']);
+        
+        $content = "<html><head><style>body { font-family: times; }</style>".
+        "<body>"; 
+        
+        $content .= '<h1>' . $row['title'] . '</h1><br />';
+        $content .= get_tpl_by_title('article_view', $row, $result);  
+        
+        $content .="</body>".
+        "</head></html>";        
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($content);
+
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+
+        // $dompdf->stream(encodestring($row['title']) . '.pdf');
+        // $dompdf->stream($row['title'] . '.pdf');
+        // header('Content-Description: File Transfer');
+        header('Content-Type: content/pdf');
+        header('Content-Disposition: attachment; filename=' . $row['title'] . '.pdf');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        ob_clean();
+        flush();
+        echo $dompdf->output();
+    }
+    exit();        
+}
+
+if (isset($input['uri'])) {
+    $params = explode('/', $input['uri']);
     if(strlen($params[1])){
         $input["view"]=$params[1];
     }else{

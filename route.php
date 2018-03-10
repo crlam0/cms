@@ -1,7 +1,11 @@
 <?php
 
 require_once 'include/common.php';
-$request_uri = str_replace($SUBDIR, '', $_SERVER['REQUEST_URI']);
+if($SUBDIR !== '/') {
+    $request_uri = str_replace($SUBDIR, '', $_SERVER['REQUEST_URI']);
+} else {
+    $request_uri = substr($_SERVER['REQUEST_URI'], 1);
+}    
 
 $routes = [
     'login' => [
@@ -29,6 +33,14 @@ $routes = [
         'file' => 'misc/vote.php'
     ],    
     
+    'article_pdf' => [
+        'pattern' => '^article\/(.*)\/(.*)\.pdf',
+        'file' => 'article/index.php',
+        'params' => [
+            '1' => 'uri',
+            '2' => 'pdf',
+        ]
+    ],    
     'article' => [
         'pattern' => '^article\/(.*)\/',
         'file' => 'article/index.php',
@@ -99,6 +111,7 @@ foreach($routes as $title => $route) {
         break;
     }
 }
+
 /*
 if($settings['debug']){
     echo $request_uri . '<br>';
@@ -109,7 +122,7 @@ if($settings['debug']){
  */
 
 if(is_file($file)) {
-    error_reporting(0);
+    // error_reporting(0);
     include($file);
     exit;
 } 

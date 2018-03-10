@@ -1,8 +1,11 @@
 <?php
-$tags['Header'] = "Галерея";
-$tags['Add_CSS'].=';gallery;blog_comments';
 include "../include/common.php";
 include $INC_DIR . "lib_comments.php";
+
+$tags['Header'] = "Галерея";
+$tags['Add_CSS'].=';gallery;blog_comments';
+
+$settings["gallery_use_popup"]=true;
 
 if ( (isset($input["uri"])) && (!isset($input["load"]))) {
     $params = explode("/", $input["uri"]);
@@ -19,7 +22,7 @@ if ( (isset($input["uri"])) && (!isset($input["load"]))) {
 }
 
 if($settings["gallery_use_popup"]){
-    $tags['INCLUDE_HEAD'] .= $JQUERY_INC .
+    $tags['INCLUDE_HEAD'] .= 
             '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
             '<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>'."\n".
             '<script type="text/javascript" src="'.$BASE_HREF.'gallery/gallery.js"></script>'."\n";
@@ -193,4 +196,4 @@ if (!$result->num_rows) {
     $content = get_tpl_by_title("gallery_list_table", $tags, $result);
 }
 echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
-?>
+

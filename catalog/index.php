@@ -1,6 +1,9 @@
 <?php
 $tags['Header']='Каталог услуг';
 $tags['Add_CSS'].=';catalog;price';
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/catalog.css" type="text/css" rel=stylesheet />'."\n";;
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/price.css" type="text/css" rel=stylesheet />'."\n";;
+
 include '../include/common.php';
 
 if (!count($input)){

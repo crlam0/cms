@@ -166,7 +166,7 @@ function get_block($block_name) {
                 ob_end_clean();
                 return $content;
             }
-            break;
+            return '';
             
         default:
             $tags[title] = $block_name;

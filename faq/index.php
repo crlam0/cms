@@ -1,9 +1,10 @@
 <?php
 $tags['Header'] = 'Вопрос/ответ';
 $tags['Add_CSS'].=';article_news_faq';
-require '../include/common.php';
+$tags['INCLUDE_HEAD'].='<link href="article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
+require_once '../include/common.php';
 
-require $INC_DIR . 'lib_bbcode.php';
+require_once $INC_DIR . 'lib_bbcode.php';
 $editor = new BBCODE_EDITOR ();
 
 $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";

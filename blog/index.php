@@ -1,8 +1,9 @@
 <?php
 $tags['Header'] = 'Блог';
 $tags['Add_CSS'].=';blog_comments';
-include '../include/common.php';
-include $INC_DIR . 'lib_comments.php';
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
+include_once '../include/common.php';
+include_once $INC_DIR . 'lib_comments.php';
 
 $MSG_PER_PAGE = $settings["blog_msg_per_page"];
 $TABLE="blog_posts";
@@ -25,6 +26,7 @@ if(!is_array($input)){
     $_SESSION["BLOG_PAGE"] = 1;
 }
 
+
 $comments = new COMMENTS ("blog",$input["view_post"]);
 
 if ($input["view_post"]) {
@@ -32,9 +34,9 @@ if ($input["view_post"]) {
     $result = my_query($query, $conn, true);
     $row = $result->fetch_array();
 
-    $tags[nav_str].="<span class=nav_next><a href=\"{$server["PHP_SELF_DIR"]}\">$tags[Header]</a></span>";
-    $tags[nav_str].="<span class=nav_next>{$row["title"]}</span>";
-    $tags[Header] .= " - ".$row["title"];
+    $tags['nav_str'].="<span class=nav_next><a href=\"{$server["PHP_SELF_DIR"]}\">$tags[Header]</a></span>";
+    $tags['nav_str'].="<span class=nav_next>{$row["title"]}</span>";
+    $tags['Header'] .= " - ".$row["title"];
     
     $content.="<div id=blog>";
     $row["post_title"]=$row["title"];
@@ -90,6 +92,7 @@ if ($input["view_post"]) {
         while ($row = $result->fetch_array()) {
             $row["post_title"]="<a href=\"".$SUBDIR.get_post_href(null,$row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
             $row["content"] = replace_base_href($row["content"], false);
+            $row["content"] = preg_replace('/height: \d+px;/', 'max-width: 100%;', $row["content"]);
             if(strlen($row["target_type"])){
                 $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );
                 $row["target_link"]="<a href=\"{$href}\" class=button>Перейти >></a>";
@@ -112,6 +115,8 @@ if ($input["view_post"]) {
     }
 }
 
+// $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
+
 echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
 
-?>
+

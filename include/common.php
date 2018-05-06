@@ -95,7 +95,9 @@ foreach ($css_array as $css){
     $css='css/'.$css.'.css';
     if(file_exists($DIR.$css)){
         $tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.$css.'" type="text/css" rel=stylesheet />'."\n";
-    }    
+    } else {
+        add_to_debug('CSS file missing: ' . $DIR.$css);
+    }
 }
 unset($css_array,$css);
 $tags['INCLUDE_HEAD']='';

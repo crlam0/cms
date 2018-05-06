@@ -6,10 +6,12 @@ $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 
 if ($input['logon']) {
     $query = "select id,flags,passwd,salt from users where login='" . $input['login'] . "' and flags like '%active%'";
-    $result = my_query($query, $conn, true);
+    $result = my_query($query, $conn, false);
     if ($result->num_rows) {
         $row = $result->fetch_array();        
+	echo $row['salt'];
         if(strcmp(user_encrypt_password($input['passwd'], $row['salt']),$row['passwd'])==0){
+	echo $row['salt'];
             $_SESSION['UID']=$row['id'];
             $_SESSION['FLAGS']=$row['flags'];
             if (mb_strlen($row['salt']) !== 22) {

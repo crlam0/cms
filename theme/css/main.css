@@ -5,7 +5,7 @@
 
 
 body {
-    background-color: #ffgg33;
+    background-color: #fff;
 }
 
 
@@ -58,7 +58,7 @@ div.nav_str{
 #content .nav_home{
 }
 #content .nav_next{
-    background: url(../images/design/arrow.png) 5px 3px  no-repeat;
+    background: url(../img/arrow.png) 5px 3px  no-repeat;
     line-height: 15px;
     padding: 0px 0px 0px 18px;
 }
@@ -94,6 +94,188 @@ div.nav_str{
     margin: 10px 0px;
     text-align: center;
 }
+
+
+@media (max-width: 400px) {
+    #main-header {
+        background: none;
+        height: auto;
+    }    
+    img.main-logo {
+        display: block;
+        max-width: 100%;
+    }    
+}    
+
+
+/* 
+===========================================================================
+
+   BLOCKS
+
+===========================================================================
+*/
+div.block_header {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12pt;
+    text-align: center;
+    color: #ffffff;
+    background: #555;
+    line-height: 25px;
+    margin: 0;
+    padding: 0;
+}
+div.block_shadow {
+    background: #aaaabb;
+    height: 3px;
+}
+div.block_content {
+    background: #f5f5ff;
+    padding: 5px 10px 5px 10px;
+}
+
+#block_news div.news_title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 10px;
+    color: #325376;
+}
+#block_news div.news_date {
+    font-size: 10px;
+    font-weight: bold;
+}
+#block_news div.news_content {
+    font-size: 11px;
+    margin-top: 7px;
+}
+#block_news a.news {
+/*    background: url(../images/design/submenu_item.png) 0px -5px no-repeat;
+    padding: 0px 0px 0px 15px;*/
+    line-height: 25px;
+    margin-bottom: 10px;
+}
+div.vote_variant {
+    margin-bottom: 10px;
+}
+#block_partners div.title {
+    font-weight: bold;
+    font-size: 12pt;
+    margin-top: 10px;
+    color: #325376;
+}
+#block_partners div.url {
+    margin-top: 7px;
+    line-height: 150%;
+}
+
+
+/* 
+===========================================================================
+
+   MENU
+
+===========================================================================
+*/
+#menu a {
+	padding: 0px 0px 0px 0px;
+	line-height: 0px;
+	font-size: 10pt;
+}
+#menu .default
+{
+    background: url(../images/design/submenu_item.png) 0px -4px  no-repeat;
+}
+
+ul#mainmenu,
+ul#mainmenu li,
+ul#mainmenu ul {
+	margin: 0;
+	border: 0 none;
+	padding: 0;
+	width: 120px; 
+	list-style: none;
+}
+
+ul#mainmenu:after {
+  clear: both;
+  display: block;
+  font: 1px/0px serif;
+  content: ".";
+  height: 0;
+  visibility: hidden;
+}
+
+ul#mainmenu li {
+	display: block !important; 
+	display: inline; 
+	position: relative;
+}
+
+ul#mainmenu li ul li {
+	border:none;
+}
+/* Root Menu */
+ul#mainmenu a {
+	display: block;
+	height: auto !important;
+	height: 1%; 
+	line-height: 15px;
+	font-size: 10pt;
+	margin: 10px 0px;
+	z-index: 5;
+}
+
+ul#mainmenu a:hover,
+ul#mainmenu li:hover a,
+ul#mainmenu li.iehover a {
+	z-index: 5;
+}
+/* 2nd Menu */
+ul#mainmenu li:hover li a,
+ul#mainmenu li.iehover li a {
+	line-height: 15px;
+	font-size: 10pt;
+	width: 200px;
+	z-index: 10;
+}
+
+ul#mainmenu li:hover li a:hover,
+ul#mainmenu li:hover li:hover a,
+ul#mainmenu li.iehover li a:hover,
+ul#mainmenu li.iehover li.iehover a {
+}
+
+ul#mainmenu ul,
+ul#mainmenu ul ul,
+ul#mainmenu ul ul ul {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 100px;
+	width: 200px;
+	background-color: #dddddd;
+	border: 1px dotted;
+	z-index: 10;
+}
+
+ul#mainmenu li:hover ul ul,
+ul#mainmenu li:hover ul ul ul,
+ul#mainmenu li.iehover ul ul,
+ul#mainmenu li.iehover ul ul ul {
+	display: none;
+}
+
+ul#mainmenu li:hover ul,
+ul#mainmenu ul li:hover ul,
+ul#mainmenu ul ul li:hover ul,
+ul#mainmenu li.iehover ul,
+ul#mainmenu ul li.iehover ul,
+ul#mainmenu ul ul li.iehover ul {
+	display: block;
+}
+
 
 
 /* 
@@ -136,3 +318,4 @@ div.nav_str{
 #left-column {
     padding-left: 0px;
 }
+

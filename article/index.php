@@ -1,6 +1,8 @@
 <?php
 $tags['Add_CSS'].=';article_news_faq';
-// include_once '../include/common.php';
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
+
+include_once '../include/common.php';
 
 require_once $INC_DIR . 'dompdf/lib/html5lib/Parser.php';
 require_once $INC_DIR . 'dompdf/lib/php-font-lib/src/FontLib/Autoloader.php';
@@ -43,6 +45,7 @@ if (isset($input['pdf'])) {
         // $dompdf->stream(encodestring($row['title']) . '.pdf');
         // $dompdf->stream($row['title'] . '.pdf');
         // header('Content-Description: File Transfer');
+        
         header('Content-Type: content/pdf');
         header('Content-Disposition: attachment; filename=' . $row['title'] . '.pdf');
         header('Content-Transfer-Encoding: binary');

@@ -4,6 +4,8 @@ include $INC_DIR . "lib_comments.php";
 
 $tags['Header'] = "Галерея";
 $tags['Add_CSS'].=';gallery;blog_comments';
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/gallery.css" type="text/css" rel=stylesheet />'."\n";;
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 
 $settings["gallery_use_popup"]=true;
 

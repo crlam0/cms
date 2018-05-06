@@ -76,10 +76,6 @@ $routes = [
             '1' => 'uri',
         ]
     ],    
-    'media_player' => [
-        'pattern' => '^gallery\/(.*)\/player.swf',
-        'passthru' => 'media/player.swf',
-    ],    
     'news' => [
         'pattern' => '^news\/(.*)\/',
         'file' => 'news/index.php',
@@ -105,7 +101,7 @@ foreach($routes as $title => $route) {
             if($key==0){
                 $file=dirname(__FILE__) . DIRECTORY_SEPARATOR . $route['file'];
             } else {
-                $input[$route['params'][$key]]=$value;
+                $input[$route['params'][$key]]=htmlspecialchars($value);
             }
         }
         break;
@@ -122,14 +118,16 @@ if($settings['debug']){
  */
 
 if(is_file($file)) {
-    // error_reporting(0);
-    include($file);
+    error_reporting(0);    
+    $server['PHP_SELF'] = $SUBDIR.$route['file'];
+    $server['PHP_SELF_DIR'] = $SUBDIR.dirname($route['file']) . '/';
+    include_once $file;
     exit;
 } 
 
 $tags['Header'] = 'Ошибка 404';
 $tags['file_name'] = $server['REQUEST_URI'];
-$content = my_msg_to_str('file_not_found', $tags, "");
+$content = my_msg_to_str('file_not_found', $tags, '');
 
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 

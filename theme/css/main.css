@@ -40,44 +40,7 @@ ul#menu-left li:first-child {
     background-color: yellow;
     margin: 0;
 }
-/* 
-===========================================================================
 
-   CONTENT
-
-===========================================================================
-*/
-
-#content {
-    background-color: white;
-}
-
-div.nav_str{
-    margin-top: 15px;
-}
-#content .nav_home{
-}
-#content .nav_next{
-    background: url(../img/arrow.png) 5px 3px  no-repeat;
-    line-height: 15px;
-    padding: 0px 0px 0px 18px;
-}
-#content table,tr,td {
-    font-size: 10pt;
-}
-#content div.header {
-    margin: 0px 0px 0px 0px;
-    padding: 5px 0px 5px 0px;
-    text-align: center;
-    font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: 18pt;
-    line-height: 100%;
-    font-weight: bold;
-    color: #325376;
-}
-#content div.container {
-    text-align: left;
-}
 
 /* 
 ===========================================================================
@@ -96,9 +59,8 @@ div.nav_str{
 }
 
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
     #main-header {
-        background: none;
         height: auto;
     }    
     img.main-logo {
@@ -277,6 +239,44 @@ ul#mainmenu ul ul li.iehover ul {
 }
 
 
+/* 
+===========================================================================
+
+   CONTENT
+
+===========================================================================
+*/
+
+#content {
+    background-color: white;
+}
+
+div.nav_str{
+    margin-top: 15px;
+}
+#content .nav_home{
+}
+#content .nav_next{
+    background: url(../img/arrow.png) 5px 3px  no-repeat;
+    line-height: 15px;
+    padding: 0px 0px 0px 18px;
+}
+#content table,tr,td {
+    font-size: 10pt;
+}
+#content div.header {
+    margin: 0px 0px 0px 0px;
+    padding: 5px 0px 5px 0px;
+    text-align: center;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 18pt;
+    line-height: 100%;
+    font-weight: bold;
+    color: #325376;
+}
+#content div.container {
+    text-align: left;
+}
 
 /* 
 ===========================================================================
@@ -299,6 +299,34 @@ ul#mainmenu ul ul li.iehover ul {
         width: 330px;
     }
 }
+
+/* 
+===========================================================================
+
+   FOOTER
+
+===========================================================================
+*/
+
+
+#main-footer {
+    height: 60px;
+    width: 100%;
+    background: url(../img/bottom_bg.jpg) repeat-x;
+    margin: 10px 0px;
+    text-align: center;
+}
+
+
+@media (max-width: 500px) {
+    #main-footer {
+        height: auto;
+    }    
+    img.bottom-logo {
+        display: block;
+        max-width: 100%;
+    }    
+}    
 
 
 

@@ -26,7 +26,7 @@ function get_image_list($item_id) {
     global $IMG_URL;
     $query = "select cat_item_images.*,default_img,cat_item.id as item_id from cat_item_images left join cat_item on (cat_item.id=item_id) where item_id='$item_id'";
     $result = my_query($query);
-    $content = "<table width=550 border=0 cellspacing=1 cellpadding=1 class=admin align=center>
+    $content = "<table width=550 border=0 cellspacing=1 cellpadding=1 class=\"table table-striped table-responsive table-bordered normal-form\" align=center >
 	<tr class=header align=center>
 		<td width=15%>По умолчанию</td>
 		<td width=45%>Изображение</td>
@@ -105,6 +105,7 @@ if ($input['add_image']) {
         $input['edit']=1;
         $input['id']=$input['id'];
     }
+    exit;
 }
 
 if(is_array($input['form'])){ 
@@ -169,11 +170,9 @@ if (($input['edit']) || ($input['add'])) {
     $row_part = my_select_row("select * from cat_part where id=" . $_SESSION['ADMIN_PART_ID'], 1);
     if ($tags[special_offer])$tags[special_offer] = ' checked';
 
-    $tags['price_inputs'] = "<tr class=content align=left><td>{$row_part['price1_title']}</td><td><input type=edit maxlength=45 size=64 name=form[price] value=\"{$tags['price']}\"></td></tr>";
-    if ($row_part['price_cnt'] >= 2){ $tags['price_inputs'].="<tr class=content align=left><td>{$row_part['price2_title']}</td><td><input type=edit maxlength=45 size=64 name=form[price2] value=\"{$tags['price2']}\"></td></tr>";}
-    if ($row_part['price_cnt'] >= 3){ $tags['price_inputs'].="<tr class=content align=left><td>{$row_part['price3_title']}</td><td><input type=edit maxlength=45 size=64 name=form[price3] value=\"{$tags['price3']}\"></td></tr>";}
-    if ($row_part['price_cnt'] >= 4){ $tags['price_inputs'].="<tr class=content align=left><td>{$row_part['price4_title']}</td><td><input type=edit maxlength=45 size=64 name=form[price4] value=\"{$tags['price4']}\"></td></tr>";}
-    if ($row_part['price_cnt'] >= 5){ $tags['price_inputs'].="<tr class=content align=left><td>{$row_part['price5_title']}</td><td><input type=edit maxlength=45 size=64 name=form[price5] value=\"{$tags['price5']}\"></td></tr>";}
+    $tags['price_inputs'] = "<tr class=content align=left><td>{$row_part['price1_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price] value=\"{$tags['price']}\"></td></tr>";
+    if ($row_part['price_cnt'] >= 2){ $tags['price_inputs'].="<tr class=content align=left><td>{$row_part['price2_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price2] value=\"{$tags['price2']}\"></td></tr>";}
+    if ($row_part['price_cnt'] >= 3){ $tags['price_inputs'].="<tr class=content align=left><td>{$row_part['price3_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price3] value=\"{$tags['price3']}\"></td></tr>";}
 
 //	$tags[images]=get_image_list($input["id"]);
 
@@ -195,16 +194,12 @@ $row_part = my_select_row("select * from cat_part where id=" . $_SESSION['ADMIN_
 $tags['price_header']="<td width=10%>{$row_part['price1_title']}</td>";
 if ($row_part['price_cnt'] >= 2){ $tags['price_header'].="<td width=10%>{$row_part['price2_title']}</td>"; }
 if ($row_part['price_cnt'] >= 3){ $tags['price_header'].="<td width=10%>{$row_part['price3_title']}</td>"; }
-if ($row_part['price_cnt'] >= 4){ $tags['price_header'].="<td width=10%>{$row_part['price4_title']}</td>"; }
-if ($row_part['price_cnt'] >= 5){ $tags['price_header'].="<td width=10%>{$row_part['price5_title']}</td>"; }
 
 function price_content($tmp,$row){
     $row_part = my_select_row("select * from cat_part where id='{$_SESSION['ADMIN_PART_ID']}'", true);
     $content = "<td align=center>{$row['price']}</td>";
     if ($row_part['price_cnt'] >= 2){ $content .= "<td align=center>{$row['price2']}</td>"; }
     if ($row_part['price_cnt'] >= 3){ $content .= "<td align=center>{$row['price3']}</td>"; }
-    if ($row_part['price_cnt'] >= 4){ $content .= "<td align=center>{$row['price4']}</td>"; }
-    if ($row_part['price_cnt'] >= 5){ $content .= "<td align=center>{$row['price5']}</td>"; }
     return $content;
 }
 

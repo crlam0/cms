@@ -112,7 +112,7 @@ class BBCODE_EDITOR {
                 padding-top: 2px;
                 padding-left: 3px;
                 font-size: 11px; 
-                width: 220px;
+                max-width: 220px;
             }		
             #bbcode_editor .color_select {
                 font-size: 10px;
@@ -170,12 +170,12 @@ class BBCODE_EDITOR {
                 </tr>
                 <tr>
                     <td colspan=2>
-                        <textarea cols="65" rows="12" name="bbcode_textarea" id="bbcode_textarea"><?= $this->__value ?></textarea>
+                        <textarea cols="<?= ($this->__width)/7 ?>" rows="12" name="bbcode_textarea" id="bbcode_textarea"><?= $this->__value ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td colspan=2>
-                        <input type="text" id="bbcode_helpbox" size="80" readonly="readonly">
+                        <input type="text" id="bbcode_helpbox" size="40" readonly="readonly">
                     </td>
                 </tr>
             </table>

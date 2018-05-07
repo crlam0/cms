@@ -194,7 +194,7 @@ if ($input["del_gallery"]) {
     } else {
         list($img) = my_select_row("select image_name from gallery_list where id=" . $_GET["id"]);
         if (is_file($IMG_PATH . $img)) {
-            if (!unlink($IMG_PATH . $img))print_error("Ошибка удаления файла");
+            if (!unlink($IMG_PATH . $img))my_msg_to_str("", "", "Ошибка удаления файла");
         }
 	$query = "delete from gallery_list where id='$input[id]'";
 	my_query($query, $conn);
@@ -205,7 +205,7 @@ if ($input["del_gallery"]) {
 if ($_GET["del_gallery_list_image"]) {
     list($img) = my_select_row("select image_name from gallery_list where id=" . $_GET["id"]);
     if (is_file($IMG_PATH . $img)) {
-        if (!unlink($IMG_PATH . $img))print_error("Ошибка удаления файла");
+        if (!unlink($IMG_PATH . $img))my_msg_to_str("", "", "Ошибка удаления файла");
     }
     $query = "update gallery_list set image_name='-' where id=" . $_GET["id"];
     my_query($query, $conn);
@@ -226,7 +226,7 @@ if ($input["added_gallery"]) {
             $query = "update gallery_list set image_name='$img' where id=$part_id";
             my_query($query, $conn);
         } else {
-            print_error("Ошибка копирования файла !");
+            my_msg_to_str("error", "", "Ошибка копирования файла !");
         }
     }
     $content.=my_msg_to_str("", "", "Галерея успешно добавлена.");
@@ -249,7 +249,7 @@ if ($input["edited_gallery"]) {
             $query = "update gallery_list set image_name='$img' where id=" . $input["id"];
             my_query($query, $conn);
         } else {
-            print_error("Ошибка копирования файла !");
+            my_msg_to_str("error", "", "Ошибка копирования файла !");
         }
     }
     $content.=my_msg_to_str('', '', 'Галерея успешно изменена.');

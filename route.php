@@ -34,7 +34,7 @@ $routes = [
     ],    
     
     'article_pdf' => [
-        'pattern' => '^article\/(.*)\/(.*)\.pdf',
+        'pattern' => '^article\/(.*)\/(.*)\.pdf$',
         'file' => 'article/index.php',
         'params' => [
             '1' => 'uri',
@@ -42,21 +42,21 @@ $routes = [
         ]
     ],    
     'article' => [
-        'pattern' => '^article\/(.*)\/',
+        'pattern' => '^article\/(.*)\/$',
         'file' => 'article/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
     'blog' => [
-        'pattern' => '^blog\/(.*)\/',
+        'pattern' => '^blog\/(.*)\/$',
         'file' => 'blog/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
     'gallery' => [
-        'pattern' => '^gallery\/(.*)\/',
+        'pattern' => '^gallery\/(.*)\/$',
         'file' => 'gallery/index.php',
         'params' => [
             '1' => 'uri',
@@ -70,22 +70,38 @@ $routes = [
         ]
     ],    
     'media' => [
-        'pattern' => '^media\/(.*)\/',
+        'pattern' => '^media\/(.*)\/$',
         'file' => 'media/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
     'news' => [
-        'pattern' => '^news\/(.*)\/',
+        'pattern' => '^news\/(.*)\/$',
         'file' => 'news/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
-    
+
+
+    'catalog_index' => [
+        'pattern' => '^catalog\/(.*)\/index.php$',
+        'file' => 'misc/search.php'
+    ],    
+    'catalog_buy' => [
+        'pattern' => '^catalog\/(.*)\/buy.php',
+        'file' => 'catalog/buy.php'
+    ], 
     'catalog' => [
-        'pattern' => '^test\/(.*)\/(.*)',
+        'pattern' => '^catalog\/(.*)\/$',
+        'file' => 'catalog/index.php',
+        'params' => [
+            '1' => 'uri',
+        ]
+    ],
+    'catalog_item' => [
+        'pattern' => '^catalog\/(.*)\/(.*)$',
         'file' => 'catalog/index.php',
         'params' => [
             '1' => 'uri',

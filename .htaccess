@@ -8,9 +8,11 @@ RewriteEngine On
 
 # RewriteRule ^blog/(.*)/$ blog/index.php?uri=$1 [L]
 
-RewriteRule ^catalog/(.*)/index.php$ catalog/index.php [L]
-RewriteRule ^catalog/(.*)/request.php$ catalog/request.php [L]
-RewriteRule ^catalog/(.*)/(.*)$ catalog/index.php?uri=$1&item_title=$2 [L]
+# RewriteRule ^catalog/(.*)/index.php$ catalog/index.php [L]
+# RewriteRule ^catalog/(.*)/buy.php$ catalog/buy.php [L]
+# RewriteRule ^catalog/(.*)/$ catalog/index.php?uri=$1 [L]
+# RewriteRule ^catalog/(.*)/(.*)$ catalog/index.php?uri=$1&item_title=$2 [L]
+
 
 # RewriteRule ^gallery/(.*)/$ gallery/index.php?uri=$1 [L]
 # RewriteRule ^gallery/(.*)/index.php$ gallery/index.php [L]

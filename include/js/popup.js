@@ -2,7 +2,6 @@
 var popupStatus = 0;
 
 function loadPopup() {
-    centerPopup();
     if (popupStatus == 0) {
         $("#backgroundPopup").css({
             "opacity": "0.7"
@@ -49,7 +48,7 @@ function centerPopup() {
             "width": PopupWidth
         });   
     }
-//	alert('WH: '+windowHeight+' PPH: '+popupHeight);
+    // alert('windowHeight: '+windowHeight+' popupHeight: '+popupHeight+'\n windowWidth: '+windowWidth+' popupPopipWidth: '+popupWidth);
 
     $("#popupItem").css({
         "position": "absolute",

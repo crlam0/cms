@@ -27,7 +27,7 @@ function get_menu_items($menu_id, $attr_ul = '', $attr_li = '') {
                 $href = $SUBDIR . $href;
                 $target_inc = '';
             }
-            $output.="<li {$attr_li}><a href=\"$href\" {$target_inc}title=\"{$row["title"]}\">{$row["title"]}</a>";
+            $output.="<li {$attr_li}><a href=\"$href\"{$target_inc} title=\"{$row["title"]}\">{$row["title"]}</a>";
             $output.=get_menu_items($row['submenu_id']);
             $output.="</li>\n";
         }

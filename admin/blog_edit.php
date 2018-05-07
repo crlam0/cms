@@ -76,7 +76,7 @@ if ($input["active"]) {
 if ($input["del_post"]) {
     list($img) = my_select_row("select image_name from blog_posts where id=" . $_GET["id"]);
     if (is_file($IMG_PATH . $img)) {
-        if (!unlink($IMG_PATH . $img))print_error("Ошибка удаления файла");
+        if (!unlink($IMG_PATH . $img))my_msg_to_str("error", "", "Ошибка удаления файла");
     }
     $query = "delete from blog_posts where id=" . $input["id"];
     $result = my_query($query, $conn);
@@ -89,7 +89,7 @@ if ($input["del_post"]) {
 if ($_GET["del_img"]) {
     list($img) = my_select_row("select image_name from blog_posts where id=" . $_GET["id"]);
     if (is_file($IMG_PATH . $img)) {
-        if (!unlink($IMG_PATH . $img))print_error("Ошибка удаления файла");
+        if (!unlink($IMG_PATH . $img))my_msg_to_str("", "", "Ошибка удаления файла");
     }
     $query = "update blog_posts set image_name='-' where id=" . $_GET["id"];
     my_query($query, $conn);
@@ -112,7 +112,7 @@ if ($input["added_post"]) {
             $query = "update blog_posts set image_name='$img' where id=$part_id";
             my_query($query, $conn);
         } else {
-            print_error("Ошибка копирования файла !");
+            my_msg_to_str("error", "", "Ошибка копирования файла !");
         }
     }
     $content.=my_msg_to_str("", "", "Пост успешно добавлен.");
@@ -143,7 +143,7 @@ if ($input["edited_post"]) {
             $query = "update blog_posts set image_name='$img' where id=" . $input["id"];
             my_query($query, $conn);
         } else {
-            print_error("Ошибка копирования файла !");
+            my_msg_to_str("error", "", "Ошибка копирования файла !");
         }
     }
     $content.=my_msg_to_str("", "", "Пост успешно изменен.");

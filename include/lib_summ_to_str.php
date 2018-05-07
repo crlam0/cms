@@ -157,7 +157,7 @@ function summ_to_str($sum) {
 // Проверка ввода
     $sum = str_replace(' ', '', $sum);
     $sum = trim($sum);
-    if ((!(@eregi('^[0-9]*' . '[,\.]' . '[0-9]*$', $sum) || @eregi('^[0-9]+$', $sum))) || ($sum == '.') || ($sum == ',')) :
+    if ((!(preg_match('/^[0-9]*' . '[,\.]' . '[0-9]*$/', $sum) || preg_match('/^[0-9]+$/', $sum))) || ($sum == '.') || ($sum == ',')) :
         return "Это не деньги: $sum";
     endif;
 // Меняем запятую, если она есть, на точку

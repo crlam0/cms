@@ -19,15 +19,20 @@ function my_msg_to_str($title, $tags = array(), $str = '') {
         $sql = "select * from messages where title='{$title}'";
         $message = my_select_row($sql, 1);
     }
-    if (strlen($str))
-        $message[content] = $str;
+    if (strlen($str)){
+        $message['content'] = $str;
+    }    
     if (!strlen($message['content'])) {
         return '';
     }
-    if (is_array($tags))
-        foreach ($tags as $key => $value) {
-            $message[content] = str_replace('[%' . $key . '%]', $value, $message[content]);
+    if (is_array($tags)){
+        if(strlen($tags['type'])) {
+            $message['type'] = $tags['type'];            
         }
+        foreach ($tags as $key => $value) {
+            $message['content'] = str_replace('[%' . $key . '%]', $value, $message[content]);
+        }
+    }    
     if ($message) {
         // return "<div align=center><div class=msg_{$message['type']} bgcolor=$bgcolor><font class={$message['type']}>{$message['content']}</font></div></div>";
         switch ($message['type']) {

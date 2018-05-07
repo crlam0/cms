@@ -1,4 +1,10 @@
+
 /nbproject/
+/.vscode/
+/*.code-workspace
+
+
+
 /upload/
 /src/
 /include/global.php

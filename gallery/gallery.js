@@ -3,8 +3,8 @@ $(document).ready(function () {
         var id = $(this).attr("item_id");
         var clientHeight = document.documentElement.clientHeight;
         $('#popupContent').load("index.php?load=1&id=" + id + "&clientHeight="+clientHeight, function () {
+            loadPopup();
             $("#popupContent").waitForImages(function () {
-                loadPopup();
                 centerPopup();
             });
         });

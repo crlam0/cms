@@ -327,7 +327,6 @@ $(document).ready(function(){
 	<td width=20%>Название</td>
 	<td width=25%>Описание</td>
 	<td width=10%>Цена  с НДС по безналичному расчету руб/час</td>
-	<td width=10%>Минимальное время заказа</td>
 	<td width=10%>Изображение</td>
 	<td width=5%>&nbsp;</td>
 	<td width=5%>&nbsp;</td>
@@ -338,7 +337,6 @@ $(document).ready(function(){
 	<td align=left><b>[%row(title)%]</b></td>
 	<td align=left>[%row(descr)%]</td>
 	<td align=center>[%row(price)%]</td>
-	<td align=center>[%row(minimum_time)%]</td>
 	<td align=center>[%func(show_img)%]</td>
 	<td><a href=[%PHP_SELF%]?edit=1&id=[%row(id)%]><img src="../images/open.gif" alt="Редактировать" border=0></a></td>
 	<td><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border=0 onClick="return test()"></a></td>
@@ -367,7 +365,6 @@ $(document).ready(function(){
 	<tr class=content align=left><td>Позиция:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[num] value="[%num%]"></td></tr>
 	<tr class=content align=left><td>Алиас:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
 	[%price_inputs%]
-	<tr class=content align=left><td>Минимальное время заказа:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[minimum_time] value="[%minimum_time%]"></td></tr>
 	<tr class=header><td colspan=2>Краткое описание</td></tr>
 	<tr class=content><td align=center colspan=2>
 		<textarea class="form-control" name=form[descr] rows=7 cols=90 maxlength=64000>[%descr%]</textarea>
@@ -440,10 +437,10 @@ $(document).ready(function(){
             target: '#image_list',
             success: update_image_list
         }; 
-//        $('#upload_form').submit(function(){
-//                $(this).ajaxSubmit(options);
-//                return false;
-//        });
+        $('#upload_form').submit(function(){
+                $(this).ajaxSubmit(options);
+                return false;
+        });
 });
 </script>
 <!--[/content]-->

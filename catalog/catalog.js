@@ -10,8 +10,8 @@ $(document).ready(function() {
             success: function(msg){
                 if(msg !== 'OK') alert(msg);
                 $('#popupContent').load("buy.php?get_summary=1");
-                centerPopup();
                 loadPopup();                
+                centerPopup();
             }
         });
     });
@@ -22,8 +22,8 @@ $(document).ready(function() {
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
         $('#popupContent').load("index.php?get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,function(){
-            loadPopup();                    
             $("#popupContent").waitForImages(function() {
+                loadPopup();                    
                 centerPopup();
             });
         });
@@ -35,8 +35,8 @@ $(document).ready(function() {
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
         $('#popupContent').load("index.php?get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,function(){
-            loadPopup();                    
             $("#popupContent").waitForImages(function() {
+                loadPopup();                    
                 centerPopup();
             });
         });

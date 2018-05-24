@@ -28,6 +28,10 @@ $routes = [
         'pattern' => '^request\/$',
         'file' => 'misc/request.php'
     ],    
+    'misc_request' => [
+        'pattern' => '^.*misc\/request\.php$',
+        'file' => 'misc/request.php'
+    ],    
     'vote' => [
         'pattern' => '^vote\/$',
         'file' => 'misc/vote.php'

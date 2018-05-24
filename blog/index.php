@@ -39,7 +39,7 @@ if ($input["view_post"]) {
     $tags['Header'] .= " - ".$row["title"];
     
     $content.="<div id=blog>";
-    $row["post_title"]=$row["title"];
+    $row["post_title"]=$row['title'];
     $row["content"] = replace_base_href($row["content"], false);
 
     if(strlen($row["target_type"])){
@@ -65,17 +65,17 @@ if ($input["view_post"]) {
     
 } else {
 
-    $tags[nav_str].="<span class=nav_next>$tags[Header]</span>";
+    $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
     
     $query = "SELECT ceiling(count(id)/$MSG_PER_PAGE) from {$TABLE} where active='Y'";
     list($PAGES) = my_select_row($query, NULL, true);
     $offset=$MSG_PER_PAGE*($_SESSION["BLOG_PAGE"]-1);
 
     if ($PAGES > 1) {
-        $tags[pages_list] = "<div class=pages>Страницы: ";
+        $tags['pages_list'] = "<div class=pages>Страницы: ";
         for ($i = 1; $i <= $PAGES; $i++)
-            $tags[pages_list].=($i == $_SESSION["BLOG_PAGE"] ? "[ <b>$i</b> ]&nbsp;" : "[ <a href=" . dirname($server["PHP_SELF"]) . "/page" . $i ."/>$i</a> ]&nbsp;");
-        $tags[pages_list].="</div>";
+            $tags['pages_list'].=($i == $_SESSION["BLOG_PAGE"] ? "[ <b>$i</b> ]&nbsp;" : "[ <a href=" . dirname($server["PHP_SELF"]) . "/page" . $i ."/>$i</a> ]&nbsp;");
+        $tags['pages_list'].="</div>";
     }
 
     $query = "SELECT {$TABLE}.*,users.fullname as author,date_format(date_add,'%Y-%m-%dT%H:%i+06:00') as timestamp
@@ -88,7 +88,7 @@ if ($input["view_post"]) {
         $content.=my_msg_to_str("part_empty");
     } else {
         $content.="<div id=blog>";
-        $content.=$tags[pages_list];
+        $content.=$tags['pages_list'];
         while ($row = $result->fetch_array()) {
             $row["post_title"]="<a href=\"".$SUBDIR.get_post_href(null,$row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
             $row["content"] = replace_base_href($row["content"], false);
@@ -106,17 +106,17 @@ if ($input["view_post"]) {
             $row["comment_line"] = 
                     " [ <a href=\"".$SUBDIR.get_post_href(null,$row)."#comment_form\" title=\"{$row["title"]}\">Добавить комментарий</a> ] ".
                     " [ <a href=\"".$SUBDIR.get_post_href(null,$row)."#comments\" title=\"{$row["title"]}\">".
-                    "Комментариев: " . $comments->show_count($row[id])."</a> ]";
+                    "Комментариев: " . $comments->show_count($row['id'])."</a> ]";
             $content.=get_tpl_by_title("blog_post", $row, $result);
 
         }
-        $content.=$tags[pages_list];
+        $content.=$tags['pages_list'];
         $content.="</div>";
     }
 }
 
 // $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 
-echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+echo get_tpl_by_title($part['tpl_name'], $tags, "", $content);
 
 

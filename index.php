@@ -15,7 +15,7 @@ $query="select title,content from article_item where seo_alias='main'";
 $result=my_query($query);
 list($title,$text)=$result->fetch_array();
 
-$tags[Header]=$title;
+$tags['Header']=$title;
 $text=replace_base_href($text);
 
 $content="<table width=100% border=0 cellspacing=0 cellpadding=0 align=center>
@@ -50,7 +50,7 @@ if ($result->num_rows) {
             $row['comment_line'] = 
                     " [ <a href=\"".get_post_href(null,$row)."#comment_form\" title=\"{$row["title"]}\">Добавить комментарий</a> ] ".
                     " [ <a href=\"".get_post_href(null,$row)."#comments\" title=\"{$row["title"]}\">".
-                    "Комментариев: " . $comments->show_count($row[id])."</a> ]";
+                    "Комментариев: " . $comments->show_count($row['id'])."</a> ]";
 
             $content.=get_tpl_by_title('blog_post', $row, $result);
 
@@ -59,5 +59,5 @@ if ($result->num_rows) {
     $content.='</div>';
 }
 
-echo get_tpl_by_title($part[tpl_name],$tags,"",$content);
+echo get_tpl_by_title($part['tpl_name'],$tags,"",$content);
 

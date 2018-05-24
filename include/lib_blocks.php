@@ -120,7 +120,7 @@ function get_block($block_name) {
                 }    
                 $i = 0;
                 while ($row = $result->fetch_array()) {
-                    $tags[variants].="
+                    $tags['variants'].="
                             <div class=vote_variant>
                             <input type=$type name=vote[] value=$row[id]" . ((!$i) && ($type == "radio") ? " checked" : "") . ">$row[title]
                             </div>\n";

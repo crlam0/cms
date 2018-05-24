@@ -134,10 +134,10 @@ function tpl_parse_string($content, $tags = array(), $sql_row = array(), $sql_ro
  */
 function tpl_parse($content, $tags = array(), $sql_result = array(), $inner_content = '') {
     global $server, $BASE_HREF, $SUBDIR;
-    $tags[PHP_SELF] = $server['PHP_SELF'];
-    $tags[PHP_SELF_DIR] = $server['PHP_SELF_DIR'];
-    $tags[BASE_HREF] = $BASE_HREF;
-    $tags[SUBDIR] = $SUBDIR;
+    $tags['PHP_SELF'] = $server['PHP_SELF'];
+    $tags['PHP_SELF_DIR'] = $server['PHP_SELF_DIR'];
+    $tags['BASE_HREF'] = $BASE_HREF;
+    $tags['SUBDIR'] = $SUBDIR;
     //foreach ($tags as $key => $value) { $result=str_replace("[%".$key."%]",$value,$result); }
     $strings = explode("\n", $content);
     $loop_start = 0;
@@ -237,22 +237,22 @@ function get_tpl_by_title($title, $tags = array(), $sql_result = array(), $inner
     }
     if ($template['file_name']) {
         $fname = '';
-        if (file_exists($template[file_name]))
-            $fname = $template[file_name];
-        if (file_exists($DIR . $template[file_name]))
-            $fname = $DIR . $template[file_name];
+        if (file_exists($template['file_name']))
+            $fname = $template['file_name'];
+        if (file_exists($DIR . $template['file_name']))
+            $fname = $DIR . $template['file_name'];
         if ($fname) {
-            $template[content] = implode('', file($fname));
+            $template['content'] = implode('', file($fname));
         } else {
-            $tags[file_name] = $template[file_name];
+            $tags['file_name'] = $template['file_name'];
             my_msg('file_not_found', $tags);
             return '';
         }
     }
-    if ((!$template[do_parse]) || (!strstr($template[content], '[%'))) {
-        return($template[content]);
+    if ((!$template['do_parse']) || (!strstr($template['content'], '[%'))) {
+        return($template['content']);
     }
     add_to_debug("Parse template '{$title}' done");
-    return tpl_parse($template[content], $tags, $sql_result, $inner_content);
+    return tpl_parse($template['content'], $tags, $sql_result, $inner_content);
 }
 

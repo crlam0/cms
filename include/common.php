@@ -48,22 +48,22 @@ add_to_debug('Stats added');
 
 $query = "SELECT * FROM parts WHERE uri='" . $server["REQUEST_URI"] . "'";
 $part = my_select_row($query, 1);
-if (!$part[id]) {
+if (!$part['id']) {
     $query = "SELECT * FROM parts WHERE '" . $server["REQUEST_URI"] . "' LIKE concat('%',uri,'%') AND title<>'default'";
     $part = my_select_row($query, 1);
 }
-if (!$part[id]) {
+if (!$part['id']) {
     $query = "SELECT * FROM parts WHERE title='default'";
     $part = my_select_row($query, 1);
 }
-if (!$part[id]) {
+if (!$part['id']) {
     my_msg('default_tpl_not_found');
     exit();
 }
 
 add_to_debug('Part data loaded');
 
-if ((strlen($part[user_flag])) && (!strstr($_SESSION['FLAGS'], $part['user_flag'])) && (!strstr($_SESSION['FLAGS'], 'global'))) {
+if ((strlen($part['user_flag'])) && (!strstr($_SESSION['FLAGS'], $part['user_flag'])) && (!strstr($_SESSION['FLAGS'], 'global'))) {
     if ($_SESSION['UID']) {
         echo '<h1 align=center>У вас нет соответствующих прав !</h1>';
         exit();

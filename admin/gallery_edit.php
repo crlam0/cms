@@ -173,7 +173,7 @@ if (($input['edit_image']) || ($input['add_image'])) {
     $tags['descr'] = "<textarea name=form[descr] class=\"form-control\" rows=15 cols=100 maxlength=64000>$tags[descr]</textarea>";
     $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_title('gallery_image_edit_form', $tags);
-    echo get_tpl_by_title($part[tpl_name], $tags, '', $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -182,7 +182,7 @@ if ($_SESSION['view_gallery']) {
     $result = my_query($query, $conn, true);
     $content.=get_tpl_by_title('gallery_image_edit_table', $tags, $result);
     $tags['INCLUDE_HEAD']=$JQUERY_INC;
-    echo get_tpl_by_title($part[tpl_name], $tags, '', $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -273,7 +273,7 @@ if (($input['edit_gallery']) || ($input['add_gallery'])) {
     $tags['del_button'] = (is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $server['PHP_SELF'] . "?del_gallery_list_image=1&id={$tags['id']}>Удалить</a><br>" : "");
 
     $content.=get_tpl_by_title('gallery_list_edit_form', $tags);
-    echo get_tpl_by_title($part[tpl_name], $tags, '', $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();
 }
 

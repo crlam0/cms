@@ -37,12 +37,12 @@ if (($input["view"]) || ($input["adding"])) {
 	$tags[user_flags].="<option value=\"$row[value]\"" . ($tags[user_flag] == $row[value] ? " selected" : "") . ">$row[title]</option>";
     }
     $content.=get_tpl_by_title("parts_edit_form", $tags);
-    echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 } else {
 
     $query = "SELECT * from parts order by title asc";
     $result = my_query($query, $conn);
     $content.=get_tpl_by_title("parts_edit_table", $tags, $result);
-    echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 }
 ?>

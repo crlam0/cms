@@ -21,5 +21,5 @@ $query="SELECT script_name,count(id) as hits from visitor_log group by script_na
 $result=my_query($query);
 $content.=get_tpl_by_title("stats_script_name_table",$tags,$result);
 
-echo get_tpl_by_title($part[tpl_name],$tags,"",$content);	
+echo get_tpl_by_title($part['tpl_name'],$tags,"",$content);	
 ?>

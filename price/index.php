@@ -94,7 +94,7 @@ if(strlen($row_part[descr_bottom]))$content.="<div class=part_descr>".nl2br($row
 
 $tags['INCLUDE_HEAD'] .= "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/popup.js\"></script>\n";
 
-echo get_tpl_by_title($part[tpl_name],$tags,'',$final_content);
+echo get_tpl_by_title($part['tpl_name'],$tags,'',$final_content);
 ?>
 
 <script>

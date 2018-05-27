@@ -113,7 +113,7 @@ if ($_SESSION["view_files"]) {
         $content.="<script>$('audio,video').mediaelementplayer();</script>";
     }
 
-    echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -127,5 +127,5 @@ if (!$result->num_rows) {
 } else {
     $content = get_tpl_by_title("media_list_table", $tags, $result);
 }
-echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 

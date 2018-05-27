@@ -25,6 +25,6 @@ if(!$result->num_rows){
 }else{
 	$content=get_tpl_by_title("news_table",$tags,$result);
 }
-echo get_tpl_by_title("$part[tpl_name]",$tags,"",$content);
+echo get_tpl_by_title("$part['tpl_name']",$tags,"",$content);
 
 ?>

@@ -181,7 +181,7 @@ if (($input['edit']) || ($input['add'])) {
     if($input['edit']){
         $content .= get_tpl_by_title('cat_item_images_form', $tags);
     }
-    echo get_tpl_by_title($part[tpl_name], $tags, '', $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit;
 }
 
@@ -204,4 +204,4 @@ function price_content($tmp,$row){
 }
 
 $content = get_tpl_by_title("cat_item_table", $tags, $result);
-echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

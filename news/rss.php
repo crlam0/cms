@@ -7,7 +7,7 @@ $tags[nav_str].="<span class=nav_next>$tags[Header]</span>";
 $xmlstr = @file_get_contents($settings[rss_url]);
 if ( $xmlstr===false ){
 	$content=my_msg_to_str("rss_error");
-	echo get_tpl_by_title($part[tpl_name],$tags,"",$content);
+	echo get_tpl_by_title($part['tpl_name'],$tags,"",$content);
 	exit;
 }
 
@@ -33,6 +33,6 @@ for ($i=0; $i < $count; $i++) {
 	$content.=get_tpl_by_title("news_rss",$tags,$result);
 }
 
-echo get_tpl_by_title("$part[tpl_name]",$tags,"",$content);
+echo get_tpl_by_title("$part['tpl_name']",$tags,"",$content);
 
 ?>

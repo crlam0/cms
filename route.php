@@ -3,9 +3,9 @@
 require_once 'include/common.php';
 
 if($SUBDIR !== '/') {
-    $request_uri = str_replace($SUBDIR, '', $_SERVER['REQUEST_URI']);
+    $request_uri = str_replace($SUBDIR, '', $server['REQUEST_URI']);
 } else {
-    $request_uri = substr($_SERVER['REQUEST_URI'], 1);
+    $request_uri = substr($server['REQUEST_URI'], 1);
 }    
 
 $routes = [

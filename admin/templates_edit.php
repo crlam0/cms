@@ -42,11 +42,11 @@ if (($input['view']) || ($input['adding'])) {
     $tags[content] = str_replace('textarea', 'text_area', $tags[content]);
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_HTML_INC;
     $content.=get_tpl_by_title('templates_edit_form', $tags);
-    echo get_tpl_by_title($part[tpl_name], $tags, '', $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 } else {
     $query = "SELECT * from templates order by title asc";
     $result = my_query($query, $conn);
     $content.=get_tpl_by_title('templates_edit_table', $tags, $result);
-    echo get_tpl_by_title($part[tpl_name], $tags, '', $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 }
 

@@ -198,7 +198,7 @@ if(strlen($input['item_title'])){
         $content.=my_msg_to_str('notice',[],'Товар не найден');
     }
 
-    echo get_tpl_by_title($part[tpl_name],$tags,"",$content);
+    echo get_tpl_by_title($part['tpl_name'],$tags,"",$content);
     exit;
 }
 
@@ -306,4 +306,4 @@ if($current_part_id){
 }
 
 
-echo get_tpl_by_title($part[tpl_name],$tags,"",$content);
+echo get_tpl_by_title($part['tpl_name'],$tags,"",$content);

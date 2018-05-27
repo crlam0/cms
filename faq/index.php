@@ -73,7 +73,7 @@ if ($input["add"]) {
     }
     $tags[editor] = $editor->GetContol(400, 200, '../images/bbcode_editor');
     $content.=get_tpl_by_title('faq_edit_form', $tags);
-    echo get_tpl_by_title($part[tpl_name], $tags, '', $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit;
 }
 
@@ -102,4 +102,4 @@ if (!$result->num_rows) {
 } else {
     $content.=get_tpl_by_title("faq_list", $tags, $result);
 }
-echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

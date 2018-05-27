@@ -165,7 +165,7 @@ if (isset($input["request_done"])) {
         send_mail($settings["email_to_addr"], "Request from site " . $BASE_HREF, $msg);
         $content.=my_msg_to_str('',[],"Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.");
        
-        echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+        echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
         exit();
     }
 }
@@ -239,6 +239,6 @@ if (count($_SESSION["BUY"])) {
 }
 
 
-echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 
 

@@ -112,7 +112,7 @@ if (($input["view_image"]) || (isset($input["load"]))) {
 
     if ($input["view_image"]){
         $content = get_tpl_by_title("gallery_image_view", $tags);
-        echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+        echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
         exit();
     }
 }
@@ -169,7 +169,7 @@ if (($_SESSION['view_gallery'])||($input['page'])) {
     $tags["action"]=$SUBDIR.get_gallery_list_href($_SESSION["view_gallery"])."#comments";
     $content.=$comments->show_form($tags);    
     
-    echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -197,5 +197,5 @@ if (!$result->num_rows) {
 } else {
     $content = get_tpl_by_title("gallery_list_table", $tags, $result);
 }
-echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 

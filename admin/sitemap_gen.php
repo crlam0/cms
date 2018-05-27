@@ -11,6 +11,6 @@ $content=$result['output'];
 
 $content.= my_msg_to_str('', '', 'Готово');
 
-echo get_tpl_by_title($part[tpl_name], $tags, '', $content);
+echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 ?>
 

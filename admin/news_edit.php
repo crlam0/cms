@@ -42,11 +42,11 @@ if (($input["view"]) || ($input["adding"])) {
     $tags['INCLUDE_HEAD'] = $EDITOR_INC;
     $tags["content"] = replace_base_href($tags["content"], false);
     $content.=get_tpl_by_title("news_edit_form", $tags);
-    echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 } else {
     $query = "SELECT * from news order by id desc";
     $result = my_query($query, $conn);
     $content.=get_tpl_by_title("news_edit_table", $tags, $result);
-    echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 }
 ?>

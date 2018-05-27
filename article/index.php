@@ -101,7 +101,7 @@ if ($input["view_article"]) {
     $row["content"] = replace_base_href($row["content"]);
     
     $content = get_tpl_by_title("article_view", $row, $result);
-    echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit;
 }
 
@@ -116,7 +116,7 @@ if ($_SESSION["view_items"]) {
     $tags[Header] = $title;
 
     $content = get_tpl_by_title("article_items", $row, $result);
-    echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit;
 }
 
@@ -128,7 +128,7 @@ if (!$_SESSION["view_items"]) {
     $tags[nav_str].="<span class=nav_next>Статьи</span>";
 
     $content = get_tpl_by_title("article_list", $row, $result);
-    echo get_tpl_by_title($part[tpl_name], $tags, "", $content);
+    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit;
 }
 ?>

@@ -1,7 +1,7 @@
 <?php
 $tags['Header']='Прайс-лист';
 
-include_once "../include/common.php";
+include_once '../include/common.php';
 
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/price.css" type="text/css" rel=stylesheet />'."\n";
 
@@ -14,30 +14,28 @@ function part_items($part_id){
     left join cat_item_images on (cat_item_images.id=default_img or cat_item_images.item_id=cat_item.id)
     where part_id='{$part_id}'
     order by num,title asc";
-    $result=my_query($query,$conn,1);
+    $result=my_query($query, null, true);
         if($result->num_rows){
             $content.="<br>
-            <table width=100% align=center cellspacing=1 class=price_table>
+            <table width=100% class=\"table table-striped table-responsive table-bordered normal-form\"
             <tr class=price_header>
             <td width=30% class=price>Наименование</td>
             <td width=40% class=price>Описание</td>
-            <td width=15% class=price>Цена с НДС по безналичному расчету руб/час</td>
-            <td width=15% class=price>Минимальное время заказа</td>
+            <td width=10% class=price>Цена с НДС по безналичному расчету руб/час</td>
+            <td width=10% class=price>Минимальное время заказа</td>
+            <td width=10% class=price>&nbsp;</td>
             </tr>";
             while ($row = $result->fetch_array()){
                     $content.="<tr valign=middle class=price_line>
-                    <td class=title>$row[title]</td>
+                    <td class=title>{$row['title']}</td>
                     <td class=title>".nl2br($row['descr'])."</td>
-                    <td class=price>$row[price]</td>
-                    <td class=price>$row[minimum_time]</td>
-                    ";
-                    /*  
+                    <td class=price>{$row['price']}</td>
+                    <td class=price>{$row['minimum_time']}</td>
                     <td class=price>
-                        <input class=\"cnt_{$row[id]}\" size=1 maxlength=2 value=1>
-                        <a class=buy_button item_id=\"{$row[id]}\">Заказать</a>
-                    </td>
-                    */
-                    $content.="</tr>";
+                        <input class=\"cnt_{$row['id']}\" size=1 maxlength=2 value=1>
+                        <a class=buy_button item_id=\"{$row['id']}\">Заказать</a>
+                    </td>    
+                    </tr>";
             }
             $content.="</table><br>\n";
     }    
@@ -57,17 +55,17 @@ if( true ){
         $result=my_query($query,$conn,1);
         while ($row = $result->fetch_array()){
             $pan_ins="";
-//                        $subparts++;
+//          $subparts++;
             if((!$deep)&&(!$prev_id)){
-                    $content.="<div class=root_part><a name={$row['seo_alias']}></a><h3>$row[title]</h3></div>";
+                    $content.="<div class=root_part><a name={$row['seo_alias']}></a><h3>{$row['title']}</h3></div>";
             }else{
                 $content.="
                 <div class=sub_part>
-                    <h4> $row[title]</h4>                    
+                    <h4>{$row['title']}</h4>                    
                 </div>";				
             }
-            $content.=part_items($row[id]);
-            if($deep<$max_deep)sub_part($row[id],$deep+1,$max_deep);
+            $content.=part_items($row['id']);
+            if($deep<$max_deep)sub_part($row['id'],$deep+1,$max_deep);
         }
     }
     sub_part(0,0,2);
@@ -90,7 +88,7 @@ $final_content='
     </div>
     ';
 
-if(strlen($row_part[descr_bottom]))$content.="<div class=part_descr>".nl2br($row_part[descr_bottom])."</div>\n";
+if(strlen($row_part['descr_bottom']))$content.="<div class=part_descr>".nl2br($row_part['descr_bottom'])."</div>\n";
 
 $tags['INCLUDE_HEAD'] .= "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/popup.js\"></script>\n";
 

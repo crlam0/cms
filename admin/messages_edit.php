@@ -1,5 +1,5 @@
 <?php
-$tags[Header]="Сообщения";
+$tags['Header']="Сообщения";
 include "../include/common.php";
 
 if ($input["del"]){
@@ -8,13 +8,13 @@ if ($input["del"]){
 }
 
 if ($input["add"]){	
-	$query="insert into messages ".db_insert_fields($input[form]);
+	$query="insert into messages ".db_insert_fields($input['form']);
 	my_query($query,$conn,1);
 }
 
 
 if ($input["edit"]){	
-	$query="update messages set ".db_update_fields($input[form])." where id='$input[id]'";
+	$query="update messages set ".db_update_fields($input['form'])." where id='$input[id]'";
 	my_query($query,$conn,1);
 }
 

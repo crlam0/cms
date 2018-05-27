@@ -1,5 +1,5 @@
 <?php
-$tags[Header] = "Пункты меню";
+$tags['Header'] = "Пункты меню";
 include "../include/common.php";
 
 $tags['INCLUDE_HEAD']=$JQUERY_INC;
@@ -14,7 +14,7 @@ if ($input["view_list"]) {
 
 if ($_SESSION["view_menu"]) {
     list($list_title) = my_select_row("select title from menu_list where id='" . $_SESSION["view_menu"] . "'", 1);
-    $tags[Header].=" -> $list_title";
+    $tags['Header'].=" -> $list_title";
 }
 
 if ($input["del_menu_item"]) {
@@ -29,17 +29,17 @@ function get_item_title($target_type,$traget_id){
 }
 
 if ($input["added_menu_item"]) {
-    if (!isset($input[form][active]))$input[form][active] = 0;
-    $input[form][menu_id] = $_SESSION["view_menu"];
-    if(!strlen($input[form][title]))$input[form][title]=get_item_title($input[form][target_type],$input[form][target_id]);
-    $query = "insert into menu_item " . db_insert_fields($input[form]);
+    if (!isset($input['form'][active]))$input['form'][active] = 0;
+    $input['form'][menu_id] = $_SESSION["view_menu"];
+    if(!strlen($input['form'][title]))$input['form'][title]=get_item_title($input['form'][target_type],$input['form'][target_id]);
+    $query = "insert into menu_item " . db_insert_fields($input['form']);
     my_query($query, $conn);
 }
 
 if ($input["edited_menu_item"]) {
-    if (!isset($input[form][active]))$input[form][active] = 0;
-    if(!strlen($input[form][title]))$input[form][title]=get_item_title($input[form][target_type],$input[form][target_id]);
-    $query = "update menu_item set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    if (!isset($input['form'][active]))$input['form'][active] = 0;
+    if(!strlen($input['form'][title]))$input['form'][title]=get_item_title($input['form'][target_type],$input['form'][target_id]);
+    $query = "update menu_item set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, $conn);
 }
 
@@ -161,19 +161,19 @@ if ($input["del_menu"]) {
 }
 
 if ($input["added_menu"]) {
-    if (!isset($input[form][root]))$input[form][root] = 0;
-    if (!isset($input[form][top_menu]))$input[form][top_menu] = 0;
-    if (!isset($input[form][bottom_menu]))$input[form][bottom_menu] = 0;
-    $query = "insert into menu_list " . db_insert_fields($input[form]);
+    if (!isset($input['form'][root]))$input['form'][root] = 0;
+    if (!isset($input['form'][top_menu]))$input['form'][top_menu] = 0;
+    if (!isset($input['form'][bottom_menu]))$input['form'][bottom_menu] = 0;
+    $query = "insert into menu_list " . db_insert_fields($input['form']);
     my_query($query, $conn);
 }
 
 
 if ($input["edited_menu"]) {
-    if (!isset($input[form][root]))$input[form][root] = 0;
-    if (!isset($input[form][top_menu]))$input[form][top_menu] = 0;
-    if (!isset($input[form][bottom_menu]))$input[form][bottom_menu] = 0;
-    $query = "update menu_list set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    if (!isset($input['form'][root]))$input['form'][root] = 0;
+    if (!isset($input['form'][top_menu]))$input['form'][top_menu] = 0;
+    if (!isset($input['form'][bottom_menu]))$input['form'][bottom_menu] = 0;
+    $query = "update menu_list set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, $conn);
 }
 

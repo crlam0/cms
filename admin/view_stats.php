@@ -1,5 +1,5 @@
 <?php
-$tags[Header]="Статистика посещений";
+$tags['Header']="Статистика посещений";
 include "../include/common.php";
 $query="SELECT day,count(id) as hits,sum(unique_visitor) as unique_hits from visitor_log group by day order by day desc limit 31";
 $result=my_query($query);

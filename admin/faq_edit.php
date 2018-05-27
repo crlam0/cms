@@ -1,6 +1,6 @@
 <?php
 
-$tags[Header] = "Вопрос/ответ";
+$tags['Header'] = "Вопрос/ответ";
 include "../include/common.php";
 
 $TABLE = "faq";
@@ -23,7 +23,7 @@ if ($input["del"]) {
 }
 
 if ($input["edited"]) {
-    $query = "update $TABLE set " . db_update_fields($input[form]) . " where id=" . $input["edited"];
+    $query = "update $TABLE set " . db_update_fields($input['form']) . " where id=" . $input["edited"];
     $result = my_query($query, $conn, 1);
     $list = 1;
     $content.=my_msg_to_str("", "", "Сообщение успешно изменено.");

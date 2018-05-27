@@ -1,6 +1,6 @@
 <?php
 
-$tags[Header] = "Блог";
+$tags['Header'] = "Блог";
 include "../include/common.php";
 
 $IMG_PATH = $DIR.$settings['blog_img_path'];
@@ -97,13 +97,13 @@ if ($_GET["del_img"]) {
 }
 
 if ($input["added_post"]) {
-    $input[form][date_add] = "now()";
-    $input[form][uid] = $_SESSION["UID"];
-    // $input[form][content] = $input["form"]["content"];
-    $input[form][content] = replace_base_href($input[form][content], true);
-    if (!strlen($input[form][seo_alias]))
-        $input[form][seo_alias] = encodestring($input[form][title]);
-    $query = "insert into blog_posts " . db_insert_fields($input[form]);
+    $input['form'][date_add] = "now()";
+    $input['form'][uid] = $_SESSION["UID"];
+    // $input['form']['content'] = $input["form"]["content"];
+    $input['form']['content'] = replace_base_href($input['form']['content'], true);
+    if (!strlen($input['form'][seo_alias]))
+        $input['form'][seo_alias] = encodestring($input['form'][title]);
+    $query = "insert into blog_posts " . db_insert_fields($input['form']);
     my_query($query, null, true);
     if ($_FILES["img_file"]["size"]) {
         $f_info = pathinfo($_FILES["img_file"]["name"]);
@@ -124,12 +124,12 @@ if ($input["revert"]) {
 }
 
 if ($input["edited_post"]) {
-    $input[form][date_add] = "now()";
-    $input[form][content] = $input["form"]["content"];
-    $input[form][content] = replace_base_href($input[form][content], true);
-    if (!strlen($input[form][seo_alias]))
-        $input[form][seo_alias] = encodestring($input[form][title]);
-    $query = "update blog_posts set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $input['form'][date_add] = "now()";
+    $input['form']['content'] = $input["form"]["content"];
+    $input['form']['content'] = replace_base_href($input['form']['content'], true);
+    if (!strlen($input['form'][seo_alias]))
+        $input['form'][seo_alias] = encodestring($input['form'][title]);
+    $query = "update blog_posts set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, null, true);
     if ($_FILES["img_file"]["size"] > 100) {
         list($img) = my_select_row("select image_name from blog_posts where id=" . $input["id"]);
@@ -159,11 +159,11 @@ if (($input["edit_post"]) || ($input["add_post"])) {
         $tags = array_merge($tags, $result->fetch_array());
         $tags[type] = "edited_post";
         $tags[form_title] = "Редактирование";
-        $tags[Header] = "Редактирование поста";
+        $tags['Header'] = "Редактирование поста";
     } else {
         $tags[type] = "added_post";
         $tags[form_title] = "Добавление";
-        $tags[Header] = "Добавление поста";
+        $tags['Header'] = "Добавление поста";
     }
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
     $tags["content"] = replace_base_href($tags["content"], false);

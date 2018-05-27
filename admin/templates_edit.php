@@ -39,7 +39,7 @@ if (($input['view']) || ($input['adding'])) {
 	$tags['type'] = 'add';
 	$tags['form_title'] = 'Добавление';
     }
-    $tags[content] = str_replace('textarea', 'text_area', $tags[content]);
+    $tags['content'] = str_replace('textarea', 'text_area', $tags['content']);
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_HTML_INC;
     $content.=get_tpl_by_title('templates_edit_form', $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

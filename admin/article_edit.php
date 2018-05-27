@@ -1,6 +1,6 @@
 <?php
 
-$tags[Header] = "Статьи";
+$tags['Header'] = "Статьи";
 include "../include/common.php";
 
 if ($input["view_article"]) {
@@ -13,7 +13,7 @@ if ($input["view_list"]) {
 
 if ($_SESSION["view_article"]) {
     list($list_title) = my_select_row("select title from article_list where id='" . $_SESSION["view_article"] . "'", 1);
-    $tags[Header].=" -> $list_title";
+    $tags['Header'].=" -> $list_title";
 }
 
 if ($input["del_article"]) {
@@ -23,12 +23,12 @@ if ($input["del_article"]) {
 }
 
 if ($input["added_article"]) {
-    $input[form][date_add] = "now()";
-    $input[form][list_id] = $_SESSION["view_article"];
-    $input[form][content] = $_POST["form"]["content"];
-    $input[form][content]=replace_base_href($input[form][content],true);
-    if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $query = "insert into article_item" . db_insert_fields($input[form]);
+    $input['form'][date_add] = "now()";
+    $input['form'][list_id] = $_SESSION["view_article"];
+    $input['form']['content'] = $_POST["form"]["content"];
+    $input['form']['content']=replace_base_href($input['form']['content'],true);
+    if (!strlen($input['form'][seo_alias]))$input['form'][seo_alias] = encodestring($input['form'][title]);
+    $query = "insert into article_item" . db_insert_fields($input['form']);
     my_query($query, null, true);
     $content.=my_msg_to_str("", "", "Статья успешно добавлена.");
 }
@@ -39,11 +39,11 @@ if($input["revert"]){
 }
 
 if ($input["edited_article"]) {
-    $input[form][date_add] = "now()";
-    $input[form][content] = $_POST["form"]["content"];
-    $input[form][content]=replace_base_href($input[form][content],true);
-    if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $query = "update article_item set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $input['form'][date_add] = "now()";
+    $input['form']['content'] = $_POST["form"]["content"];
+    $input['form']['content']=replace_base_href($input['form']['content'],true);
+    if (!strlen($input['form'][seo_alias]))$input['form'][seo_alias] = encodestring($input['form'][title]);
+    $query = "update article_item set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, null, true);
     $content.=my_msg_to_str("", "", "Статья успешно изменена.");
     if($input["update"]){
@@ -58,11 +58,11 @@ if (($input["edit_article"]) || ($input["add_article"])) {
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags[type] = "edited_article";
 	$tags[form_title] = "Редактирование";
-	$tags[Header] = "Редактирование статьи";
+	$tags['Header'] = "Редактирование статьи";
     } else {
 	$tags[type] = "added_article";
 	$tags[form_title] = "Добавление";
-	$tags[Header] = "Добавление статьи";
+	$tags['Header'] = "Добавление статьи";
     }
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
     $tags["content"]=replace_base_href($tags["content"],false);
@@ -92,16 +92,16 @@ if ($input["del_list"]) {
 }
 
 if ($input["added_list"]) {
-    $input[form][date_add] = "now()";
-    if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $query = "insert into article_list " . db_insert_fields($input[form]);
+    $input['form'][date_add] = "now()";
+    if (!strlen($input['form'][seo_alias]))$input['form'][seo_alias] = encodestring($input['form'][title]);
+    $query = "insert into article_list " . db_insert_fields($input['form']);
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Раздел успешно добавлен.");
 }
 
 if ($input["edited_list"]) {
-    if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $query = "update article_list set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    if (!strlen($input['form'][seo_alias]))$input['form'][seo_alias] = encodestring($input['form'][title]);
+    $query = "update article_list set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Раздел успешно изменен.");
 }
@@ -113,11 +113,11 @@ if (($input["edit_list"]) || ($input["add_list"])) {
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags[type] = "edited_list";
 	$tags[form_title] = "Редактирование";
-	$tags[Header] = "Редактирование раздела";
+	$tags['Header'] = "Редактирование раздела";
     } else {
 	$tags[type] = "added_list";
 	$tags[form_title] = "Добавление";
-	$tags[Header] = "Добавление раздела";
+	$tags['Header'] = "Добавление раздела";
     }
     $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_title("article_list_edit_form", $tags);

@@ -1,5 +1,5 @@
 <?php
-$tags[Header]="Список заказов";
+$tags['Header']="Список заказов";
 include_once "../include/common.php";
 
 if($_GET["active"]){

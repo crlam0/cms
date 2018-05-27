@@ -1,6 +1,6 @@
 <?php
 
-$tags[Header] = "Разделы сайта";
+$tags['Header'] = "Разделы сайта";
 include "../include/common.php";
 
 if ($input["del"]) {
@@ -9,13 +9,13 @@ if ($input["del"]) {
 }
 
 if ($input["add"]) {
-    $query = "insert into parts " . db_insert_fields($input[form]);
+    $query = "insert into parts " . db_insert_fields($input['form']);
     my_query($query, null, true);
 }
 
 
 if ($input["edit"]) {
-    $query = "update parts set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $query = "update parts set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, null, true);
 }
 

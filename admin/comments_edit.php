@@ -1,6 +1,6 @@
 <?php
 
-$tags[Header] = "Комментарии";
+$tags['Header'] = "Комментарии";
 include "../include/common.php";
 
 $TABLE = "comments";
@@ -23,7 +23,7 @@ if ($input["del_comment"]) {
 }
 
 if ($input["edited_comment"]) {
-    $query = "update $TABLE set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $query = "update $TABLE set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, null, true);
     $content.=my_msg_to_str("", "", "Комментарий успешно изменен.");
 }
@@ -35,11 +35,11 @@ if (($input["edit_comment"]) || ($input["add_comment"])) {
         $tags = array_merge($tags, $result->fetch_array());
         $tags[type] = "edited_comment";
         $tags[form_title] = "Редактирование";
-        $tags[Header] = "Редактирование комментария";
+        $tags['Header'] = "Редактирование комментария";
     } else {
         $tags[type] = "added_comment";
         $tags[form_title] = "Добавление";
-        $tags[Header] = "Добавление комментария";
+        $tags['Header'] = "Добавление комментария";
     }
     $content.=get_tpl_by_title("comment_edit_form", $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

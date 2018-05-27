@@ -1,6 +1,6 @@
 <?php
 
-$tags[Header] = "Голосования";
+$tags['Header'] = "Голосования";
 include "../include/common.php";
 
 if ($input["view_vote"]) {
@@ -18,15 +18,15 @@ if ($input["del_variant"]) {
 }
 
 if ($input["added_variant"]) {
-    $input[form][vote_id] = $_SESSION["view_vote"];
-    $query = "insert into vote_variants " . db_insert_fields($input[form]);
+    $input['form'][vote_id] = $_SESSION["view_vote"];
+    $query = "insert into vote_variants " . db_insert_fields($input['form']);
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Вариант успешно добавлен.");
 }
 
 if ($input["edited_variant"]) {
-    $input[form][vote_id] = $_SESSION["view_vote"];
-    $query = "update vote_variants set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $input['form'][vote_id] = $_SESSION["view_vote"];
+    $query = "update vote_variants set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Вариант успешно изменен.");
 }
@@ -70,17 +70,17 @@ if ($input["del_vote"]) {
 }
 
 if ($input["added_vote"]) {
-    if (!isset($input[form][active])
-	)$input[form][active] = 0;
-    $query = "insert into vote_list " . db_insert_fields($input[form]);
+    if (!isset($input['form'][active])
+	)$input['form'][active] = 0;
+    $query = "insert into vote_list " . db_insert_fields($input['form']);
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Вариант успешно добавлено.");
 }
 
 if ($input["edited_vote"]) {
-    if (!isset($input[form][active])
-	)$input[form][active] = 0;
-    $query = "update vote_list set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    if (!isset($input['form'][active])
+	)$input['form'][active] = 0;
+    $query = "update vote_list set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Вариант успешно изменено.");
 }

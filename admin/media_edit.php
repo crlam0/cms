@@ -1,6 +1,6 @@
 <?php
 
-$tags[Header] = "Мультимедиа";
+$tags['Header'] = "Мультимедиа";
 include "../include/common.php";
 
 if ($input["view_list"]) {
@@ -13,7 +13,7 @@ if ($input["list_media"]) {
 
 if ($_SESSION["view_files"]) {
     list($list_title) = my_select_row("select title from media_list where id='" . $_SESSION["view_files"] . "'", 1);
-    $tags[Header].=" -> $list_title";
+    $tags['Header'].=" -> $list_title";
 }
 
 function show_size($tmp, $row) {
@@ -38,21 +38,21 @@ if ($input["del_file"]) {
 }
 
 if ($input["added_file"]) {
-    $input[form][date_add] = "now()";
-    $input[form][list_id] = $_SESSION["view_files"];
+    $input['form'][date_add] = "now()";
+    $input['form'][list_id] = $_SESSION["view_files"];
     if ($_FILES["uploaded_file"]["size"] > 100) {
       	$f_info = pathinfo($_FILES["uploaded_file"]["name"]);
 	$file_name = encodestring($f_info["filename"]) . "." . $f_info["extension"];
 
 //	$file_name = str_replace(" ", "_", encodestring($_FILES["uploaded_file"]["name"]));
 	if (move_uploaded_file($_FILES["uploaded_file"]["tmp_name"], $DIR . $settings["media_upload_path"] . $file_name)) {
-	    $input[form][file_name] = $file_name;
+	    $input['form'][file_name] = $file_name;
 	} else {
 	    $content.=my_msg_to_str("error","","Ошибка копирования файла !");
 	}
     }
 
-    $query = "insert into media_files " . db_insert_fields($input[form]);
+    $query = "insert into media_files " . db_insert_fields($input['form']);
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Файл успешно добавлен.");
 }
@@ -68,12 +68,12 @@ if ($input["edited_file"]) {
 	$file_name = encodestring($f_info["filename"]) . "." . $f_info["extension"];
 //	$file_name = str_replace(" ", "_", encodestring($_FILES["uploaded_file"]["name"]));
 	if (move_uploaded_file($_FILES["uploaded_file"]["tmp_name"], $DIR . $settings["media_upload_path"] . $file_name)) {
-	    $input[form][file_name] = $file_name;
+	    $input['form'][file_name] = $file_name;
 	} else {
 	    $content.=my_msg_to_str("error","","Ошибка копирования файла !");
 	}
     }
-    $query = "update media_files set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $query = "update media_files set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Файл успешно изменен.");
 }
@@ -117,16 +117,16 @@ if ($input["del_list"]) {
 }
 
 if ($input["added_list"]) {
-    if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $input[form][date_add] = "now()";
-    $query = "insert into media_list " . db_insert_fields($input[form]);
+    if (!strlen($input['form'][seo_alias]))$input['form'][seo_alias] = encodestring($input['form'][title]);
+    $input['form'][date_add] = "now()";
+    $query = "insert into media_list " . db_insert_fields($input['form']);
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Раздел успешно добавлен.");
 }
 
 if ($input["edited_list"]) {
-    if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $query = "update media_list set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    if (!strlen($input['form'][seo_alias]))$input['form'][seo_alias] = encodestring($input['form'][title]);
+    $query = "update media_list set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, $conn);
     $content.=my_msg_to_str("", "", "Раздел успешно изменен.");
 }

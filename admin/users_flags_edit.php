@@ -9,12 +9,12 @@ if ($input['del']) {
 }
 
 if ($input['add']) {
-    $query = "insert into users_flags " . db_insert_fields($input[form]);
+    $query = "insert into users_flags " . db_insert_fields($input['form']);
     my_query($query, null, true);
 }
 
 if ($input['edit']) {
-    $query = "update users_flags set " . db_update_fields($input[form]) . " where id='{$input['id']}'";
+    $query = "update users_flags set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, null, true);
 }
 

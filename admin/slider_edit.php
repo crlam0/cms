@@ -1,6 +1,6 @@
 <?php
 
-$tags[Header] = "Картинки для слайдера";
+$tags['Header'] = "Картинки для слайдера";
 include "../include/common.php";
 
 function show_img($tmp, $row) {
@@ -27,7 +27,7 @@ if ($input["del_image"]) {
 // ($_FILES["img_file"]);
 
 if ($input["added_image"]) {
-    $query = "insert into slider_images " . db_insert_fields($input[form]);
+    $query = "insert into slider_images " . db_insert_fields($input['form']);
     my_query($query, $conn);
     if ($_FILES["img_file"]["size"] > 100) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
@@ -35,7 +35,7 @@ if ($input["added_image"]) {
         } else {
             $image_id = $mysqli->insert_id;
             $f_info = pathinfo($_FILES["img_file"]["name"]);
-            $file_name = encodestring($input[form][title]) . "." . $f_info["extension"];
+            $file_name = encodestring($input['form'][title]) . "." . $f_info["extension"];
             if (move_uploaded_image($_FILES["img_file"], $DIR . $settings["slider_img_path"] . $file_name, 1600)) {
                 $query = "update slider_images set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
                 my_query($query, $conn);
@@ -58,17 +58,17 @@ if ($input["edited_image"]) {
                     $content.=my_msg_to_str("error", "", "Ошибка удаления файла");
             }
             $f_info = pathinfo($_FILES["img_file"]["name"]);
-            $file_name = encodestring($input[form][title]) . "." . $f_info["extension"];
+            $file_name = encodestring($input['form'][title]) . "." . $f_info["extension"];
             if (move_uploaded_image($_FILES["img_file"], $DIR . $settings["slider_img_path"] . $file_name, 1600)) {
-                $input[form][file_name] = $file_name;
-                $input[form][file_type] = $_FILES["img_file"]["type"];
+                $input['form'][file_name] = $file_name;
+                $input['form'][file_type] = $_FILES["img_file"]["type"];
                 $content.=my_msg_to_str("", "", "Фотография успешно изменена.");
             } else {
                 $content.=my_msg_to_str("error", "", "Ошибка копирования файла !");
             }
         }
     }
-    $query = "update slider_images set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    $query = "update slider_images set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, $conn);
 }
 

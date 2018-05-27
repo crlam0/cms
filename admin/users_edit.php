@@ -1,5 +1,5 @@
 <?php
-$tags[Header]="Пользователи сервера";
+$tags['Header']="Пользователи сервера";
 include "../include/common.php";
 
 if ($input['del']) {

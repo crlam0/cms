@@ -1,6 +1,6 @@
 <?php
 
-$tags[Header] = 'Галерея';
+$tags['Header'] = 'Галерея';
 include '../include/common.php';
 
 $IMG_PATH = $DIR.$settings['gallery_list_img_path'];
@@ -25,7 +25,7 @@ if ($input['active']) {
 
 if ($_SESSION['view_gallery']) {
     list($list_title) = my_select_row("select title from gallery_list where id='" . $_SESSION["view_gallery"] . "'", 1);
-    $tags[Header].=" -> $list_title";
+    $tags['Header'].=" -> $list_title";
 }
 
 if ($_POST['default_image_id']) {
@@ -72,9 +72,9 @@ if ($input['add_multiple']){
         $file_ary = reArrayFiles($_FILES['files']);
 
         foreach ($file_ary as $file) {
-            $input[form][date_add] = "now()";
-            $input[form][gallery_id] = $_SESSION['view_gallery'];
-            $query = "insert into gallery_images " . db_insert_fields($input[form]);
+            $input['form'][date_add] = "now()";
+            $input['form'][gallery_id] = $_SESSION['view_gallery'];
+            $query = "insert into gallery_images " . db_insert_fields($input['form']);
             my_query($query, $conn);    
             if ($file["size"] > 100) {
                 if (!in_array($file["type"], $validImageTypes)) {
@@ -112,9 +112,9 @@ if ($input['del_image']) {
 // print_array($_FILES["img_file"]);
 
 if ($input['added_image']) {
-    $input[form][date_add] = 'now()';
-    $input[form][gallery_id] = $_SESSION['view_gallery'];
-    $query = "insert into gallery_images " . db_insert_fields($input[form]);
+    $input['form'][date_add] = 'now()';
+    $input['form'][gallery_id] = $_SESSION['view_gallery'];
+    $query = "insert into gallery_images " . db_insert_fields($input['form']);
     my_query($query, $conn);    
     if ($_FILES['img_file']["size"] > 100) {
 	if (!in_array($_FILES['img_file']['type'], $validImageTypes)) {
@@ -122,7 +122,7 @@ if ($input['added_image']) {
 	} else {
             $image_id=$mysqli->insert_id;
 	    $f_info = pathinfo($_FILES['img_file']['name']);
-	    $file_name = encodestring($input[form][title]) . "." . $f_info['extension'];
+	    $file_name = encodestring($input['form'][title]) . "." . $f_info['extension'];
 	    if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['gallery_upload_path'] . $file_name, 1024)) {
 		$query = "update gallery_images set file_name='{$file_name}',file_type='" . $_FILES['img_file']['type'] . "' where id='{$image_id}'";
 		my_query($query, $conn);
@@ -145,7 +145,7 @@ if ($input['edited_image']) {
 		    )$content.=my_msg_to_str('error','','Ошибка удаления файла');
 	    }
 	    $f_info = pathinfo($_FILES['img_file']['name']);
-	    $file_name = encodestring($input[form][title]) . "." . $f_info['extension'];
+	    $file_name = encodestring($input['form'][title]) . "." . $f_info['extension'];
 	    if (move_uploaded_image($_FILES['img_file'], $DIR . $settings['gallery_upload_path'] . $file_name, 1024)) {
 		$input['form']['file_name'] = $file_name;
 		$input['form']['file_type'] = $_FILES['img_file']['type'];
@@ -214,9 +214,9 @@ if ($_GET["del_gallery_list_image"]) {
 
 
 if ($input["added_gallery"]) {
-    if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $input[form][date_add] = "now()";
-    $query = "insert into gallery_list " . db_insert_fields($input[form]);
+    if (!strlen($input['form'][seo_alias]))$input['form'][seo_alias] = encodestring($input['form'][title]);
+    $input['form'][date_add] = "now()";
+    $query = "insert into gallery_list " . db_insert_fields($input['form']);
     my_query($query, $conn);
     if ($_FILES["img_file"]["size"]) {
         $part_id = $mysqli->insert_id;
@@ -233,8 +233,8 @@ if ($input["added_gallery"]) {
 }
 
 if ($input["edited_gallery"]) {
-    if (!strlen($input[form][seo_alias]))$input[form][seo_alias] = encodestring($input[form][title]);
-    $query = "update gallery_list set " . db_update_fields($input[form]) . " where id='$input[id]'";
+    if (!strlen($input['form'][seo_alias]))$input['form'][seo_alias] = encodestring($input['form'][title]);
+    $query = "update gallery_list set " . db_update_fields($input['form']) . " where id='$input[id]'";
     my_query($query, $conn);
     if ($_FILES["img_file"]["size"] > 100) {
         list($img) = my_select_row("select image_name from gallery_list where id=" . $input["id"]);

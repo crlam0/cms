@@ -216,6 +216,32 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0) {
 }
 
 /**
+ * Redirect to $url
+ *
+ * @param string $url
+ *
+ */
+function redirect($url) {
+  $content = sprintf('<!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0;url=%1$s" />
+
+    <title>Redirecting to %1$s</title>
+  </head>
+  <body>
+    Redirecting to <a href="%1$s">%1$s</a>.
+  </body>
+  </html>', htmlspecialchars($url, ENT_QUOTES, 'UTF-8'));
+
+  header('Location: ' . $url);
+  header('Status: 301 Moved Permanently', false, 301);
+
+  die($content);
+}
+
+/**
  * Print calendar
  *
  * @param integer $month Month number

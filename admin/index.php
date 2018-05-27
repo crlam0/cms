@@ -43,5 +43,4 @@ $query="SELECT * from visitor_log where unique_visitor=1 order by id desc limit 
 $result=my_query($query);
 $content.=get_tpl_by_title('stats_last_visitors_table',$tags,$result);
 
-echo get_tpl_by_title($part[tpl_name],$tags,'',$content);
-?>
+echo get_tpl_by_title($part['tpl_name'],$tags,'',$content);

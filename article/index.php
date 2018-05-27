@@ -2,7 +2,7 @@
 $tags['Add_CSS'].=';article_news_faq';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
 
-include_once '../include/common.php';
+@include_once '../include/common.php';
 
 require_once $INC_DIR . 'dompdf/lib/html5lib/Parser.php';
 require_once $INC_DIR . 'dompdf/lib/php-font-lib/src/FontLib/Autoloader.php';

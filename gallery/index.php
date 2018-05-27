@@ -1,5 +1,5 @@
 <?php
-include "../include/common.php";
+@include_once "../include/common.php";
 include $INC_DIR . "lib_comments.php";
 
 $tags['Header'] = "Галерея";

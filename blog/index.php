@@ -2,7 +2,7 @@
 $tags['Header'] = 'Блог';
 $tags['Add_CSS'].=';blog_comments';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
-include_once '../include/common.php';
+@include_once '../include/common.php';
 include_once $INC_DIR . 'lib_comments.php';
 
 $MSG_PER_PAGE = $settings["blog_msg_per_page"];

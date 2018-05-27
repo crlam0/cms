@@ -69,7 +69,7 @@ if ((strlen($part['user_flag'])) && (!strstr($_SESSION['FLAGS'], $part['user_fla
         exit();
     } else {
         $_SESSION['GO_TO_URI'] = $server['REQUEST_URI'];
-        header('Location: ' . $SUBDIR . 'login/');
+        redirect($SUBDIR . 'login/');
         exit;
     }
 }

@@ -74,4 +74,3 @@ if (!$deny) {
     my_query($query, null, true);
     unset($data);
 }
-?>

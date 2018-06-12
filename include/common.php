@@ -1,6 +1,12 @@
 <?php
 
-require_once 'global.php';
+// require_once 'global.php';
+
+require 'config/globals.php';
+require 'config/misc.php';
+if(file_exists($DIR.'config/misc.local.php')) {
+    require_once $DIR.'config/misc.local.php';
+}    
 
 $DEBUG['start_time'] = microtime(true);
 
@@ -12,14 +18,17 @@ session_cache_limiter('nocache');
 session_name($SESSID);
 session_start();
 
+if(file_exists($DIR.'vendor/autoload.php')) {
+    require_once $DIR.'vendor/autoload.php';
+}    
 require_once $INC_DIR.'lib_sql.php';
 
 if(is_array($_GET))foreach ($_GET as $key => $value) $input[$key]=db_test_param($value,$key);
 if(is_array($_POST))foreach ($_POST as $key => $value) $input[$key]=db_test_param($value,$key);
 if(is_array($_SERVER))foreach ($_SERVER as $key => $value) $server[$key]=$value;
 
-require_once $INC_DIR.'lib_blocks.php';
 require_once $INC_DIR.'lib_messages.php';
+require_once $INC_DIR.'lib_blocks.php';
 require_once $INC_DIR.'lib_templates.php';
 require_once $INC_DIR.'lib_functions.php';
 
@@ -74,20 +83,6 @@ if ((strlen($part['user_flag'])) && (!strstr($_SESSION['FLAGS'], $part['user_fla
     }
 }
 
-$JQUERY_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.js"></script>'."\n";
-$JQUERY_FORM_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.form.js"></script>'."\n";
-
-$EDITOR_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/ckeditor/ckeditor.js" charset="utf-8"></script>'."\n".
-'<script type="text/javascript" src="'.$BASE_HREF.'include/js/editor.js"></script>'."\n";
-
-$EDITOR_MINI_INC= ' <script type="text/javascript" src="'.$BASE_HREF.'include/ckeditor/ckeditor.js" charset="utf-8"></script>'."\n".
-'<script type="text/javascript" src="'.$BASE_HREF.'include/js/editor_mini.js"></script>'."\n";
-
-$EDITOR_HTML_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/edit_area/edit_area_full.js" charset="utf-8">></script>'."\n".
-'<script type="text/javascript" src="'.$BASE_HREF.'include/js/editor_html.js" charset="utf-8"></script>'."\n";
-
-$tags['nav_str']="<a href={$SUBDIR} class=nav_home>Главная</a>";
-
 $server['PHP_SELF_DIR']=dirname($server['PHP_SELF']).'/';
 
 $css_array=explode(';',$settings['css_list'].$tags['Add_CSS']);
@@ -101,4 +96,6 @@ foreach ($css_array as $css){
 }
 unset($css_array,$css);
 $tags['INCLUDE_HEAD']='';
+$tags['INCLUDE_JS']='';
 
+add_to_debug('Part data loaded');

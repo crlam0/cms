@@ -1,5 +1,7 @@
 <?php
 
+namespace Classes;
+
 /**
  * Sitemap generator.
  *
@@ -8,8 +10,8 @@
  *
  */
 
-class SITEMAP {
-    public $static_pages = array(
+class Sitemap {
+    private $static_pages = array(
         array(
             'url' => "",
             'changefreq' => "daily",
@@ -106,7 +108,7 @@ class SITEMAP {
         global $server,$SUBDIR;
         
         $ServerUrl = 'http://' . $server["HTTP_HOST"] . $SUBDIR;
-        $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
         $SITEMAP_NS = 'http://www.sitemaps.org/schemas/sitemap/0.9';

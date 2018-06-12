@@ -1,6 +1,8 @@
 <?php
 @include_once "../include/common.php";
-include $INC_DIR . "lib_comments.php";
+// include $INC_DIR . "lib_comments.php";
+
+use Classes\Comments;
 
 $tags['Header'] = "Галерея";
 $tags['Add_CSS'].=';gallery;blog_comments';
@@ -30,7 +32,7 @@ if($settings["gallery_use_popup"]){
             '<script type="text/javascript" src="'.$BASE_HREF.'gallery/gallery.js"></script>'."\n";
 }
 
-$tags[nav_str].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>$tags[Header]</a>";
+$tags['nav_str'].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>{$tags['Header']}</a>";
 
 if ($input["view_gallery"]) {
     $_SESSION["view_gallery"] = $input["id"];
@@ -48,16 +50,16 @@ if (isset($input["page"])) {
 
 function show_img($tmp, $row) {
     global $DIR, $settings, $SUBDIR;
-    if (is_file($DIR . $settings["gallery_upload_path"] . $row[file_name])) {
+    if (is_file($DIR . $settings["gallery_upload_path"] . $row['file_name'])) {
         $content="";
         if($settings["gallery_use_popup"]==true){
             $content.="
-                <img src=\"" . $SUBDIR . "gallery/image.php?preview=1&id=$row[id]\" border=0 item_id=$row[id] class=gallery_popup alt=\"$row[title]\">
+                <img src=\"" . $SUBDIR . "gallery/image.php?preview=1&id={$row['id']}\" border=0 item_id={$row['id']} class=gallery_popup alt=\"{$row['title']}\">
                 ";
         }else{
             $content.="
-                <a href=" . $server["PHP_SELF"] . "?view_image=1&id=$row[id] title=\"$row[title]\">
-                <img src=\"" . $SUBDIR . "gallery/image.php?preview=1&id=$row[id]\" border=0 class=preview alt=\"$row[title]\">
+                <a href=" . $server["PHP_SELF"] . "?view_image=1&id={$row['id']} title=\"{$row['title']}\">
+                <img src=\"" . $SUBDIR . "gallery/image.php?preview=1&id={$row['id']}\" border=0 class=preview alt=\"{$row['title']}\">
                 </a>";
         }    
     } else {
@@ -81,7 +83,7 @@ function show_list_img($tmp, $row) {
     $row_image = my_select_row("select * from gallery_images where id='{$image_id}'", false);
     if (is_file($DIR . $settings["gallery_upload_path"] . $row_image["file_name"])) {
         $content="
-                <img src=\"" . $SUBDIR . "gallery/image.php?preview=1&id={$row_image["id"]}\" border=0 alt=\"$row[title]\">
+                <img src=\"" . $SUBDIR . "gallery/image.php?preview=1&id={$row_image["id"]}\" border=0 alt=\"{$row['title']}\">
                 ";
     } else {
         $content = "<div class=empty_img>Изображение отсутствует: {$row['file_name']}</div>";
@@ -90,11 +92,11 @@ function show_list_img($tmp, $row) {
 }
 
 if (($input["view_image"]) && (!$_SESSION["view_gallery"])) {
-    list($_SESSION["view_gallery"]) = my_select_row("select gallery_id from gallery_images where id='$input[id]'");
+    list($_SESSION["view_gallery"]) = my_select_row("select gallery_id from gallery_images where id='{$input['id']}'");
 }
 
 if (($input["view_image"]) || (isset($input["load"]))) {
-    $query = "SELECT * from gallery_images where id='$input[id]'";
+    $query = "SELECT * from gallery_images where id='{$input['id']}'";
     $row = my_select_row($query, true);
     $tags = array_merge($row, $tags);
     $tags[Header] = $row[title];
@@ -104,11 +106,11 @@ if (($input["view_image"]) || (isset($input["load"]))) {
     $tags["back_url"]=$server["PHP_SELF"] . "?view_gallery1&id=".$_SESSION["view_gallery"];
     $tags[nav_str].="<a href=" . $tags["back_url"] ." class=nav_next>$title</a><span class=nav_next>$row[title]</span>";
 
-    list($prev_id) = my_select_row("select id from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " and id<'$tags[id]' order by id desc limit 1", true);
-    if ($prev_id)$tags[prev] = "<a href={$server['PHP_SELF']}?view_image=1&id=$prev_id class=button><< Предыдущая</a>";
+    list($prev_id) = my_select_row("select id from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " and id<'{$tags['id']}' order by id desc limit 1", true);
+    if ($prev_id)$tags[prev] = "<a href={$server['PHP_SELF']}?view_image=1&id={$prev_id} class=button><< Предыдущая</a>";
 
-    list($next_id) = my_select_row("select id from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " and id>'$tags[id]' order by id asc limit 1", true);
-    if ($next_id)$tags[next] = "<a href={$server['PHP_SELF']}?view_image=1&id=$next_id class=button>Следующая >></a>";
+    list($next_id) = my_select_row("select id from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " and id>'{$tags['id']}' order by id asc limit 1", true);
+    if ($next_id)$tags[next] = "<a href={$server['PHP_SELF']}?view_image=1&id={$next_id} class=button>Следующая >></a>";
 
     if ($input["view_image"]){
         $content = get_tpl_by_title("gallery_image_view", $tags);
@@ -143,7 +145,7 @@ if (($_SESSION['view_gallery'])||($input['page'])) {
     $tags[Header] = $title;
     $tags[nav_str].="<span class=nav_next>$title</span>";
     if ($PAGES > 1) {
-        $tags[pages_list] = "<center>";
+        $tags['pages_list'] = "<center>";
         for ($i = 1; $i <= $PAGES; $i++){
             if($i == $_SESSION['gallery_page']) {
                 $tags['pages_list'].= "[ <b>$i</b> ]&nbsp;";
@@ -151,7 +153,7 @@ if (($_SESSION['view_gallery'])||($input['page'])) {
                 $tags['pages_list'].= "[ <a href=" . $SUBDIR . get_gallery_list_href($_SESSION["view_gallery"]) . "$i/>$i</a> ]&nbsp;";
             }
         }    
-        $tags[pages_list].="</center><br>";
+        $tags['pages_list'].="</center><br>";
     }
     $offset = $settings['gallery_images_per_page'] * ($_SESSION['gallery_page'] - 1);
     $query = "SELECT * from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " order by id asc limit {$offset},{$settings['gallery_images_per_page']}";
@@ -162,7 +164,7 @@ if (($_SESSION['view_gallery'])||($input['page'])) {
         $content = get_tpl_by_title("gallery_images_table", $tags, $result);
     }
     
-    $comments = new COMMENTS ("gallery",$_SESSION["view_gallery"]);
+    $comments = new Comments ("gallery",$_SESSION["view_gallery"]);
     
     $comments->get_form_data($input);
     $content.=$comments->show_list();

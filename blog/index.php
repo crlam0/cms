@@ -3,7 +3,10 @@ $tags['Header'] = 'Блог';
 $tags['Add_CSS'].=';blog_comments';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 @include_once '../include/common.php';
-include_once $INC_DIR . 'lib_comments.php';
+
+// include_once $INC_DIR . 'lib_comments.php';
+
+use Classes\Comments;
 
 $MSG_PER_PAGE = $settings["blog_msg_per_page"];
 $TABLE="blog_posts";
@@ -27,7 +30,7 @@ if(!is_array($input)){
 }
 
 
-$comments = new COMMENTS ("blog",$input["view_post"]);
+$comments = new Comments ('blog',$input['view_post']);
 
 if ($input["view_post"]) {
     $query = "select {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid) where {$TABLE}.id='{$input["view_post"]}'";

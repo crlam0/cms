@@ -1,6 +1,10 @@
 <?php
 
-include $INC_DIR . 'lib_bbcode.php';
+// include $INC_DIR . 'lib_bbcode.php';
+
+namespace Classes;
+
+use Classes\BBCodeEditor;
 
 /**
  * Add coments to some content
@@ -8,7 +12,7 @@ include $INC_DIR . 'lib_bbcode.php';
  * @return string Output string
  */
 
-class COMMENTS
+class Comments
 {
     private $__target_type;
     private $__target_id;
@@ -29,7 +33,7 @@ class COMMENTS
     function __construct($target_type,$target_id = 0,$action_href = ''){
         $this->__target_type=$target_type;
         $this->__target_id=$target_id;
-        $this->__editor = new BBCODE_EDITOR ();
+        $this->__editor = new BBCodeEditor ();
         $this->__new_form = true;
     }
 

@@ -2,6 +2,8 @@
 $tags['Header']='Страница администрирования';
 require '../include/common.php';
 
+use Classes\Sitemap;
+
 $sitemap=$DIR . 'sitemap.xml';
 
 if(file_exists($sitemap)){
@@ -10,9 +12,9 @@ if(file_exists($sitemap)){
 
 if($time_diff>7*24*60*60){
     $content.=my_msg_to_str('','','Файл sitemap.xml не обновлялся более недели.');
-    require $INC_DIR . 'lib_sitemap.php';
-    $sitemap=new SITEMAP();
-    $sitemap->build_pages_array(array('article','blog','gallery'));
+    $sitemap= new Sitemap();
+    $types = explode(';', $settings['sitemap_types']);
+    $sitemap->build_pages_array($types);
     $result=$sitemap->write();    
     $content.=my_msg_to_str('','',"Файл sitemap.xml сгенерирован, записано {$result['count']} позиций.");
 }

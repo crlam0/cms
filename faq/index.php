@@ -4,8 +4,11 @@ $tags['Add_CSS'].=';article_news_faq';
 $tags['INCLUDE_HEAD'].='<link href="article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
 require_once '../include/common.php';
 
-require_once $INC_DIR . 'lib_bbcode.php';
-$editor = new BBCODE_EDITOR ();
+// require_once $INC_DIR . 'lib_bbcode.php';
+// $editor = new BBCODE_EDITOR ();
+
+use Classes\BBCodeEditor;
+$editor = new BBCodeEditor ();
 
 $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 

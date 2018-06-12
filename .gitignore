@@ -1,8 +1,11 @@
 /nbproject/
 /.vscode/
 /*.code-workspace
-/composer.lock
 
+composer.phar
+/composer.lock
+phpunit.phar
+/phpunit.xml
 
 /upload/
 /src/

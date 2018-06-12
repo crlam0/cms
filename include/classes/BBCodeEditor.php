@@ -1,5 +1,7 @@
 <?php
 
+namespace Classes;
+
 /**
  * Parse BBCode to HTML
  *
@@ -60,7 +62,7 @@ function bb_parse($string) {
  * 
  */
 
-class BBCODE_EDITOR {
+class BBCodeEditor {
 
     private $__controlId;
     private $__value;

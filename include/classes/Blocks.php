@@ -1,12 +1,14 @@
 <?php
 
-require_once 'BlocksInterface.php';
+// require_once 'BlocksInterface.php';
+
+namespace Classes;
 
 /**
  * Implements work with simple blocks
  *
  */
-class Blocks implements BlocksInterface {
+class Blocks {
     /**
      * Return menu content
      *
@@ -117,6 +119,7 @@ class Blocks implements BlocksInterface {
     }
 
     private function last_posts () {
+        global $settings;
         $TABLE = 'blog_posts';
         $query = "SELECT {$TABLE}.*,date_format(date_add,'%d.%m.%Y') as date from {$TABLE} where active='Y' order by {$TABLE}.id desc limit {$settings['news_block_count']}";
         $result = my_query($query, null, true);
@@ -138,30 +141,11 @@ class Blocks implements BlocksInterface {
      * @return string Block content
      */
     public function content($block_name) {
-        global $settings, $DEBUG;
+        global $settings, $DEBUG, $DIR;
+        
+        add_to_debug('Parse block ' . $block_name);        
         switch ($block_name) {
             
-            case 'menu_main':
-                return $this->menu_main();
-
-            case 'menu_top':
-                return $this->menu_top();
-
-            case 'menu_bottom':
-                return $this->menu_bottom();
-                
-            case 'slider':
-                return $this->slider();
-                
-            case 'vote':
-                return $this->vote();
-                
-            case 'news':
-                return $this->news();
-                
-            case 'last_posts':
-                return $this->last_posts();
-                
             case 'partners':
                 $query = "SELECT * FROM partners order by pos asc";
                 $result = my_query($query, null);
@@ -177,13 +161,6 @@ class Blocks implements BlocksInterface {
             case 'calendar':
                 ob_start();
                 show_month(date('n'), 0);
-                $content = ob_get_contents();
-                ob_end_clean();
-                return $content;
-
-            case 'chat':
-                ob_start();
-                include_once($DIR . 'bot/chat.php');
                 $content = ob_get_contents();
                 ob_end_clean();
                 return $content;
@@ -206,6 +183,9 @@ class Blocks implements BlocksInterface {
                 return '';
                 
             default:
+                if(\is_callable([$this,$block_name])) {
+                   return $this->$block_name();
+                }                
                 $tags['title'] = $block_name;
                 return my_msg_to_str('block_not_found', $tags);
             

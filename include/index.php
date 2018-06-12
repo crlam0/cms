@@ -1,4 +1,3 @@
 <?php
-include "global.php";
-header("Location: $BASE_HREF");
-?>
+include 'config/globals.php';
+redirect($BASE_HREF);

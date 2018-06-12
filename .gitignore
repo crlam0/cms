@@ -7,9 +7,11 @@ composer.phar
 phpunit.phar
 /phpunit.xml
 
-/upload/
+/dump.cmd
+/*.html
+/*.sql
+
 /src/
-/var/
 /vendor/
 
 *.local.php
@@ -18,15 +20,7 @@ phpunit.phar
 /include/global.php
 /admin/nav.php
 /main.tpl
-/css/
-/images/design/
-/theme/
 /favicon.png
 /sitemap.xml
-
-/dump.cmd
-/*.html
-/*.sql
-
 /include/dompdf/
 

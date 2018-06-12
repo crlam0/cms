@@ -82,25 +82,15 @@ while ($row = $result->fetch_array()){
 }
 
 $final_content='
-    <div id=price>
-    <div class=price_column>'.$content.'</div>
-    <price_parts>'.$price_parts_content.'</div>
+    <div id="price">
+    <div class="col-md-8">'.$content.'</div>
+    <div class="col-md-4" id="price_parts">'.$price_parts_content.'</div>
     </div>
     ';
 
 if(strlen($row_part['descr_bottom']))$content.="<div class=part_descr>".nl2br($row_part['descr_bottom'])."</div>\n";
 
-$tags['INCLUDE_HEAD'] .= "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/popup.js\"></script>\n";
+$tags['INCLUDE_JS'] .= "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/popup.js\"></script>\n";
+$tags['INCLUDE_JS'] .= "<script type=\"text/javascript\" src=\"{$BASE_HREF}price/price.js\"></script>\n";
 
 echo get_tpl_by_title($part['tpl_name'],$tags,'',$final_content);
-?>
-
-<script>
-    var aside = document.querySelector('price_parts'),
-        HTMLtop = document.documentElement.getBoundingClientRect().top,
-        t0 = aside.getBoundingClientRect().top - HTMLtop;
-
-    window.onscroll = function() {
-        aside.className = (t0 < window.pageYOffset ? 'sticky' : '');
-    };
-</script>

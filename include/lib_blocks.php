@@ -1,5 +1,31 @@
 <?php
 
+$BlocksObject = null;
+
+if($BlocksObject===null) {
+    if(file_exists($INC_DIR.'classes/BlocksLocal.php')) {
+        require $INC_DIR.'classes/BlocksLocal.php';
+        $BlocksObject = new BlocksLocal();    
+    } else {
+        require $INC_DIR.'classes/Blocks.php';
+        $BlocksObject = new Blocks();
+    }
+}
+
+/**
+ * Return block content
+ *
+ * @param string $block_name Block name
+ *
+ * @return string Block content
+ */
+function get_block($block_name) {
+    global $BlocksObject;
+
+    return $BlocksObject->content($block_name);
+}
+
+
 /**
  * Return menu content
  *
@@ -8,7 +34,7 @@
  * @param string $attr_li LI CSS attributes
  *
  * @return string Menu content
- */
+ *
 function get_menu_items($menu_id, $attr_ul = '', $attr_li = '') {
     global $_SESSION, $SUBDIR;
     if (!$menu_id){
@@ -42,7 +68,7 @@ function get_menu_items($menu_id, $attr_ul = '', $attr_li = '') {
  * @param string $block_name Block name
  *
  * @return string Block content
- */
+ *
 function get_block($block_name) {
     global $DEBUG, $DIR, $SUBDIR, $BASE_HREF, $_SESSION, $conn, $settings, $input, $server;
     switch ($block_name) {
@@ -173,3 +199,5 @@ function get_block($block_name) {
             return my_msg_to_str("block_not_found", $tags);
     }
 }
+*/
+

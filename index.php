@@ -2,16 +2,16 @@
 $tags['Add_CSS'].=';blog_comments';
 include 'include/common.php';
 
-if(file_exists('index.local.php')) {
-    require 'index.local.php';
-    exit;
-}
-
 if($SUBDIR !== '/') {
     $request_uri = str_replace($SUBDIR, '', $server['REQUEST_URI']);
 } else {
     $request_uri = substr($server['REQUEST_URI'], 1);
 }    
+
+if( ($request_uri==='' or $request_uri==='index.php') and file_exists('index.local.php')) {
+    require 'index.local.php';
+    exit;
+}
 
 $routes = require $INC_DIR . 'config/routes.global.php';
 

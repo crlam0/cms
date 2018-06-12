@@ -30,7 +30,7 @@ if ($input["edited"]) {
 }
 
 if ($input["edit"]) {
-    $query = "select * from $TABLE where id='$input[id]'";
+    $query = "select * from $TABLE where id='{$input['id']}'";
     $result = my_query($query, $conn, 1);
     $tags = array_merge($tags, $result->fetch_array());
 

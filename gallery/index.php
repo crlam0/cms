@@ -73,7 +73,7 @@ function show_list_img($tmp, $row) {
 /*    $content="";
     if (is_file($DIR . $settings['gallery_list_img_path'] . $row[image_name])) {
         $content.="
-            <img src=\"" . $SUBDIR . $settings['gallery_list_img_path'] . $row[image_name] . "\" border=0 item_id=$row[id] class=gallery_list_image alt=\"$row[title]\">
+            <img src=\"" . $SUBDIR . $settings['gallery_list_img_path'] . $row[image_name] . "\" border=0 item_id={$row['id']} class=gallery_list_image alt=\"$row[title]\">
             ";
     } else {
         $content = "<div class=empty_img>Изображение отсутствует</div>";

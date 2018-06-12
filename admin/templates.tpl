@@ -1626,7 +1626,7 @@ $(document).ready(function(){
 <tr class=header align=left><td align=center colspan=2><input class="btn btn-primary" type=submit value="  Сохранить  "></td></tr>
 </table>
 </form>
-<center><a href="[%PHP_SELF%]"><img border=0 src=images/back.gif>  Назад</a></center>
+<center><a href="[%PHP_SELF%]" class="btn btn-default"><<  Назад</a></center>
 <!--[/content]-->
 
 

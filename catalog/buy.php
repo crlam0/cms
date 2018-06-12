@@ -1,13 +1,13 @@
 <?php
 
-$tags[Header] = "Корзина";
+$tags['Header'] = "Корзина";
 include_once "../include/common.php";
 include "../include/lib_summ_to_str.php";
 
 $tags['nav_str'].="<span class=nav_next>Корзина</span>";
 
-$IMG_ITEM_PATH = $DIR . $settings[catalog_item_img_path];
-$IMG_ITEM_URL = $BASE_HREF . $settings[catalog_item_img_path];
+$IMG_ITEM_PATH = $DIR . $settings['catalog_item_img_path'];
+$IMG_ITEM_URL = $BASE_HREF . $settings['catalog_item_img_path'];
 
 if (isset($input["clear"])) {
     unset($_SESSION["BUY"]);
@@ -26,7 +26,7 @@ if (isset($input["add_buy"])) {
 if (isset($input["calc"])) {
     while (list ($n, $item_cnt) = @each($input["buy_cnt"]))
         if (is_numeric($item_cnt)) {
-            $_SESSION["BUY"][$n][count] = $item_cnt;
+            $_SESSION["BUY"][$n]['count'] = $item_cnt;
             $_SESSION["BUY"][$n]["size"] = $input["buy_size"][$n];
             $_SESSION["BUY"][$n]["color"] = $input["buy_color"][$n];
         }
@@ -60,8 +60,8 @@ if ($input["get_summary_cost"]) {
         $cnt = 0;
         if ($result->num_rows) {
             while ($row = $result->fetch_array()) {
-                $summ+=$row[price] * $_SESSION["BUY"][$row[id]]["count"];
-                $cnt+=$_SESSION["BUY"][$row[id]]["count"];
+                $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
+                $cnt+=$_SESSION["BUY"][$row['id']]["count"];
             }
         }    
         $summ_with_discount = calc_discount($summ, get_discount($summ));
@@ -86,10 +86,10 @@ if ($input["get_summary"]) {
         $cnt = 0;
         if ($result->num_rows)
             while ($row = $result->fetch_array()) {
-                $summ+=$row[price] * $_SESSION["BUY"][$row[id]]["count"];
-                $cnt+=$_SESSION["BUY"][$row[id]]["count"];
-                $item_list.="$row[title]\t Кол-во:" . $_SESSION["BUY"][$row[id]]["count"] . "\t" .
-                        " Цена: $row[price]<br>\n";
+                $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
+                $cnt+=$_SESSION["BUY"][$row['id']]["count"];
+                $item_list.="$row[title]\t Кол-во:" . $_SESSION["BUY"][$row['id']]["count"] . "\t" .
+                        " Цена: {$row['price']}<br>\n";
             }
         $summ_with_discount = calc_discount($summ, get_discount($summ));
         $item_list.="<br><b>Итого $cnt шт. на сумму " . add_zero($summ) . " руб.<br>\n";
@@ -140,10 +140,10 @@ if (isset($input["request_done"])) {
             $item_list = "";
             if ($result->num_rows ){
                 while ($row = $result->fetch_array()) {
-                    $summ+=$row[price] * $_SESSION["BUY"][$row[id]]["count"];
-                    $cnt+=$_SESSION["BUY"][$row[id]]["count"];
-                    $item_list.="Наименовние: $row[title]\t Кол-во:" . $_SESSION["BUY"][$row[id]]["count"] . "\t" .
-                            " Цена: $row[price]\n";
+                    $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
+                    $cnt+=$_SESSION["BUY"][$row['id']]["count"];
+                    $item_list.="Наименовние: $row[title]\t Кол-во:" . $_SESSION["BUY"][$row['id']]["count"] . "\t" .
+                            " Цена: {$row['price']}\n";
                 }
             }    
         }
@@ -171,7 +171,7 @@ if (isset($input["request_done"])) {
 }
 
 
-if (count($_SESSION["BUY"])) {
+if (is_array($_SESSION["BUY"]) && count($_SESSION["BUY"])) {
     $where = "";
     $count = 0;
     foreach ($_SESSION["BUY"] as $item_id => $cnt) {
@@ -205,13 +205,13 @@ if (count($_SESSION["BUY"])) {
         $summ = 0;
         $cnt = 0;
         while ($row = $result->fetch_array()) {
-            $summ+=$row[price] * $_SESSION["BUY"][$row[id]]["count"];
-            $cnt+=$_SESSION["BUY"][$row[id]]["count"];
+            $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
+            $cnt+=$_SESSION["BUY"][$row['id']]["count"];
             $content.= "<tr valign=middle>
                 <td align=center width=50%>" . (file_exists($IMG_ITEM_PATH) . $row[fname] ? "<img src=\"{$SUBDIR}catalog/image.php?id={$row['default_img']}&windowHeight=500&fix_size=1\">" : "&nbsp;") . "</td>
-                <td class=price><b>$row[title]</b> &nbsp;&nbsp;(Кол-во: {$_SESSION["BUY"][$row[id]]["count"]})<br>
-                Цена: <b>" . add_zero($row[price]) . " руб.</b><br>" . nl2br($row[descr]) . "<br>
-                <input type=hidden name=buy_cnt[$row[id]] value=1>
+                <td class=price><b>$row[title]</b> &nbsp;&nbsp;(Кол-во: {$_SESSION["BUY"][$row['id']]["count"]})<br>
+                Цена: <b>" . add_zero($row['price']) . " руб.</b><br>" . nl2br($row[descr]) . "<br>
+                <input type=hidden name=buy_cnt[{$row['id']}] value=1>
                 </td>
                 </tr>
                 ";
@@ -235,7 +235,7 @@ if (count($_SESSION["BUY"])) {
             ";
     }
 } else {
-    $content.=$content.=my_msg_to_str('notice',[],"Корзина пуста !");
+    $content.=my_msg_to_str('notice',[],"Корзина пуста !");
 }
 
 

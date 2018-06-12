@@ -157,18 +157,18 @@ if (($input['edit']) || ($input['add'])) {
         $query = "select * from cat_item where id='{$input['id']}'";
         $result = my_query($query);
         $tags=array_merge($tags,$result->fetch_array());
-        $tags[form_title] = 'Редактирование';
-        $tags[type] = 'edited';
+        $tags['form_title'] = 'Редактирование';
+        $tags['type'] = 'edited';
         $tags['Header'] = 'Редактирование товара';
-        $tags[descr]=  strip_tags($tags[descr]);
+        $tags['descr']=  strip_tags($tags['descr']);
     } else {
-        $tags[form_title] = 'Добавление';
-        $tags[type] = 'added';
+        $tags['form_title'] = 'Добавление';
+        $tags['type'] = 'added';
         $tags['Header'] = 'Добавление товара';
-        $tags[price] = '';
+        $tags['price'] = '';
     }
     $row_part = my_select_row("select * from cat_part where id=" . $_SESSION['ADMIN_PART_ID'], 1);
-    if ($tags[special_offer])$tags[special_offer] = ' checked';
+    if ($tags['special_offer'])$tags['special_offer'] = ' checked';
 
     $tags['price_inputs'] = "<tr class=content align=left><td>{$row_part['price1_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price] value=\"{$tags['price']}\"></td></tr>";
     if ($row_part['price_cnt'] >= 2){ $tags['price_inputs'].="<tr class=content align=left><td>{$row_part['price2_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price2] value=\"{$tags['price2']}\"></td></tr>";}
@@ -203,5 +203,5 @@ function price_content($tmp,$row){
     return $content;
 }
 
-$content = get_tpl_by_title("cat_item_table", $tags, $result);
+$content = get_tpl_by_title('cat_item_table', $tags, $result);
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

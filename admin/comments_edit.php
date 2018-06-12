@@ -16,29 +16,29 @@ if ($input["active"]) {
 }
 
 if ($input["del_comment"]) {
-    $query = "delete from $TABLE where id=" . $input["id"];
+    $query = "delete from $TABLE where id={$input["id"]}";
     $result = my_query($query, null, true);
     $list = 1;
     $content.=my_msg_to_str("", "", "Комментарий успешно удален.");
 }
 
 if ($input["edited_comment"]) {
-    $query = "update $TABLE set " . db_update_fields($input['form']) . " where id='$input[id]'";
+    $query = "update $TABLE set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, null, true);
     $content.=my_msg_to_str("", "", "Комментарий успешно изменен.");
 }
 
 if (($input["edit_comment"]) || ($input["add_comment"])) {
     if ($input["edit_comment"]) {
-        $query = "select * from $TABLE where id='$input[id]'";
+        $query = "select * from $TABLE where id='{$input['id']}'";
         $result = my_query($query, $conn);
         $tags = array_merge($tags, $result->fetch_array());
-        $tags[type] = "edited_comment";
-        $tags[form_title] = "Редактирование";
+        $tags['type'] = "edited_comment";
+        $tags['form_title'] = "Редактирование";
         $tags['Header'] = "Редактирование комментария";
     } else {
-        $tags[type] = "added_comment";
-        $tags[form_title] = "Добавление";
+        $tags['type'] = "added_comment";
+        $tags['form_title'] = "Добавление";
         $tags['Header'] = "Добавление комментария";
     }
     $content.=get_tpl_by_title("comment_edit_form", $tags);
@@ -53,4 +53,3 @@ $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 
 $content.=get_tpl_by_title("comments_edit_table", $tags, $result);
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
-?>

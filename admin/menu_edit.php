@@ -18,7 +18,7 @@ if ($_SESSION["view_menu"]) {
 }
 
 if ($input["del_menu_item"]) {
-    $query = "delete from menu_item where id='$input[id]'";
+    $query = "delete from menu_item where id='{$input['id']}'";
     my_query($query, $conn);
 }
 
@@ -29,17 +29,17 @@ function get_item_title($target_type,$traget_id){
 }
 
 if ($input["added_menu_item"]) {
-    if (!isset($input['form'][active]))$input['form'][active] = 0;
-    $input['form'][menu_id] = $_SESSION["view_menu"];
-    if(!strlen($input['form'][title]))$input['form'][title]=get_item_title($input['form'][target_type],$input['form'][target_id]);
+    if (!isset($input['form']['active']))$input['form']['active'] = 0;
+    $input['form']['menu_id'] = $_SESSION["view_menu"];
+    if(!strlen($input['form']['title']))$input['form']['title']=get_item_title($input['form']['target_type'],$input['form']['target_id']);
     $query = "insert into menu_item " . db_insert_fields($input['form']);
     my_query($query, $conn);
 }
 
 if ($input["edited_menu_item"]) {
-    if (!isset($input['form'][active]))$input['form'][active] = 0;
-    if(!strlen($input['form'][title]))$input['form'][title]=get_item_title($input['form'][target_type],$input['form'][target_id]);
-    $query = "update menu_item set " . db_update_fields($input['form']) . " where id='$input[id]'";
+    if (!isset($input['form']['active']))$input['form']['active'] = 0;
+    if(!strlen($input['form']['title']))$input['form']['title']=get_item_title($input['form']['target_type'],$input['form']['target_id']);
+    $query = "update menu_item set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, $conn);
 }
 
@@ -56,7 +56,7 @@ if($input["get_target_select"]){
             $result = my_query($query, $conn,1);
             $output = "<td>Статья:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
-                $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
+                $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row['title']}</option>";
             }
             $output.="</select></td>";
             break;
@@ -65,7 +65,7 @@ if($input["get_target_select"]){
             $result = my_query($query, $conn,1);
             $output = "<td>Раздел статей:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
-                $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
+                $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row['title']}</option>";
             }
             $output.="</select></td>";
             break;
@@ -74,7 +74,7 @@ if($input["get_target_select"]){
             $result = my_query($query, $conn,1);
             $output = "<td>Раздел файлов:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
-                $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
+                $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row[title]}</option>";
             }
             $output.="</select></td>";
             break;
@@ -83,7 +83,7 @@ if($input["get_target_select"]){
             $result = my_query($query, $conn,1);
             $output = "<td>Раздел каталога:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
-                $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
+                $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row['title']}</option>";
             }
             $output.="</select></td>";
             break;
@@ -92,7 +92,7 @@ if($input["get_target_select"]){
             $result = my_query($query, $conn,1);
             $output = "<td>Раздел галереи:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
-                $output.="<option value=$row[id]" . ($row[id] == $target_id ? " selected" : "") . ">$row[title]</option>";
+                $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row['title']}</option>";
             }
             $output.="</select></td>";
             break;
@@ -103,28 +103,28 @@ if($input["get_target_select"]){
 
 if (($input["add_menu_item"]) || ($input["edit_menu_item"])) {
     if ($input["edit_menu_item"]) {
-	$query = "select * from menu_item where id='$input[id]'";
+	$query = "select * from menu_item where id='{$input['id']}'";
 	$result = my_query($query, $conn);
 	$tags = array_merge($tags, $result->fetch_array());
-	$tags[type] = "edited_menu_item";
-	$tags[form_title] = "Редактирование";
+	$tags['type'] = "edited_menu_item";
+	$tags['form_title'] = "Редактирование";
     } else {
-	$tags[type] = "added_menu_item";
-	$tags[form_title] = "Добавление";
-	$tags[css_class] = "default";
-	$tags[active] = " checked";
+	$tags['type'] = "added_menu_item";
+	$tags['form_title'] = "Добавление";
+	$tags['css_class'] = "default";
+	$tags['active'] = " checked";
     }
-    if ($tags[active])$tags[active] = " checked";
+    if ($tags['active'])$tags['active'] = " checked";
     $query = "select * from users_flags";
     $result = my_query($query, $conn);
     while ($row = $result->fetch_array()) {
-	$tags[flag_select].="<option value=$row[value]" . ($row[value] == $tags[flag] ? " selected" : "") . ">$row[title]</option>";
+	$tags['flag_select'].="<option value={$row['value']}" . ($row['value'] == $tags['flag'] ? " selected" : "") . ">{$row['title']}</option>";
     }
-    $query = "select * from menu_list where id<>'$input[id]'";
+    $query = "select * from menu_list where id<>'{$input['id']}'";
     $result = my_query($query, $conn);
     $tags['submenu_select'] = "<select name=form[submenu_id] class=\"form-control\"><option value=0>-</option>";
     while ($row = $result->fetch_array()) {
-	$tags[submenu_select].="<option value=$row[id]" . ($row[id] == $tags[submenu_id] ? " selected" : "") . ">$row[title]</option>";
+	$tags['submenu_select'].="<option value={$row['id']}" . ($row['id'] == $tags['submenu_id'] ? " selected" : "") . ">{$row['title']}</option>";
     }
     $tags['submenu_select'].="</select>";
     $tags["target_type_select"]="
@@ -150,36 +150,36 @@ if ($_SESSION["view_menu"]) {
 }
 
 if ($input["del_menu"]) {
-    $query = "select id from menu_item where menu_id='$input[id]'";
+    $query = "select id from menu_item where menu_id={$input['id']}";
     $result = my_query($query, $conn);
     if ($result->num_rows) {
 	$content.=my_msg_to_str("error","","Этот раздел не пустой !");
     } else {
-	$query = "delete from menu_list where id='$input[id]'";
+	$query = "delete from menu_list where id='{$input['id']}'";
 	my_query($query, $conn);
     }
 }
 
 if ($input["added_menu"]) {
-    if (!isset($input['form'][root]))$input['form'][root] = 0;
-    if (!isset($input['form'][top_menu]))$input['form'][top_menu] = 0;
-    if (!isset($input['form'][bottom_menu]))$input['form'][bottom_menu] = 0;
+    if (!isset($input['form']['root']))$input['form']['root'] = 0;
+    if (!isset($input['form']['top_menu']))$input['form']['top_menu'] = 0;
+    if (!isset($input['form']['bottom_menu']))$input['form']['bottom_menu'] = 0;
     $query = "insert into menu_list " . db_insert_fields($input['form']);
     my_query($query, $conn);
 }
 
 
 if ($input["edited_menu"]) {
-    if (!isset($input['form'][root]))$input['form'][root] = 0;
-    if (!isset($input['form'][top_menu]))$input['form'][top_menu] = 0;
-    if (!isset($input['form'][bottom_menu]))$input['form'][bottom_menu] = 0;
-    $query = "update menu_list set " . db_update_fields($input['form']) . " where id='$input[id]'";
+    if (!isset($input['form']['root']))$input['form']['root'] = 0;
+    if (!isset($input['form']['top_menu']))$input['form']['top_menu'] = 0;
+    if (!isset($input['form']['bottom_menu']))$input['form']['bottom_menu'] = 0;
+    $query = "update menu_list set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, $conn);
 }
 
 if (($input["add_menu"]) || ($input["edit_menu"])) {
     if ($input["edit_menu"]) {
-	$query = "select * from menu_list where id='$input[id]'";
+	$query = "select * from menu_list where id='{$input['id']}'";
 	$result = my_query($query, $conn);
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags['type'] = "edited_menu";

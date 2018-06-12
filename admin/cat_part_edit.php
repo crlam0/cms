@@ -219,7 +219,7 @@ function sub_part($prev_id, $deep) {
                 <td width=16><a href=" . $_SERVER['PHP_SELF'] . "?del=1&id={$row['id']}><img src=\"../images/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
             </tr>
             ";
-	sub_part($row[id], $deep + 1);
+	sub_part($row['id'], $deep + 1);
     }
 }
 

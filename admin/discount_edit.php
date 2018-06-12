@@ -17,7 +17,7 @@ if ($input["add"]) {
 
 
 if ($input["edit"]) {
-    $query = "update discount set " . db_update_fields($input['form']) . " where id='$input[id]'";
+    $query = "update discount set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     print_debug($query);
     my_query($query, $conn);
 }
@@ -27,15 +27,15 @@ if (($input["view"]) || ($input["adding"])) {
         $query = "select * from discount where id=" . $input["id"];
         $result = my_query($query, $conn);
         $tags=array_merge($tags,$result->fetch_array());
-        $tags[form_title] = "Редактирование";
-        $tags[type] = "edit";
+        $tags['form_title'] = "Редактирование";
+        $tags['type'] = "edit";
         $tags['Header'] = "Редактирование скидки";
     } else {
-        $tags[form_title] = "Добавление";
-        $tags[type] = "add";
+        $tags['form_title'] = "Добавление";
+        $tags['type'] = "add";
         $tags['Header'] = "Добавление скидки";
     }
-echo $tags[summ];
+echo $tags['summ'];
     $content .= get_tpl_by_title("discount_edit_form", $tags);
 
 } else {
@@ -46,4 +46,3 @@ echo $tags[summ];
     $content.=get_tpl_by_title("discount_edit_table", $tags, $result);
 }
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
-?>

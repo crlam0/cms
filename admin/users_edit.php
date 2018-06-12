@@ -53,7 +53,7 @@ if (($input['view']) || ($input['adding'])) {
     $query="select * from users_flags order by title asc";
     $result_flags=my_query($query,$conn,1);
     while($row_flags=$result_flags->fetch_array()){
-            $tags['flags'].="<input type=checkbox name=flags[] ".(in_array($row_flags[value], $flags) ? "checked" : "")." value=\"$row_flags[value]\">$row_flags[title]<br>";
+            $tags['flags'].="<input type=checkbox name=flags[] ".(in_array($row_flags['value'], $flags) ? "checked" : "")." value=\"{$row_flags['value']}\">{$row_flags['title']}<br>";
     }
 
     $content.=get_tpl_by_title('users_edit_form', $tags);

@@ -56,7 +56,7 @@ if ($input["view_post"]) {
             <img width="150" height="150" src="'.$SUBDIR.$settings['blog_img_path'].$row['image_name'].'" class="attachment-150x150 wp-post-image" alt="'.$row['title'].'">    
         </div>';
     }            
-    $row["comment_line"] = "Комментариев: " . $comments->show_count($row[id]);
+    $row["comment_line"] = "Комментариев: " . $comments->show_count($row['id']);
     // unset($row['post_title']);
     $content.=get_tpl_by_title("blog_post", $row, $result);
     $content.="</div>";

@@ -4,18 +4,18 @@ include "../include/common.php";
 
 if ($input["del"]){
 	$query="delete from messages where id='{$input['id']}'";	
-	my_query($query,$conn,1);
+	my_query($query, true);
 }
 
 if ($input["add"]){	
 	$query="insert into messages ".db_insert_fields($input['form']);
-	my_query($query,$conn,1);
+	my_query($query, true);
 }
 
 
 if ($input["edit"]){	
 	$query="update messages set ".db_update_fields($input['form'])." where id='{$input['id']}'";
-	my_query($query,$conn,1);
+	my_query($query, true);
 }
 
 if (($input["view"])||($input["adding"])){

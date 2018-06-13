@@ -4,7 +4,7 @@ $tags['Add_CSS'].=';article_news_faq';
 include "../include/common.php";
 
 $query="select * from news ".($input["show"]?" where id='".$input["show"]."' ":"")."order by date desc".($input["show_all"]?"":" limit ".$settings[news_count]);
-$result=my_query($query,$conn,1);
+$result=my_query($query, true);
 
 if($input["show"]){
 	$tags[nav_str].="<a href=".$server["PHP_SELF"]." class=nav_next>$tags[Header]</a>";

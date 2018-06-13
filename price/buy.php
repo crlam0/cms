@@ -30,7 +30,7 @@ if (isset($input["calc"])) {
 }
 
 function get_discount($summ){
-        global $conn;
+        
         $query="SELECT discount from discount where summ<='$summ' order by summ desc";
         $result=my_query($query,null,true);
         if($result->num_rows){
@@ -51,7 +51,7 @@ if ($input["get_summary_cost"]) {
             $where.=(!strlen($where) ? " id='$item_id'" : " or id='$item_id'");
         }
         $query = "select * from cat_item where $where order by b_code,title asc";
-        $result = my_query($query, $conn, 1);
+        $result = my_query($query, true);
         $summ = 0;
         $cnt = 0;
         if ($result->num_rows) {
@@ -77,7 +77,7 @@ if ($input["get_summary"]) {
             $where.=(!strlen($where) ? " id='{$item_id}'" : " or id='{$item_id}'");
         }
         $query = "select * from cat_item where $where order by b_code,title asc";
-        $result = my_query($query, $conn, 1);
+        $result = my_query($query, true);
         $summ = 0;
         $cnt = 0;
         if ($result->num_rows)
@@ -152,7 +152,7 @@ if (isset($input["request_done"])) {
         $contact_info.="IP адрес: " . $_SERVER["REMOTE_ADDR"] . "\n";
         $msg = "Наименования:\n$item_list\n\nКонтактная информация:\n$contact_info\n\n";
         $query = "insert into request(date,item_list,contact_info,comment) values(now(),'" . $item_list . "','" . $contact_info . "','" .$input['comment']."')";
-        $result=my_query($query, null, true);
+        $result=my_query($query, true);
         
         unset($_SESSION["BUY"]);
         
@@ -173,7 +173,7 @@ if (count($_SESSION["BUY"])) {
         // $count += $cnt;
     }
     $query = "select cat_item.*,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
-    $result = my_query($query, $conn, 1);
+    $result = my_query($query, true);
     if ((isset($input["request_x"])) || (isset($input["request"]))) {
         $tags[Header] = "Оформить заказ";
         $content.= '<div align="center" style="max-width: 400px;margin-top:30px;">' . "<form action=" . $_SERVER["PHP_SELF"] . ' method=post>

@@ -19,11 +19,11 @@ if ($_SESSION["view_menu"]) {
 
 if ($input["del_menu_item"]) {
     $query = "delete from menu_item where id='{$input['id']}'";
-    my_query($query, $conn);
+    my_query($query);
 }
 
 function get_item_title($target_type,$traget_id){
-    global $conn;
+    
     list($title) = my_select_row("select title from ".$target_type." where id='{$traget_id}'", true);
     return $title;
 }
@@ -33,19 +33,19 @@ if ($input["added_menu_item"]) {
     $input['form']['menu_id'] = $_SESSION["view_menu"];
     if(!strlen($input['form']['title']))$input['form']['title']=get_item_title($input['form']['target_type'],$input['form']['target_id']);
     $query = "insert into menu_item " . db_insert_fields($input['form']);
-    my_query($query, $conn);
+    my_query($query);
 }
 
 if ($input["edited_menu_item"]) {
     if (!isset($input['form']['active']))$input['form']['active'] = 0;
     if(!strlen($input['form']['title']))$input['form']['title']=get_item_title($input['form']['target_type'],$input['form']['target_id']);
     $query = "update menu_item set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, $conn);
+    my_query($query);
 }
 
 if($input["get_target_select"]){
     $query = "select target_id,href from menu_item where id='{$input["item_id"]}'";
-    $result = my_query($query, $conn,1);
+    $result = my_query($query, true);
     list($target_id,$href) = $result->fetch_array();
     switch ($input["target_type"]){
         case "":
@@ -53,7 +53,7 @@ if($input["get_target_select"]){
             break;
         case "article":
             $query = "select * from article_item order by title";
-            $result = my_query($query, $conn,1);
+            $result = my_query($query, true);
             $output = "<td>Статья:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
                 $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row['title']}</option>";
@@ -62,7 +62,7 @@ if($input["get_target_select"]){
             break;
         case "article_list":
             $query = "select * from article_list order by title";
-            $result = my_query($query, $conn,1);
+            $result = my_query($query, true);
             $output = "<td>Раздел статей:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
                 $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row['title']}</option>";
@@ -71,7 +71,7 @@ if($input["get_target_select"]){
             break;
         case "media_list":
             $query = "select * from media_list order by title";
-            $result = my_query($query, $conn,1);
+            $result = my_query($query, true);
             $output = "<td>Раздел файлов:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
                 $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row[title]}</option>";
@@ -80,7 +80,7 @@ if($input["get_target_select"]){
             break;
         case "cat_part":
             $query = "select * from cat_part where prev_id=0 order by title";
-            $result = my_query($query, $conn,1);
+            $result = my_query($query, true);
             $output = "<td>Раздел каталога:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
                 $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row['title']}</option>";
@@ -89,7 +89,7 @@ if($input["get_target_select"]){
             break;
         case "gallery_list":
             $query = "select * from gallery_list order by title";
-            $result = my_query($query, $conn,1);
+            $result = my_query($query, true);
             $output = "<td>Раздел галереи:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
                 $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row['title']}</option>";
@@ -104,7 +104,7 @@ if($input["get_target_select"]){
 if (($input["add_menu_item"]) || ($input["edit_menu_item"])) {
     if ($input["edit_menu_item"]) {
 	$query = "select * from menu_item where id='{$input['id']}'";
-	$result = my_query($query, $conn);
+	$result = my_query($query);
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags['type'] = "edited_menu_item";
 	$tags['form_title'] = "Редактирование";
@@ -116,12 +116,12 @@ if (($input["add_menu_item"]) || ($input["edit_menu_item"])) {
     }
     if ($tags['active'])$tags['active'] = " checked";
     $query = "select * from users_flags";
-    $result = my_query($query, $conn);
+    $result = my_query($query);
     while ($row = $result->fetch_array()) {
 	$tags['flag_select'].="<option value={$row['value']}" . ($row['value'] == $tags['flag'] ? " selected" : "") . ">{$row['title']}</option>";
     }
     $query = "select * from menu_list where id<>'{$input['id']}'";
-    $result = my_query($query, $conn);
+    $result = my_query($query);
     $tags['submenu_select'] = "<select name=form[submenu_id] class=\"form-control\"><option value=0>-</option>";
     while ($row = $result->fetch_array()) {
 	$tags['submenu_select'].="<option value={$row['id']}" . ($row['id'] == $tags['submenu_id'] ? " selected" : "") . ">{$row['title']}</option>";
@@ -144,19 +144,19 @@ if (($input["add_menu_item"]) || ($input["edit_menu_item"])) {
 
 if ($_SESSION["view_menu"]) {
     $query = "SELECT * from menu_item where menu_id='" . $_SESSION["view_menu"] . "' order by position asc";
-    $result = my_query($query, $conn);
+    $result = my_query($query);
     $content.=get_tpl_by_title("menu_item_edit_table", $tags, $result);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 }
 
 if ($input["del_menu"]) {
     $query = "select id from menu_item where menu_id={$input['id']}";
-    $result = my_query($query, $conn);
+    $result = my_query($query);
     if ($result->num_rows) {
 	$content.=my_msg_to_str("error","","Этот раздел не пустой !");
     } else {
 	$query = "delete from menu_list where id='{$input['id']}'";
-	my_query($query, $conn);
+	my_query($query);
     }
 }
 
@@ -165,7 +165,7 @@ if ($input["added_menu"]) {
     if (!isset($input['form']['top_menu']))$input['form']['top_menu'] = 0;
     if (!isset($input['form']['bottom_menu']))$input['form']['bottom_menu'] = 0;
     $query = "insert into menu_list " . db_insert_fields($input['form']);
-    my_query($query, $conn);
+    my_query($query);
 }
 
 
@@ -174,13 +174,13 @@ if ($input["edited_menu"]) {
     if (!isset($input['form']['top_menu']))$input['form']['top_menu'] = 0;
     if (!isset($input['form']['bottom_menu']))$input['form']['bottom_menu'] = 0;
     $query = "update menu_list set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, $conn);
+    my_query($query);
 }
 
 if (($input["add_menu"]) || ($input["edit_menu"])) {
     if ($input["edit_menu"]) {
 	$query = "select * from menu_list where id='{$input['id']}'";
-	$result = my_query($query, $conn);
+	$result = my_query($query);
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags['type'] = "edited_menu";
 	$tags['form_title'] = "Редактирование";
@@ -198,7 +198,7 @@ if (($input["add_menu"]) || ($input["edit_menu"])) {
 }
 
 $query = "select * from menu_list order by root desc,title asc";
-$result = my_query($query, $conn, true);
+$result = my_query($query, true);
 $content.=get_tpl_by_title('menu_edit_table', $tags, $result);
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 ?>

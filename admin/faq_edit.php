@@ -17,21 +17,21 @@ if ($input["active"]) {
 
 if ($input["del"]) {
     $query = "delete from $TABLE where id=" . $input["id"];
-    $result = my_query($query, $conn, 1);
+    $result = my_query($query, true);
     $list = 1;
     $content.=my_msg_to_str("", "", "Сообщение успешно удалено.");
 }
 
 if ($input["edited"]) {
     $query = "update $TABLE set " . db_update_fields($input['form']) . " where id=" . $input["edited"];
-    $result = my_query($query, $conn, 1);
+    $result = my_query($query, true);
     $list = 1;
     $content.=my_msg_to_str("", "", "Сообщение успешно изменено.");
 }
 
 if ($input["edit"]) {
     $query = "select * from $TABLE where id='{$input['id']}'";
-    $result = my_query($query, $conn, 1);
+    $result = my_query($query, true);
     $tags = array_merge($tags, $result->fetch_array());
 
 //	$tags['INCLUDE_HEAD']=$EDITOR_SIMPLE_INC;
@@ -42,7 +42,7 @@ if ($input["edit"]) {
 }
 
 $query = "SELECT * from $TABLE order by id desc";
-$result = my_query($query, $conn, 1);
+$result = my_query($query, true);
 
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 

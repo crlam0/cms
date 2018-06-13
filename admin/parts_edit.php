@@ -5,24 +5,24 @@ include "../include/common.php";
 
 if ($input["del"]) {
     $query = "delete from parts where id='{$input['id']}'";
-    my_query($query, null, true);
+    my_query($query, true);
 }
 
 if ($input["add"]) {
     $query = "insert into parts " . db_insert_fields($input['form']);
-    my_query($query, null, true);
+    my_query($query, true);
 }
 
 
 if ($input["edit"]) {
     $query = "update parts set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, null, true);
+    my_query($query, true);
 }
 
 if (($input["view"]) || ($input["adding"])) {
     if ($input["view"]) {
 	$query = "select * from parts where id='{$input['id']}'";
-	$result = my_query($query, $conn);
+	$result = my_query($query);
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags['type'] = "edit";
 	$tags['form_title'] = "Редактирование";
@@ -32,7 +32,7 @@ if (($input["view"]) || ($input["adding"])) {
     }
     $tags['user_flags'] = "";
     $query = "SELECT * from users_flags order by title asc";
-    $result = my_query($query, $conn);
+    $result = my_query($query);
     while ($row = $result->fetch_array()) {
 	$tags['user_flags'].="<option value=\"$row[value]\"" . ($tags['user_flag'] == $row['value'] ? " selected" : "") . ">{$row['title']}</option>";
     }
@@ -41,7 +41,7 @@ if (($input["view"]) || ($input["adding"])) {
 } else {
 
     $query = "SELECT * from parts order by title asc";
-    $result = my_query($query, $conn);
+    $result = my_query($query);
     $content.=get_tpl_by_title("parts_edit_table", $tags, $result);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 }

@@ -11,7 +11,7 @@ if (!is_file($file_name)) {
 }
 
 if (!$input['preview']) {
-    my_query("update gallery_images set view_count=view_count+1 where id='{$input['id']}'", $conn, true);
+    my_query("update gallery_images set view_count=view_count+1 where id='{$input['id']}'", true);
 }
 
 if(!$input['clientHeight']){

@@ -28,13 +28,12 @@ if(is_array($_POST))foreach ($_POST as $key => $value) $input[$key]=db_test_para
 if(is_array($_SERVER))foreach ($_SERVER as $key => $value) $server[$key]=$value;
 
 require_once $INC_DIR.'lib_messages.php';
-require_once $INC_DIR.'lib_blocks.php';
 require_once $INC_DIR.'lib_templates.php';
 require_once $INC_DIR.'lib_functions.php';
 
 // Load settings into $settings[]
 $query='SELECT * FROM settings';
-$result=my_query($query,$conn,true);
+$result=my_query($query,true);
 while ($row = $result->fetch_array()) {
     $settings[$row['title']] = $row['value'];
 }

@@ -9,7 +9,7 @@ if (isset($input["uri"])) {
     $params = explode("/", $input["uri"]);
 
     $query = "select id from media_list where seo_alias like '" . $params[0] . "'";
-    $result = my_query($query, $conn);
+    $result = my_query($query);
     list($_SESSION["view_files"]) = $result->fetch_array();
 
     if (strlen($params[1])) {
@@ -100,7 +100,7 @@ if ($_SESSION["view_files"]) {
     }
     $offset = $settings[media_files_per_page] * ($_SESSION["media_page"] - 1);
     $query = "SELECT * from media_files where list_id=" . $_SESSION["view_files"] . " order by date_add desc limit $offset,$settings[media_files_per_page]";
-    $result = my_query($query, $conn, true);
+    $result = my_query($query, true);
     if (!$result->num_rows) {
         $content = my_msg_to_str("list_empty", $tags, "");
     } else {
@@ -121,7 +121,7 @@ $query = "SELECT media_list.*,count(media_files.id) as files
 from media_list 
 left join media_files on (media_files.list_id=media_list.id) 
 group by media_list.id order by media_list.date_add desc";
-$result = my_query($query, $conn, 0);
+$result = my_query($query, true);
 if (!$result->num_rows) {
     $content = my_msg_to_str("$part_empty");
 } else {

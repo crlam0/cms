@@ -2,7 +2,9 @@
 
 $tags['Header'] = "Корзина";
 @include_once "../include/common.php";
-include "../include/lib_summ_to_str.php";
+
+use Classes\SummToStr;
+$SummToStr = new SummToStr();
 
 $tags['nav_str'].="<span class=nav_next>Корзина</span>";
 
@@ -34,9 +36,9 @@ if (isset($input["calc"])) {
 }
 
 function get_discount($summ){
-        global $conn;
+        
         $query="SELECT discount from discount where summ<='$summ' order by summ desc";
-        $result=my_query($query,$conn);
+        $result=my_query($query);
         if($result->num_rows){
                 list($discount)=$result->fetch_array();
         }else{
@@ -55,7 +57,7 @@ if ($input["get_summary_cost"]) {
             $where.=(!strlen($where) ? " id='$item_id'" : " or id='$item_id'");
         }
         $query = "select * from cat_item where $where order by b_code,title asc";
-        $result = my_query($query, $conn, 1);
+        $result = my_query($query, true);
         $summ = 0;
         $cnt = 0;
         if ($result->num_rows) {
@@ -81,7 +83,7 @@ if ($input["get_summary"]) {
             $where.=(!strlen($where) ? " id='$item_id'" : " or id='$item_id'");
         }
         $query = "select * from cat_item where $where order by b_code,title asc";
-        $result = my_query($query, $conn, 1);
+        $result = my_query($query, true);
         $summ = 0;
         $cnt = 0;
         if ($result->num_rows)
@@ -157,7 +159,7 @@ if (isset($input["request_done"])) {
         $contact_info.="IP адрес: " . $server["REMOTE_ADDR"] . "\n";
         $msg = "Наименования:\n{$item_list}\n\nКонтактная информация:\n{$contact_info}\n\n";
         $query = "insert into request(date,item_list,contact_info,comment) values(now(),'" . $item_list . "','" . $contact_info . "','" .$input['comment']."')";
-        $result=my_query($query, null, true);
+        $result=my_query($query, true);
         
         unset($_SESSION["BUY"]);
         
@@ -179,7 +181,7 @@ if (is_array($_SESSION["BUY"]) && count($_SESSION["BUY"])) {
         $count = $count + (int)$cnt;
     }
     $query = "select cat_item.*,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
-    $result = my_query($query, $conn, 1);
+    $result = my_query($query, true);
     if ((isset($input["request_x"])) || (isset($input["request"]))) {
         $tags[Header] = "Оформить заказ";
         $content.= '<div align="center" style="max-width: 400px;margin-top:30px;">' . "<form action=" . $_SERVER["PHP_SELF"] . ' method=post>
@@ -221,7 +223,7 @@ if (is_array($_SESSION["BUY"]) && count($_SESSION["BUY"])) {
             <tr><td colspan=2>
             <center>Итого на сумму <b>" . add_zero($summ) . " руб.</b>
             " . (get_discount($summ) ? " С учетом скидки <b>" . get_discount($summ) . "%</b> сумма составлет: <b>" . add_zero($summ_with_discount) . "</b>" : "") . "
-            </center><center>Итого к оплате: <b>" . summ_to_str($summ_with_discount) . "</b></center>
+            </center><center>Итого к оплате: <b>" . $SummToStr($summ_with_discount) . "</b></center>
             </td></tr>    
             <tr><td colspan=2 align=center>
             <table border=0 cellspacing=7 cellpadding=7 align=center><tr align=center>

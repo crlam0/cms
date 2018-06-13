@@ -157,7 +157,7 @@ if (($_SESSION['view_gallery'])||($input['page'])) {
     }
     $offset = $settings['gallery_images_per_page'] * ($_SESSION['gallery_page'] - 1);
     $query = "SELECT * from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " order by id asc limit {$offset},{$settings['gallery_images_per_page']}";
-    $result = my_query($query, $conn, false);
+    $result = my_query($query, false);
     if (!$result->num_rows) {
         $content = my_msg_to_str("list_empty", $tags, "");
     } else {
@@ -176,10 +176,10 @@ if (($_SESSION['view_gallery'])||($input['page'])) {
 }
 
 function get_icons($tmp,$input_row){
-    global $DIR, $settings, $SUBDIR, $conn;
+    global $DIR, $settings, $SUBDIR;
     $content="";
     $query="select * from gallery_images where gallery_id='{$input_row['id']}' limit 6";
-    $result = my_query($query, $conn, true);
+    $result = my_query($query, true);
     while($row=  $result->fetch_array()){
         if (is_file($DIR . $settings['gallery_upload_path'] . $row['file_name'])) {
             $content.='<img src="' . $SUBDIR . 'gallery/image.php?icon=1&id='.$row['id'].'" class="list_icon" border="0" alt="'.$row['title'].'" />';
@@ -193,7 +193,7 @@ from gallery_list
 left join gallery_images on (gallery_images.gallery_id=gallery_list.id)
 where gallery_list.active='Y'
 group by gallery_list.id order by last_images_date_add desc,gallery_list.date_add desc";
-$result = my_query($query, $conn, true);
+$result = my_query($query, true);
 if (!$result->num_rows) {
     $content = my_msg_to_str("part_empty");
 } else {

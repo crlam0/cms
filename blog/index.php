@@ -34,7 +34,7 @@ $comments = new Comments ('blog',$input['view_post']);
 
 if ($input["view_post"]) {
     $query = "select {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid) where {$TABLE}.id='{$input["view_post"]}'";
-    $result = my_query($query, $conn, true);
+    $result = my_query($query, true);
     $row = $result->fetch_array();
 
     $tags['nav_str'].="<span class=nav_next><a href=\"{$server["PHP_SELF_DIR"]}\">$tags[Header]</a></span>";
@@ -85,7 +85,7 @@ if ($input["view_post"]) {
         from {$TABLE} left join users on (users.id=uid)
         where {$TABLE}.active='Y'
         group by {$TABLE}.id  order by {$TABLE}.id desc limit $offset,$MSG_PER_PAGE";
-    $result = my_query($query, $conn, true);
+    $result = my_query($query, true);
 
     if (!$result->num_rows) {
         $content.=my_msg_to_str("part_empty");

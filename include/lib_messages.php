@@ -14,7 +14,7 @@
  * @return string Output string
  */
 function my_msg_to_str($title, $tags = array(), $str = '') {
-    global $conn, $settings;
+    global $settings;
     if (strlen($title)) {
         $sql = "select * from messages where title='{$title}'";
         $message = my_select_row($sql, 1);

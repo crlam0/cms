@@ -25,7 +25,7 @@ if(file_exists($file_name)) {
     readfile($file_name);
     if(is_numeric($input['media_file_id'])){
         $query="update media_files set download_count=download_count+1 where id='{$input['media_file_id']}'";
-        my_query($query, $conn, true);
+        my_query($query, true);
     }
     exit;
 }

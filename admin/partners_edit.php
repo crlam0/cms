@@ -20,7 +20,7 @@ if ($input["del_partner"]) {
             $content.=my_msg_to_str("error", "", "Ошибка удаления файла");
     }
     $query = "delete from partners where id='{$input['id']}'";
-    my_query($query, $conn);
+    my_query($query);
     $content.=my_msg_to_str("", "", "Картинка успешно удалена.");
 }
 
@@ -28,7 +28,7 @@ if ($input["del_partner"]) {
 
 if ($input["added_partner"]) {
     $query = "insert into partners " . db_insert_fields($input['form']);
-    my_query($query, $conn);
+    my_query($query);
     if ($_FILES["img_file"]["size"] > 100) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
             $content.=my_msg_to_str("error", "", "Неверный тип файла !");
@@ -38,7 +38,7 @@ if ($input["added_partner"]) {
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
             if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['banners_img_path'] . $file_name, 1600)) {
                 $query = "update partners set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
-                my_query($query, $conn);
+                my_query($query);
                 $content.=my_msg_to_str("", "", "Картинка успешно добавлена.");
             } else {
                 $content.=my_msg_to_str("error", "", "Ошибка копирования файла !");
@@ -69,13 +69,13 @@ if ($input["edited_partner"]) {
         }
     }
     $query = "update partners set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, $conn);
+    my_query($query);
 }
 
 if (($input["edit_partner"]) || ($input["add_partner"])) {
     if ($_GET["edit_partner"]) {
         $query = "select * from partners where id='{$input['id']}'";
-        $result = my_query($query, $conn);
+        $result = my_query($query);
         $tags = array_merge($tags, $result->fetch_array());
         $tags['type'] = "edited_partner";
         $tags['form_title'] = "Редактирование";
@@ -91,7 +91,7 @@ if (($input["edit_partner"]) || ($input["add_partner"])) {
 }
 
 $query = "SELECT * from partners order by pos,title asc";
-$result = my_query($query, $conn, true);
+$result = my_query($query, true);
 $content.=get_tpl_by_title("partners_edit_table", $tags, $result);
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 

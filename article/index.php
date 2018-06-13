@@ -18,7 +18,7 @@ if (isset($input['pdf'])) {
     if(strlen($params[1])){
         $input['view']=$params[1];
         $query = "select * from article_item where seo_alias like '" . $input['view'] . "'";
-        $result = my_query($query, null, true);
+        $result = my_query($query, true);
         if(!$result->num_rows) {
             header('Location: ' . $SUBDIR . '');
             exit ();
@@ -89,7 +89,7 @@ if (!count($input)) {
 
 if ($input["view_article"]) {
     $query = "select * from article_item where id='" . $input["id"] . "'";
-    $result = my_query($query, $conn);
+    $result = my_query($query);
     $row = $result->fetch_array();
 
     $tags[nav_str].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
@@ -108,7 +108,7 @@ if ($input["view_article"]) {
 
 if ($_SESSION["view_items"]) {
     $query = "select * from article_item where list_id=" . $_SESSION["view_items"];
-    $result = my_query($query, null, true);
+    $result = my_query($query, true);
 
     $tags[nav_str].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
     list($title) = my_select_row("select title from article_list where id='{$_SESSION["view_items"]}'", 1);
@@ -123,7 +123,7 @@ if ($_SESSION["view_items"]) {
 
 if (!$_SESSION["view_items"]) {
     $query = "select * from article_list";
-    $result = my_query($query, null, true);
+    $result = my_query($query, true);
 
     $tags[nav_str].="<span class=nav_next>Статьи</span>";
 

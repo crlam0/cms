@@ -9,12 +9,12 @@ $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/price.css" type="text/css" re
 $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 
 function part_items($part_id){
-    global $conn;
+    
     $query="select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
     left join cat_item_images on (cat_item_images.id=default_img or cat_item_images.item_id=cat_item.id)
     where part_id='{$part_id}'
     order by num,title asc";
-    $result=my_query($query, null, true);
+    $result=my_query($query, true);
         if($result->num_rows){
             $content.="<br>
             <table width=100% class=\"table table-striped table-responsive table-bordered normal-form\"
@@ -49,10 +49,10 @@ if( true ){
     $content.=$before_price."<br />";
     $subparts=0;
     function sub_part($prev_id,$deep,$max_deep){
-        global $conn,$tags,$content,$IMG_PART_PATH,$IMG_PART_URL,$subparts,$SUBDIR;
+        global $tags,$content,$IMG_PART_PATH,$IMG_PART_URL,$subparts,$SUBDIR;
         if($deep)$subparts++;
         $query="SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='$prev_id' group by cat_part.id order by cat_part.num,cat_part.title asc";
-        $result=my_query($query,$conn,1);
+        $result=my_query($query, true);
         while ($row = $result->fetch_array()){
             $pan_ins="";
 //          $subparts++;
@@ -76,7 +76,7 @@ if( true ){
 
 $price_parts_content="";
 $query="SELECT cat_part.*from cat_part where prev_id='0' order by cat_part.num,cat_part.title asc";
-$result=my_query($query,$conn,1);
+$result=my_query($query, true);
 while ($row = $result->fetch_array()){
     $price_parts_content.="<a href=#{$row['seo_alias']}>{$row['title']}<a><br />";
 }

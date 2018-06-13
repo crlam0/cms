@@ -1,7 +1,5 @@
 <?php
 
-// require_once 'BlocksInterface.php';
-
 namespace Classes;
 
 /**
@@ -24,7 +22,7 @@ class Blocks {
             return '';
         }    
         $query = "SELECT * FROM menu_item WHERE '" . $_SESSION['FLAGS'] . "' LIKE concat('%',flag,'%') AND menu_id='{$menu_id}' AND active=1 ORDER BY position ASC";
-        $result = my_query($query, null, true);
+        $result = my_query($query, true);
         $output = '';
         if ($result->num_rows) {
             $output.="<ul {$attr_ul}>\n";
@@ -61,13 +59,13 @@ class Blocks {
     
     private function vote () {
         $query = "SELECT id,title,type FROM vote_list WHERE active=1 limit 1";
-        $result = my_query($query, null, true);
+        $result = my_query($query, true);
         if ($result->num_rows) {
             list($vote_id, $title, $type) = $result->fetch_array();
             $tags['vote_title'] = $title;
             $tags['variants'] = '';
             $query = "SELECT * FROM vote_variants WHERE vote_id='{$vote_id}'";
-            $result = my_query($query, null, true);
+            $result = my_query($query, true);
             if (!$result->num_rows){
                 return null;
             }    
@@ -95,7 +93,7 @@ class Blocks {
 
         if ($SCRIPT == '/index.php') {
             $query = "SELECT * FROM slider_images WHERE length(file_name)>0 ORDER BY pos,title ASC";
-            $result = my_query($query, null, true);
+            $result = my_query($query, true);
             return get_tpl_by_title('slider_items', [], $result);
         } else {
             return '';
@@ -122,7 +120,7 @@ class Blocks {
         global $settings;
         $TABLE = 'blog_posts';
         $query = "SELECT {$TABLE}.*,date_format(date_add,'%d.%m.%Y') as date from {$TABLE} where active='Y' order by {$TABLE}.id desc limit {$settings['news_block_count']}";
-        $result = my_query($query, null, true);
+        $result = my_query($query, true);
         if ($result->num_rows) {
             function get_news_short_content($tmp, $row) {
                 return cut_stringing($row['content'], 100);
@@ -141,7 +139,7 @@ class Blocks {
      * @return string Block content
      */
     public function content($block_name) {
-        global $settings, $DEBUG, $DIR;
+        global $settings, $DEBUG, $DIR, $SUBDIR;
         
         add_to_debug('Parse block ' . $block_name);        
         switch ($block_name) {

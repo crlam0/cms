@@ -5,10 +5,10 @@ include '../include/common.php';
 
 /*
 $query = "select * from cat_part";
-$result = my_query($query, $conn, 1);
+$result = my_query($query, true);
 while ($row = $result->fetch_array()) {
     $query="update cat_part set seo_alias='".encodestring($row["title"])."' where id='{$row["id"]}'";
-    my_query($query, $conn, 1);
+    my_query($query, true);
 }
 */
 
@@ -17,7 +17,7 @@ function prev_part($prev_id, $deep, $arr) {
         return null;
     }
     $query = "SELECT id,title,prev_id from cat_part where id='{$prev_id}' order by num,title asc";
-    $result = my_query($query, null, true);
+    $result = my_query($query, true);
     if(!$result->num_rows){
         return null;
     }
@@ -34,7 +34,7 @@ $IMG_URL = $BASE_HREF . $settings['catalog_part_img_path'];
 if ($input["del"]) {
     $query = "select count(id) as cnt from cat_part where prev_id=" . $input['id'] . " having cnt>0
 	union select count(id) as cnt from cat_item where part_id=" . $input['id'] . " having cnt>0";
-    $result = my_query($query, $conn);
+    $result = my_query($query);
     if ($result->num_rows) {
         $content.=my_msg_to_str('error','','Этот раздел не пустой !');
     } else {
@@ -43,7 +43,7 @@ if ($input["del"]) {
 	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
 	}
 	$query = "delete from cat_part where id=" . $input['id'];
-	my_query($query, $conn);
+	my_query($query);
     }
 }
 
@@ -55,14 +55,14 @@ if ($input["del_img"]) {
         }    
     }
     $query = "update cat_part set img='-' where id=" . $input['id'];
-    my_query($query, $conn);
+    my_query($query);
     $input["edit"] = 1;
     $content.=my_msg_to_str('','','Изображение удалено');
 }
 
 if ($input["copy"]) {
     $query = "SELECT * from cat_part where prev_id={$input['id']} order by num,title+1 asc";
-    $result_part = my_query($query, $conn);
+    $result_part = my_query($query);
     while ($row_part = $result_part->fetch_assoc()) {
         $row_part['title'];
         $input_cat_id = $row_part['id'];
@@ -75,7 +75,7 @@ if ($input["copy"]) {
         my_query("update cat_part set seo_alias='{$seo_alias}' where id='{$part_id}'");
         
         $query = "SELECT * from cat_item where part_id='{$input_cat_id}'";
-        $result_item = my_query($query, $conn);
+        $result_item = my_query($query);
         while ($row_item = $result_item->fetch_assoc()) {
             unset($row_item['id']);
             $row_item['part_id'] = $part_id;
@@ -102,7 +102,7 @@ if ($input["added"]) {
         $seo_alias_duplicate=1;
     }
     $query = "insert into cat_part " . db_insert_fields($input['form']);
-    my_query($query, $conn, 0);
+    my_query($query, true);
     $insert_id=$mysqli->insert_id;
     if($seo_alias_duplicate){
         $input['form']['seo_alias'].='_'.$insert_id;
@@ -110,13 +110,13 @@ if ($input["added"]) {
     }
     $content.=my_msg_to_str('','','Раздел успешно добавлен.');
     if ($_FILES['img_file']['size']) {
-	$part_id = mysql_insert_id($conn);
+	$part_id = $mysqli->insert_id();
 	$f_info = pathinfo($_FILES['img_file']['name']);
 	$img = $part_id . '.' . $f_info['extension'];
 //		if(move_uploaded_file($_FILES["img_file"]["tmp_name"],$IMG_PATH.$img)){
 	if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings["catalog_part_img_max_width"])) {
 	    $query = "update cat_part set img='{$img}' where id='{'$part_id'}'";
-	    my_query($query, $conn);
+	    my_query($query);
 	} else {
             $content.=my_msg_to_str('error','','Ошибка копирования файла !');
 	}
@@ -130,7 +130,7 @@ if ($input['edited']) {
         $input['form']['seo_alias'].='_'.$input['id'];
     }
     $query = "update cat_part set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, $conn, 1);
+    my_query($query, true);
     $content.=my_msg_to_str('','','Раздел успешно изменен.');
     if ($_FILES["img_file"]["size"] > 100) {
 	list($img) = my_select_row("select img from cat_part where id='{$input['id']}'");
@@ -142,7 +142,7 @@ if ($input['edited']) {
 //		if(move_uploaded_file($_FILES["img_file"]["tmp_name"],$IMG_PATH.$img)){
 	if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings['catalog_part_img_max_width'])) {
 	    $query = "update cat_part set img='{$img}' where id='{$input['id']}'";
-	    my_query($query, $conn);
+	    my_query($query);
 	} else {
 	   $content.=my_msg_to_str('error','','Ошибка копирования файла !');
 	}
@@ -152,7 +152,7 @@ if ($input['edited']) {
 if (($input['edit']) || ($input['adding'])) {
     if ($input['edit']) {
 	$query = "select * from cat_part where id='{$input['id']}'";
-	$result = my_query($query, null, true);
+	$result = my_query($query, true);
 	$tags = $result->fetch_array();
 	$tags['form_title'] = 'Редактирование';
 	$tags['type'] = 'edited';
@@ -175,7 +175,7 @@ if (($input['edit']) || ($input['adding'])) {
             return null;
         }
         $query = "select * from cat_part where prev_id='{$prev_id}' order by num,title asc";
-        $result = my_query($query, null, true);
+        $result = my_query($query, true);
 
         while ($row = $result->fetch_array()) {
             $title='';
@@ -204,9 +204,9 @@ if (($input['edit']) || ($input['adding'])) {
 };
 
 function sub_part($prev_id, $deep) {
-    global $conn, $IMG_PATH, $tags, $IMG_URL;
+    global $IMG_PATH, $tags, $IMG_URL;
     $query = "SELECT * from cat_part where prev_id={$prev_id} order by num,title+1 asc";
-    $result = my_query($query, null, true);
+    $result = my_query($query, true);
     while ($row = $result->fetch_array()) {
 	$spaces = '';
         $spaces = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $deep);

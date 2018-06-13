@@ -162,7 +162,7 @@ if ($input['get_popup_content']) {
 
 if(strlen($input['item_title'])){
     $query="select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.seo_alias='".$input["item_title"]."' order by b_code,title asc";
-    $result=my_query($query,$conn);
+    $result=my_query($query);
     if($result->num_rows) {
         $row = $result->fetch_array();
         $item_id=$row['id'];
@@ -174,7 +174,7 @@ if(strlen($input['item_title'])){
         $part_id=$row['part_id'];
 
         $query="select * from cat_item_images where item_id='{$item_id}' and id<>'{$row['default_img']}' order by id asc";
-        $result=my_query($query,$conn);
+        $result=my_query($query);
         $tags['images'].="<div style=\"width:100%;height:1px;float:left;\">&nbsp;</div>";
         if($result->num_rows){
                 $tags['images'].="<div class=item_images>";
@@ -215,10 +215,10 @@ if(strlen($input['item_title'])){
 $content.="<div id=cat_parts>";
 $subparts=0;
 function sub_part($prev_id,$deep,$max_deep){
-    global $conn,$tags,$content,$IMG_PART_PATH,$IMG_PART_URL,$subparts,$SUBDIR;
+    global $tags,$content,$IMG_PART_PATH,$IMG_PART_URL,$subparts,$SUBDIR;
     if($deep)$subparts++;
     $query="SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='$prev_id' group by cat_part.id order by cat_part.num,cat_part.title asc";
-    $result=my_query($query,$conn,1);
+    $result=my_query($query, true);
     while ($row = $result->fetch_array()){
         $pan_ins="";
         $subparts++;
@@ -270,7 +270,7 @@ left join cat_item_images on (cat_item_images.id=default_img or cat_item_images.
 .(isset($_GET["show_all"])?"":" where part_id='".$current_part_id."'")." 
 group by cat_item.id   
 order by cat_item.id,b_code,title asc limit $offset,$settings[catalog_items_per_page]";
-$result=my_query($query,$conn,1);
+$result=my_query($query, true);
 if($result->num_rows){
     $content.="<div id=cat_items>\n";
     while ($row = $result->fetch_array()) {

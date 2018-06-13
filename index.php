@@ -8,7 +8,7 @@ if($SUBDIR !== '/') {
     $request_uri = substr($server['REQUEST_URI'], 1);
 }    
 
-if( ($request_uri==='' or $request_uri==='index.php') and file_exists('index.local.php')) {
+if( ($request_uri==='' or $request_uri==='/') and file_exists('index.local.php')) {
     require 'index.local.php';
     exit;
 }

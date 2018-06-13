@@ -86,6 +86,10 @@ return [
         'pattern' => '^catalog\/(.*)\/buy.php',
         'file' => 'catalog/buy.php'
     ], 
+    'catalog_basket' => [
+        'pattern' => '^catalog\/basket\/',
+        'file' => 'catalog/buy.php'
+    ], 
     'catalog' => [
         'pattern' => '^catalog\/(.*)\/$',
         'file' => 'catalog/index.php',

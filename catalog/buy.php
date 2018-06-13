@@ -1,7 +1,7 @@
 <?php
 
 $tags['Header'] = "Корзина";
-include_once "../include/common.php";
+@include_once "../include/common.php";
 include "../include/lib_summ_to_str.php";
 
 $tags['nav_str'].="<span class=nav_next>Корзина</span>";

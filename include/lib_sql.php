@@ -11,13 +11,17 @@ use Classes\SQLHelper;
 /**
  * @var Classes\SQLHelper
  */
-$SQLHelper;
+$DB;
 
-if(!$SQLHelper) {
-    $SQLHelper = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DB);
+if(!$DB) {
+    $DB = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 }
 
-$mysqli=$SQLHelper->mysqli;
+$mysqli=$DB->mysqli;
+
+
+
+
 
 /**
  * @var Array Debug array of all SQL query
@@ -32,8 +36,8 @@ empty($DEBUG['sql_query_array']);
  * @return string Output string
  */
 function db_test_param($str,$param='') {
-    global $SQLHelper;
-    return $SQLHelper->test_param($str,$param='');
+    global $DB;
+    return $DB->test_param($str,$param='');
 }
 
 /**
@@ -46,8 +50,8 @@ function db_test_param($str,$param='') {
  */
 
 function my_query($sql, $dont_debug=false) {
-    global $SQLHelper;
-    return $SQLHelper->query($sql, $dont_debug);
+    global $DB;
+    return $DB->query($sql, $dont_debug);
 }
 
 /**
@@ -60,8 +64,8 @@ function my_query($sql, $dont_debug=false) {
  */
 
 function my_select_row($sql, $dont_debug=false) {
-    global $SQLHelper;
-    return $SQLHelper->select_row($sql, $dont_debug);    
+    global $DB;
+    return $DB->select_row($sql, $dont_debug);    
 }
 
 /**
@@ -73,8 +77,8 @@ function my_select_row($sql, $dont_debug=false) {
  */
 
 function db_insert_fields($fields) {
-    global $SQLHelper;
-    return $SQLHelper->insert_fields($fields);
+    global $DB;
+    return $DB->insert_fields($fields);
 }
 
 /**
@@ -86,10 +90,11 @@ function db_insert_fields($fields) {
  */
 
 function db_update_fields($fields) {
-    global $SQLHelper;
-    return $SQLHelper->update_fields($fields);
+    global $DB;
+    return $DB->update_fields($fields);
 }
 
-$SQLHelper->query('SET character_set_client = utf8', true);
-$SQLHelper->query('SET character_set_results = utf8', true);
-$SQLHelper->query('SET character_set_connection = utf8', true);
+$DB->query('SET character_set_client = utf8', true);
+$DB->query('SET character_set_results = utf8', true);
+$DB->query('SET character_set_connection = utf8', true);
+

@@ -13,6 +13,8 @@ phpunit.phar
 
 /src/
 /vendor/
+/var/
+/templates/
 
 *.local.php
 *Local.php

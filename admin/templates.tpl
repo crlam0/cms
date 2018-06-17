@@ -1479,8 +1479,9 @@ $(document).ready(function(){
 <br>
 <table width=90% border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
 <tr class=header align=center>
-	<td width=45%>Название</td>
-	<td width=45%>Описание</td>
+	<td width=40%>Название</td>
+	<td width=40%>Описание</td>
+	<td width=10%>Тип</td>
 	<td width=5% align=center>&nbsp;</td>
 	<td width=5% align=center>&nbsp;</td>
 </tr>
@@ -1488,6 +1489,7 @@ $(document).ready(function(){
 	<tr class=content align=left>
 	<td><b>[%row(title)%]</b></td>
 	<td>[%row(comment)%]</td>
+	<td>[%row(template_type)%]</td>
 	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border=0></a></td>
 	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border=0 onClick="return test()"></a></td>
 	</tr>
@@ -1514,6 +1516,9 @@ $(document).ready(function(){
 	<tr class=content align=left><td>Описание:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[comment] value="[%comment%]"></td></tr>
 	<tr class=content align=left><td>URI:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[uri] value="[%uri%]"></td></tr>
 	<tr class=content align=left><td>Название файла:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[file_name] value="[%file_name%]"></td></tr>
+	<tr class=content align=left><td>Тип:</td><td>
+                <select class="form-control" name="form[template_type]">[%template_type_select%]</select>
+        </td></tr>
 	<tr class=content><td align=left colspan=2>
 	<textarea class="form-control" id="editor" name=form[content] rows=25 cols=120 maxlength=64000>[%content%]</textarea>
 	</td></tr>

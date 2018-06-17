@@ -2,7 +2,7 @@
 
 // require_once 'global.php';
 
-require 'config/globals.php';
+require 'config/config.local.php';
 require 'config/misc.php';
 if(file_exists($DIR.'config/misc.local.php')) {
     require_once $DIR.'config/misc.local.php';
@@ -97,4 +97,4 @@ unset($css_array,$css);
 $tags['INCLUDE_HEAD']='';
 $tags['INCLUDE_JS']='';
 
-add_to_debug('Part data loaded');
+add_to_debug('common.php complete');

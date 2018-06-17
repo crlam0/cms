@@ -60,7 +60,7 @@ class SQLHelper {
     //    $str=mysql_real_escape_string($str);
     //    echo $str."<br>";
 
-        foreach($this->$DENIED_WORDS as $word) {
+        foreach($this->DENIED_WORDS as $word) {
             if(stristr($str, $word)){
                 header($server['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
                 exit();

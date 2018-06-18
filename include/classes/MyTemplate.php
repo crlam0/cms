@@ -88,10 +88,12 @@ class MyTemplate {
                 } elseif ($tagclass == 'summ') {
                     $replace_str = $sql_row_summ[$tagparam] . '';
                 } elseif ($tagclass == 'include') {
-                    if (file_exists($tagparam))
+                    if (file_exists($tagparam)) {
                         $fname = $tagparam;
-                    if (file_exists($DIR . $tagparam))
+                    }    
+                    if (file_exists($DIR . $tagparam)) {
                         $fname = $DIR . $tagparam;
+                    }
                     if (strlen($fname)) {
                         ob_start();
                         include_once($fname);
@@ -150,6 +152,7 @@ class MyTemplate {
         $strings = explode("\n", $content);
         $loop_start = 0;
         $loop_content = '';
+        $mysql_row_summ = null;        
         $result = '';
         foreach ($strings as $key => $value) {
             if (strstr($value, '[%loop_begin%]')) {

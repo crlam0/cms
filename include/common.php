@@ -1,35 +1,41 @@
 <?php
 
-// require_once 'global.php';
 
 require 'config/config.local.php';
 require 'config/misc.php';
-if(file_exists($DIR.'config/misc.local.php')) {
-    require_once $DIR.'config/misc.local.php';
-}    
-
-$DEBUG['start_time'] = microtime(true);
 
 $_SESSION['UID']=0;
 $_SESSION['UNAME']='';
 $_SESSION['FLAGS']='';
 
-session_cache_limiter('nocache');
-session_name($SESSID);
-session_start();
+if($_SERVER['SERVER_PROTOCOL']) {
+    session_cache_limiter('nocache');
+    session_name($SESSID);
+    session_start();    
+} else {
+    $DIR=dirname(dirname(__FILE__)) . '/';
+    $INC_DIR=$DIR.'include/';
+}
+
+if(file_exists($INC_DIR.'config/misc.local.php')) {
+    require_once $INC_DIR.'config/misc.local.php';
+}    
+
+$DEBUG['start_time'] = microtime(true);
+
 
 if(file_exists($DIR.'vendor/autoload.php')) {
     require_once $DIR.'vendor/autoload.php';
 }    
-require_once $INC_DIR.'lib_sql.php';
+require $INC_DIR.'lib_sql.php';
 
 if(is_array($_GET))foreach ($_GET as $key => $value) $input[$key]=db_test_param($value,$key);
 if(is_array($_POST))foreach ($_POST as $key => $value) $input[$key]=db_test_param($value,$key);
 if(is_array($_SERVER))foreach ($_SERVER as $key => $value) $server[$key]=$value;
 
-require_once $INC_DIR.'lib_messages.php';
-require_once $INC_DIR.'lib_templates.php';
-require_once $INC_DIR.'lib_functions.php';
+require $INC_DIR.'lib_messages.php';
+require $INC_DIR.'lib_templates.php';
+require $INC_DIR.'lib_functions.php';
 
 // Load settings into $settings[]
 $query='SELECT * FROM settings';

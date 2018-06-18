@@ -92,8 +92,9 @@ function print_error($string) {
  */
 function print_debug($string) {
     global $settings;
-    if ($settings['debug'])
+    if ($settings['debug']) {
         print("<center><font class=debug>{$string}</font></center>");
+    }    
 }
 
 /**

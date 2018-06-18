@@ -11,17 +11,13 @@ use Classes\SQLHelper;
 /**
  * @var Classes\SQLHelper
  */
-$DB;
+// $DB;
 
 if(!$DB) {
     $DB = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 }
 
 $mysqli=$DB->mysqli;
-
-
-
-
 
 /**
  * @var Array Debug array of all SQL query
@@ -37,7 +33,7 @@ empty($DEBUG['sql_query_array']);
  */
 function db_test_param($str,$param='') {
     global $DB;
-    return $DB->test_param($str,$param='');
+    return $DB->test_param($str,$param);
 }
 
 /**
@@ -48,7 +44,6 @@ function db_test_param($str,$param='') {
  *
  * @return array mysqli result
  */
-
 function my_query($sql, $dont_debug=false) {
     global $DB;
     return $DB->query($sql, $dont_debug);
@@ -62,7 +57,6 @@ function my_query($sql, $dont_debug=false) {
  *
  * @return array One row
  */
-
 function my_select_row($sql, $dont_debug=false) {
     global $DB;
     return $DB->select_row($sql, $dont_debug);    

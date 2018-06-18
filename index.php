@@ -1,5 +1,4 @@
 <?php
-$tags['Add_CSS'].=';blog_comments';
 include 'include/common.php';
 
 if($SUBDIR !== '/') {

@@ -45,8 +45,7 @@ class Comments
      *
      * @return integer Count of comments
      */
-    function show_count($target_id) {
-        
+    function show_count($target_id) {        
         $query="select count(id) from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id={$target_id}";
         list($count) = my_select_row($query, true);
         return $count;
@@ -59,8 +58,7 @@ class Comments
      *
      * @return string Output content
      */
-    function show_list($tags = array ()) {
-        
+    function show_list($tags = array ()) {        
         $query="select * from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id={$this->__target_id} order by id asc";
         $result = MyGlobal::get('DB')->query($query);
         return get_tpl_by_title('comments_list',$tags,$result);        
@@ -74,15 +72,17 @@ class Comments
      * @return string Output content
      */
     function show_form($tags = array ()) {
-        global $_SESSION,$SUBDIR,$editor,$input,$server;
+        global $_SESSION,$SUBDIR,$input,$server;
         if ( $this->__new_form ) {
             $this->__editor->SetValue('');
         }elseif (is_array($input['form'])) {
             $data = $input['form'];
             $tags = array_merge($tags, $data);            
         }
-        $tags[editor] = $this->__editor->GetContol(400, 200, $SUBDIR . 'images/bbcode_editor');
-        if(!strlen($tags['action'])) $tags['action'] = $server['PHP_SELF'];        
+        $tags['editor'] = $this->__editor->GetContol(400, 200, $SUBDIR . 'images/bbcode_editor');
+        if(!strlen($tags['action'])){
+            $tags['action'] = $server['PHP_SELF'];        
+        }
         $_SESSION['IMG_CODE'] = rand(111111, 999999);        
         return $this->__get_form_data_result.get_tpl_by_title('comment_add_form', $tags);
     }
@@ -120,7 +120,7 @@ class Comments
                 $input['form']['target_id']=$this->__target_id;
                 $input['form']['content']=$this->__editor->GetHTML();
                 $query = "insert into {$this->__table} " . db_insert_fields($input['form']);
-                $result = MyGlobal::get('DB')->query($query);
+                MyGlobal::get('DB')->query($query);
                 $output.=my_msg_to_str('','','Комментарий успешно добавлен');
 
                 $remote_host=($server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );

@@ -44,10 +44,12 @@ function bb_parse($string) {
                 case 'video':
                     $videourl = parse_url($innertext);
                     parse_str($videourl['query'], $videoquery);
-                    if (strpos($videourl['host'], 'youtube.com') !== FALSE)
+                    if (strpos($videourl['host'], 'youtube.com') !== FALSE) {
                         $replacement = '<embed src="http://www.youtube.com/v/' . $videoquery['v'] . '" type="application/x-shockwave-flash" width="425" height="344"></embed>';
-                    if (strpos($videourl['host'], 'google.com') !== FALSE)
+                    }    
+                    if (strpos($videourl['host'], 'google.com') !== FALSE) {
                         $replacement = '<embed src="http://video.google.com/googleplayer.swf?docid=' . $videoquery['docid'] . '" width="400" height="326" type="application/x-shockwave-flash"></embed>';
+                    }    
                     break;
             }
             $string = str_ireplace($match, $replacement, $string);
@@ -70,7 +72,7 @@ class BBCodeEditor {
     private $__width;
     private $__height;
 
-    function __construct() {
+    public function __construct() {
         $__numControls++;
         $this->__controlId = $__numControls;
         $this->__value = (strlen($_POST["bbcode_textarea"]) ? $_POST["bbcode_textarea"] : "");
@@ -88,7 +90,7 @@ class BBCodeEditor {
      *
      * @return string Output string
      */
-    function ShowControl($Width, $Height, $ImagePath) {
+    private function ShowControl($Width, $Height, $ImagePath) {
         $this->__width = $Width;
         $this->__height = $Height;
         $this->__imagePath = $ImagePath;
@@ -378,7 +380,7 @@ class BBCodeEditor {
      *
      * @return string Output string
      */
-    function GetContol($Width, $Height, $ImagePath) {
+    public function GetContol($Width, $Height, $ImagePath) {
         ob_start();
         $this->ShowControl($Width, $Height, $ImagePath);
         $content = ob_get_contents();
@@ -389,9 +391,9 @@ class BBCodeEditor {
     /**
      * Set control value.
      *
-     * @param string $ImagePath Path to controls images
+     * @param string $NewValue New value
      */
-    function SetValue($NewValue) {
+    public function SetValue($NewValue) {
         $this->__value = $NewValue;
     }
 
@@ -400,7 +402,7 @@ class BBCodeEditor {
      *
      * @return string Output string
      */
-    function GetValue() {
+    public function GetValue() {
         global $input;
         return $input['bbcode_textarea'];
     }
@@ -410,7 +412,7 @@ class BBCodeEditor {
      *
      * @return string Output string
      */
-    function GetHTML() {
+    public function GetHTML() {
         global $input;
         return bb_parse($input['bbcode_textarea']);
     }

@@ -25,7 +25,7 @@ class Sitemap {
     );
     public $pages;
     
-    function __construct(){
+    public function __construct(){
         $this->pages=$this->static_pages;
     }
     

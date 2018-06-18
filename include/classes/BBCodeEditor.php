@@ -3,61 +3,6 @@
 namespace Classes;
 
 /**
- * Parse BBCode to HTML
- *
- * @param string $string Input string
- *
- * @return string Output string
- */
-
-function bb_parse($string) {
-    global $mysqli;
-    $string = strip_tags($string);
-    $string = $mysqli->real_escape_string($string);
-
-    while (preg_match_all('`\[(.+?)=?(.*?)\](.+?)\[/\1\]`', $string, $matches))
-        foreach ($matches[0] as $key => $match) {
-            list($tag, $param, $innertext) = array($matches[1][$key], $matches[2][$key], $matches[3][$key]);
-            switch ($tag) {
-                case 'b': $replacement = "<strong>$innertext</strong>";
-                    break;
-                case 'i': $replacement = "<em>$innertext</em>";
-                    break;
-                case 'u': $replacement = "<u>$innertext</u>";
-                    break;
-                case 'size': $replacement = "<span style=\"font-size: $param;\">$innertext</a>";
-                    break;
-                case 'color': $replacement = "<span style=\"color: $param;\">$innertext</a>";
-                    break;
-                case 'left': $replacement = "<p align=left>$innertext</p>";
-                    break;
-                case 'center': $replacement = "<p align=center>$innertext</p>";
-                    break;
-                case 'right': $replacement = "<p align=right>$innertext</p>";
-                    break;
-                case 'quote': $replacement = "<blockquote>$innertext</blockquote>";
-                    break;
-                case 'url': $replacement = '<a href="' . ($param ? $param : $innertext) . "\">$innertext</a>";
-                    break;
-                case 'img': $replacement = "<img src=\"$innertext\" border=0>";
-                    break;
-                case 'video':
-                    $videourl = parse_url($innertext);
-                    parse_str($videourl['query'], $videoquery);
-                    if (strpos($videourl['host'], 'youtube.com') !== FALSE) {
-                        $replacement = '<embed src="http://www.youtube.com/v/' . $videoquery['v'] . '" type="application/x-shockwave-flash" width="425" height="344"></embed>';
-                    }    
-                    if (strpos($videourl['host'], 'google.com') !== FALSE) {
-                        $replacement = '<embed src="http://video.google.com/googleplayer.swf?docid=' . $videoquery['docid'] . '" width="400" height="326" type="application/x-shockwave-flash"></embed>';
-                    }    
-                    break;
-            }
-            $string = str_ireplace($match, $replacement, $string);
-        }
-    return $string;
-}
-
-/**
  * Class BBCODE_EDITOR
  * 
  * Textarea with BBCode support
@@ -81,6 +26,62 @@ class BBCodeEditor {
         $this->__cols = 0;
     }
 
+    /**
+     * Parse BBCode to HTML
+     *
+     * @param string $string Input string
+     *
+     * @return string Output string
+     */
+
+    private function bb_parse($string) {
+        global $mysqli;
+        $string = strip_tags($string);
+        $string = $mysqli->real_escape_string($string);
+
+        while (preg_match_all('`\[(.+?)=?(.*?)\](.+?)\[/\1\]`', $string, $matches))
+            foreach ($matches[0] as $key => $match) {
+                list($tag, $param, $innertext) = array($matches[1][$key], $matches[2][$key], $matches[3][$key]);
+                switch ($tag) {
+                    case 'b': $replacement = "<strong>$innertext</strong>";
+                        break;
+                    case 'i': $replacement = "<em>$innertext</em>";
+                        break;
+                    case 'u': $replacement = "<u>$innertext</u>";
+                        break;
+                    case 'size': $replacement = "<span style=\"font-size: $param;\">$innertext</a>";
+                        break;
+                    case 'color': $replacement = "<span style=\"color: $param;\">$innertext</a>";
+                        break;
+                    case 'left': $replacement = "<p align=left>$innertext</p>";
+                        break;
+                    case 'center': $replacement = "<p align=center>$innertext</p>";
+                        break;
+                    case 'right': $replacement = "<p align=right>$innertext</p>";
+                        break;
+                    case 'quote': $replacement = "<blockquote>$innertext</blockquote>";
+                        break;
+                    case 'url': $replacement = '<a href="' . ($param ? $param : $innertext) . "\">$innertext</a>";
+                        break;
+                    case 'img': $replacement = "<img src=\"$innertext\" border=0>";
+                        break;
+                    case 'video':
+                        $videourl = parse_url($innertext);
+                        parse_str($videourl['query'], $videoquery);
+                        if (strpos($videourl['host'], 'youtube.com') !== FALSE) {
+                            $replacement = '<embed src="http://www.youtube.com/v/' . $videoquery['v'] . '" type="application/x-shockwave-flash" width="425" height="344"></embed>';
+                        }    
+                        if (strpos($videourl['host'], 'google.com') !== FALSE) {
+                            $replacement = '<embed src="http://video.google.com/googleplayer.swf?docid=' . $videoquery['docid'] . '" width="400" height="326" type="application/x-shockwave-flash"></embed>';
+                        }    
+                        break;
+                }
+                $string = str_ireplace($match, $replacement, $string);
+            }
+        return $string;
+    }
+    
+    
     /**
      * Show textarea with BBCode controls.
      *
@@ -414,7 +415,7 @@ class BBCodeEditor {
      */
     public function GetHTML() {
         global $input;
-        return bb_parse($input['bbcode_textarea']);
+        return $this->bb_parse($input['bbcode_textarea']);
     }
 
 }

@@ -31,7 +31,7 @@ class Comments
      * @param string $action_href Action HREF
      *
      */
-    function __construct($target_type,$target_id = 0,$action_href = ''){
+    public function __construct($target_type,$target_id = 0,$action_href = ''){
         $this->__target_type=$target_type;
         $this->__target_id=$target_id;
         $this->__editor = new BBCodeEditor ();
@@ -45,7 +45,7 @@ class Comments
      *
      * @return integer Count of comments
      */
-    function show_count($target_id) {        
+    public function show_count($target_id) {        
         $query="select count(id) from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id={$target_id}";
         list($count) = my_select_row($query, true);
         return $count;
@@ -58,7 +58,7 @@ class Comments
      *
      * @return string Output content
      */
-    function show_list($tags = array ()) {        
+    public function show_list($tags = array ()) {        
         $query="select * from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id={$this->__target_id} order by id asc";
         $result = MyGlobal::get('DB')->query($query);
         return get_tpl_by_title('comments_list',$tags,$result);        
@@ -71,7 +71,7 @@ class Comments
      *
      * @return string Output content
      */
-    function show_form($tags = array ()) {
+    public function show_form($tags = array ()) {
         global $_SESSION,$SUBDIR,$input,$server;
         if ( $this->__new_form ) {
             $this->__editor->SetValue('');
@@ -93,7 +93,7 @@ class Comments
      * @param array $input Input array
      *
      */
-    function get_form_data($input){
+    public function get_form_data($input){
         global $server,$SUBDIR,$settings;
         if ($input['add_comment']) { 
             $err = 0;            

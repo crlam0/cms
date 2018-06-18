@@ -104,8 +104,8 @@ class Sitemap {
      *
      * @return array ['output','count']
      */
-    public function write(){
-        global $server,$SUBDIR;
+    public function write($test_only = false){
+        global $server, $DIR, $SUBDIR;
         
         $ServerUrl = 'http://' . $server["HTTP_HOST"] . $SUBDIR;
         $dom = new \DOMDocument('1.0', 'UTF-8');
@@ -146,7 +146,9 @@ class Sitemap {
         }
 
         $xml = $dom->saveXML();
-        file_put_contents($server['DOCUMENT_ROOT'] . $SUBDIR . 'sitemap.xml', $xml);
+        if(!$test_only) {
+            file_put_contents($DIR . 'sitemap.xml', $xml);
+        }    
         return array('output'=>$output,'count'=>count($this->pages));
     }
 }

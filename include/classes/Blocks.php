@@ -27,6 +27,7 @@ class Blocks {
         if ($result->num_rows) {
             $output.="<ul {$attr_ul}>\n";
             while ($row = $result->fetch_array()) {
+                $tmp = null;
                 $href = get_menu_href($tmp, $row);
                 if (preg_match('/^http.?:\/\/.+$/', $href)) {
                     $target_inc = ' target="_blank"';

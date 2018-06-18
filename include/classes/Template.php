@@ -79,7 +79,7 @@ class Template {
      * @return string Output content
      */
     private function get_my_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){
-        global $DIR, $settings, $MyTemplate;
+        global $DIR;
         if ($template['file_name']) {
             $fname = '';
             if (file_exists($template['file_name'])) {
@@ -115,7 +115,9 @@ class Template {
      * @return string Output content
      */
     function get_tpl_by_title($title, $tags = [], $sql_result = [], $inner_content = '') {
-        global $server, $settings, $DIR;
+        global $server, $DIR;
+        
+        $template = null;
 
         if (file_exists(dirname($server['SCRIPT_FILENAME']) . '/templates.tpl')) {
             $temp = $this->MyTemplate->load_from_file(dirname($server['SCRIPT_FILENAME']) . '/templates.tpl', $title);

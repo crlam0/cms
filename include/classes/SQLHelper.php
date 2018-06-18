@@ -133,6 +133,7 @@ class SQLHelper {
      */
     public function insert_fields($fields) {
         $total = count($fields);
+        $output = '';
         if ($total > 0) {
             $a = 0;
             while (list($key, $value) = each($fields)) {
@@ -169,6 +170,7 @@ class SQLHelper {
      */
     public function update_fields($fields) {
         $total = count($fields);
+        $output = '';
         $a = 0;
         while (list($key, $value) = each($fields)) {
             $a++;

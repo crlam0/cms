@@ -16,7 +16,7 @@ class MyTemplateTest extends TestCase
     {
         parent::setUp();
         $this->Blocks = new Blocks();
-        $this->MyTemplate = new Classes\MyTemplate($Blocks);
+        $this->MyTemplate = new Classes\MyTemplate($this->Blocks);
     }
 
     public function testSimpleParse()

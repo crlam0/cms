@@ -4,6 +4,8 @@
   Messages library.
  */
 
+use Classes\MyGlobal;
+
 /**
  * Return message by title
  *
@@ -117,7 +119,7 @@ function print_array($array) {
  */
 function admin_log($message) {
     $query = "insert into admin_log(user_id,date,msg) values('" . $_SESSION['UID'] . "',now(),'{$message}')";
-    $DB->query($query);
+    MyGlobal::get('DB')->query($query);
 }
 
 /**

@@ -5,6 +5,7 @@
 namespace Classes;
 
 use Classes\BBCodeEditor;
+use Classes\MyGlobal;
 
 /**
  * Add coments to some content
@@ -61,7 +62,7 @@ class Comments
     function show_list($tags = array ()) {
         
         $query="select * from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id={$this->__target_id} order by id asc";
-        $result=  $DB->query($query);
+        $result = MyGlobal::get('DB')->query($query);
         return get_tpl_by_title('comments_list',$tags,$result);        
     }
     
@@ -119,7 +120,7 @@ class Comments
                 $input['form']['target_id']=$this->__target_id;
                 $input['form']['content']=$this->__editor->GetHTML();
                 $query = "insert into {$this->__table} " . db_insert_fields($input['form']);
-                $result = $DB->query($query);
+                $result = MyGlobal::get('DB')->query($query);
                 $output.=my_msg_to_str('','','Комментарий успешно добавлен');
 
                 $remote_host=($server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
@@ -127,7 +128,9 @@ class Comments
                 $message.="IP: {$input['form']['ip']} ( {$remote_host} )\n";
                 $message.="Сообщение:\n";
                 $message.=str_replace('\r\n',"\n",$input['form']['content']) . "\n";
-                if(!$settings['debug'])send_mail($settings['email_to_addr'], 'На сайте http://'.$server['HTTP_HOST'].$SUBDIR.' оставлен новый комментарий.', $message);
+                if(!$settings['debug']){
+                    send_mail($settings['email_to_addr'], 'На сайте http://'.$server['HTTP_HOST'].$SUBDIR.' оставлен новый комментарий.', $message);
+                }    
                 
                 $this->__new_form = true;
             }

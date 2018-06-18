@@ -2,6 +2,7 @@
 
 $tags['Header'] = 'Шаблоны';
 include '../include/common.php';
+header('X-XSS-Protection:0');
 
 if ($input['del']) {
     $query = "delete from templates where id='{$input['id']}'";
@@ -22,7 +23,7 @@ if($input['revert']){
 if ($input['edit']) {
     $input['form']['content'] = str_replace('text_area', 'textarea', $input['form']['content']);
     $query = "update templates set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, false);
+    my_query($query, true);
     if($input['update']){
         $input['view']=1;
     }

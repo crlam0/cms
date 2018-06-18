@@ -135,6 +135,7 @@ class SQLHelper {
         $total = count($fields);
         $output = '';
         $str_fields = '';
+        $str_values = '';
         if ($total > 0) {
             $a = 0;
             while (list($key, $value) = each($fields)) {

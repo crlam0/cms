@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once 'tests/misc.php';
+require_once 'tests/require.php';
   
 use Classes\Blocks;
 

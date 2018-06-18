@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once 'tests/misc.php';
+require_once 'tests/require.php';
   
 use Classes\Blocks;
 use Classes\TwigTemplate;
@@ -21,7 +21,7 @@ class TwigTemplateTest extends TestCase
         self::assertEquals('Hello Test', $content);
     }
     
-    public function testFuncionParse()
+    public function testFunctionParse()
     {
         $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, true, '{{ TwigTest(123) }}');
         function TwigTest($param){

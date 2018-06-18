@@ -17,7 +17,11 @@ if(!$DB) {
     $DB = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 }
 
+// var_dump($DB);
+
 $mysqli=$DB->mysqli;
+
+$GLOBALS['DB'] = $DB;
 
 /**
  * @var Array Debug array of all SQL query
@@ -48,6 +52,14 @@ function my_query($sql, $dont_debug=false) {
     global $DB;
     return $DB->query($sql, $dont_debug);
 }
+/*
+function my_query($sql, $dont_debug=false) {
+    global $GLOBALS;
+    // var_dump($GLOBALS);
+    return $GLOBALS['DB']->query($sql, $dont_debug);
+}
+ * 
+ */
 
 /**
  * Return one row from query

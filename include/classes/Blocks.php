@@ -151,11 +151,15 @@ class Blocks {
                 return get_tpl_by_title('block_partners', [], $result);
 
             case 'banners':
-                ob_start();
-                include_once($DIR . 'bannners.php');
-                $content = ob_get_contents();
-                ob_end_clean();
+                if(file_exists($DIR . 'bannners.php')) {
+                    ob_start();
+                    include_once($DIR . 'bannners.php');
+                    $content = ob_get_contents();
+                    ob_end_clean();
                 return $content;
+                } else {
+                    return null;
+                }
 
             case 'calendar':
                 ob_start();

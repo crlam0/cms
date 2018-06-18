@@ -7,6 +7,7 @@
   ========================================================================= */
 
 use Classes\SQLHelper;
+use Classes\MyGlobal;
 
 /**
  * @var Classes\SQLHelper
@@ -23,6 +24,8 @@ $mysqli=$DB->mysqli;
 
 $GLOBALS['DB'] = $DB;
 
+MyGlobal::set('DB', $DB );
+
 /**
  * @var Array Debug array of all SQL query
  */
@@ -36,8 +39,7 @@ empty($DEBUG['sql_query_array']);
  * @return string Output string
  */
 function db_test_param($str,$param='') {
-    global $DB;
-    return $DB->test_param($str,$param);
+    return MyGlobal::get('DB')->test_param($str,$param);
 }
 
 /**
@@ -49,17 +51,8 @@ function db_test_param($str,$param='') {
  * @return array mysqli result
  */
 function my_query($sql, $dont_debug=false) {
-    global $DB;
-    return $DB->query($sql, $dont_debug);
+    return MyGlobal::get('DB')->query($sql, $dont_debug);
 }
-/*
-function my_query($sql, $dont_debug=false) {
-    global $GLOBALS;
-    // var_dump($GLOBALS);
-    return $GLOBALS['DB']->query($sql, $dont_debug);
-}
- * 
- */
 
 /**
  * Return one row from query
@@ -70,8 +63,7 @@ function my_query($sql, $dont_debug=false) {
  * @return array One row
  */
 function my_select_row($sql, $dont_debug=false) {
-    global $DB;
-    return $DB->select_row($sql, $dont_debug);    
+    return MyGlobal::get('DB')->select_row($sql, $dont_debug);    
 }
 
 /**
@@ -83,8 +75,7 @@ function my_select_row($sql, $dont_debug=false) {
  */
 
 function db_insert_fields($fields) {
-    global $DB;
-    return $DB->insert_fields($fields);
+    return MyGlobal::get('DB')->insert_fields($fields);
 }
 
 /**
@@ -96,8 +87,7 @@ function db_insert_fields($fields) {
  */
 
 function db_update_fields($fields) {
-    global $DB;
-    return $DB->update_fields($fields);
+    return MyGlobal::get('DB')->update_fields($fields);
 }
 
 $DB->query('SET character_set_client = utf8', true);

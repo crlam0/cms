@@ -1,5 +1,14 @@
 <?php
 
+$DEBUG['start_time'] = microtime(true);
+
+function add_to_debug ($message) {
+    global $DEBUG;
+    $time = microtime(true) - $DEBUG['start_time'];
+    $time = sprintf('%.4F', $time);
+
+    $DEBUG['log'][] = $time . "\t" . $message;
+}
 
 require 'config/config.local.php';
 require 'config/misc.php';
@@ -21,37 +30,46 @@ if(file_exists($INC_DIR.'config/misc.local.php')) {
     require_once $INC_DIR.'config/misc.local.php';
 }    
 
-$DEBUG['start_time'] = microtime(true);
-
+add_to_debug('Local configs loaded');
 
 if(file_exists($DIR.'vendor/autoload.php')) {
     require_once $DIR.'vendor/autoload.php';
 }    
+add_to_debug('Autoload classes complete');
+
 require $INC_DIR.'lib_sql.php';
 
-if(is_array($_GET))foreach ($_GET as $key => $value) $input[$key]=db_test_param($value,$key);
-if(is_array($_POST))foreach ($_POST as $key => $value) $input[$key]=db_test_param($value,$key);
-if(is_array($_SERVER))foreach ($_SERVER as $key => $value) $server[$key]=$value;
+add_to_debug('SQL base connected');
+
+if(is_array($_GET))foreach ($_GET as $key => $value){
+    $input[$key]=db_test_param($value,$key);
+}
+if(is_array($_POST))foreach ($_POST as $key => $value){
+    $input[$key]=db_test_param($value,$key);
+}
+if(is_array($_SERVER))foreach ($_SERVER as $key => $value){
+    $server[$key]=$value;
+}
+
+add_to_debug('Global arrays loaded');
+
+use Classes\MyGlobal;
+
+MyGlobal::set('input', $input );
+MyGlobal::set('DIR', $DIR );
+MyGlobal::set('SUBDIR', $SUBDIR );
 
 require $INC_DIR.'lib_messages.php';
 require $INC_DIR.'lib_templates.php';
 require $INC_DIR.'lib_functions.php';
 
+add_to_debug('Library loaded');
+
 // Load settings into $settings[]
 $query='SELECT * FROM settings';
-$result=my_query($query,true);
+$result=$DB->query($query,true);
 while ($row = $result->fetch_array()) {
     $settings[$row['title']] = $row['value'];
-}
-
-function add_to_debug ($message) {
-    global $settings, $DEBUG;
-    if($settings['debug']){
-        $time = microtime(true) - $DEBUG['start_time'];
-        $time = sprintf('%.4F', $time);
-
-        $DEBUG['log'][] = $time . "\t" . $message;
-    }
 }
 
 add_to_debug('Settings loaded');
@@ -87,6 +105,8 @@ if ((strlen($part['user_flag'])) && (!strstr($_SESSION['FLAGS'], $part['user_fla
         exit;
     }
 }
+
+add_to_debug('User flag checked');
 
 $server['PHP_SELF_DIR']=dirname($server['PHP_SELF']).'/';
 

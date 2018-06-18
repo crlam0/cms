@@ -61,7 +61,7 @@ class Comments
     function show_list($tags = array ()) {
         
         $query="select * from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id={$this->__target_id} order by id asc";
-        $result=  my_query($query);
+        $result=  $DB->query($query);
         return get_tpl_by_title('comments_list',$tags,$result);        
     }
     
@@ -119,7 +119,7 @@ class Comments
                 $input['form']['target_id']=$this->__target_id;
                 $input['form']['content']=$this->__editor->GetHTML();
                 $query = "insert into {$this->__table} " . db_insert_fields($input['form']);
-                $result = my_query($query);
+                $result = $DB->query($query);
                 $output.=my_msg_to_str('','','Комментарий успешно добавлен');
 
                 $remote_host=($server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );

@@ -117,7 +117,7 @@ function print_array($array) {
  */
 function admin_log($message) {
     $query = "insert into admin_log(user_id,date,msg) values('" . $_SESSION['UID'] . "',now(),'{$message}')";
-    my_query($query);
+    $DB->query($query);
 }
 
 /**

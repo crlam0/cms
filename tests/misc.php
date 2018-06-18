@@ -11,14 +11,16 @@ $setting['debug'] = true;
 $DIR=dirname(dirname(__FILE__)) . '/';
 $INC_DIR=$DIR.'include/';
 
+/*
 var_dump($DB);
-
 
 $query='SELECT * FROM settings';
 $result=my_query($query,true);
 while ($row = $result->fetch_array()) {
     $settings[$row['title']] = $row['value'];
 }
+ * 
+ */
 
 
 function add_to_debug ($message) {

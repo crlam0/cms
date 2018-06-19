@@ -245,10 +245,10 @@ function redirect($url) {
  * Print calendar
  *
  * @param integer $month Month number
- * @param integer $service_id Service ID
+ * @param callable $show_day_func Function for customize day output
  *
  */
-function show_month($month, $service_id) {
+function show_month($month, $show_day_func = null) {
     global $_SESSION, $server;
     $month_names = array(1 => 'Январь', 2 => 'Февраль', 3 => 'Март', 4 => 'Апрель', 5 => 'Май', 6 => 'Июнь', 7 => 'Июль', 8 => 'Август', 9 => 'Сентябрь', 10 => 'Октябрь', 11 => 'Ноябрь', 12 => 'Декабрь');
     $day_names = array('Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс');
@@ -273,14 +273,14 @@ function show_month($month, $service_id) {
         $i = mktime(0, 0, 0, $month, $d, date('Y'));
         if ($i >= $pd) {
             $today = (date('Ymd') == date('Ymd', $i)) ? '_today' : '';
-            $minulost = (date('Ymd') >= date('Ymd', $i + 86400)) && !$allow_past;
+            // $minulost = (date('Ymd') >= date('Ymd', $i + 86400)) && !$allow_past;
             echo '<div class="day' . $today . '">';
             $day = date('j', $i);
-//             if ((date('Ymd', $i)>date('Ymd')) ) {
-//                echo "<a href=\"" . $server["PHP_SELF"] . "?sel_service=" . $service_id . "&sel_day=" . date('Y-m-d', $i) . "\">$day</a>";
-//            } else {
-            echo date('j', $i);
-//            }
+            if(is_callable($show_day_func)) {
+                $show_day_func(date('Y-m-d', $i));
+            } else {
+                echo $day;
+            }
             echo '</div>';
         } else {
             echo '

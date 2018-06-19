@@ -15,7 +15,7 @@ require_once $INC_DIR . 'lib_templates.php';
 
 $settings['debug'] = false;
 
-function add_to_debug ($message) {
-	return null;
+function add_to_debug () {
+    return null;
 }
 

@@ -152,9 +152,9 @@ class Blocks {
                 return get_tpl_by_title('block_partners', [], $result);
 
             case 'banners':
-                if(file_exists($DIR . 'bannners.php')) {
+                if(file_exists($DIR . 'bannners.local.php')) {
                     ob_start();
-                    include_once($DIR . 'bannners.php');
+                    include_once($DIR . 'bannners.local.php');
                     $content = ob_get_contents();
                     ob_end_clean();
                 return $content;

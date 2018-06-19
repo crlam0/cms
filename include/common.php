@@ -6,12 +6,15 @@ function add_to_debug ($message) {
     global $DEBUG;
     $time = microtime(true) - $DEBUG['start_time'];
     $time = sprintf('%.4F', $time);
-
     $DEBUG['log'][] = $time . "\t" . $message;
 }
 
 require 'config/config.local.php';
 require 'config/misc.php';
+
+if(file_exists($INC_DIR.'config/misc.local.php')) {
+    require_once $INC_DIR.'config/misc.local.php';
+}    
 
 $_SESSION['UID']=0;
 $_SESSION['UNAME']='';
@@ -26,11 +29,7 @@ if($_SERVER['SERVER_PROTOCOL']) {
     $INC_DIR=$DIR.'include/';
 }
 
-if(file_exists($INC_DIR.'config/misc.local.php')) {
-    require_once $INC_DIR.'config/misc.local.php';
-}    
-
-add_to_debug('Local configs loaded');
+add_to_debug('Local configs loaded, session started');
 
 if(file_exists($DIR.'vendor/autoload.php')) {
     require_once $DIR.'vendor/autoload.php';
@@ -51,13 +50,14 @@ if(is_array($_SERVER))foreach ($_SERVER as $key => $value){
     $server[$key]=$value;
 }
 
-add_to_debug('Global arrays loaded');
-
 use Classes\MyGlobal;
 
 MyGlobal::set('input', $input );
+MyGlobal::set('server', $server );
 MyGlobal::set('DIR', $DIR );
 MyGlobal::set('SUBDIR', $SUBDIR );
+
+add_to_debug('Global arrays loaded');
 
 require $INC_DIR.'lib_messages.php';
 require $INC_DIR.'lib_templates.php';
@@ -97,13 +97,13 @@ add_to_debug('Part data loaded');
 
 if ((strlen($part['user_flag'])) && (!strstr($_SESSION['FLAGS'], $part['user_flag'])) && (!strstr($_SESSION['FLAGS'], 'global'))) {
     if ($_SESSION['UID']) {
-        echo '<h1 align=center>У вас нет соответствующих прав !</h1>';
-        exit();
+        $content ='<h1 align=center>У вас нет соответствующих прав !</h1>';
+        echo get_tpl_by_title($part['tpl_name'], [], null, $content);
     } else {
         $_SESSION['GO_TO_URI'] = $server['REQUEST_URI'];
         redirect($SUBDIR . 'login/');
-        exit;
     }
+    exit;
 }
 
 add_to_debug('User flag checked');

@@ -60,11 +60,10 @@ class MyTemplate {
                 if ($tagclass == "func") {
                     if (strstr($tagparam, ',')) {
                         $param = explode(',', $tagparam);
-                        eval("\$replace_str=\$param[0](\$param[1],\$sql_row);");
                     } else {
                         $param[0] = $tagparam;
-                        eval("\$replace_str=\$param[0](\$sql_row);");
-                    }                    
+                    }
+                    eval("\$replace_str=\$param[0](\$param[1],\$sql_row);");
                 } elseif ($tagclass == "var") {
                     eval("\$replace_str=\"\$" . $tagparam . "\";");
                 } elseif ($tagclass == 'settings') {
@@ -127,8 +126,9 @@ class MyTemplate {
                 } elseif (isset($tags[$tagclass])) {
                     $replace_str = $tags[$tagclass];
                 }
-                if (isset($replace_str))
+                if (isset($replace_str)){
                     $content = str_replace('[%' . $temp[$a][1] . '%]', $replace_str, $content);
+                }
                 $a++;
             }
         return $content;

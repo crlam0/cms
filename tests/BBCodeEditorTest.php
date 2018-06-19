@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Classes\BBCodeEditor;
 
-require_once 'tests/require.php';
+require_once 'tests/bootstrap.php';
 
 class BBCodeEditorTest extends TestCase
 {

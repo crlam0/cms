@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once 'tests/require.php';
+require_once 'tests/bootstrap.php';
 
 class MessagesTest extends TestCase
 {

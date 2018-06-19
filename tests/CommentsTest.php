@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Classes\Comments;
 
-require_once 'tests/require.php';
+require_once 'tests/bootstrap.php';
 
 class CommentsTest extends TestCase
 {

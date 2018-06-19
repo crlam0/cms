@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Classes\MyGlobal;
 
-require_once 'tests/require.php';
+require_once 'tests/bootstrap.php';
 
 class MyGlobalTest extends TestCase
 {

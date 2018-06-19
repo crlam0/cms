@@ -1,10 +1,9 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-
-require_once 'tests/require.php';
-  
 use Classes\Template;
+
+require_once 'tests/bootstrap.php';
 
 class TemplateTest extends TestCase
 {

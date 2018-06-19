@@ -1,11 +1,11 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-
-require_once 'tests/require.php';
-  
 use Classes\Blocks;
 use Classes\TwigTemplate;
+
+require_once 'tests/bootstrap.php';
+ 
 
 class TwigTemplateTest extends TestCase
 {

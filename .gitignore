@@ -17,8 +17,6 @@ composer.phar
 
 *.local.php
 *Local.php
-/bannners.php
-/include/global.php
 /admin/nav.php
 /main.tpl
 /favicon.png

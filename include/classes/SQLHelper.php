@@ -11,6 +11,11 @@ namespace Classes;
 class SQLHelper {
     public $mysqli;
     
+    private $host;
+    private $user;
+    private $passwd;
+    private $dbname;
+    
     /**
     * @var Array Array of denied words for input strings
     */
@@ -26,14 +31,74 @@ class SQLHelper {
      *
      * @return null
      */    
-    public function __construct($host, $user, $passwd, $db) {
-        $this->mysqli = new \mysqli($host, $user, $passwd, $db);
+    public function __construct($host, $user, $passwd, $dbname) {
+        $this->host=$host;
+        $this->user=$user;
+        $this->passwd=$passwd;
+        $this->dbname=$dbname;
+        $this->mysqli = new \mysqli($this->host, $this->user, $this->passwd, $this->dbname);
         if (mysqli_connect_error()) {
             die('DB connect error ' . mysqli_connect_errno() . ': ' . mysqli_connect_error());
         }        
     }
     
     
+    /**
+     * Replace for mysql_query
+     *
+     * @param string $sql SQL Query
+     * @param boolean $dont_debug Dont echo debug info
+     *
+     * @return array mysqli result
+     */
+    public function query($sql, $dont_debug=false) {
+        global $settings,$DEBUG;
+        if (!$dont_debug) {
+            print_debug($sql);
+        }    
+        if($settings['debug']){
+            $start_time = microtime(true);
+        }
+        // var_dump($this->mysqli);
+        echo($this->mysqli->info);
+        // $this->mysqli = new \mysqli($this->host, $this->user, $this->passwd, $this->dbname);
+        // var_dump($this->mysqli);
+        if($this->mysqli) {
+        $result = $this->mysqli->query($sql);
+            
+        }
+        if($settings['debug']){
+            $time = sprintf('%.4F', microtime(true) - $start_time);
+            $DEBUG['sql_query_array'][] = $time . "\t" . $sql;
+        }
+        if (!$result) {
+            echo 'SQL Error: '.$this->mysqli->error;
+            if($settings['debug']){
+                echo '<br />Query is: '.$sql;
+            }
+            exit();
+        }
+        return $result;
+    }
+
+    /**
+     * Return one row from query
+     *
+     * @param string $sql SQL Query
+     * @param boolean $dont_debug Dont echo debug info
+     *
+     * @return array One row
+     */
+    public function select_row($sql, $dont_debug=false) {
+        $result = $this->query($sql, $dont_debug);    
+        if ($result->num_rows) {
+            $row = $result->fetch_array();
+            return $row;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Test field parameter for deny sql injections
      *
@@ -71,57 +136,15 @@ class SQLHelper {
         return $str;
     }
     
+    /**
+     * Escape string
+     *
+     * @param string $str Input string
+     *
+     * @return string
+     */
     public function escape_string($str) {
         return $this->mysqli->escape_string($str);        
-    }
-
-    /**
-     * Replace for mysql_query
-     *
-     * @param string $sql SQL Query
-     * @param boolean $dont_debug Dont echo debug info
-     *
-     * @return array mysqli result
-     */
-    public function query($sql, $dont_debug=false) {
-        global $settings,$DEBUG;
-        if (!$dont_debug) {
-            print_debug($sql);
-        }    
-        if($settings['debug']){
-            $start_time = microtime(true);
-        }    
-        $result = $this->mysqli->query($sql);
-        if($settings['debug']){
-            $time = sprintf('%.4F', microtime(true) - $start_time);
-            $DEBUG['sql_query_array'][] = $time . "\t" . $sql;
-        }
-        if (!$result) {
-            echo 'SQL Error: '.$this->mysqli->error;
-            if($settings['debug']){
-                echo '<br />Query is: '.$sql;
-            }
-            exit();
-        }
-        return $result;
-    }
-
-    /**
-     * Return one row from query
-     *
-     * @param string $sql SQL Query
-     * @param boolean $dont_debug Dont echo debug info
-     *
-     * @return array One row
-     */
-    public function select_row($sql, $dont_debug=false) {
-        $result = $this->query($sql, $dont_debug);    
-        if ($result->num_rows) {
-            $row = $result->fetch_array();
-            return $row;
-        } else {
-            return false;
-        }
     }
 
     /**

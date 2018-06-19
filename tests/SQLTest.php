@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use Classes\SQLHelper;
 
 require_once 'tests/require.php';
 
@@ -12,9 +13,10 @@ class SQLTest extends TestCase
         self::assertEquals($row['id'], '7');
     }
 
-    public function testDB()            
+    public function testDB()
     {
-        global $DB;
+        global $DBHOST, $DBUSER, $DBPASSWD, $DBNAME;
+        $DB = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
         $row=$DB->select_row("select id from users where login='boot'");
         self::assertEquals($row['id'], '7');
     }

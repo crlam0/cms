@@ -18,7 +18,7 @@ if(strlen($input["search_str"])>3){
     FROM blog_posts
     WHERE MATCH (title,content) AGAINST ('{$input["search_str"]}'))
     order by score desc";
-    $result=my_query($query, $conn);
+    $result=my_query($query);
     $result_cnt=$result->num_rows;
     if($result_cnt>0){
         $content.="<h5>Найдено {$result_cnt} совпадений.</h5><br />";

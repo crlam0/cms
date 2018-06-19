@@ -1,57 +1,6 @@
 <?php
 
-/**
- * Parse BBCode to HTML
- *
- * @param string $string Input string
- *
- * @return string Output string
- */
-
-function bb_parse($string) {
-    global $mysqli;
-    $string = strip_tags($string);
-    $string = $mysqli->real_escape_string($string);
-
-    while (preg_match_all('`\[(.+?)=?(.*?)\](.+?)\[/\1\]`', $string, $matches))
-        foreach ($matches[0] as $key => $match) {
-            list($tag, $param, $innertext) = array($matches[1][$key], $matches[2][$key], $matches[3][$key]);
-            switch ($tag) {
-                case 'b': $replacement = "<strong>$innertext</strong>";
-                    break;
-                case 'i': $replacement = "<em>$innertext</em>";
-                    break;
-                case 'u': $replacement = "<u>$innertext</u>";
-                    break;
-                case 'size': $replacement = "<span style=\"font-size: $param;\">$innertext</a>";
-                    break;
-                case 'color': $replacement = "<span style=\"color: $param;\">$innertext</a>";
-                    break;
-                case 'left': $replacement = "<p align=left>$innertext</p>";
-                    break;
-                case 'center': $replacement = "<p align=center>$innertext</p>";
-                    break;
-                case 'right': $replacement = "<p align=right>$innertext</p>";
-                    break;
-                case 'quote': $replacement = "<blockquote>$innertext</blockquote>";
-                    break;
-                case 'url': $replacement = '<a href="' . ($param ? $param : $innertext) . "\">$innertext</a>";
-                    break;
-                case 'img': $replacement = "<img src=\"$innertext\" border=0>";
-                    break;
-                case 'video':
-                    $videourl = parse_url($innertext);
-                    parse_str($videourl['query'], $videoquery);
-                    if (strpos($videourl['host'], 'youtube.com') !== FALSE)
-                        $replacement = '<embed src="http://www.youtube.com/v/' . $videoquery['v'] . '" type="application/x-shockwave-flash" width="425" height="344"></embed>';
-                    if (strpos($videourl['host'], 'google.com') !== FALSE)
-                        $replacement = '<embed src="http://video.google.com/googleplayer.swf?docid=' . $videoquery['docid'] . '" width="400" height="326" type="application/x-shockwave-flash"></embed>';
-                    break;
-            }
-            $string = str_ireplace($match, $replacement, $string);
-        }
-    return $string;
-}
+namespace Classes;
 
 /**
  * Class BBCODE_EDITOR
@@ -60,7 +9,7 @@ function bb_parse($string) {
  * 
  */
 
-class BBCODE_EDITOR {
+class BBCodeEditor {
 
     private $__controlId;
     private $__value;
@@ -68,7 +17,7 @@ class BBCODE_EDITOR {
     private $__width;
     private $__height;
 
-    function __construct() {
+    public function __construct() {
         $__numControls++;
         $this->__controlId = $__numControls;
         $this->__value = (strlen($_POST["bbcode_textarea"]) ? $_POST["bbcode_textarea"] : "");
@@ -78,6 +27,62 @@ class BBCODE_EDITOR {
     }
 
     /**
+     * Parse BBCode to HTML
+     *
+     * @param string $string Input string
+     *
+     * @return string Output string
+     */
+
+    private function bb_parse($string) {
+        global $mysqli;
+        $string = strip_tags($string);
+        $string = $mysqli->real_escape_string($string);
+
+        while (preg_match_all('`\[(.+?)=?(.*?)\](.+?)\[/\1\]`', $string, $matches))
+            foreach ($matches[0] as $key => $match) {
+                list($tag, $param, $innertext) = array($matches[1][$key], $matches[2][$key], $matches[3][$key]);
+                switch ($tag) {
+                    case 'b': $replacement = "<strong>$innertext</strong>";
+                        break;
+                    case 'i': $replacement = "<em>$innertext</em>";
+                        break;
+                    case 'u': $replacement = "<u>$innertext</u>";
+                        break;
+                    case 'size': $replacement = "<span style=\"font-size: $param;\">$innertext</a>";
+                        break;
+                    case 'color': $replacement = "<span style=\"color: $param;\">$innertext</a>";
+                        break;
+                    case 'left': $replacement = "<p align=left>$innertext</p>";
+                        break;
+                    case 'center': $replacement = "<p align=center>$innertext</p>";
+                        break;
+                    case 'right': $replacement = "<p align=right>$innertext</p>";
+                        break;
+                    case 'quote': $replacement = "<blockquote>$innertext</blockquote>";
+                        break;
+                    case 'url': $replacement = '<a href="' . ($param ? $param : $innertext) . "\">$innertext</a>";
+                        break;
+                    case 'img': $replacement = "<img src=\"$innertext\" border=0>";
+                        break;
+                    case 'video':
+                        $videourl = parse_url($innertext);
+                        parse_str($videourl['query'], $videoquery);
+                        if (strpos($videourl['host'], 'youtube.com') !== FALSE) {
+                            $replacement = '<embed src="http://www.youtube.com/v/' . $videoquery['v'] . '" type="application/x-shockwave-flash" width="425" height="344"></embed>';
+                        }    
+                        if (strpos($videourl['host'], 'google.com') !== FALSE) {
+                            $replacement = '<embed src="http://video.google.com/googleplayer.swf?docid=' . $videoquery['docid'] . '" width="400" height="326" type="application/x-shockwave-flash"></embed>';
+                        }    
+                        break;
+                }
+                $string = str_ireplace($match, $replacement, $string);
+            }
+        return $string;
+    }
+    
+    
+    /**
      * Show textarea with BBCode controls.
      *
      * @param integer $Width Textarea width
@@ -86,7 +91,7 @@ class BBCODE_EDITOR {
      *
      * @return string Output string
      */
-    function ShowControl($Width, $Height, $ImagePath) {
+    private function ShowControl($Width, $Height, $ImagePath) {
         $this->__width = $Width;
         $this->__height = $Height;
         $this->__imagePath = $ImagePath;
@@ -376,7 +381,7 @@ class BBCODE_EDITOR {
      *
      * @return string Output string
      */
-    function GetContol($Width, $Height, $ImagePath) {
+    public function GetContol($Width, $Height, $ImagePath) {
         ob_start();
         $this->ShowControl($Width, $Height, $ImagePath);
         $content = ob_get_contents();
@@ -387,9 +392,9 @@ class BBCODE_EDITOR {
     /**
      * Set control value.
      *
-     * @param string $ImagePath Path to controls images
+     * @param string $NewValue New value
      */
-    function SetValue($NewValue) {
+    public function SetValue($NewValue) {
         $this->__value = $NewValue;
     }
 
@@ -398,7 +403,7 @@ class BBCODE_EDITOR {
      *
      * @return string Output string
      */
-    function GetValue() {
+    public function GetValue() {
         global $input;
         return $input['bbcode_textarea'];
     }
@@ -408,9 +413,9 @@ class BBCODE_EDITOR {
      *
      * @return string Output string
      */
-    function GetHTML() {
+    public function GetHTML() {
         global $input;
-        return bb_parse($input['bbcode_textarea']);
+        return $this->bb_parse($input['bbcode_textarea']);
     }
 
 }

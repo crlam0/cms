@@ -1,14 +1,6 @@
 <?php
 
-require_once 'include/common.php';
-
-if($SUBDIR !== '/') {
-    $request_uri = str_replace($SUBDIR, '', $server['REQUEST_URI']);
-} else {
-    $request_uri = substr($server['REQUEST_URI'], 1);
-}    
-
-$routes = [
+return [
     'login' => [
         'pattern' => '^login\/$',
         'file' => 'misc/login.php'
@@ -32,10 +24,6 @@ $routes = [
     'misc_request' => [
         'pattern' => '^.*misc\/request\.php$',
         'file' => 'misc/request.php'
-    ],    
-    'vote' => [
-        'pattern' => '^vote\/$',
-        'file' => 'misc/vote.php'
     ],    
     
     'article_pdf' => [
@@ -98,6 +86,10 @@ $routes = [
         'pattern' => '^catalog\/(.*)\/buy.php',
         'file' => 'catalog/buy.php'
     ], 
+    'catalog_basket' => [
+        'pattern' => '^catalog\/basket\/',
+        'file' => 'catalog/buy.php'
+    ], 
     'catalog' => [
         'pattern' => '^catalog\/(.*)\/$',
         'file' => 'catalog/index.php',
@@ -114,42 +106,4 @@ $routes = [
         ]
     ],    
 ];
-
-foreach($routes as $title => $route) {
-    if (preg_match('/'.$route['pattern'].'/', $request_uri, $matches) === 1) {
-        add_to_debug("Match route '{$title}'");
-        foreach($matches as $key => $value){
-            if($key==0){
-                $file=dirname(__FILE__) . DIRECTORY_SEPARATOR . $route['file'];
-            } else {
-                $input[$route['params'][$key]]=htmlspecialchars($value);
-            }
-        }
-        break;
-    }
-}
-
-/*
-if($settings['debug']){
-    echo $request_uri . '<br>';
-    echo $file . '<br>';
-    print_array($input);
-}
- * 
- */
-
-if(is_file($file)) {
-    // error_reporting(0);    
-    $server['PHP_SELF'] = $SUBDIR.$route['file'];
-    $server['PHP_SELF_DIR'] = $SUBDIR.dirname($route['file']) . '/';
-
-    include_once $file;
-    exit;
-} 
-
-$tags['Header'] = 'Ошибка 404';
-$tags['file_name'] = $server['REQUEST_URI'];
-$content = my_msg_to_str('file_not_found', $tags, '');
-header($server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 

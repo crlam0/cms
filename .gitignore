@@ -1,24 +1,25 @@
-
 /nbproject/
 /.vscode/
 /*.code-workspace
 
+composer.phar
+/composer.lock
+/phpunit.xml
 
-
-/upload/
-/src/
-/include/global.php
-/admin/nav.php
+/dump.cmd
 /*.html
 /*.sql
-/main.tpl
-/css/
-/images/design/
-/theme/
-/favicon.png
-/dump.cmd
-/sitemap.xml
-/bannners.php
 
+/src/
+/vendor/
+/var/
+/templates/
+
+*.local.php
+*Local.php
+/admin/nav.php
+/main.tpl
+/favicon.png
+/sitemap.xml
 /include/dompdf/
 

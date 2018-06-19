@@ -3,7 +3,10 @@ $tags['Header'] = 'Блог';
 $tags['Add_CSS'].=';blog_comments';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 @include_once '../include/common.php';
-include_once $INC_DIR . 'lib_comments.php';
+
+// include_once $INC_DIR . 'lib_comments.php';
+
+use Classes\Comments;
 
 $MSG_PER_PAGE = $settings["blog_msg_per_page"];
 $TABLE="blog_posts";
@@ -27,11 +30,11 @@ if(!is_array($input)){
 }
 
 
-$comments = new COMMENTS ("blog",$input["view_post"]);
+$comments = new Comments ('blog',$input['view_post']);
 
 if ($input["view_post"]) {
     $query = "select {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid) where {$TABLE}.id='{$input["view_post"]}'";
-    $result = my_query($query, $conn, true);
+    $result = my_query($query, true);
     $row = $result->fetch_array();
 
     $tags['nav_str'].="<span class=nav_next><a href=\"{$server["PHP_SELF_DIR"]}\">$tags[Header]</a></span>";
@@ -53,7 +56,7 @@ if ($input["view_post"]) {
             <img width="150" height="150" src="'.$SUBDIR.$settings['blog_img_path'].$row['image_name'].'" class="attachment-150x150 wp-post-image" alt="'.$row['title'].'">    
         </div>';
     }            
-    $row["comment_line"] = "Комментариев: " . $comments->show_count($row[id]);
+    $row["comment_line"] = "Комментариев: " . $comments->show_count($row['id']);
     // unset($row['post_title']);
     $content.=get_tpl_by_title("blog_post", $row, $result);
     $content.="</div>";
@@ -82,7 +85,7 @@ if ($input["view_post"]) {
         from {$TABLE} left join users on (users.id=uid)
         where {$TABLE}.active='Y'
         group by {$TABLE}.id  order by {$TABLE}.id desc limit $offset,$MSG_PER_PAGE";
-    $result = my_query($query, $conn, true);
+    $result = my_query($query, true);
 
     if (!$result->num_rows) {
         $content.=my_msg_to_str("part_empty");

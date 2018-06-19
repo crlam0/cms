@@ -4,8 +4,11 @@ $tags['Add_CSS'].=';article_news_faq';
 $tags['INCLUDE_HEAD'].='<link href="article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
 require_once '../include/common.php';
 
-require_once $INC_DIR . 'lib_bbcode.php';
-$editor = new BBCODE_EDITOR ();
+// require_once $INC_DIR . 'lib_bbcode.php';
+// $editor = new BBCODE_EDITOR ();
+
+use Classes\BBCodeEditor;
+$editor = new BBCodeEditor ();
 
 $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 
@@ -78,7 +81,7 @@ if ($input["add"]) {
 }
 
 $query = "SELECT ceiling(count(id)/$MSG_PER_PAGE) from $TABLE where active='Y'";
-$result = my_query($query, null, true);
+$result = my_query($query, true);
 list($PAGES) = $result->fetch_array();
 
 if ($PAGES > 1) {
@@ -90,12 +93,12 @@ if ($PAGES > 1) {
 
 $limit = $MSG_PER_PAGE * ($_SESSION["FAQ_PAGE"] - 1);
 $query = "SELECT id from $TABLE where active='Y' order by id desc limit $limit";
-$result = my_query($query, $conn, true);
+$result = my_query($query, true);
 while ($row = $result->fetch_array())
     $LAST_ID = $row[id];
 
 $query = "SELECT $TABLE.* from $TABLE where $TABLE.active='Y'" . ($LAST_ID ? " and $TABLE.id<'$LAST_ID'" : "") . " group by $TABLE.id order by $TABLE.id desc limit $MSG_PER_PAGE";
-$result = my_query($query, $conn, true);
+$result = my_query($query, true);
 
 if (!$result->num_rows) {
     $content.=my_msg_to_str("$part_empty");

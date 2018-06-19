@@ -1,0 +1,21 @@
+{
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+        "php": ">=5.5.0",
+        "twig/twig": "^2.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Classes\\": "include/classes/",
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --colors=always"
+    }
+}

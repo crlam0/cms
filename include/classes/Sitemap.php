@@ -1,5 +1,7 @@
 <?php
 
+namespace Classes;
+
 /**
  * Sitemap generator.
  *
@@ -8,8 +10,8 @@
  *
  */
 
-class SITEMAP {
-    public $static_pages = array(
+class Sitemap {
+    private $static_pages = array(
         array(
             'url' => "",
             'changefreq' => "daily",
@@ -23,7 +25,7 @@ class SITEMAP {
     );
     public $pages;
     
-    function __construct(){
+    public function __construct(){
         $this->pages=$this->static_pages;
     }
     
@@ -55,12 +57,12 @@ class SITEMAP {
         if(in_array('article', $types)){
             $this->add_page('article/', 'monthly', '0.50');
             $query = 'SELECT * from article_list order by date_add asc';
-            $result = my_query($query, $conn, true);
+            $result = MyGlobal::get('DB')->query($query, true);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_article_list_href($row['id']), 'monthly', '0.80');
             }
             $query = 'SELECT * from article_item order by date_add asc';
-            $result = my_query($query, $conn, true);
+            $result = MyGlobal::get('DB')->query($query, true);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_article_href($row['id']), 'monthly', '0.80');
             }
@@ -68,7 +70,7 @@ class SITEMAP {
         if(in_array('blog', $types)){
             $this->add_page('blog/', 'monthly', '0.50');
             $query = "SELECT * from blog_posts where active='Y' order by date_add asc";
-            $result = my_query($query, $conn, true);
+            $result = MyGlobal::get('DB')->query($query, true);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_post_href(NULL,$row), 'monthly', '0.80');
             }    
@@ -76,7 +78,7 @@ class SITEMAP {
         if(in_array('gallery', $types)){
             $this->add_page('gallery/', 'monthly', '0.50');
             $query = 'SELECT * from gallery_list order by title asc';
-            $result = my_query($query, $conn, true);
+            $result = MyGlobal::get('DB')->query($query, true);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_gallery_list_href($row['id']), 'monthly', '0.80');
             }
@@ -84,12 +86,12 @@ class SITEMAP {
         if(in_array('catalog', $types)){
             $this->add_page('catalog/', 'monthly', '0.50');
             $query = 'SELECT * from cat_part order by num,title asc';
-            $result = my_query($query, $conn, true);
+            $result = MyGlobal::get('DB')->query($query, true);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_cat_part_href($row['id']), 'monthly', '0.80');
             }
             $query = 'SELECT * from cat_item order by num,title asc';
-            $result = my_query($query, $conn, true);
+            $result = MyGlobal::get('DB')->query($query, true);
             while ($row = $result->fetch_array()) {
                 $url = get_cat_part_href($row['part_id']) . $row['seo_alias'];
                 $this->add_page($url, 'monthly', '0.80');
@@ -102,11 +104,11 @@ class SITEMAP {
      *
      * @return array ['output','count']
      */
-    public function write(){
-        global $server,$SUBDIR;
+    public function write($test_only = false){
+        global $server, $DIR, $SUBDIR;
         
         $ServerUrl = 'http://' . $server["HTTP_HOST"] . $SUBDIR;
-        $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
         $SITEMAP_NS = 'http://www.sitemaps.org/schemas/sitemap/0.9';
@@ -144,7 +146,9 @@ class SITEMAP {
         }
 
         $xml = $dom->saveXML();
-        file_put_contents($server['DOCUMENT_ROOT'] . $SUBDIR . 'sitemap.xml', $xml);
+        if(!$test_only) {
+            file_put_contents($DIR . 'sitemap.xml', $xml);
+        }    
         return array('output'=>$output,'count'=>count($this->pages));
     }
 }

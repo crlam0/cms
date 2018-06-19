@@ -4,6 +4,8 @@
   Messages library.
  */
 
+use Classes\MyGlobal;
+
 /**
  * Return message by title
  *
@@ -14,7 +16,7 @@
  * @return string Output string
  */
 function my_msg_to_str($title, $tags = array(), $str = '') {
-    global $conn, $settings;
+    global $settings;
     if (strlen($title)) {
         $sql = "select * from messages where title='{$title}'";
         $message = my_select_row($sql, 1);
@@ -92,8 +94,9 @@ function print_error($string) {
  */
 function print_debug($string) {
     global $settings;
-    if ($settings['debug'])
+    if ($settings['debug']) {
         print("<center><font class=debug>{$string}</font></center>");
+    }    
 }
 
 /**
@@ -116,7 +119,7 @@ function print_array($array) {
  */
 function admin_log($message) {
     $query = "insert into admin_log(user_id,date,msg) values('" . $_SESSION['UID'] . "',now(),'{$message}')";
-    my_query($query);
+    MyGlobal::get('DB')->query($query);
 }
 
 /**

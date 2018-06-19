@@ -1,23 +1,21 @@
 <?php
 
-$tags[Header] = "Корзина";
-include_once "../include/common.php";
-include "../include/lib_summ_to_str.php";
+$tags['Header'] = "Корзина";
+include_once '../include/common.php';
+include '../include/lib_summ_to_str.php';
 
-$IMG_ITEM_PATH = $DIR . $settings[catalog_item_img_path];
-$IMG_ITEM_URL = $BASE_HREF . $settings[catalog_item_img_path];
+$IMG_ITEM_PATH = $DIR . $settings['catalog_item_img_path'];
+$IMG_ITEM_URL = $BASE_HREF . $settings['catalog_item_img_path'];
 
-if (isset($input["clear"])) {
-    unset($_SESSION["BUY"]);
-    header("Location: buy.php");
+if (isset($input['clear'])) {
+    unset($_SESSION['BUY']);
+    redirect('buy.php');
     exit;
 }
 
-if (isset($input["add_buy"])) {
-    while (list ($n, $item_id) = @each($input["buy_item"])) {
-        $_SESSION["BUY"][$item_id]["count"] = 1;
-    }
-    header("Location: buy.php");
+if (isset($input['add_buy'])) {
+    $_SESSION["BUY"][$input['item_id']]['count'] += $input['cnt'];
+    redirect('buy.php');
     exit;
 }
 
@@ -32,9 +30,9 @@ if (isset($input["calc"])) {
 }
 
 function get_discount($summ){
-        global $conn;
+        
         $query="SELECT discount from discount where summ<='$summ' order by summ desc";
-        $result=my_query($query,$conn);
+        $result=my_query($query,null,true);
         if($result->num_rows){
                 list($discount)=$result->fetch_array();
         }else{
@@ -53,13 +51,13 @@ if ($input["get_summary_cost"]) {
             $where.=(!strlen($where) ? " id='$item_id'" : " or id='$item_id'");
         }
         $query = "select * from cat_item where $where order by b_code,title asc";
-        $result = my_query($query, $conn, 1);
+        $result = my_query($query, true);
         $summ = 0;
         $cnt = 0;
         if ($result->num_rows) {
             while ($row = $result->fetch_array()) {
-                $summ+=$row[price] * $_SESSION["BUY"][$row[id]]["count"];
-                $cnt+=$_SESSION["BUY"][$row[id]]["count"];
+                $summ+=$row[price] * $_SESSION["BUY"][$row['id']]["count"];
+                $cnt+=$_SESSION["BUY"][$row['id']]["count"];
             }
         }    
         $summ_with_discount = calc_discount($summ, get_discount($summ));
@@ -76,17 +74,17 @@ if ($input["get_summary"]) {
         $item_list.="<div class=\"buy_summary\">
             <h3>Сейчас в корзине :</h3><br>";
         foreach ($_SESSION["BUY"] as $item_id => $cnt) {
-            $where.=(!strlen($where) ? " id='$item_id'" : " or id='$item_id'");
+            $where.=(!strlen($where) ? " id='{$item_id}'" : " or id='{$item_id}'");
         }
         $query = "select * from cat_item where $where order by b_code,title asc";
-        $result = my_query($query, $conn, 1);
+        $result = my_query($query, true);
         $summ = 0;
         $cnt = 0;
         if ($result->num_rows)
             while ($row = $result->fetch_array()) {
-                $summ+=$row[price] * $_SESSION["BUY"][$row[id]]["count"];
-                $cnt+=$_SESSION["BUY"][$row[id]]["count"];
-                $item_list.="$row[title]\t Кол-во:" . $_SESSION["BUY"][$row[id]]["count"] . "\t" .
+                $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
+                $cnt+=$_SESSION["BUY"][$row['id']]["count"];
+                $item_list.="$row[title]\t Кол-во:" . $_SESSION["BUY"][$row['id']]["count"] . "\t" .
                         " Цена: $row[price]<br>\n";
             }
         $summ_with_discount = calc_discount($summ, get_discount($summ));
@@ -154,7 +152,7 @@ if (isset($input["request_done"])) {
         $contact_info.="IP адрес: " . $_SERVER["REMOTE_ADDR"] . "\n";
         $msg = "Наименования:\n$item_list\n\nКонтактная информация:\n$contact_info\n\n";
         $query = "insert into request(date,item_list,contact_info,comment) values(now(),'" . $item_list . "','" . $contact_info . "','" .$input['comment']."')";
-        $result=my_query($query, null, true);
+        $result=my_query($query, true);
         
         unset($_SESSION["BUY"]);
         
@@ -172,10 +170,10 @@ if (count($_SESSION["BUY"])) {
     $count = 0;
     foreach ($_SESSION["BUY"] as $item_id => $cnt) {
         $where.=(!strlen($where) ? " cat_item.id='$item_id'" : " or cat_item.id='$item_id'");
-        $count = $count + cnt;
+        // $count += $cnt;
     }
     $query = "select cat_item.*,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
-    $result = my_query($query, $conn, 1);
+    $result = my_query($query, true);
     if ((isset($input["request_x"])) || (isset($input["request"]))) {
         $tags[Header] = "Оформить заказ";
         $content.= '<div align="center" style="max-width: 400px;margin-top:30px;">' . "<form action=" . $_SERVER["PHP_SELF"] . ' method=post>
@@ -201,13 +199,13 @@ if (count($_SESSION["BUY"])) {
         $summ = 0;
         $cnt = 0;
         while ($row = $result->fetch_array()) {
-            $summ+=$row[price] * $_SESSION["BUY"][$row[id]]["count"];
-            $cnt+=$_SESSION["BUY"][$row[id]]["count"];
+            $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
+            $cnt+=$_SESSION["BUY"][$row['id']]["count"];
             $content.= "<tr valign=middle>
-                <td align=center width=50%>" . (file_exists($IMG_ITEM_PATH) . $row[fname] ? "<img src=\"{$SUBDIR}catalog/image.php?id={$row['default_img']}&windowHeight=500&fix_size=1\">" : "&nbsp;") . "</td>
-                <td class=price><b>$row[title]</b> &nbsp;&nbsp;(Кол-во: {$_SESSION["BUY"][$row[id]]["count"]})<br>
-                Цена: <b>" . add_zero($row[price]) . " руб.</b><br>" . nl2br($row[descr]) . "<br>
-                <input type=hidden name=buy_cnt[$row[id]] value=1>
+                <td align=center width=50%>" . (file_exists($IMG_ITEM_PATH) . $row['fname'] ? "<img src=\"{$SUBDIR}catalog/image.php?id={$row['default_img']}&windowHeight=500&fix_size=1\">" : "&nbsp;") . "</td>
+                <td class=price><b>{$row['title']}</b> &nbsp;&nbsp;(Кол-во: {$_SESSION["BUY"][$row['id']]["count"]})<br>
+                Цена: <b>" . add_zero($row['price']) . " руб.</b><br>" . nl2br($row['descr']) . "<br>
+                <input type=hidden name=buy_cnt[{$row['id']}] value=1>
                 </td>
                 </tr>
                 ";

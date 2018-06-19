@@ -1,43 +1,75 @@
 <?php
 
-require_once 'global.php';
-
 $DEBUG['start_time'] = microtime(true);
+
+function add_to_debug ($message) {
+    global $DEBUG;
+    $time = microtime(true) - $DEBUG['start_time'];
+    $time = sprintf('%.4F', $time);
+    $DEBUG['log'][] = $time . "\t" . $message;
+}
+
+require 'config/config.local.php';
+require 'config/misc.php';
+
+if(file_exists($INC_DIR.'config/misc.local.php')) {
+    require_once $INC_DIR.'config/misc.local.php';
+}    
 
 $_SESSION['UID']=0;
 $_SESSION['UNAME']='';
 $_SESSION['FLAGS']='';
 
-session_cache_limiter('nocache');
-session_name($SESSID);
-session_start();
+if($_SERVER['SERVER_PROTOCOL']) {
+    session_cache_limiter('nocache');
+    session_name($SESSID);
+    session_start();    
+} else {
+    $DIR=dirname(dirname(__FILE__)) . '/';
+    $INC_DIR=$DIR.'include/';
+}
 
-require_once $INC_DIR.'lib_sql.php';
+add_to_debug('Local configs loaded, session started');
 
-if(is_array($_GET))foreach ($_GET as $key => $value) $input[$key]=db_test_param($value,$key);
-if(is_array($_POST))foreach ($_POST as $key => $value) $input[$key]=db_test_param($value,$key);
-if(is_array($_SERVER))foreach ($_SERVER as $key => $value) $server[$key]=$value;
+if(file_exists($DIR.'vendor/autoload.php')) {
+    require_once $DIR.'vendor/autoload.php';
+}    
+add_to_debug('Autoload classes complete');
 
-require_once $INC_DIR.'lib_blocks.php';
-require_once $INC_DIR.'lib_messages.php';
-require_once $INC_DIR.'lib_templates.php';
-require_once $INC_DIR.'lib_functions.php';
+require $INC_DIR.'lib_sql.php';
+
+add_to_debug('SQL base connected');
+
+if(is_array($_GET))foreach ($_GET as $key => $value){
+    $input[$key]=db_test_param($value,$key);
+}
+if(is_array($_POST))foreach ($_POST as $key => $value){
+    $input[$key]=db_test_param($value,$key);
+}
+if(is_array($_SERVER))foreach ($_SERVER as $key => $value){
+    $server[$key]=$value;
+}
+
+use Classes\MyGlobal;
+
+MyGlobal::set('input', $input );
+MyGlobal::set('server', $server );
+MyGlobal::set('DIR', $DIR );
+MyGlobal::set('SUBDIR', $SUBDIR );
+
+add_to_debug('Global arrays loaded');
+
+require $INC_DIR.'lib_messages.php';
+require $INC_DIR.'lib_templates.php';
+require $INC_DIR.'lib_functions.php';
+
+add_to_debug('Library loaded');
 
 // Load settings into $settings[]
 $query='SELECT * FROM settings';
-$result=my_query($query,$conn,true);
+$result=$DB->query($query,true);
 while ($row = $result->fetch_array()) {
     $settings[$row['title']] = $row['value'];
-}
-
-function add_to_debug ($message) {
-    global $settings, $DEBUG;
-    if($settings['debug']){
-        $time = microtime(true) - $DEBUG['start_time'];
-        $time = sprintf('%.4F', $time);
-
-        $DEBUG['log'][] = $time . "\t" . $message;
-    }
 }
 
 add_to_debug('Settings loaded');
@@ -65,28 +97,16 @@ add_to_debug('Part data loaded');
 
 if ((strlen($part['user_flag'])) && (!strstr($_SESSION['FLAGS'], $part['user_flag'])) && (!strstr($_SESSION['FLAGS'], 'global'))) {
     if ($_SESSION['UID']) {
-        echo '<h1 align=center>У вас нет соответствующих прав !</h1>';
-        exit();
+        $content ='<h1 align=center>У вас нет соответствующих прав !</h1>';
+        echo get_tpl_by_title($part['tpl_name'], [], null, $content);
     } else {
         $_SESSION['GO_TO_URI'] = $server['REQUEST_URI'];
         redirect($SUBDIR . 'login/');
-        exit;
     }
+    exit;
 }
 
-$JQUERY_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.js"></script>'."\n";
-$JQUERY_FORM_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.form.js"></script>'."\n";
-
-$EDITOR_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/ckeditor/ckeditor.js" charset="utf-8"></script>'."\n".
-'<script type="text/javascript" src="'.$BASE_HREF.'include/js/editor.js"></script>'."\n";
-
-$EDITOR_MINI_INC= ' <script type="text/javascript" src="'.$BASE_HREF.'include/ckeditor/ckeditor.js" charset="utf-8"></script>'."\n".
-'<script type="text/javascript" src="'.$BASE_HREF.'include/js/editor_mini.js"></script>'."\n";
-
-$EDITOR_HTML_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/edit_area/edit_area_full.js" charset="utf-8">></script>'."\n".
-'<script type="text/javascript" src="'.$BASE_HREF.'include/js/editor_html.js" charset="utf-8"></script>'."\n";
-
-$tags['nav_str']="<a href={$SUBDIR} class=nav_home>Главная</a>";
+add_to_debug('User flag checked');
 
 $server['PHP_SELF_DIR']=dirname($server['PHP_SELF']).'/';
 
@@ -101,4 +121,6 @@ foreach ($css_array as $css){
 }
 unset($css_array,$css);
 $tags['INCLUDE_HEAD']='';
+$tags['INCLUDE_JS']='';
 
+add_to_debug('common.php complete');

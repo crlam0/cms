@@ -30,17 +30,17 @@ $deny_user_agents=array('bot','spider','YandexMetrika','Yahoo');
 
 $deny=0;
 foreach($deny_urls as $url){
-    if(strstr($server["REQUEST_URI"],$url)){
+    if(strstr($server['REQUEST_URI'],$url)){
         $deny=1;
     }
 }
 foreach($deny_remote_hosts as $host){
-    if(stristr($server["REMOTE_HOST"],$host)){
+    if(stristr($server['REMOTE_HOST'],$host)){
         $deny=1;
     }
 }
 foreach($deny_user_agents as $agent){
-    if(stristr($server["HTTP_USER_AGENT"],$agent)){
+    if(stristr($server['HTTP_USER_AGENT'],$agent)){
         $deny=1;
     }
 }
@@ -54,8 +54,8 @@ if (!$deny) {
       }
      */
     $unique=0;
-    $query="SELECT id FROM visitor_log WHERE remote_addr='" . $server["REMOTE_ADDR"] . "'";
-    $result=my_query($query, $conn, true);
+    $query="SELECT id FROM visitor_log WHERE remote_addr='" . $server['REMOTE_ADDR'] . "'";
+    $result=$DB->query($query, true);
     if(!$result->num_rows)$unique=1;    
     $data['date']='now()';
     $data['day']="date_format(now(),'%Y-%m-%d')";
@@ -64,14 +64,13 @@ if (!$deny) {
     if ($_SESSION["UID"])$data['uid'] = $_SESSION["UID"];
     $data['remote_addr']=$server['REMOTE_ADDR'];
     $data['remote_host']=($server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
-    $data['script_name']=$server["SCRIPT_NAME"];
+    $data['script_name']=$server['SCRIPT_NAME'];
     $data['request_uri'] = $server['REQUEST_URI'];
     if (strlen($SUBDIR) > 1)$data['script_name'] = str_replace($SUBDIR, "/", $data['script_name']);    
     if (strlen($SUBDIR) > 1)$data['request_uri'] = str_replace($SUBDIR, "/", $data['request_uri']);
-    $data['user_agent']=$server["HTTP_USER_AGENT"];
+    $data['user_agent']=$server['HTTP_USER_AGENT'];
 
     $query = "insert into visitor_log" . db_insert_fields($data);
-    my_query($query, null, true);
+    $DB->query($query, true);
     unset($data);
 }
-?>

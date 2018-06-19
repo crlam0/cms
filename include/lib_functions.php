@@ -6,6 +6,8 @@
 
   ========================================================================= */
 
+use Classes\MyGlobal;
+
 /**
  * Check user access
  *
@@ -356,7 +358,7 @@ function get_article_list_href($list_id, $row = array()) {
         $list_id = $row['id'];
     }
     $query = "SELECT seo_alias FROM article_list WHERE id='{$list_id}'";
-    $result = my_query($query, null, true);
+    $result = MyGlobal::get('DB')->query($query, true);
     list($seo_alias) = $result->fetch_array();
     if (strlen($seo_alias)) {
         return 'article/' . $seo_alias . '/';
@@ -378,7 +380,7 @@ function get_article_href($article_id, $row = array()) {
         $article_id = $row['id'];
     }
     $query = "SELECT seo_alias,list_id FROM article_item WHERE id='{$article_id}'";
-    $result = my_query($query, null, true);
+    $result = MyGlobal::get('DB')->query($query, true);
     list($seo_alias, $list_id) = $result->fetch_array();
     if (strlen($seo_alias)) {
         return get_article_list_href($list_id) . $seo_alias . '/';
@@ -400,7 +402,7 @@ function get_media_list_href($list_id, $row = array()) {
         $list_id = $row['id'];
     }
     $query = "SELECT seo_alias FROM media_list WHERE id='{$list_id}'";
-    $result = my_query($query, null, true);
+    $result = MyGlobal::get('DB')->query($query, true);
     list($seo_alias) = $result->fetch_array();
     if (strlen($seo_alias)) {
         return 'media/' . $seo_alias . "/";
@@ -420,7 +422,7 @@ function get_media_list_href($list_id, $row = array()) {
  */
 function cat_prev_part($prev_id, $deep, $array) {
     $query = "SELECT id,title,prev_id,seo_alias FROM cat_part WHERE id='{$prev_id}' order by title asc";
-    $result = my_query($query);
+    $result = MyGlobal::get('DB')->query($query);
     $array[$deep] = $result->fetch_array();
     if ($array[$deep]['prev_id']){
         $array = cat_prev_part($array[$deep]['prev_id'], $deep + 1, $array);
@@ -464,7 +466,7 @@ function get_gallery_list_href($list_id, $row = array()) {
         $list_id = $row['id'];
     }
     $query = "SELECT seo_alias FROM gallery_list WHERE id='{$list_id}'";
-    $result = my_query($query, null, true);
+    $result = MyGlobal::get('DB')->query($query, true);
     list($seo_alias) = $result->fetch_array();
     if (strlen($seo_alias)) {
         return 'gallery/' . $seo_alias . '/';

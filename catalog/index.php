@@ -4,9 +4,9 @@ $tags['Add_CSS'].=';catalog;price';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/catalog.css" type="text/css" rel=stylesheet />'."\n";;
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/price.css" type="text/css" rel=stylesheet />'."\n";;
 
-include_once '../include/common.php';
+@include_once '../include/common.php';
 
-if (!count($input)){
+if (is_array($input) && !count($input)){
     $input['part_id'] = 0;
 }
 
@@ -32,8 +32,8 @@ if(isset($input['item_title'])){
     }    
 }
 
-if (isset($input[part_id])) {
-    $current_part_id = $input[part_id];
+if (isset($input['part_id'])) {
+    $current_part_id = $input['part_id'];
     unset($_SESSION['catalog_page']);
 }
 
@@ -58,7 +58,7 @@ if (isset($input['add_buy'])) {
 
 function show_img($tmp, $row) {
     global $IMG_ITEM_PATH, $IMG_ITEM_URL;
-    if (is_file($IMG_ITEM_PATH . $row[fname])) {
+    if (is_file($IMG_ITEM_PATH . $row['fname'])) {
         return "<img src={$IMG_ITEM_URL}{$row['fname']} border=0>";
     } else {
         return 'Отсутствует';
@@ -162,26 +162,26 @@ if ($input['get_popup_content']) {
 
 if(strlen($input['item_title'])){
     $query="select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.seo_alias='".$input["item_title"]."' order by b_code,title asc";
-    $result=my_query($query,$conn);
+    $result=my_query($query);
     if($result->num_rows) {
         $row = $result->fetch_array();
         $item_id=$row['id'];
         $tags=array_merge($tags,$row);
-        if(is_file($IMG_ITEM_PATH.$row[fname]))$tags[default_image]="<img src=\"{$SUBDIR}catalog/image.php?id={$row['cat_item_images_id']}&windowHeight=500&fix_size=1\" item_id={$row['id']} file_name={$row[fname]} image_id={$row[cat_item_images_id]} border=0 align=left class=cat_item_image_popup>";
+        if(is_file($IMG_ITEM_PATH.$row['fname']))$tags['default_image']="<img src=\"{$SUBDIR}catalog/image.php?id={$row['cat_item_images_id']}&windowHeight=500&fix_size=1\" item_id={$row['id']} file_name={$row['fname']} image_id={$row['cat_item_images_id']} border=0 align=left class=cat_item_image_popup>";
 
         $tags['Header']=$row['title'];
         $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";
         $part_id=$row['part_id'];
 
         $query="select * from cat_item_images where item_id='{$item_id}' and id<>'{$row['default_img']}' order by id asc";
-        $result=my_query($query,$conn);
-        $tags[images].="<div style=\"width:100%;height:1px;float:left;\">&nbsp;</div>";
+        $result=my_query($query);
+        $tags['images'].="<div style=\"width:100%;height:1px;float:left;\">&nbsp;</div>";
         if($result->num_rows){
-                $tags[images].="<div class=item_images>";
-                while ($row = $result->fetch_array())if(is_file($IMG_ITEM_PATH.$row[fname])){
-                        $tags[images].="<div class=image_item><img class=cat_images src=\"{$SUBDIR}catalog/image.php?preview=50&file_name=$row[fname]&windowHeight=300&fix_size=1\" item_id={$item_id} file_name={$row[fname]} image_id={$row[id]} border=0></div>";
+                $tags['images'].="<div class=item_images>";
+                while ($row = $result->fetch_array())if(is_file($IMG_ITEM_PATH.$row['fname'])){
+                        $tags['images'].="<div class=image_item><img class=cat_images src=\"{$SUBDIR}catalog/image.php?preview=50&file_name={$row['fname']}&windowHeight=300&fix_size=1\" item_id={$item_id} file_name={$row['fname']} image_id={$row['id']} border=0></div>";
                 }
-                $tags[images].="</div>";
+                $tags['images'].="</div>";
         }
 
         $content.=get_tpl_by_title("cat_item_detail_view",$tags,$result);
@@ -215,20 +215,20 @@ if(strlen($input['item_title'])){
 $content.="<div id=cat_parts>";
 $subparts=0;
 function sub_part($prev_id,$deep,$max_deep){
-    global $conn,$tags,$content,$IMG_PART_PATH,$IMG_PART_URL,$subparts,$SUBDIR;
+    global $tags,$content,$IMG_PART_PATH,$IMG_PART_URL,$subparts,$SUBDIR;
     if($deep)$subparts++;
     $query="SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='$prev_id' group by cat_part.id order by cat_part.num,cat_part.title asc";
-    $result=my_query($query,$conn,1);
+    $result=my_query($query, true);
     while ($row = $result->fetch_array()){
         $pan_ins="";
         $subparts++;
         $row['href']=$SUBDIR.get_cat_part_href($row["id"]);
-        $row['image']=(is_file($IMG_PART_PATH.$row[img]) ? "<img src=\"{$IMG_PART_URL}{$row['img']}\" alt=\"{$row['title']}\" title=\"{$row['title']}\">": "<br>Изображение отсутствует");
+        $row['image']=(is_file($IMG_PART_PATH.$row['img']) ? "<img src=\"{$IMG_PART_URL}{$row['img']}\" alt=\"{$row['title']}\" title=\"{$row['title']}\">": "<br>Изображение отсутствует");
         $content.=get_tpl_by_title('cat_part_list_view',$row,$result);
-        if($deep<$max_deep)sub_part($row[id],$deep+1,$max_deep);
+        if($deep<$max_deep)sub_part($row['id'],$deep+1,$max_deep);
     }
 }
-sub_part($input[part_id],0,0);
+sub_part($input['part_id'],0,0);
 $content.="</div>";
     
 
@@ -258,27 +258,27 @@ if(isset($input["page"])){
 }
 list($PAGES)=my_select_row("SELECT ceiling(count(id)/$settings[catalog_items_per_page]) from cat_item where part_id='".$current_part_id."'",1);
 if($PAGES>1){
-	$tags[pages_list]="<div class=cat_pages>";
-	for($i=1;$i<=$PAGES;$i++)$tags[pages_list].=($i==$_SESSION["catalog_page"]?"[ <b>$i</b> ]&nbsp;":"[ <a href=".$_SERVER["PHP_SELF"]."?page=$i>$i</a> ]&nbsp;");
-	$tags[pages_list].="</div>";
+	$tags['pages_list']="<div class=cat_pages>";
+	for($i=1;$i<=$PAGES;$i++)$tags['pages_list'].=($i==$_SESSION["catalog_page"]?"[ <b>$i</b> ]&nbsp;":"[ <a href=".$_SERVER["PHP_SELF"]."?page=$i>$i</a> ]&nbsp;");
+	$tags['pages_list'].="</div>";
 }
-$content.=$tags[pages_list];
-$offset=$settings[catalog_items_per_page]*($_SESSION["catalog_page"]-1);	
+$content.=$tags['pages_list'];
+$offset=$settings['catalog_items_per_page']*($_SESSION["catalog_page"]-1);	
 
 $query="select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
 left join cat_item_images on (cat_item_images.id=default_img or cat_item_images.item_id=cat_item.id)"
 .(isset($_GET["show_all"])?"":" where part_id='".$current_part_id."'")." 
 group by cat_item.id   
 order by cat_item.id,b_code,title asc limit $offset,$settings[catalog_items_per_page]";
-$result=my_query($query,$conn,1);
+$result=my_query($query, true);
 if($result->num_rows){
     $content.="<div id=cat_items>\n";
     while ($row = $result->fetch_array()) {
         $row['item_a']='<a href="'.$SUBDIR.get_cat_part_href($row['part_id']).$row['seo_alias'].'" title="'.$row['title'].'">';
         $row['special_offer_ins']=($row['special_offer'] ? "<div class=cat_item_special_offer>Спецпредложение !</div>": "");
-        $row['default_image']=(is_file($IMG_ITEM_PATH.$row['fname']) ? $row['item_a']."<img src=\"{$SUBDIR}catalog/image.php?id={$row[image_id]}&windowHeight=500&fix_size=1\" alt=\"{$row['title']}\" title=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
+        $row['default_image']=(is_file($IMG_ITEM_PATH.$row['fname']) ? $row['item_a']."<img src=\"{$SUBDIR}catalog/image.php?id={$row['image_id']}&windowHeight=500&fix_size=1\" alt=\"{$row['title']}\" title=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
         $row['descr']=nl2br($row['descr']);
-        $row['price']=($row[price] ? "Цена $row[price]" : "");
+        $row['price']=($row['price'] ? "Цена $row[price]" : "");
         $content.=get_tpl_by_title('cat_item_list_view',$row,$result);
     }
     $content.="</div>\n";
@@ -294,7 +294,7 @@ $tags['INCLUDE_HEAD'] .=
 
 
 if($current_part_id){
-    if (strlen($row_part[descr])){
+    if (strlen($row_part['descr'])){
         $content.="<div class=part_descr>".$row_part['descr']."</div>\n";
     }
     list($href_id)=my_select_row("select prev_id from cat_part where id='{$current_part_id}'", true);

@@ -6,7 +6,7 @@ $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 
 if ($input['passwd_change']) {    
     $query = "select passwd,salt from users where id='".$_SESSION['UID']."'";
-    $result = my_query($query, $conn, true);
+    $result = my_query($query, true);
     if ($result->num_rows) {
         $row = $result->fetch_array();   
         if(strcmp(user_encrypt_password($input['old_passwd'], $row['salt']),$row['passwd'])!=0){
@@ -25,7 +25,7 @@ if ($input['passwd_change']) {
             }
             $data['passwd']=user_encrypt_password($input['new_passwd1'], $data['salt']);
             $query="update users set ". db_update_fields($data) ." where id='{$_SESSION['UID']}'";
-            $result = my_query($query, $conn, true);
+            $result = my_query($query, true);
             $content .= my_msg_to_str('info','','Пароль успешно изменен !');            
         }
     }

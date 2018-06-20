@@ -1,0 +1,57 @@
+=== 2018-06-17
+
+ALTER TABLE `templates`
+	ADD COLUMN `template_type` ENUM('my','twig') NOT NULL DEFAULT 'my' AFTER `file_name`;
+
+=== 2018-05-07
+
+CREATE TABLE `discount` (
+	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`summ` DECIMAL(10,2) NOT NULL,
+	`discount` DECIMAL(10,2) NOT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='utf8_general_ci'
+
+
+=== 2018-01-10
+CREATE TABLE `media_list` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`title` VARCHAR(255) NULL DEFAULT NULL,
+	`date_add` DATETIME NULL DEFAULT NULL,
+	`descr` TEXT NULL,
+	`seo_alias` VARCHAR(128) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='utf8_general_ci';
+
+CREATE TABLE `media_files` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`list_id` INT(11) NULL DEFAULT NULL,
+	`title` VARCHAR(255) NULL DEFAULT NULL,
+	`file_name` VARCHAR(255) NULL DEFAULT NULL,
+	`descr` TEXT NULL,
+	`date_add` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='utf8_general_ci';
+
+
+
+=== 2017-09-12
+
+ALTER TABLE `news` ADD COLUMN `seo_alias` VARCHAR(255) NULL AFTER `date`;
+ALTER TABLE `cat_part` ADD COLUMN `seo_alias` VARCHAR(255) NULL AFTER `num`;
+ALTER TABLE `news` ADD COLUMN `css_class` VARCHAR(50) NULL AFTER `seo_alias`;
+ALTER TABLE `cat_item` ADD COLUMN `css_class` VARCHAR(50) NOT NULL DEFAULT '' AFTER `descr`;
+
+
+=== 2016-04-13
+
+RENAME TABLE `gallery_image` TO `gallery_images`;
+ALTER TABLE `gallery_list` ADD COLUMN `default_image_id` INT(11) AFTER `active`;
+ALTER TABLE `users` ADD COLUMN `salt` VARCHAR(32) NOT NULL DEFAULT '' AFTER `passwd`;
+ALTER TABLE `users` CHANGE COLUMN `passwd` `passwd` VARCHAR(128) NOT NULL DEFAULT '' AFTER `login`;
+RENAME TABLE `slider_image` TO `slider_images`;
+RENAME TABLE `cat_item_image` TO `cat_item_images`;
+

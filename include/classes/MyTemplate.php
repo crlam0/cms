@@ -101,21 +101,21 @@ class MyTemplate {
                         $replace_str = ob_get_contents();
                         ob_end_clean();
                     } else {
-                        $tags[file_name] = $tagparam;
+                        $tags['file_name'] = $tagparam;
                         my_msg('file_not_found', $tags);
                     }
                 } elseif ($tagclass == 'file') {
                     if (file_exists($tagparam)) {
                         $replace_str = implode("", file($tagparam));
                     } else {
-                        $tags[file_name] = $tagparam;
+                        $tags['file_name'] = $tagparam;
                         my_msg('file_not_found', $tags);
                         return '';
                     }
                 } elseif ($tagclass == 'template') {
                     $replace_str = get_tpl_by_title($tagparam,$tags, null, $inner_content);
                     if (!$replace_str) {
-                        $tags[title] = $tagparam;
+                        $tags['title'] = $tagparam;
                         my_msg('tpl_not_found', $tags);
                         return "";
                     }

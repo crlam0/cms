@@ -36,6 +36,7 @@ if(file_exists($DIR.'vendor/autoload.php')) {
 }    
 add_to_debug('Autoload classes complete');
 
+
 require $INC_DIR.'lib_sql.php';
 
 add_to_debug('SQL base connected');
@@ -73,6 +74,19 @@ while ($row = $result->fetch_array()) {
 }
 
 add_to_debug('Settings loaded');
+
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run;
+
+if($settings['debug']) {
+    $whoops = new Run();
+    $whoops->writeToOutput(true);
+    $whoops->allowQuit(true);
+    $whoops->pushHandler(new PrettyPageHandler());
+    $whoops->register();
+    add_to_debug('Add exception handler');
+}
+
 
 require_once $INC_DIR.'lib_stats.php';
 

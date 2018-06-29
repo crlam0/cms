@@ -29,7 +29,6 @@ if(!is_array($input)){
     $_SESSION["BLOG_PAGE"] = 1;
 }
 
-
 $comments = new Comments ('blog',$input['view_post']);
 
 if ($input["view_post"]) {

@@ -22,7 +22,7 @@ class Blocks {
         if (!$menu_id){
             return '';
         }
-        if(array_key_exists('FLAGS',$_SESSION)){
+        if(isset($_SESSION) && array_key_exists('FLAGS',$_SESSION)){
             $where_add="'" . $_SESSION['FLAGS'] . "' LIKE concat('%',flag,'%') AND ";
         } else {
             $where_add = '';

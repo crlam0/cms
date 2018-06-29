@@ -53,7 +53,9 @@ if(is_array($_SERVER))foreach ($_SERVER as $key => $value){
 
 use Classes\MyGlobal;
 
-MyGlobal::set('input', $input );
+if(isset($input)) {
+    MyGlobal::set('input', $input );
+}    
 MyGlobal::set('server', $server );
 MyGlobal::set('DIR', $DIR );
 MyGlobal::set('SUBDIR', $SUBDIR );
@@ -109,7 +111,7 @@ if (!$part['id']) {
 
 add_to_debug('Part data loaded');
 
-if ((strlen($part['user_flag'])) && (!strstr($_SESSION['FLAGS'], $part['user_flag'])) && (!strstr($_SESSION['FLAGS'], 'global'))) {
+if (array_key_exists('FLAGS',$_SESSION) && (strlen($part['user_flag'])) && (!strstr($_SESSION['FLAGS'], $part['user_flag'])) && (!strstr($_SESSION['FLAGS'], 'global'))) {
     if ($_SESSION['UID']) {
         $content ='<h1 align=center>У вас нет соответствующих прав !</h1>';
         echo get_tpl_by_title($part['tpl_name'], [], null, $content);
@@ -124,7 +126,14 @@ add_to_debug('User flag checked');
 
 $server['PHP_SELF_DIR']=dirname($server['PHP_SELF']).'/';
 
-$css_array=explode(';',$settings['css_list'].$tags['Add_CSS']);
+if(array_key_exists('Add_CSS', $tags)) {
+    $settings['css_list'] .= $tags['Add_CSS'];
+}
+
+$css_array=explode(';',$settings['css_list']);
+if(!array_key_exists('INCLUDE_CSS', $tags)) {
+    $tags['INCLUDE_CSS']='';
+}
 foreach ($css_array as $css){
     $css='css/'.$css.'.css';
     if(file_exists($DIR.$css)){

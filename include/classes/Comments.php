@@ -46,7 +46,7 @@ class Comments
      * @return integer Count of comments
      */
     public function show_count($target_id) {        
-        $query="select count(id) from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id={$target_id}";
+        $query="select count(id) from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id='{$target_id}'";
         list($count) = my_select_row($query, true);
         return $count;
     }
@@ -59,7 +59,7 @@ class Comments
      * @return string Output content
      */
     public function show_list($tags = array ()) {        
-        $query="select * from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id={$this->__target_id} order by id asc";
+        $query="select * from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id='{$this->__target_id}' order by id asc";
         $result = MyGlobal::get('DB')->query($query);
         return get_tpl_by_title('comments_list',$tags,$result);        
     }
@@ -95,8 +95,9 @@ class Comments
      */
     public function get_form_data($input){
         global $server,$SUBDIR,$settings;
-        if ($input['add_comment']) { 
-            $err = 0;            
+        if (check_key('add_comment',$input)) { 
+            $err = 0;
+            $output = '';
             if (strlen($input['form']['author']) < 3) {
                 $output.=my_msg_to_str('form_error_name');
                 $err = 1;
@@ -115,7 +116,7 @@ class Comments
             } else {
                 $input['form']['ip'] = $server['REMOTE_ADDR'];
                 $input['form']['date_add'] = 'now()';
-                $input['form']['uid'] = $_SESSION['UID'];
+                $input['form']['uid'] = check_key('UID', $_SESSION);
                 $input['form']['target_type']=$this->__target_type;
                 $input['form']['target_id']=$this->__target_id;
                 $input['form']['content']=$this->__editor->GetHTML();
@@ -123,7 +124,7 @@ class Comments
                 MyGlobal::get('DB')->query($query);
                 $output.=my_msg_to_str('','','Комментарий успешно добавлен');
 
-                $remote_host=($server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
+                $remote_host=(check_key('REMOTE_HOST',$server) ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
                 $message="Автор: {$input['form']['author']} ( {$input['form']['email']} )\n";
                 $message.="IP: {$input['form']['ip']} ( {$remote_host} )\n";
                 $message.="Сообщение:\n";

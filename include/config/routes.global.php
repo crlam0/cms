@@ -56,7 +56,7 @@ return [
         ]
     ],    
     'gallery_index' => [
-        'pattern' => '^gallery\/(.*)\/index.php',
+        'pattern' => '^gallery\/(.*)\/index\.php',
         'file' => 'gallery/index.php',
         'params' => [
             '1' => 'uri',
@@ -79,11 +79,11 @@ return [
 
 
     'catalog_index' => [
-        'pattern' => '^catalog\/(.*)\/index.php$',
+        'pattern' => '^catalog\/(.*)\/index\.php$',
         'file' => 'misc/search.php'
     ],    
     'catalog_buy' => [
-        'pattern' => '^catalog\/(.*)\/buy.php',
+        'pattern' => '^catalog\/(.*)\/buy\.php',
         'file' => 'catalog/buy.php'
     ], 
     'catalog_basket' => [

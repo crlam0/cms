@@ -28,7 +28,7 @@ function my_msg_to_str($title, $tags = array(), $str = '') {
         return '';
     }
     if (is_array($tags)){
-        if(strlen($tags['type'])) {
+        if(strlen(check_key('type',$tags))) {
             $message['type'] = $tags['type'];            
         }
         foreach ($tags as $key => $value) {
@@ -37,7 +37,7 @@ function my_msg_to_str($title, $tags = array(), $str = '') {
     }    
     if ($message) {
         // return "<div align=center><div class=msg_{$message['type']} bgcolor=$bgcolor><font class={$message['type']}>{$message['content']}</font></div></div>";
-        switch ($message['type']) {
+        switch (check_key('type', $message)) {
             case 'info':
                 $class='info';
                 break;

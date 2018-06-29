@@ -49,19 +49,30 @@ class MyTemplate {
         $total = count($temp);
         $a = 0;
         unset($replace_str);
-        if ($total)
+        if ($total) {
+
+            // print_array($temp);
+            // exit();
+            
             while ($temp[$a]) {
                 $replace_str = '';
-                list($tagclass, $tagparam) = explode('(', $temp[$a][1], 2);
-                if (strlen($tagparam)){
+                // if(array_key_exists(1,$temp[$a])) {
+                if(strstr($temp[$a][1], '(')) {
+                    list($tagclass, $tagparam) = explode('(', $temp[$a][1], 2);
                     $tagparam = str_replace(')', '', $tagparam);
-                }    
+                } else {
+                    $tagclass = $temp[$a][1];
+                    $tagparam = '';                
+                }
+//                if (strlen($tagparam)){
+//                }    
                 //echo "Tag: ".$temp[$a][1]." Class: $tagclass Func: $tagparam <br>";
                 if ($tagclass == "func") {
                     if (strstr($tagparam, ',')) {
                         $param = explode(',', $tagparam);
                     } else {
                         $param[0] = $tagparam;
+                        $param[1] = "''";
                     }
                     eval("\$replace_str=\$param[0](\$param[1],\$sql_row);");
                 } elseif ($tagclass == "var") {
@@ -75,7 +86,7 @@ class MyTemplate {
                         $param[0] = $tagparam;
                         $param[1] = '';
                     }
-                    if ($param[1] == 'nl2br') {
+                    if ($param[1] == 'nl2br' && array_key_exists($param[0], $sql_row)) {
                         $sql_row[$param[0]] = str_replace("\\r\\n", "<br>", $sql_row[$param[0]]);
                         $replace_str = nl2br($sql_row[$param[0]]) . '';
                     } elseif ($param[1] == 'yes_no') {
@@ -83,8 +94,10 @@ class MyTemplate {
                     } elseif ($param[1] == 'if') {
                         $replace_str = ( ($sql_row[$param[0]] == '1') || ($sql_row[$param[0]] == 'Y') ||
                                 (strlen($sql_row[$param[0]])) && $sql_row[$param[0]] != 'N' ? $param[2] : $param[3]) . '';
-                    } else {
+                    } elseif ( array_key_exists($param[0], $sql_row)) {
                         $replace_str = $sql_row[$param[0]] . "";
+                    } else {
+                        $replace_str = '';
                     }
                 } elseif ($tagclass == 'summ') {
                     $replace_str = $sql_row_summ[$tagparam] . '';
@@ -130,7 +143,11 @@ class MyTemplate {
                     $content = str_replace('[%' . $temp[$a][1] . '%]', $replace_str, $content);
                 }
                 $a++;
+                if(!array_key_exists($a,$temp)){
+                    break;
+                } 
             }
+        }
         return $content;
     }
 
@@ -171,10 +188,12 @@ class MyTemplate {
                     }
                 }    
                 $loop_start = 0;
-            }elseif ($loop_start) {
+            } elseif ($loop_start) {
                 $loop_content.=$value;
-            } else {
+            } elseif (isset($mysql_row_summ)) {
                 $result.=$this->parse_string($value, $tags, $sql_result, $mysql_row_summ, $inner_content) . "\n";
+            } else {
+                $result.=$this->parse_string($value, $tags, $sql_result, [], $inner_content) . "\n";
             }
         }
         return $result;
@@ -210,7 +229,11 @@ class MyTemplate {
                 $tpl_content.=$tpl_file[$line];
             }
         }
-        return $templates[$title];
+        if(array_key_exists($title,$templates)) {
+            return $templates[$title];
+        } else {
+            return false;
+        }
     }    
 
 }

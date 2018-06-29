@@ -35,7 +35,7 @@ foreach($deny_urls as $url){
     }
 }
 foreach($deny_remote_hosts as $host){
-    if(stristr($server['REMOTE_HOST'],$host)){
+    if(array_key_exists('REMOTE_HOST', $server) && stristr($server['REMOTE_HOST'],$host)){
         $deny=1;
     }
 }
@@ -61,13 +61,19 @@ if (!$deny) {
     $data['day']="date_format(now(),'%Y-%m-%d')";
     $data['unique_visitor']=$unique;
     $uid = 0;
-    if ($_SESSION["UID"])$data['uid'] = $_SESSION["UID"];
+    if (array_key_exists('UID', $_SESSION) && $_SESSION['UID']){
+        $data['uid'] = $_SESSION["UID"];
+    }
     $data['remote_addr']=$server['REMOTE_ADDR'];
-    $data['remote_host']=($server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
+    $data['remote_host']=(array_key_exists('REMOTE_HOST', $server) && $server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
     $data['script_name']=$server['SCRIPT_NAME'];
     $data['request_uri'] = $server['REQUEST_URI'];
-    if (strlen($SUBDIR) > 1)$data['script_name'] = str_replace($SUBDIR, "/", $data['script_name']);    
-    if (strlen($SUBDIR) > 1)$data['request_uri'] = str_replace($SUBDIR, "/", $data['request_uri']);
+    if (strlen($SUBDIR) > 1){
+        $data['script_name'] = str_replace($SUBDIR, "/", $data['script_name']);
+    }
+    if (strlen($SUBDIR) > 1){
+        $data['request_uri'] = str_replace($SUBDIR, "/", $data['request_uri']);
+    }
     $data['user_agent']=$server['HTTP_USER_AGENT'];
 
     $query = "insert into visitor_log" . db_insert_fields($data);

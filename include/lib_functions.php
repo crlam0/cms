@@ -9,6 +9,22 @@
 use Classes\MyGlobal;
 
 /**
+ * Check $key in $array
+ *
+ * @param string $key Key
+ * @param array $array Array
+ *
+ * @return boolean true if key in array
+ */
+function check_key($key, $array) {
+    if(isset($array) && array_key_exists($key, $array)) {
+        return $array[$key];
+    } else {
+        return false;
+    }
+}
+
+/**
  * Check user access
  *
  * @param string $flag Flsg title
@@ -17,9 +33,13 @@ use Classes\MyGlobal;
  */
 function have_flag($flag) {
     global $_SESSION;
-    if (!strlen($flag))
-        return 1;
-    return @strstr($_SESSION['FLAGS'], $flag);
+    if (!strlen($flag)) {
+        return true;
+    }
+    if(!check_key('FLAGS',$_SESSION)) {
+        return false;
+    }
+    return strstr($_SESSION['FLAGS'], $flag);
 }
 
 /**
@@ -354,7 +374,7 @@ function user_encrypt_password($passwd, $salt) {
  * @return string Output string
  */
 function get_article_list_href($list_id, $row = array()) {
-    if ($row['id']){
+    if (array_key_exists('id',$row)){
         $list_id = $row['id'];
     }
     $query = "SELECT seo_alias FROM article_list WHERE id='{$list_id}'";
@@ -376,7 +396,7 @@ function get_article_list_href($list_id, $row = array()) {
  * @return string Output string
  */
 function get_article_href($article_id, $row = array()) {
-    if ($row['id']){
+    if (array_key_exists('id',$row)){
         $article_id = $row['id'];
     }
     $query = "SELECT seo_alias,list_id FROM article_item WHERE id='{$article_id}'";
@@ -398,7 +418,7 @@ function get_article_href($article_id, $row = array()) {
  * @return string Output string
  */
 function get_media_list_href($list_id, $row = array()) {
-    if ($row['id']){
+    if (array_key_exists('id',$row)){
         $list_id = $row['id'];
     }
     $query = "SELECT seo_alias FROM media_list WHERE id='{$list_id}'";
@@ -439,7 +459,7 @@ function cat_prev_part($prev_id, $deep, $array) {
  * @return string Output string
  */
 function get_cat_part_href($part_id, $row = array()) {
-    if (is_numeric($row['id'])) {
+    if (array_key_exists('id',$row)){
         $part_id = $row['id'];
     }
     $uri = 'catalog/';
@@ -462,7 +482,7 @@ function get_cat_part_href($part_id, $row = array()) {
  * @return string Output string
  */
 function get_gallery_list_href($list_id, $row = array()) {
-    if ($row['id']){
+    if (array_key_exists('id',$row)){
         $list_id = $row['id'];
     }
     $query = "SELECT seo_alias FROM gallery_list WHERE id='{$list_id}'";
@@ -484,10 +504,10 @@ function get_gallery_list_href($list_id, $row = array()) {
  * @return string Output string
  */
 function get_post_href($tmp, $row) {
-    if (strlen($row['seo_alias'])) {
+    if (check_key('seo_alias',$row)) {
         return "blog/" . $row['seo_alias'] . "/";
     } else {
-        return "blog/" . "?view_post=" . $row['id'];
+        return "blog/" . "?view_post=" . check_key('id', $row);
     }
 }
 

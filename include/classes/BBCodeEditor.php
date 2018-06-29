@@ -18,10 +18,18 @@ class BBCodeEditor {
     private $__height;
 
     public function __construct() {
-        $__numControls++;
+        if(isset($__numControls)){
+            $__numControls++;
+        } else {
+            $__numControls = 1;
+        }
         $this->__controlId = $__numControls;
-        $this->__value = (strlen($_POST["bbcode_textarea"]) ? $_POST["bbcode_textarea"] : "");
-        $this->__imagePath = "";
+        if(array_key_exists('bbcode_textarea',$_POST)) {
+            $this->__value = $_POST['bbcode_textarea'];
+        } else {
+            $this->__value = '';
+        }
+        $this->__imagePath = '';
         $this->__width = 0;
         $this->__cols = 0;
     }

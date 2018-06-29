@@ -14,11 +14,7 @@ use Classes\MyGlobal;
  */
 // $DB;
 
-if(!$DB) {
-    $DB = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
-}
-
-// var_dump($DB);
+$DB = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
 $mysqli=$DB->mysqli;
 

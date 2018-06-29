@@ -4,17 +4,17 @@ include '../include/common.php';
 
 list($file_name, $file_type) = my_select_row("select file_name,file_type from gallery_images where id='{$input['id']}'", true);
 $file_name = $DIR . $settings['gallery_upload_path'] . $file_name;
-$gallery_fix_size= ( $settings['gallery_fix_size']) && ($input["preview"]);
+$gallery_fix_size= ( $settings['gallery_fix_size']) && (check_key('preview',$input));
 
 if (!is_file($file_name)) {
     exit();
 }
 
-if (!$input['preview']) {
+if (!check_key('preview',$input)) {
     my_query("update gallery_images set view_count=view_count+1 where id='{$input['id']}'", true);
 }
 
-if(!$input['clientHeight']){
+if(!check_key('clientHeight',$input)){
     $input['clientHeight']=800;
 }
 
@@ -26,12 +26,12 @@ if (($file_type == 'image/jpeg') || ($file_type == 'image/pjpeg')) {
 }
 if ($src) {    
     list($width_src, $height_src) = getimagesize($file_name);
-    if ($input['preview']) {
+    if (check_key('preview',$input)) {
         $max_width = $settings['gallery_max_width_preview'];
     } else {
         $max_width = $settings['gallery_max_width'];
     }
-    if ($input['icon']) {
+    if (check_key('icon',$input) && check_key('gallery_icon_width',$settings)) {
         $gallery_fix_size=true;
         $max_width = $settings['gallery_icon_width'];
     }

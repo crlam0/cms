@@ -1,6 +1,5 @@
 <?php
 $tags['Header'] = 'Вопрос/ответ';
-$tags['Add_CSS'].=';article_news_faq';
 $tags['INCLUDE_HEAD'].='<link href="article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
 require_once '../include/common.php';
 

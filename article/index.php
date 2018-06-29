@@ -1,5 +1,4 @@
 <?php
-$tags['Add_CSS'].=';article_news_faq';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
 
 @include_once '../include/common.php';
@@ -79,7 +78,7 @@ if (isset($input['view'])) {
     $input['view_article'] = 1;
 }
 
-if ($input['view_items']) {
+if (array_key_exists('view_items', $input) && $input['view_items']) {
     $_SESSION['view_items'] = $input['id'];
 }
 

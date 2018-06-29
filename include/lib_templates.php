@@ -2,9 +2,7 @@
 
 use Classes\Template;
 
-if(!$Template) {
-    $Template = new Template();
-}  
+$Template = new Template();
 
 
 /**

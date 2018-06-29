@@ -80,7 +80,7 @@ class Template {
      */
     private function get_my_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){
         global $DIR;
-        if ($template['file_name']) {
+        if (array_key_exists('file_name', $template) && $template['file_name']) {
             $fname = '';
             if (file_exists($template['file_name'])) {
                 $fname = $template['file_name'];

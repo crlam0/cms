@@ -1,8 +1,7 @@
 <?php
-$tags['Header'] = 'Блог';
-$tags['Add_CSS'].=';blog_comments';
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 @include_once '../include/common.php';
+$tags['Header'] = 'Блог';
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 
 // include_once $INC_DIR . 'lib_comments.php';
 
@@ -16,22 +15,34 @@ if (isset($input["uri"])) {
     $query="select id from {$TABLE} where seo_alias like '".$params[0]."'";    
     $result=my_query($query);
     list($post_id)=$result->fetch_array();
-    $input["view_post"] = ( is_numeric($post_id) ? $post_id : $input["view_post"]);
+    $input['view_post'] = is_numeric($post_id) ? $post_id : check_key('view_post', $input);
 
-    if(strstr($input["uri"],"page")){
+    if(strstr($input['uri'],'page')){
         $_SESSION["BLOG_PAGE"]=str_replace("page","",$input["uri"]);
     }else{
         $_SESSION["BLOG_PAGE"]=1;
     }
 }
 
-if(!is_array($input)){
+if(isset($input) || !is_array($input)){
     $_SESSION["BLOG_PAGE"] = 1;
 }
 
-$comments = new Comments ('blog',$input['view_post']);
+if(!isset($_SESSION["BLOG_PAGE"])) {
+    $_SESSION["BLOG_PAGE"] = 1;
+}
 
-if ($input["view_post"]) {
+if(isset($input) && array_key_exists('view_post',$input)) {
+    $comments = new Comments ('blog',$input['view_post']);
+} else {
+    $comments = new Comments ('blog', null);
+}
+
+$content = '';
+
+// print_array($input);
+
+if(isset($input) && array_key_exists('view_post',$input) && is_numeric($input['view_post'])) {
     $query = "select {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid) where {$TABLE}.id='{$input["view_post"]}'";
     $result = my_query($query, true);
     $row = $result->fetch_array();
@@ -42,20 +53,20 @@ if ($input["view_post"]) {
     
     $content.="<div id=blog>";
     $row["post_title"]=$row['title'];
-    $row["content"] = replace_base_href($row["content"], false);
+    $row["content"] = replace_base_href(check_key('content',$row), false);
 
-    if(strlen($row["target_type"])){
+    if(strlen(check_key('target_type',$row))){
         $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );
         $row["target_link"]="<a href=\"{$href}\" class=button>Перейти >></a>";
     }
 
-    if(is_file($DIR.$settings['blog_img_path'].$row['image_name'])){
+    if(is_file($DIR.$settings['blog_img_path'].check_key('image_name', $row))){
         $row["image"]='  
         <div id="featured_image">
             <img width="150" height="150" src="'.$SUBDIR.$settings['blog_img_path'].$row['image_name'].'" class="attachment-150x150 wp-post-image" alt="'.$row['title'].'">    
         </div>';
     }            
-    $row["comment_line"] = "Комментариев: " . $comments->show_count($row['id']);
+    $row["comment_line"] = "Комментариев: " . $comments->show_count(check_key('id',$row));
     // unset($row['post_title']);
     $content.=get_tpl_by_title("blog_post", $row, $result);
     $content.="</div>";
@@ -70,7 +81,7 @@ if ($input["view_post"]) {
     $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
     
     $query = "SELECT ceiling(count(id)/$MSG_PER_PAGE) from {$TABLE} where active='Y'";
-    list($PAGES) = my_select_row($query, NULL, true);
+    list($PAGES) = my_select_row($query, false);
     $offset=$MSG_PER_PAGE*($_SESSION["BLOG_PAGE"]-1);
 
     if ($PAGES > 1) {
@@ -84,7 +95,7 @@ if ($input["view_post"]) {
         from {$TABLE} left join users on (users.id=uid)
         where {$TABLE}.active='Y'
         group by {$TABLE}.id  order by {$TABLE}.id desc limit $offset,$MSG_PER_PAGE";
-    $result = my_query($query, true);
+    $result = my_query($query, false);
 
     if (!$result->num_rows) {
         $content.=my_msg_to_str("part_empty");

@@ -32,7 +32,7 @@ foreach($routes as $title => $route) {
     }
 }
 
-if(is_file($file)) {
+if(isset($file) && is_file($file)) {
     // error_reporting(0);    
     $server['PHP_SELF'] = $SUBDIR.$route['file'];
     $server['PHP_SELF_DIR'] = $SUBDIR.dirname($route['file']) . '/';

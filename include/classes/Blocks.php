@@ -21,8 +21,13 @@ class Blocks {
         global $_SESSION, $SUBDIR;
         if (!$menu_id){
             return '';
-        }    
-        $query = "SELECT * FROM menu_item WHERE '" . $_SESSION['FLAGS'] . "' LIKE concat('%',flag,'%') AND menu_id='{$menu_id}' AND active=1 ORDER BY position ASC";
+        }
+        if(array_key_exists('FLAGS',$_SESSION)){
+            $where_add="'" . $_SESSION['FLAGS'] . "' LIKE concat('%',flag,'%') AND ";
+        } else {
+            $where_add = '';
+        }
+        $query = "SELECT * FROM menu_item WHERE {$where_add} menu_id='{$menu_id}' AND active=1 ORDER BY position ASC";
         $result = MyGlobal::get('DB')->query($query, true);
         $output = '';
         if ($result->num_rows) {

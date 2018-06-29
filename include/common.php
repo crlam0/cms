@@ -6,7 +6,7 @@ function add_to_debug ($message) {
     global $DEBUG;
     $time = microtime(true) - $DEBUG['start_time'];
     $time = sprintf('%.4F', $time);
-    $DEBUG['log'][] = $time . "\t" . $message;
+    $DEBUG['log'][] = $time . "\t " . $message;
 }
 
 require 'config/config.local.php';
@@ -84,7 +84,9 @@ if($settings['debug']) {
     $whoops = new Run();
     $whoops->writeToOutput(true);
     $whoops->allowQuit(true);
-    $whoops->pushHandler(new PrettyPageHandler());
+    $PrettyPageHandler = new PrettyPageHandler();
+    $PrettyPageHandler->addDataTable('DEBUG Array',  $DEBUG['log']);
+    $whoops->pushHandler($PrettyPageHandler);
     $whoops->register();
     add_to_debug('Add exception handler');
 }

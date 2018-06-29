@@ -1,4 +1,5 @@
 <?php
+
 @include_once "../include/common.php";
 // include $INC_DIR . "lib_comments.php";
 
@@ -100,19 +101,19 @@ if (isset($input) && (check_key('view_image',$input)) || (isset($input["load"]))
     $row = my_select_row($query, true);
     $tags = array_merge($row, $tags);
     $tags['Header'] = $row['title'];
-    $tags['gallery_id'] = $_SESSION['view_gallery'];
+    $tags['gallery_id'] = check_key('view_gallery',$_SESSION);
 
-    list($title) = my_select_row("select title from gallery_list where id=" . $_SESSION["view_gallery"], true);
-    $tags["back_url"]=$server["PHP_SELF"] . "?view_gallery1&id=".$_SESSION["view_gallery"];
+    list($title) = my_select_row("select title from gallery_list where id='" . check_key('view_gallery',$_SESSION)."'", true);
+    $tags["back_url"]=$server["PHP_SELF"] . "?view_gallery1&id=".check_key('view_gallery',$_SESSION);
     $tags['nav_str'].="<a href=" . $tags["back_url"] ." class=nav_next>$title</a><span class=nav_next>$row[title]</span>";
 
-    list($prev_id) = my_select_row("select id from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " and id<'{$tags['id']}' order by id desc limit 1", true);
+    list($prev_id) = my_select_row("select id from gallery_images where gallery_id=" . check_key('view_gallery',$_SESSION) . " and id<'{$tags['id']}' order by id desc limit 1", true);
     if ($prev_id)$tags['prev'] = "<a href={$server['PHP_SELF']}?view_image=1&id={$prev_id} class=button><< Предыдущая</a>";
 
-    list($next_id) = my_select_row("select id from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " and id>'{$tags['id']}' order by id asc limit 1", true);
+    list($next_id) = my_select_row("select id from gallery_images where gallery_id=" . check_key('view_gallery',$_SESSION) . " and id>'{$tags['id']}' order by id asc limit 1", true);
     if ($next_id)$tags['next'] = "<a href={$server['PHP_SELF']}?view_image=1&id={$next_id} class=button>Следующая >></a>";
 
-    if ($input['view_image']){
+    if (check_key('view_image',$input)){
         $content = get_tpl_by_title('gallery_image_view', $tags);
         echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
         exit();
@@ -120,19 +121,26 @@ if (isset($input) && (check_key('view_image',$input)) || (isset($input["load"]))
 }
 
 if (isset($input["load"])) {
-    if($prev_id)$prev_add="<a class=gallery_button item_id=$prev_id><< Предыдущая</a>";
-    if($next_id)$next_add="<a class=gallery_button item_id=$next_id>Следующая >></a>";
+    $prev_add='';
+    $next_add='';
+    
+    if($prev_id) {
+        $prev_add="<a class=gallery_button item_id=$prev_id><< Предыдущая</a>";
+    }
+    if($next_id) {
+        $next_add="<a class=gallery_button item_id=$next_id>Следующая >></a>";
+    }
     echo "
 	<center>
         <div id=gallery>
         <div class=title>$tags[title]</div>
         <br>
         <div class=view_image>
-        <img src=\"{$SUBDIR}gallery/image.php?id={$tags['id']}&clientHeight={$input['clientHeight']}\" border=0 id=popup_image>
+        <img src=\"{$SUBDIR}gallery/image.php?id={$tags['id']}&clientHeight=".check_key('clientHeight',$input)."\" border=0 id=popup_image>
         </div>
         <div class=descr>{$tags['descr']}</div><div class=date>Добавлена {$tags['date_add']}, просмотров {$tags['view_count']}</div>
         <br>
-        <div align=center>$prev_add $next_add</div>
+        <div align=center>{$prev_add} {$next_add}</div>
         </div></center>
     ";
     exit();

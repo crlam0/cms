@@ -7,6 +7,7 @@ $(document).ready(function () {
                 loadPopup();
                 centerPopup();
             });
+            // $("#popupContent").html('test');
         });
     });
 

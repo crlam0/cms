@@ -75,6 +75,7 @@ class SQLHelper {
             echo 'SQL Error: '.$this->mysqli->error;
             if($settings['debug']){
                 echo '<br />Query is: '.$sql;
+                throw new \InvalidArgumentException('SQL Error: ' . $sql);
             }
             exit();
         }

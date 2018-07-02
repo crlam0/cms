@@ -18,7 +18,6 @@ if(file_exists($INC_DIR.'config/misc.local.php')) {
 
 $content='';
 $_SESSION['UID']=0;
-$_SESSION['UNAME']='';
 $_SESSION['FLAGS']='';
 
 if($_SERVER['SERVER_PROTOCOL']) {

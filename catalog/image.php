@@ -3,10 +3,10 @@
 include "../include/common.php";
 
 if (isset($input["id"])) {
-    list($file_name, $file_type) = my_select_row("select fname from cat_item_images where id='$input[id]'", true);
-    $file_name = $DIR . $settings[catalog_item_img_path] . $file_name;
+    list($file_name) = my_select_row("select fname from cat_item_images where id='{$input['id']}'", true);
+    $file_name = $DIR . $settings['catalog_item_img_path'] . $file_name;
 } else {
-    $file_name = $DIR . $settings[catalog_item_img_path] . $input["file_name"];
+    $file_name = $DIR . $settings['catalog_item_img_path'] . $input["file_name"];
 }
 $fix_size = $input['fix_size'];
 
@@ -77,5 +77,5 @@ if ($src && $max_width && (($width_src > $max_width) || ($height_src > $max_widt
 }
 
 $img = file_get_contents($file_name);
-Header("Content-type: $file_type");
+Header("Content-type: image/jpeg");
 print $img;

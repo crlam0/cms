@@ -1,9 +1,9 @@
 <?php
+@include_once '../include/common.php';
 $tags['Header']='Магазин';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/catalog.css" type="text/css" rel=stylesheet />'."\n";;
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/price.css" type="text/css" rel=stylesheet />'."\n";;
 
-@include_once '../include/common.php';
 
 if (is_array($input) && !count($input)){
     $input['part_id'] = 0;
@@ -174,7 +174,7 @@ if(strlen($input['item_title'])){
 
         $query="select * from cat_item_images where item_id='{$item_id}' and id<>'{$row['default_img']}' order by id asc";
         $result=my_query($query);
-        $tags['images'].="<div style=\"width:100%;height:1px;float:left;\">&nbsp;</div>";
+        $tags['images']="<div style=\"width:100%;height:1px;float:left;\">&nbsp;</div>";
         if($result->num_rows){
                 $tags['images'].="<div class=item_images>";
                 while ($row = $result->fetch_array())if(is_file($IMG_ITEM_PATH.$row['fname'])){
@@ -256,6 +256,7 @@ if(isset($input["page"])){
 	$_SESSION["catalog_page"]=$input["page"];
 }
 list($PAGES)=my_select_row("SELECT ceiling(count(id)/$settings[catalog_items_per_page]) from cat_item where part_id='".$current_part_id."'",1);
+$tags['pages_list']='';
 if($PAGES>1){
 	$tags['pages_list']="<div class=cat_pages>";
 	for($i=1;$i<=$PAGES;$i++)$tags['pages_list'].=($i==$_SESSION["catalog_page"]?"[ <b>$i</b> ]&nbsp;":"[ <a href=".$_SERVER["PHP_SELF"]."?page=$i>$i</a> ]&nbsp;");

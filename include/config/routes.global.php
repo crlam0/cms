@@ -21,7 +21,7 @@ return [
         'pattern' => '^request\/$',
         'file' => 'misc/request.php'
     ],    
-    'misc_request' => [
+    'request_php' => [
         'pattern' => '^.*misc\/request\.php$',
         'file' => 'misc/request.php'
     ],    

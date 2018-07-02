@@ -464,6 +464,7 @@ function get_cat_part_href($part_id, $row = array()) {
     }
     $uri = 'catalog/';
     if ($part_id) {
+        $array = [];
         $array = cat_prev_part($part_id, 0, $array);
         $array = array_reverse($array);
         while (list ($n, $row) = @each($array)) {

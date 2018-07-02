@@ -77,8 +77,9 @@ if ($input["get_summary_cost"]) {
 
 if ($input["get_summary"]) {
     if (count($_SESSION["BUY"])) {
-        $item_list.="<div class=\"buy_summary\">
+        $item_list="<div class=\"buy_summary\">
             <h3>Сейчас в корзине :</h3><br>";
+        $where='';
         foreach ($_SESSION["BUY"] as $item_id => $cnt) {
             $where.=(!strlen($where) ? " id='$item_id'" : " or id='$item_id'");
         }

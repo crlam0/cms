@@ -24,7 +24,7 @@ foreach($routes as $title => $route) {
         foreach($matches as $key => $value){
             if($key==0){
                 $file=dirname(__FILE__) . DIRECTORY_SEPARATOR . $route['file'];
-            } else {
+            } elseif(array_key_exists('params', $route)) {
                 $input[$route['params'][$key]]=htmlspecialchars($value);
             }
         }

@@ -122,6 +122,7 @@ if ($current_part_id) {
 
 if ($input['get_popup_content']) {
     
+    $nav_ins='';
     list($default_img,$default_img_fname)=my_select_row("select default_img,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='".$input["item_id"]."'",false);
    
     list($prev_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id<'" . $input["image_id"] . "' and id<>'{$default_img}' order by id desc limit 1", false);
@@ -189,7 +190,7 @@ if(strlen($input['item_title'])){
         <center><a href=".$SUBDIR.get_cat_part_href($part_id)." class=\"btn btn-default\"> << Назад</a></center>
         </div>";
 
-        $tags['INCLUDE_HEAD'] .=  
+        $tags['INCLUDE_JS'] .=  
             "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/popup.js\"></script>\n".
             "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/jquery.waitforimages.min.js\"></script>\n".
             "<script type=\"text/javascript\" src=\"{$BASE_HREF}catalog/catalog.js\"></script>\n";

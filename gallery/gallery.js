@@ -5,7 +5,8 @@ $(document).ready(function () {
         var DIR = '/' + domain + '/gallery/';
     } else {
         var DIR = '/';
-    }    
+    }
+    alert(DIR);
     
     $("img.gallery_popup").click(function () {
         var id = $(this).attr("item_id");

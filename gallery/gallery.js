@@ -2,11 +2,11 @@ $(document).ready(function () {
     var pathArray = window.location.pathname.split( '/' );
     var domain = pathArray[1];
     if(domain.match(/[w\-\.]./)) {
-        var DIR = '/' + domain + '/gallery/';
+        var DIR = '/' + domain + '/';
     } else {
         var DIR = '/';
     }
-    alert(DIR);
+    DIR = DIR + 'gallery/';
     
     $("img.gallery_popup").click(function () {
         var id = $(this).attr("item_id");

@@ -15,7 +15,7 @@ if (isset($input["uri"])) {
     $query="select id from {$TABLE} where seo_alias like '".$params[0]."'";    
     $result=my_query($query);
     list($post_id)=$result->fetch_array();
-    $input['view_post'] = is_numeric($post_id) ? $post_id : check_key('view_post', $input);
+    $input['view_post'] = is_numeric($post_id) ? $post_id : $input['view_post'];
 
     if(strstr($input['uri'],'page')){
         $_SESSION["BLOG_PAGE"]=str_replace("page","",$input["uri"]);

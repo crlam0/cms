@@ -97,7 +97,7 @@ function show_list_img($tmp, $row) {
     return $content;
 }
 
-if ( (isset($input) && check_key('view-image',$input)) && (!$view_gallery) ) {
+if ( (isset($input) && $input['view-image']) && (!$view_gallery) ) {
     list($view_gallery) = my_select_row("select gallery_id from gallery_images where id='{$input['id']}'");
 }
 
@@ -145,7 +145,7 @@ if (isset($input['load'])) {
         <div class=title>$tags[title]</div>
         <br>
         <div class=view_image>
-        <img src=\"{$SUBDIR}gallery/image.php?id={$tags['id']}&clientHeight=".check_key('clientHeight',$input)."\" border=0 id=popup_image>
+        <img src=\"{$SUBDIR}gallery/image.php?id={$tags['id']}&clientHeight=".$input['clientHeight']."\" border=0 id=popup_image>
         </div>
         <div class=descr>{$tags['descr']}</div><div class=date>Добавлена {$tags['date_add']}, просмотров {$tags['view_count']}</div>
         <br>

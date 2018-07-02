@@ -95,7 +95,7 @@ class Comments
      */
     public function get_form_data($input){
         global $server,$SUBDIR,$settings;
-        if (check_key('add_comment',$input)) { 
+        if ($input['add_comment']) { 
             $err = 0;
             $output = '';
             if (strlen($input['form']['author']) < 3) {

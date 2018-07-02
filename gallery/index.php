@@ -31,7 +31,7 @@ if ( (isset($input['uri'])) && (!isset($input['load']))) {
 }
 
 if($settings["gallery_use_popup"]){
-    $tags['INCLUDE_HEAD'] .= 
+    $tags['INCLUDE_JS'] .= 
             '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
             '<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>'."\n".
             '<script type="text/javascript" src="'.$BASE_HREF.'gallery/gallery.js"></script>'."\n";
@@ -139,6 +139,8 @@ if (isset($input['load'])) {
     if($next_id) {
         $next_add="<a class=gallery_button item_id=$next_id>Следующая >></a>";
     }
+    // header($server['SERVER_PROTOCOL'] . ' 200 OK', true, 200);
+    // header('HTTP/1.0 200 Ok');
     echo "
 	<center>
         <div id=gallery>

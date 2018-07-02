@@ -211,9 +211,9 @@ if (is_array($_SESSION["BUY"]) && count($_SESSION["BUY"])) {
             $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
             $cnt+=$_SESSION["BUY"][$row['id']]["count"];
             $content.= "<tr valign=middle>
-                <td align=center width=50%>" . (file_exists($IMG_ITEM_PATH) . $row[fname] ? "<img src=\"{$SUBDIR}catalog/image.php?id={$row['default_img']}&windowHeight=500&fix_size=1\">" : "&nbsp;") . "</td>
+                <td align=center width=50%>" . (file_exists($IMG_ITEM_PATH) . $row['fname'] ? "<img src=\"{$SUBDIR}catalog/image.php?id={$row['default_img']}&windowHeight=500&fix_size=1\">" : "&nbsp;") . "</td>
                 <td class=price><b>$row[title]</b> &nbsp;&nbsp;(Кол-во: {$_SESSION["BUY"][$row['id']]["count"]})<br>
-                Цена: <b>" . add_zero($row['price']) . " руб.</b><br>" . nl2br($row[descr]) . "<br>
+                Цена: <b>" . add_zero($row['price']) . " руб.</b><br>" . nl2br($row['descr']) . "<br>
                 <input type=hidden name=buy_cnt[{$row['id']}] value=1>
                 </td>
                 </tr>

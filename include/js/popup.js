@@ -39,9 +39,9 @@ function centerPopup() {
 
     var popupHeight = $("#popupItem").height();
     var popupWidth = $("#popupItem").width();
-//    if (popupHeight < 200) {
-//        popupHeight = 600;
-//    }
+    if (popupHeight < 200) {
+        popupHeight = 600;
+    }
     if( popupWidth > windowWidth ){
         PopupWidth = windowWidth + 'px';
         $("#popupItem").css({

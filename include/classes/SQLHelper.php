@@ -53,9 +53,9 @@ class SQLHelper {
      */
     public function query($sql, $dont_debug=false) {
         global $settings,$DEBUG;
-        if (!$dont_debug) {
-            print_debug($sql);
-        }    
+        // if (!$dont_debug) {
+        //     print_debug($sql);
+        // }    
         if($settings['debug']){
             $start_time = microtime(true);
         }

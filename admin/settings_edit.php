@@ -5,22 +5,22 @@ include '../include/common.php';
 
 $content = '';
 
-if (check_key('del',$input)) {
+if ($input['del']) {
     $query = "delete from settings where id='{$input['id']}'";
     my_query($query);
 }
 
-if (check_key('add',$input)) {
+if ($input['add']) {
     $query = "insert into settings " . db_insert_fields($input['form']);
     my_query($query);
 }
 
-if (check_key('edit',$input)) {
+if ($input['edit']) {
     $query = "update settings set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
 }
 
-if ( (check_key('view',$input)) || (check_key('adding',$input)) ) {
+if ( ($input['view']) || ($input['adding']) ) {
     if (check_key('view',$input)) {
         $query = "select * from settings where id='{$input['id']}'";
         $result = my_query($query);

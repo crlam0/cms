@@ -1,6 +1,6 @@
 <?php
-include "../include/common.php";
-$tags[Header]="Поиск";
+include '../include/common.php';
+$tags['Header']="Поиск";
 
 $content='
 <form action="'.$SUBDIR.'search/" method="post">
@@ -8,7 +8,7 @@ $content='
     <input type="submit" value="Искать">    
 </form><br />';
 
-if(strlen($input["search_str"])>3){
+if(strlen($input['search_str'])>3){
     $query="
     (SELECT id, 'article' as type, seo_alias, title, content, MATCH (title,content) AGAINST ('{$input["search_str"]}') AS score
     FROM article_item 
@@ -37,12 +37,10 @@ if(strlen($input["search_str"])>3){
             $content.="<span class=search_content>".$content_str."</span><br />";
         }
     }else{
-        $content.=my_msg_to_str("warnig", $tags, "Ничего не найдено.");
+        $content.=my_msg_to_str('warnig', $tags, 'Ничего не найдено.');
     }
 }else{
-    $content.=my_msg_to_str("warnig", $tags, "Поисковый запрос слишком короткий.");
+    $content.=my_msg_to_str('warnig', $tags, 'Поисковый запрос слишком короткий.');
 }
 
-echo get_tpl_by_title("$part['tpl_name']",$tags,"",$content);
-
-?>
+echo get_tpl_by_title($part['tpl_name'],$tags,'',$content);

@@ -3,12 +3,10 @@ $(document).ready(function () {
         var id = $(this).attr("item_id");
         var clientHeight = document.documentElement.clientHeight;
         $('#popupContent').load("index.php?load=1&id=" + id + "&clientHeight="+clientHeight, function () {
-            // alert(id + '   ' + clientHeight);
             $("#popupContent").waitForImages(function () {
                 loadPopup();
                 centerPopup();
             });
-            // $("#popupContent").html('test');
         });
     });
 

@@ -6,7 +6,7 @@ $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 
 $content = '';
 
-if (isset($input) && check_key('logon',$input)) {
+if (isset($input) && $input['logon']) {
     $query = "select id,flags,passwd,salt from users where login='" . $input['login'] . "' and flags like '%active%'";
     $result = my_query($query, true);
     if ($result->num_rows) {
@@ -33,7 +33,7 @@ if (isset($input) && check_key('logon',$input)) {
 }
 
 if (!$_SESSION['UID']) {
-    if(isset($input) && check_key('login', $input)) {
+    if(isset($input['login'])) {
         $tags['login'] = $input['login'];
     }
     $content.=get_tpl_by_title('user_login_promt', $tags);

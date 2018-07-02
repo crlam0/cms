@@ -65,7 +65,9 @@ class SQLHelper {
         if($settings['debug']){
             $time = sprintf('%.4F', microtime(true) - $start_time);
             $DEBUG['sql_query_array'][] = $time . "\t" . $sql;
-            $DEBUG['sql_query_array'][] = $this->mysqli->info;
+            if(strlen($this->mysqli->info)) {
+                $DEBUG['sql_query_array'][] = $this->mysqli->info;
+            }
         }
         if (!$result) {
             echo 'SQL Error: '.$this->mysqli->error;

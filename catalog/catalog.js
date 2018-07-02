@@ -1,15 +1,23 @@
 
 $(document).ready(function() {
+    var pathArray = window.location.pathname.split( '/' );
+    var domain = pathArray[1];
+    if(domain.match(/[w\-\.]./)) {
+        var DIR = '/' + domain + '/';
+    } else {
+        var DIR = '/';
+    }
+    DIR = DIR + 'catalog/';
 
     $("a.buy_button").on('click', function() {
         var id = $(this).attr("item_id");
         var cnt_id=".cnt_"+id;
         cnt=$(cnt_id).attr("value");
         $.ajax({
-            type: "GET", url: "index.php", data: "add_buy=1&item_id="+id+"&cnt="+cnt,
+            type: "GET", url: DIR + "index.php", data: "add_buy=1&item_id="+id+"&cnt="+cnt,
             success: function(msg){
                 if(msg !== 'OK') alert(msg);
-                $('#popupContent').load("buy.php?get_summary=1");
+                $('#popupContent').load(DIR + "buy.php?get_summary=1");
                 loadPopup();                
                 centerPopup();
             }
@@ -21,7 +29,7 @@ $(document).ready(function() {
         var item_id = $(this).attr("item_id");
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
-        $('#popupContent').load("index.php?get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,function(){
+        $('#popupContent').load(DIR + "index.php?get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,function(){
             $("#popupContent").waitForImages(function() {
                 loadPopup();                    
                 centerPopup();
@@ -34,7 +42,7 @@ $(document).ready(function() {
         var item_id = $(this).attr("item_id");
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
-        $('#popupContent').load("index.php?get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,function(){
+        $('#popupContent').load(DIR + "index.php?get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,function(){
             $("#popupContent").waitForImages(function() {
                 loadPopup();                    
                 centerPopup();
@@ -53,7 +61,7 @@ $(document).ready(function() {
 //        $("#popupContent").css({
 //            "height": height
 //        });
-	        $('#popupContent').load("index.php?get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,function(){
+	        $('#popupContent').load(DIR + "index.php?get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,function(){
                 $("#popupContent").waitForImages(function () {
                     centerPopup();
                     $("#popupItem").fadeIn("slow");

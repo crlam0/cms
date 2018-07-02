@@ -16,6 +16,7 @@ if(file_exists($INC_DIR.'config/misc.local.php')) {
     require_once $INC_DIR.'config/misc.local.php';
 }    
 
+$content='';
 $_SESSION['UID']=0;
 $_SESSION['UNAME']='';
 $_SESSION['FLAGS']='';
@@ -42,7 +43,8 @@ require $INC_DIR.'lib_sql.php';
 add_to_debug('SQL base connected');
 
 use Classes\MyArray;
-$input=new MyArray;
+$input = new MyArray;
+$server = new MyArray;
 if(is_array($_GET))foreach ($_GET as $key => $value){
     $input[$key]=db_test_param($value,$key);
 }

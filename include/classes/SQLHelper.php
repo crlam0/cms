@@ -59,17 +59,13 @@ class SQLHelper {
         if($settings['debug']){
             $start_time = microtime(true);
         }
-        // var_dump($this->mysqli);
-        echo($this->mysqli->info);
-        // $this->mysqli = new \mysqli($this->host, $this->user, $this->passwd, $this->dbname);
-        // var_dump($this->mysqli);
         if($this->mysqli) {
-        $result = $this->mysqli->query($sql);
-            
+            $result = $this->mysqli->query($sql);
         }
         if($settings['debug']){
             $time = sprintf('%.4F', microtime(true) - $start_time);
             $DEBUG['sql_query_array'][] = $time . "\t" . $sql;
+            $DEBUG['sql_query_array'][] = $this->mysqli->info;
         }
         if (!$result) {
             echo 'SQL Error: '.$this->mysqli->error;

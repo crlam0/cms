@@ -6,6 +6,7 @@ class MyArray implements \ArrayAccess {
     private $container = array();
 
     public function __construct() {
+        $this->container = [];
     }
 
     public function offsetSet($offset, $value) {
@@ -17,15 +18,28 @@ class MyArray implements \ArrayAccess {
     }
 
     public function offsetExists($offset) {
-        return isset($this->container[$offset]);
+        // return isset($this->container[$offset]);
+        return array_key_exists($offset, $this->container);
     }
 
     public function offsetUnset($offset) {
         unset($this->container[$offset]);
     }
 
-    public function offsetGet($offset) {
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
+    public function &offsetGet($offset) {
+        // return isset($this->container[$offset]) ? $this->container[$offset] : '';
+        if(isset($this->container[$offset])) {
+            $data = & $this->container[$offset];
+            return $data;
+        } else {
+            $tmp = null;
+            $data = & $tmp;
+            return $data;
+        }
     }
+    public function count() {
+        return count($this->container);
+    }
+
 }
 

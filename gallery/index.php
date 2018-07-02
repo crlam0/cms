@@ -1,5 +1,8 @@
 <?php
 
+// echo 'test';
+// exit ();
+
 @include_once "../include/common.php";
 // include $INC_DIR . "lib_comments.php";
 
@@ -11,17 +14,19 @@ $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text
 
 $settings["gallery_use_popup"]=true;
 
+$view_gallery = null;
+
 if ( (isset($input["uri"])) && (!isset($input["load"]))) {
     $params = explode("/", $input["uri"]);
     
     $query="select id from gallery_list where seo_alias like '".$params[0]."'";
     $result=my_query($query);
-    list($_SESSION["view_gallery"])=$result->fetch_array();
+    list($view_gallery)=$result->fetch_array();
     
     if(isset($params[1]) && strlen($params[1])){
-        $_SESSION["gallery_page"]=$params[1];
+        $gallery_page=$params[1];
     }else{
-        $_SESSION["gallery_page"]=1;
+        $gallery_page=1;
     }
 }
 
@@ -36,17 +41,17 @@ $tags['nav_str'].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>{$tags
 
 if(isset($input) && array_key_exists('view_gallery',$input)) {
 // if ($input["view_gallery"]) {
-    $_SESSION["view_gallery"] = $input["id"];
+    $view_gallery = $input["id"];
 }
-if(!isset($input) || !is_array($input)){
-    $_SESSION["view_gallery"] = "";
-    $_SESSION["gallery_page"] = 1;
+if(!isset($input) || !($input->count())){
+    $view_gallery = "";
+    $gallery_page = 1;
 }
 
-if (!isset($_SESSION["gallery_page"]))$_SESSION["gallery_page"] = 1;
+if (!isset($gallery_page))$gallery_page = 1;
 
 if (isset($input["page"])) {
-    $_SESSION["gallery_page"] = $input["page"];
+    $gallery_page = $input["page"];
 }
 
 function show_img($tmp, $row) {
@@ -92,11 +97,11 @@ function show_list_img($tmp, $row) {
     return $content;
 }
 
-if ( (isset($input) && check_key('view-image',$input)) && (!$_SESSION["view_gallery"]) ) {
-    list($_SESSION["view_gallery"]) = my_select_row("select gallery_id from gallery_images where id='{$input['id']}'");
+if ( (isset($input) && check_key('view-image',$input)) && (!$view_gallery) ) {
+    list($view_gallery) = my_select_row("select gallery_id from gallery_images where id='{$input['id']}'");
 }
 
-if (isset($input) && (check_key('view_image',$input)) || (isset($input["load"]))) {
+if ($input['view_image'] || (isset($input["load"]))) {
     $query = "SELECT * from gallery_images where id='{$input['id']}'";
     $row = my_select_row($query, true);
     $tags = array_merge($row, $tags);
@@ -107,10 +112,10 @@ if (isset($input) && (check_key('view_image',$input)) || (isset($input["load"]))
     $tags["back_url"]=$server["PHP_SELF"] . "?view_gallery1&id=".check_key('view_gallery',$_SESSION);
     $tags['nav_str'].="<a href=" . $tags["back_url"] ." class=nav_next>$title</a><span class=nav_next>$row[title]</span>";
 
-    list($prev_id) = my_select_row("select id from gallery_images where gallery_id=" . check_key('view_gallery',$_SESSION) . " and id<'{$tags['id']}' order by id desc limit 1", true);
+    list($prev_id) = my_select_row("select id from gallery_images where gallery_id='" . $view_gallery . "' and id<'{$tags['id']}' order by id desc limit 1", true);
     if ($prev_id)$tags['prev'] = "<a href={$server['PHP_SELF']}?view_image=1&id={$prev_id} class=button><< Предыдущая</a>";
 
-    list($next_id) = my_select_row("select id from gallery_images where gallery_id=" . check_key('view_gallery',$_SESSION) . " and id>'{$tags['id']}' order by id asc limit 1", true);
+    list($next_id) = my_select_row("select id from gallery_images where gallery_id='" . $view_gallery . "' and id>'{$tags['id']}' order by id asc limit 1", true);
     if ($next_id)$tags['next'] = "<a href={$server['PHP_SELF']}?view_image=1&id={$next_id} class=button>Следующая >></a>";
 
     if (check_key('view_image',$input)){
@@ -147,9 +152,9 @@ if (isset($input["load"])) {
 }
 
 
-if (($_SESSION['view_gallery'])||(isset($input) && $input['page'])) {
-    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['gallery_images_per_page']}) from gallery_images where gallery_id=" . $_SESSION['view_gallery'], false);
-    list($title) = my_select_row("select title from gallery_list where id=" . $_SESSION['view_gallery'], false);
+if (($view_gallery)||($input['page'])) {
+    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['gallery_images_per_page']}) from gallery_images where gallery_id=" . $view_gallery, false);
+    list($title) = my_select_row("select title from gallery_list where id=" . $view_gallery, false);
     $tags['Header'] = $title;
     $tags['nav_str'].="<span class=nav_next>$title</span>";
     if ($PAGES > 1) {
@@ -158,13 +163,13 @@ if (($_SESSION['view_gallery'])||(isset($input) && $input['page'])) {
             if($i == $_SESSION['gallery_page']) {
                 $tags['pages_list'].= "[ <b>$i</b> ]&nbsp;";
             }else{
-                $tags['pages_list'].= "[ <a href=" . $SUBDIR . get_gallery_list_href($_SESSION["view_gallery"]) . "$i/>$i</a> ]&nbsp;";
+                $tags['pages_list'].= "[ <a href=" . $SUBDIR . get_gallery_list_href($view_gallery) . "$i/>$i</a> ]&nbsp;";
             }
         }    
         $tags['pages_list'].="</center><br>";
     }
     $offset = $settings['gallery_images_per_page'] * ($_SESSION['gallery_page'] - 1);
-    $query = "SELECT * from gallery_images where gallery_id=" . $_SESSION["view_gallery"] . " order by id asc limit {$offset},{$settings['gallery_images_per_page']}";
+    $query = "SELECT * from gallery_images where gallery_id=" . $view_gallery . " order by id asc limit {$offset},{$settings['gallery_images_per_page']}";
     $result = my_query($query, false);
     if (!$result->num_rows) {
         $content = my_msg_to_str("list_empty", $tags, "");
@@ -172,11 +177,11 @@ if (($_SESSION['view_gallery'])||(isset($input) && $input['page'])) {
         $content = get_tpl_by_title("gallery_images_table", $tags, $result);
     }
     
-    $comments = new Comments ("gallery",$_SESSION["view_gallery"]);
+    $comments = new Comments ("gallery",$view_gallery);
     
     $comments->get_form_data($input);
     $content.=$comments->show_list();
-    $tags["action"]=$SUBDIR.get_gallery_list_href($_SESSION["view_gallery"])."#comments";
+    $tags["action"]=$SUBDIR.get_gallery_list_href($view_gallery)."#comments";
     $content.=$comments->show_form($tags);    
     
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

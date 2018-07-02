@@ -21,7 +21,7 @@ if ($input['edit']) {
 }
 
 if ( ($input['view']) || ($input['adding']) ) {
-    if (check_key('view',$input)) {
+    if ($input['view']) {
         $query = "select * from settings where id='{$input['id']}'";
         $result = my_query($query);
         $tags = array_merge($tags, $result->fetch_array());

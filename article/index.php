@@ -110,10 +110,10 @@ if ($_SESSION['view_items']) {
     $query = "select * from article_item where list_id='{$_SESSION['view_items']}'";
     $result = my_query($query, true);
 
-    $tags[nav_str].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
+    $tags['nav_str'].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
     list($title) = my_select_row("select title from article_list where id='{$_SESSION['view_items']}'", 1);
-    $tags[nav_str].="<span class=nav_next>$title</span>";
-    $tags[Header] = $title;
+    $tags['nav_str'].="<span class=nav_next>$title</span>";
+    $tags['Header'] = $title;
 
     $content = get_tpl_by_title('article_items', $row, $result);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

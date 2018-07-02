@@ -39,22 +39,23 @@ function centerPopup() {
 
     var popupHeight = $("#popupItem").height();
     var popupWidth = $("#popupItem").width();
-    if (popupHeight < 200) {
-        popupHeight = 600;
-    }
+//    if (popupHeight < 200) {
+//        popupHeight = 600;
+//    }
     if( popupWidth > windowWidth ){
         PopupWidth = windowWidth + 'px';
         $("#popupItem").css({
             "width": PopupWidth
         });   
     }
-    // alert('windowHeight: '+windowHeight+' popupHeight: '+popupHeight+'\n windowWidth: '+windowWidth+' popupPopipWidth: '+popupWidth);
+//    alert('windowHeight: '+windowHeight+' popupHeight: '+popupHeight+'\n windowWidth: '+windowWidth+' popupPopopWidth: '+popupWidth);
 
     $("#popupItem").css({
         "position": "absolute",
 	"top": scrolledY + (windowHeight/2-popupHeight/2),  
 //        "top": (windowHeight / 2 - popupHeight / 2),
         "left": scrolledX + (windowWidth / 2 - popupWidth / 2)
+        
     });
 }
 

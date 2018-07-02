@@ -41,7 +41,8 @@ require $INC_DIR.'lib_sql.php';
 
 add_to_debug('SQL base connected');
 
-$input=[];
+use Classes\MyArray;
+$input=new MyArray;
 if(is_array($_GET))foreach ($_GET as $key => $value){
     $input[$key]=db_test_param($value,$key);
 }
@@ -70,6 +71,7 @@ require $INC_DIR.'lib_functions.php';
 add_to_debug('Library loaded');
 
 // Load settings into $settings[]
+$settings = new MyArray;
 $query='SELECT * FROM settings';
 $result=$DB->query($query,true);
 while ($row = $result->fetch_array()) {

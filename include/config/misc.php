@@ -1,6 +1,6 @@
 <?php
 
-$JQUERY_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.js"></script>'."\n";
+$JQUERY_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.min.js"></script>'."\n";
 $JQUERY_FORM_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.form.js"></script>'."\n";
 
 $EDITOR_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/ckeditor/ckeditor.js" charset="utf-8"></script>'."\n".

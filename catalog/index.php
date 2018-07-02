@@ -144,7 +144,9 @@ if ($input['get_popup_content']) {
     }
 
     $content.="<center><img src=\"{$SUBDIR}catalog/image.php?preview=500&file_name={$input["file_name"]}&windowHeight={$input['windowHeight']}\" border=0></center>";
-    if(strlen($nav_ins))$content.="<br /><center>{$nav_ins}</center>";
+    if(strlen($nav_ins)) {
+        $content.="<br /><center>{$nav_ins}</center>";
+    }    
     
     echo $content;    
     exit;

@@ -3,23 +3,25 @@
 $tags['Header'] = 'Настройки';
 include '../include/common.php';
 
-if ($input['del']) {
+$content = '';
+
+if (check_key('del',$input)) {
     $query = "delete from settings where id='{$input['id']}'";
     my_query($query);
 }
 
-if ($input['add']) {
+if (check_key('add',$input)) {
     $query = "insert into settings " . db_insert_fields($input['form']);
     my_query($query);
 }
 
-if ($input['edit']) {
+if (check_key('edit',$input)) {
     $query = "update settings set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
 }
 
-if (($input['view']) || ($input['adding'])) {
-    if ($input['view']) {
+if ( (check_key('view',$input)) || (check_key('adding',$input)) ) {
+    if (check_key('view',$input)) {
         $query = "select * from settings where id='{$input['id']}'";
         $result = my_query($query);
         $tags = array_merge($tags, $result->fetch_array());

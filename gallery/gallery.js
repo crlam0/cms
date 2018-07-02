@@ -2,6 +2,7 @@ $(document).ready(function () {
     $("img.gallery_popup").click(function () {
         var id = $(this).attr("item_id");
         var clientHeight = document.documentElement.clientHeight;
+        alert(id + '   ' + clientHeight);
         $('#popupContent').load("index.php?load=1&id=" + id + "&clientHeight="+clientHeight, function () {
             $("#popupContent").waitForImages(function () {
                 loadPopup();

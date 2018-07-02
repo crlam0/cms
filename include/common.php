@@ -41,6 +41,7 @@ require $INC_DIR.'lib_sql.php';
 
 add_to_debug('SQL base connected');
 
+$input=[];
 if(is_array($_GET))foreach ($_GET as $key => $value){
     $input[$key]=db_test_param($value,$key);
 }

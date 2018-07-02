@@ -4,7 +4,9 @@ $tags['Header'] = 'Вход в систему';
 @include_once '../include/common.php';
 $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 
-if ($input['logon']) {
+$content = '';
+
+if (isset($input) && check_key('logon',$input)) {
     $query = "select id,flags,passwd,salt from users where login='" . $input['login'] . "' and flags like '%active%'";
     $result = my_query($query, true);
     if ($result->num_rows) {
@@ -31,7 +33,9 @@ if ($input['logon']) {
 }
 
 if (!$_SESSION['UID']) {
-    $tags['login'] = $input['login'];
+    if(isset($input) && check_key('login', $input)) {
+        $tags['login'] = $input['login'];
+    }
     $content.=get_tpl_by_title('user_login_promt', $tags);
 } else {
     $content = my_msg_to_str('user_already_logged_on');

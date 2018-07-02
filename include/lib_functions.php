@@ -27,7 +27,7 @@ function check_key($key, $array) {
 /**
  * Check user access
  *
- * @param string $flag Flsg title
+ * @param string $flag Flag title
  *
  * @return boolean true if user have access
  */

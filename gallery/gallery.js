@@ -1,7 +1,7 @@
 $(document).ready(function () {
     var pathArray = window.location.pathname.split( '/' );
     var domain = pathArray[1];
-    if(domain.match(/[w\-\.]./)) {
+    if(domain.match(/^[\w-.]+\.\w{1,5}$/)) {
         var DIR = '/' + domain + '/';
     } else {
         var DIR = '/';

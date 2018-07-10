@@ -55,7 +55,7 @@ if (isset($input["page"])) {
 }
 
 function show_img($tmp, $row) {
-    global $DIR, $settings, $SUBDIR;
+    global $DIR, $settings, $SUBDIR, $server;
     if (is_file($DIR . $settings["gallery_upload_path"] . $row['file_name'])) {
         $content="";
         if($settings["gallery_use_popup"]==true){

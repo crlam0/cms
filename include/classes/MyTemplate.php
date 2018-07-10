@@ -78,7 +78,7 @@ class MyTemplate {
                 } elseif ($tagclass == "var") {
                     eval("\$replace_str=\"\$" . $tagparam . "\";");
                 } elseif ($tagclass == 'settings') {
-                    $replace_str = $settings[$tagparam];
+                    isset($settings[$tagparam]) ? $replace_str = $settings[$tagparam] : $replace_str = '';
                 } elseif ($tagclass == 'row') {
                     if (strstr($tagparam, ',')) {
                         $param = explode(',', $tagparam);

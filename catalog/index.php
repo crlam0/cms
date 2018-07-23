@@ -52,12 +52,17 @@ $IMG_ITEM_URL = $BASE_HREF . $settings['catalog_item_img_path'];
 $IMG_PART_PATH = $DIR . $settings['catalog_part_img_path'];
 $IMG_PART_URL = $BASE_HREF . $settings['catalog_part_img_path'];
 
-if (isset($input['add_buy'])) {
+if (isset($input['add_buy']) && $input['cnt']) {
     if(!isset($_SESSION['BUY'][$input['item_id']]['count'])) {
         $_SESSION['BUY'][$input['item_id']]['count'] = 0;
     }
-    $_SESSION['BUY'][$input['item_id']]['count']+=$input['cnt'];
-    echo 'OK';
+    $cnt=(int)$input['cnt'];
+    if($cnt>0 && $cnt<99){
+        $_SESSION['BUY'][$input['item_id']]['count']+=$cnt;
+        echo 'OK';
+    } else {
+        echo 'ERR';
+    }
     exit;
 }
 

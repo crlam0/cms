@@ -12,7 +12,7 @@ if ($input["view_list"]) {
     unset($_SESSION["view_menu"]);
 }
 
-if ($_SESSION["view_menu"]) {
+if (isset($_SESSION["view_menu"])) {
     list($list_title) = my_select_row("select title from menu_list where id='" . $_SESSION["view_menu"] . "'", 1);
     $tags['Header'].=" -> $list_title";
 }
@@ -114,27 +114,30 @@ if (($input["add_menu_item"]) || ($input["edit_menu_item"])) {
 	$tags['css_class'] = "default";
 	$tags['active'] = " checked";
     }
-    if ($tags['active'])$tags['active'] = " checked";
+    if ($tags['active']){
+        $tags['active'] = " checked";
+    }
     $query = "select * from users_flags";
     $result = my_query($query);
+    $tags['flag_select']='';
     while ($row = $result->fetch_array()) {
-	$tags['flag_select'].="<option value={$row['value']}" . ($row['value'] == $tags['flag'] ? " selected" : "") . ">{$row['title']}</option>";
+    	$tags['flag_select'].="<option value={$row['value']}" . ($row['value'] == check_key('flag',$tags) ? " selected" : "") . ">{$row['title']}</option>";
     }
     $query = "select * from menu_list where id<>'{$input['id']}'";
     $result = my_query($query);
     $tags['submenu_select'] = "<select name=form[submenu_id] class=\"form-control\"><option value=0>-</option>";
     while ($row = $result->fetch_array()) {
-	$tags['submenu_select'].="<option value={$row['id']}" . ($row['id'] == $tags['submenu_id'] ? " selected" : "") . ">{$row['title']}</option>";
+    	$tags['submenu_select'].="<option value={$row['id']}" . ($row['id'] == check_key('submenu_id',$tags) ? " selected" : "") . ">{$row['title']}</option>";
     }
     $tags['submenu_select'].="</select>";
     $tags["target_type_select"]="
         <select name=\"form[target_type]\" id=\"target_type\" class=\"form-control\">
-            <option " . ($tags["target_type"] == "" ? "selected" : "") . " value=\"\">Ссылка</option>
-            <option " . ($tags["target_type"] == "article_list" ? "selected" : "") . " value=\"article_list\">Раздел статей</option>
-            <option " . ($tags["target_type"] == "article" ? "selected" : "") . " value=\"article\">Статья</option>
-            <option " . ($tags["target_type"] == "media_list" ? "selected" : "") . " value=\"media_list\">Раздел файлов</option>
-            <option " . ($tags["target_type"] == "cat_part" ? "selected" : "") . " value=\"cat_part\">Раздел каталога</option>
-            <option " . ($tags["target_type"] == "gallery_list" ? "selected" : "") . " value=\"gallery_list\">Раздел галереи</option>
+            <option " . (check_key('target_type',$tags) == "" ? "selected" : "") . " value=\"\">Ссылка</option>
+            <option " . (check_key('target_type',$tags) == "article_list" ? "selected" : "") . " value=\"article_list\">Раздел статей</option>
+            <option " . (check_key('target_type',$tags) == "article" ? "selected" : "") . " value=\"article\">Статья</option>
+            <option " . (check_key('target_type',$tags) == "media_list" ? "selected" : "") . " value=\"media_list\">Раздел файлов</option>
+            <option " . (check_key('target_type',$tags) == "cat_part" ? "selected" : "") . " value=\"cat_part\">Раздел каталога</option>
+            <option " . (check_key('target_type',$tags) == "gallery_list" ? "selected" : "") . " value=\"gallery_list\">Раздел галереи</option>
         </select>
     ";
     $content.=get_tpl_by_title("menu_item_edit_form", $tags);
@@ -142,7 +145,7 @@ if (($input["add_menu_item"]) || ($input["edit_menu_item"])) {
     exit();
 }
 
-if ($_SESSION["view_menu"]) {
+if (isset($_SESSION["view_menu"])) {
     $query = "SELECT * from menu_item where menu_id='" . $_SESSION["view_menu"] . "' order by position asc";
     $result = my_query($query);
     $content.=get_tpl_by_title("menu_item_edit_table", $tags, $result);

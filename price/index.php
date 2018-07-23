@@ -8,13 +8,17 @@ $tags['INCLUDE_HEAD'] .= '<link href="' . $SUBDIR . 'css/price.css" type="text/c
 $tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
 $tags['INCLUDE_JS'] .=  
         '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
-        '<script type="text/javascript" src="'.$BASE_HREF.'catalog/catalog.js"></script>'."\n";
+        '<script type="text/javascript" src="'.$BASE_HREF.'price/price.js"></script>'."\n";
 
 
-if (isset($input['add_buy'])) {
-    $_SESSION['BUY'][$input['item_id']]['count']+=$input['cnt'];
-    // echo 'OK';
-echo $input['cnt'];
+if (isset($input['add_buy']) && isset($input['cnt'])) {
+    $cnt=(int)$input['cnt'];
+    if($cnt>0 && $cnt<99) {
+        $_SESSION['BUY'][$input['item_id']]['count']+=$cnt;
+        echo 'OK';
+    } else {
+        echo 'ERR';
+    }
     exit;
 }
 

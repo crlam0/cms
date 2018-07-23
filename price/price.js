@@ -10,13 +10,13 @@ $(document).ready(function() {
         var DIR = '/';
     }
     DIR = DIR + 'price/';
-    $("a.buy_button").on('click',function() {
+    $("a.buy_button").live('click',function() {
         var id = $(this).attr("item_id");
-        var cnt_id=".cnt_"+id;
-        cnt=$(cnt_id).attr("value");
-        alert(cnt);
+        var cnt_id='.cnt_' + id;
+        cnt=$(cnt_id).val();
+        alert('test');
         $.ajax({
-            type: "GET", url: DIR + "index.php11", data: "add_buy=1&item_id="+id+"&cnt="+cnt,
+            type: "GET", url: DIR + "index.php", data: "add_buy=1&item_id="+id+"&cnt="+cnt,
             success: function(msg){
                 if(msg !== 'OK') alert(msg);
                 $('#popupContent').load(DIR + "buy.php?get_summary=1");

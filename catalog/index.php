@@ -1,9 +1,12 @@
 <?php
 @include_once '../include/common.php';
 $tags['Header']='Магазин';
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/catalog.css" type="text/css" rel=stylesheet />'."\n";;
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/price.css" type="text/css" rel=stylesheet />'."\n";;
-
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/catalog.css" type="text/css" rel=stylesheet />'."\n";
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/price.css" type="text/css" rel=stylesheet />'."\n";
+$tags['INCLUDE_JS'] .=  
+        '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
+        '<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>'."\n".
+        '<script type="text/javascript" src="'.$BASE_HREF.'catalog/catalog.js"></script>'."\n";
 
 if (is_array($input) && !count($input)){
     $input['part_id'] = 0;
@@ -192,10 +195,6 @@ if(strlen($input['item_title'])){
         <center><a href=".$SUBDIR.get_cat_part_href($part_id)." class=\"btn btn-default\"> << Назад</a></center>
         </div>";
 
-        $tags['INCLUDE_JS'] .=  
-            "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/popup.js\"></script>\n".
-            "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/jquery.waitforimages.min.js\"></script>\n".
-            "<script type=\"text/javascript\" src=\"{$BASE_HREF}catalog/catalog.js\"></script>\n";
     } else {
         $content.=my_msg_to_str('notice',[],'Товар не найден');
     }
@@ -288,13 +287,6 @@ if($result->num_rows){
 } elseif (($current_part_id) && (!$subparts)) {
     $content.=my_msg_to_str("list_empty");
 }
-
-
-$tags['INCLUDE_HEAD'] .=  
-        "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/popup.js\"></script>\n".
-        "<script type=\"text/javascript\" src=\"{$BASE_HREF}include/js/jquery.waitforimages.min.js\"></script>\n".
-        "<script type=\"text/javascript\" src=\"{$BASE_HREF}catalog/catalog.js\"></script>\n";
-
 
 if($current_part_id){
     if (strlen($row_part['descr'])){

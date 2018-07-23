@@ -32,7 +32,7 @@ if (isset($input) && $input['logon']) {
     $content .= my_msg_to_str('user_login_failed');
 }
 
-if (!$_SESSION['UID']) {
+if (!isset($_SESSION['UID'])) {
     if(isset($input['login'])) {
         $tags['login'] = $input['login'];
     }

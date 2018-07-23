@@ -80,7 +80,7 @@ class Comments
             $tags = array_merge($tags, $data);            
         }
         $tags['editor'] = $this->__editor->GetContol(400, 200, $SUBDIR . 'images/bbcode_editor');
-        if(!strlen($tags['action'])){
+        if(!isset($tags['action'])){
             $tags['action'] = $server['PHP_SELF'];        
         }
         $_SESSION['IMG_CODE'] = rand(111111, 999999);        
@@ -98,10 +98,10 @@ class Comments
         if ($input['add_comment']) { 
             $err = 0;
             $output = '';
-            if (strlen($input['form']['author']) < 3) {
+            if (!isset($input['form']['author']) || strlen($input['form']['author']) < 3) {
                 $output.=my_msg_to_str('form_error_name');
                 $err = 1;
-            } elseif (!preg_match('/^[A-Za-z0-9-_]+@[A-Za-z0-9-\.]+\.[A-Za-z0-9-\.]{2,3}$/', $input['form']['email'])) {
+            } elseif (!isset($input['form']['email']) || !preg_match('/^[A-Za-z0-9-_]+@[A-Za-z0-9-\.]+\.[A-Za-z0-9-\.]{2,3}$/', $input['form']['email'])) {
                 $output.=my_msg_to_str('form_error_email');
                 $err = 1;
             } elseif (strlen($this->__editor->GetValue()) < 10) {

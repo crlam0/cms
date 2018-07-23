@@ -117,8 +117,8 @@ if (!$part['id']) {
 
 add_to_debug('Part data loaded');
 
-if (array_key_exists('FLAGS',$_SESSION) && (strlen($part['user_flag'])) && (!strstr($_SESSION['FLAGS'], $part['user_flag'])) && (!strstr($_SESSION['FLAGS'], 'global'))) {
-    if ($_SESSION['UID']) {
+if ((strlen($part['user_flag'])) && (!have_flag($part['user_flag'])) && (!have_flag('global')) ) {
+    if (isset($_SESSION['UID'])) {
         $content ='<h1 align=center>У вас нет соответствующих прав !</h1>';
         echo get_tpl_by_title($part['tpl_name'], [], null, $content);
     } else {

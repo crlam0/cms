@@ -66,7 +66,6 @@ $(document).ready(function() {
         var item_id = $(this).attr("item_id");
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
-        $("#popupItem").fadeOut("slow",function(){
             $.ajax({
                 type: "GET", url: DIR + "index.php", data: "get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,
                 success: function(msg){
@@ -77,8 +76,6 @@ $(document).ready(function() {
                     });
                 }
             });
-        
-        });    
     });
 
 });

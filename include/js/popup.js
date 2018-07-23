@@ -2,79 +2,19 @@
 var popupStatus = 0;
 
 function loadPopup() {
-    if (popupStatus == 0) {
-        $("#backgroundPopup").css({
-            "opacity": "0.7"
-        });
-        $("#backgroundPopup").fadeIn("slow");
-        $("#popupItem").fadeIn("slow");
-        popupStatus = 1;
-    }
+    $('#myModal').modal();
 }
 
 function disablePopup() {
-    if (popupStatus == 1) {
-        $("#backgroundPopup").fadeOut("slow");
-        $("#popupItem").fadeOut("slow");
-        popupStatus = 0;
-    }
 }
 
 function centerPopup() {
-
-    var scrolledX, scrolledY;
-    if (self.pageYOffset) {
-        scrolledX = self.pageXOffset;
-        scrolledY = self.pageYOffset;
-    } else if (document.documentElement && document.documentElement.scrollTop) {
-        scrolledX = document.documentElement.scrollLeft;
-        scrolledY = document.documentElement.scrollTop;
-    } else if (document.body) {
-        scrolledX = document.body.scrollLeft;
-        scrolledY = document.body.scrollTop;
-    }
-
-    var windowHeight = document.documentElement.clientHeight;
-    var windowWidth = document.documentElement.clientWidth;
-
-    var popupHeight = $("#popupItem").height();
-    var popupWidth = $("#popupItem").width();
-    if (popupHeight < 200) {
-        popupHeight = 600;
-    }
-    if( popupWidth > windowWidth ){
-        PopupWidth = windowWidth + 'px';
-        $("#popupItem").css({
-            "width": PopupWidth
-        });   
-    }
-//    alert('windowHeight: '+windowHeight+' popupHeight: '+popupHeight+'\n windowWidth: '+windowWidth+' popupPopopWidth: '+popupWidth);
-
-    $("#popupItem").css({
-        "position": "absolute",
-	"top": scrolledY + (windowHeight/2-popupHeight/2),  
-//        "top": (windowHeight / 2 - popupHeight / 2),
-        "left": scrolledX + (windowWidth / 2 - popupWidth / 2)
-        
-    });
 }
 
-$(document).ready(function () {
-
-    //Click the x event!  
-    $("#popupItemClose").click(function () {
-        disablePopup();
+$('#myModal').on('show.bs.modal', function () {
+    $(this).find('.modal-body').css({
+        'max-width': '100%',
+        'max-height':'100%'
     });
-    //Click out event!  
-    $("#backgroundPopup").click(function () {
-        disablePopup();
-    });
-    //Press Escape event!  
-    $(document).keypress(function (e) {
-        if (e.keyCode == 27 && popupStatus == 1) {
-            disablePopup();
-        }
-    });
-
 });
 

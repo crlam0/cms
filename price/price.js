@@ -1,13 +1,25 @@
 $(document).ready(function() {
-    $("a.buy_button").live('click',function() {
+    var pathArray = window.location.pathname.split( '/' );
+    for (i = 0; i < pathArray.length; i++) {
+        console.log(pathArray[i]);
+    }
+    var domain = pathArray[1];
+    if(domain.match(/^[\w-.]+\.\w{1,5}$/)) {
+        var DIR = '/' + domain + '/';        
+    } else {
+        var DIR = '/';
+    }
+    DIR = DIR + 'price/';
+    $("a.buy_button").on('click',function() {
         var id = $(this).attr("item_id");
         var cnt_id=".cnt_"+id;
         cnt=$(cnt_id).attr("value");
+        alert(cnt);
         $.ajax({
-            type: "GET", url: "buy.php", data: "add_buy=1&item_id="+id+"&cnt="+cnt,
+            type: "GET", url: DIR + "index.php11", data: "add_buy=1&item_id="+id+"&cnt="+cnt,
             success: function(msg){
-                if(msg != 'OK') alert(msg);
-                $('#popupContent').load("buy.php?get_summary=1");
+                if(msg !== 'OK') alert(msg);
+                $('#popupContent').load(DIR + "buy.php?get_summary=1");
                 loadPopup();                
                 centerPopup();
             }
@@ -15,9 +27,9 @@ $(document).ready(function() {
     });
 });
 
-    var aside = document.querySelector('#price_parts'),
-        HTMLtop = document.documentElement.getBoundingClientRect().top,
-        t0 = aside.getBoundingClientRect().top - HTMLtop;
-    window.onscroll = function() {
-        aside.className = (t0 < window.pageYOffset ? 'sticky' : '');
-    };
+var aside = document.querySelector('#price_parts'),
+    HTMLtop = document.documentElement.getBoundingClientRect().top,
+    t0 = aside.getBoundingClientRect().top - HTMLtop;
+window.onscroll = function() {
+    aside.className = (t0 < window.pageYOffset ? 'sticky' : '');
+};

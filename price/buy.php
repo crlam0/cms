@@ -1,28 +1,34 @@
 <?php
 
 $tags['Header'] = "Корзина";
-include_once '../include/common.php';
-include '../include/lib_summ_to_str.php';
+@include_once "../include/common.php";
+
+use Classes\SummToStr;
+$SummToStr = new SummToStr();
+
+$tags['nav_str'].="<span class=nav_next>Корзина</span>";
 
 $IMG_ITEM_PATH = $DIR . $settings['catalog_item_img_path'];
 $IMG_ITEM_URL = $BASE_HREF . $settings['catalog_item_img_path'];
 
-if (isset($input['clear'])) {
-    unset($_SESSION['BUY']);
-    redirect('buy.php');
+if (isset($input["clear"])) {
+    unset($_SESSION["BUY"]);
+    header("Location: buy.php");
     exit;
 }
 
-if (isset($input['add_buy'])) {
-    $_SESSION["BUY"][$input['item_id']]['count'] += $input['cnt'];
-    redirect('buy.php');
+if (isset($input["add_buy"])) {
+    while (list ($n, $item_id) = @each($input["buy_item"])) {
+        $_SESSION["BUY"][$item_id]["count"] = 1;
+    }
+    header("Location: buy.php");
     exit;
 }
 
 if (isset($input["calc"])) {
     while (list ($n, $item_cnt) = @each($input["buy_cnt"]))
         if (is_numeric($item_cnt)) {
-            $_SESSION["BUY"][$n][count] = $item_cnt;
+            $_SESSION["BUY"][$n]['count'] = $item_cnt;
             $_SESSION["BUY"][$n]["size"] = $input["buy_size"][$n];
             $_SESSION["BUY"][$n]["color"] = $input["buy_color"][$n];
         }
@@ -32,7 +38,7 @@ if (isset($input["calc"])) {
 function get_discount($summ){
         
         $query="SELECT discount from discount where summ<='$summ' order by summ desc";
-        $result=my_query($query,null,true);
+        $result=my_query($query);
         if($result->num_rows){
                 list($discount)=$result->fetch_array();
         }else{
@@ -56,7 +62,7 @@ if ($input["get_summary_cost"]) {
         $cnt = 0;
         if ($result->num_rows) {
             while ($row = $result->fetch_array()) {
-                $summ+=$row[price] * $_SESSION["BUY"][$row['id']]["count"];
+                $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
                 $cnt+=$_SESSION["BUY"][$row['id']]["count"];
             }
         }    
@@ -71,10 +77,11 @@ if ($input["get_summary_cost"]) {
 
 if ($input["get_summary"]) {
     if (count($_SESSION["BUY"])) {
-        $item_list.="<div class=\"buy_summary\">
+        $item_list="<div class=\"buy_summary\">
             <h3>Сейчас в корзине :</h3><br>";
+        $where='';
         foreach ($_SESSION["BUY"] as $item_id => $cnt) {
-            $where.=(!strlen($where) ? " id='{$item_id}'" : " or id='{$item_id}'");
+            $where.=(!strlen($where) ? " id='$item_id'" : " or id='$item_id'");
         }
         $query = "select * from cat_item where $where order by b_code,title asc";
         $result = my_query($query, true);
@@ -85,7 +92,7 @@ if ($input["get_summary"]) {
                 $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
                 $cnt+=$_SESSION["BUY"][$row['id']]["count"];
                 $item_list.="$row[title]\t Кол-во:" . $_SESSION["BUY"][$row['id']]["count"] . "\t" .
-                        " Цена: $row[price]<br>\n";
+                        " Цена: {$row['price']}<br>\n";
             }
         $summ_with_discount = calc_discount($summ, get_discount($summ));
         $item_list.="<br><b>Итого $cnt шт. на сумму " . add_zero($summ) . " руб.<br>\n";
@@ -104,21 +111,21 @@ if ($input["get_summary"]) {
 if (isset($input["request_done"])) {
     $err = 0;
 //        if(!preg_match("/^[\w-]+$/",$input["lastname"])){
-    if (!strlen($input["lastname"])) {
-        $content.=print_error("Неверно заполнено поле \"Фамилия\"");
+    if (strlen($input["lastname"]<3)) {
+        $content.=my_msg_to_str('error',[],"Неверно заполнено поле \"Фамилия\"");
         $err = 1;       
     }
 //        if(!preg_match("/^[\w-]+$/",$input["firstname"])){
     if (!strlen($input["firstname"])) {
-        $content.=print_error("Неверно заполнено поле \"Имя\"");
+        $content.=my_msg_to_str('error',[],"Неверно заполнено поле \"Имя\"");
         $err = 1;
     }
     if (!preg_match("/^[A-Za-z0-9-_\.]+@[A-Za-z0-9-\.]+\.[A-Za-z0-9-\.]{2,3}$/", $input["email"])) {
-        $content.=print_error("Анкета заполнена неверно ! Неверный адрес E-Mail");
+        $content.=my_msg_to_str('error',[],"Анкета заполнена неверно ! Неверный адрес E-Mail");
         $err = 1;
     }
     if (!preg_match("/^\+?[\d\(\)-]{7,20}$/", $input['phone'])) {
-        $content.=print_error("Анкета заполнена неверно ! Неверный номер мобильного телефона. Формат: +7-xxx-xxx-xxxx или xxx-xx-xx");
+        $content.=my_msg_to_str('error',[],"Анкета заполнена неверно ! Неверный номер мобильного телефона. Формат: +7-xxx-xxx-xxxx или xxx-xx-xx");
         $err = 1;
     }
     if ($err) {
@@ -134,13 +141,14 @@ if (isset($input["request_done"])) {
             $summ = 0;
             $cnt = 0;
             $item_list = "";
-            if ($result->num_rows )
+            if ($result->num_rows ){
                 while ($row = $result->fetch_array()) {
-                    $summ+=$row[price] * $_SESSION["BUY"][$row[id]]["count"];
-                    $cnt+=$_SESSION["BUY"][$row[id]]["count"];
-                    $item_list.="Наименовние: $row[title]\t Кол-во:" . $_SESSION["BUY"][$row[id]]["count"] . "\t" .
-                            " Цена: $row[price]\n";
+                    $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
+                    $cnt+=$_SESSION["BUY"][$row['id']]["count"];
+                    $item_list.="Наименовние: $row[title]\t Кол-во:" . $_SESSION["BUY"][$row['id']]["count"] . "\t" .
+                            " Цена: {$row['price']}\n";
                 }
+            }    
         }
         $summ_with_discount = calc_discount($summ, get_discount($summ));
         $item_list.="Итого $cnt шт. на сумму " . add_zero($summ) . " руб.\n";
@@ -149,8 +157,8 @@ if (isset($input["request_done"])) {
         $contact_info.="ФИО: " . $input["lastname"] . " " . $input["firstname"] . " " . $input["middlename"] . "\n";
         $contact_info.="E-Mail: " . $input["email"] . "\n";
         $contact_info.="Телефон: " . $input["phone"] . "\n";
-        $contact_info.="IP адрес: " . $_SERVER["REMOTE_ADDR"] . "\n";
-        $msg = "Наименования:\n$item_list\n\nКонтактная информация:\n$contact_info\n\n";
+        $contact_info.="IP адрес: " . $server["REMOTE_ADDR"] . "\n";
+        $msg = "Наименования:\n{$item_list}\n\nКонтактная информация:\n{$contact_info}\n\n";
         $query = "insert into request(date,item_list,contact_info,comment) values(now(),'" . $item_list . "','" . $contact_info . "','" .$input['comment']."')";
         $result=my_query($query, true);
         
@@ -158,19 +166,20 @@ if (isset($input["request_done"])) {
         
         $msg = iconv('UTF-8', 'windows-1251', $msg);
         send_mail($settings["email_to_addr"], "Request from site " . $BASE_HREF, $msg);
-        $content.=print_ok("Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.");
+        $content.=my_msg_to_str('',[],"Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.");
        
         echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
         exit();
     }
 }
 
-if (count($_SESSION["BUY"])) {
+
+if (is_array($_SESSION["BUY"]) && count($_SESSION["BUY"])) {
     $where = "";
     $count = 0;
     foreach ($_SESSION["BUY"] as $item_id => $cnt) {
         $where.=(!strlen($where) ? " cat_item.id='$item_id'" : " or cat_item.id='$item_id'");
-        // $count += $cnt;
+        $count = $count + (int)$cnt;
     }
     $query = "select cat_item.*,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
     $result = my_query($query, true);
@@ -180,10 +189,10 @@ if (count($_SESSION["BUY"])) {
             <input type=hidden name=request_done value=1>          
             
             '.
-            '<input type=edit size=32 maxlength=64 name=lastname class="form-control form-normal" placeholder="Фамилия" value="' . $input["lastname"] . '"><br />'.
-            '<input type=edit size=32 maxlength=64 name=firstname class="form-control" placeholder="Имя" value="' . $input["firstname"] . '"><br />'.
-            '<input type=edit size=32 maxlength=64 name=phone class="form-control" placeholder="Телефон" value="' . $input["phone"] . '"><br />'.
-            '<input type=edit size=32 maxlength=64 name=email class="form-control" placeholder="Адрес E-Mail" value="' . $input["email"] . '"><br />'.
+            '<input type=edit size=32 maxlength=64 name=lastname class="form-control form-normal" placeholder="Фамилия" value="' . $input["lastname"] . '" required><br />'.
+            '<input type=edit size=32 maxlength=64 name=firstname class="form-control" placeholder="Имя" value="' . $input["firstname"] . '" required><br />'.
+            '<input type=edit size=32 maxlength=64 name=phone class="form-control" placeholder="Телефон" value="' . $input["phone"] . '" required><br />'.
+            '<input type=edit size=32 maxlength=64 name=email class="form-control" placeholder="Адрес E-Mail" value="' . $input["email"] . '" required><br />'.
             '<textarea name=comment class="form-control" placeholder="Ваш коментарий" rows="8">'.$input["comment"].'</textarea><br />'.
             '     
             <input type=submit class="btn btn-success" value="  Отправить  ">
@@ -195,7 +204,7 @@ if (count($_SESSION["BUY"])) {
                 <center>
                 <form action=" . $server["PHP_SELF"] . " method=post name=request_form>
                 <input type=hidden name=calc value=1>
-                <table width=100% border=0 cellspacing=17 cellpadding=17 align=center class=\"table table-striped table-responsive table-bordered normal-form\">";
+                <table width=100% border=0 cellspacing=17 cellpadding=17 align=center>";
         $summ = 0;
         $cnt = 0;
         while ($row = $result->fetch_array()) {
@@ -203,7 +212,7 @@ if (count($_SESSION["BUY"])) {
             $cnt+=$_SESSION["BUY"][$row['id']]["count"];
             $content.= "<tr valign=middle>
                 <td align=center width=50%>" . (file_exists($IMG_ITEM_PATH) . $row['fname'] ? "<img src=\"{$SUBDIR}catalog/image.php?id={$row['default_img']}&windowHeight=500&fix_size=1\">" : "&nbsp;") . "</td>
-                <td class=price><b>{$row['title']}</b> &nbsp;&nbsp;(Кол-во: {$_SESSION["BUY"][$row['id']]["count"]})<br>
+                <td class=price><b>$row[title]</b> &nbsp;&nbsp;(Кол-во: {$_SESSION["BUY"][$row['id']]["count"]})<br>
                 Цена: <b>" . add_zero($row['price']) . " руб.</b><br>" . nl2br($row['descr']) . "<br>
                 <input type=hidden name=buy_cnt[{$row['id']}] value=1>
                 </td>
@@ -215,13 +224,13 @@ if (count($_SESSION["BUY"])) {
             <tr><td colspan=2>
             <center>Итого на сумму <b>" . add_zero($summ) . " руб.</b>
             " . (get_discount($summ) ? " С учетом скидки <b>" . get_discount($summ) . "%</b> сумма составлет: <b>" . add_zero($summ_with_discount) . "</b>" : "") . "
-            </center><center>Итого к оплате: <b>" . summ_to_str($summ_with_discount) . "</b></center>
+            </center><center>Итого к оплате: <b>" . $SummToStr($summ_with_discount) . "</b></center>
             </td></tr>    
             <tr><td colspan=2 align=center>
             <table border=0 cellspacing=7 cellpadding=7 align=center><tr align=center>
-            <td width=33%><a class=button onClick=\"document.request_form.submit();\" style=\"cursor: pointer\"> Посчитать </a></td>
-            <td width=33% nowrap><a href=" . $_SERVER["PHP_SELF"] . "?request=1 class=\"button\"> Оформить заказ </a></td>
-            <td width=33% nowrap><a href=" . $_SERVER["PHP_SELF"] . "?clear=1 class=button> Очистить список </a></td>
+            <td width=33%><a onClick=\"document.request_form.submit();\" style=\"cursor: pointer\" class=\"btn btn-success\"> Посчитать </a></td>
+            <td width=33% nowrap><a href=" . $server["PHP_SELF"] . "?request=1 class=\"btn btn-success\"> Оформить заказ </a></td>
+            <td width=33% nowrap><a href=" . $server["PHP_SELF"] . "?clear=1 class=\"btn btn-success\"> Очистить список </a></td>
             </tr></table></form>
             </td></tr>
             </table>
@@ -229,7 +238,7 @@ if (count($_SESSION["BUY"])) {
             ";
     }
 } else {
-    $content.=print_ok("Корзина пуста !");
+    $content.=my_msg_to_str('notice',[],"Корзина пуста !");
 }
 
 

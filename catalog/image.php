@@ -15,15 +15,16 @@ if (!is_file($file_name)) {
 }
 
 $max_width = $settings["catalog_item_img_preview"];
-if ($input["preview"])
+if ($input["preview"]) {
     $max_width = $input["preview"];
+}
 
 unset($src);
-if( (stristr($file_name,'.jpg')) || (stristr($file_name,'.jpeg')) ){
+if ((stristr($file_name, '.jpg')) || (stristr($file_name, '.jpeg'))) {
     $src = imagecreatefromjpeg($file_name);
-} elseif (stristr($file_name,'.png')) {
+} elseif (stristr($file_name, '.png')) {
     $src = imagecreatefrompng($file_name);
-}    
+}
 list($width_src, $height_src) = getimagesize($file_name);
 
 if ($src && $max_width && (($width_src > $max_width) || ($height_src > $max_width))) {

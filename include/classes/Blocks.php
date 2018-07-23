@@ -17,7 +17,7 @@ class Blocks {
      *
      * @return string Menu content
      */
-    private function get_menu_items($menu_id, $attr_ul = '', $attr_li = '') {
+    protected function get_menu_items($menu_id, $attr_ul = '', $attr_li = '') {
         global $_SESSION, $SUBDIR;
         if (!$menu_id){
             return '';
@@ -50,21 +50,21 @@ class Blocks {
         return $output;
     }
     
-    private function menu_main () {
+    protected function menu_main () {
         list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE root=1", 1);
         $tags['menu_content'] = $this->get_menu_items($menu_id, 'id="mainmenu"', '');
         return get_tpl_by_title('block_menu', $tags);
     }
-    private function menu_top () {
+    protected function menu_top () {
         list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE top_menu=1", 1);
         return $this->get_menu_items($menu_id, 'class="menu"', 'class="menu-item"');
     }
-    private function menu_bottom () {
+    protected function menu_bottom () {
         list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE bottom_menu=1", 1);
         return $this->get_menu_items($menu_id, 'id="menu-footer" class="menu"', 'class="menu-item"');
     }
     
-    private function vote () {
+    protected function vote () {
         $query = "SELECT id,title,type FROM vote_list WHERE active=1 limit 1";
         $result = MyGlobal::get('DB')->query($query, true);
         if ($result->num_rows) {
@@ -90,7 +90,7 @@ class Blocks {
     
     }
     
-    private function slider () {
+    protected function slider () {
         global $server, $SUBDIR;
         
         $SCRIPT = $server['SCRIPT_NAME'];
@@ -107,7 +107,7 @@ class Blocks {
         }
     }
     
-    private function news() {
+    protected function news() {
         global $settings;
         
         $query = "select *,date_format(date,'%d.%m.%Y') as date from news order by id desc limit {$settings['news_block_count']}";
@@ -123,7 +123,7 @@ class Blocks {
         return null;
     }
 
-    private function last_posts () {
+    protected function last_posts () {
         global $settings;
         $TABLE = 'blog_posts';
         $query = "SELECT {$TABLE}.*,date_format(date_add,'%d.%m.%Y') as date from {$TABLE} where active='Y' order by {$TABLE}.id desc limit {$settings['news_block_count']}";

@@ -31,24 +31,24 @@ $(document).ready(function () {
 
     $("a.gallery_button").live('click', function () {
         var id = $(this).attr("item_id");
-        // $("#popupContent").fadeOut("slow", function () {
+        $(".modal-dialog").fadeOut("slow", function () {
             var clientHeight = document.documentElement.clientHeight;
             $.ajax({
                 type: "GET", url: DIR + "index.php", data: "load=1&id=" + id + "&clientHeight=" + clientHeight,
                 success: function (msg) {
                     $('#popupContent').html(msg);
                     $("#popupContent").waitForImages(function () {
-                        $("#popupContent").fadeIn("slow");
+                        $(".modal-dialog").fadeIn("slow");
                         centerPopup();
                     });
                 },
                 error: function (jqXHR, error, errorThrown) {
                     $('#popupContent').html(jqXHR.responseText);
-                    $("#popupContent").fadeIn("slow");
+                    $(".modal-dialog").fadeIn("slow");
                     centerPopup();
                 }
             });
-        // });
+        });
     });
 });
 

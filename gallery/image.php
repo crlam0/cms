@@ -4,7 +4,7 @@ include '../include/common.php';
 
 list($file_name, $file_type) = my_select_row("select file_name,file_type from gallery_images where id='{$input['id']}'", true);
 $file_name = $DIR . $settings['gallery_upload_path'] . $file_name;
-$gallery_fix_size= ( $settings['gallery_fix_size']) && ($input['preview']);
+$gallery_fix_size = ( $settings['gallery_fix_size']) && ($input['preview']);
 
 if (!is_file($file_name)) {
     exit();

@@ -134,13 +134,11 @@ if (isset($input['load'])) {
     $next_add='';
     
     if($prev_id) {
-        $prev_add="<a class=gallery_button item_id=$prev_id><< Предыдущая</a>";
+        $prev_add='<a class="btn btn-default gallery_button" item_id="'. $prev_id. '"><< Предыдущая</a>';
     }
     if($next_id) {
-        $next_add="<a class=gallery_button item_id=$next_id>Следующая >></a>";
+        $next_add='<a class="btn btn-default gallery_button" item_id="'. $next_id. '">Следующая >></a>';
     }
-    // header($server['SERVER_PROTOCOL'] . ' 200 OK', true, 200);
-    // header('HTTP/1.0 200 Ok');
     echo "
 	<center>
         <div id=gallery>

@@ -82,7 +82,7 @@ if (array_key_exists('view_items', $input) && $input['view_items']) {
     $_SESSION['view_items'] = $input['id'];
 }
 
-if (!count($input)) {
+if (!$input->count()) {
     $_SESSION['view_items'] = '';
     $tags['Header'] = 'Статьи';
 }

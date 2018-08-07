@@ -97,7 +97,7 @@
 <!--DESCRIPTION: Список статей адм. разделе -->
 <!--[content]-->
 <center><form action=[%PHP_SELF%] method=get>
-	<input type=hidden name=add_text value=1>
+	<input type=hidden name=add_article value=1>
 	<input class="btn btn-primary" type=submit value="Добавить">
 </form></center>
 <br>

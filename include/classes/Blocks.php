@@ -157,14 +157,14 @@ class Blocks {
                 return get_tpl_by_title('block_partners', [], $result);
 
             case 'banners':
-                if(file_exists($DIR . 'bannners.local.php')) {
+                if(file_exists($DIR . 'banners.local.php')) {
                     ob_start();
-                    include_once($DIR . 'bannners.local.php');
+                    include_once($DIR . 'banners.local.php');
                     $content = ob_get_contents();
                     ob_end_clean();
-                return $content;
+                    return $content;
                 } else {
-                    return null;
+                    return '';
                 }
 
             case 'calendar':

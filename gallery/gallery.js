@@ -17,12 +17,14 @@ $(document).ready(function () {
                 $('#popupContent').html(msg);
                 $("#popupContent").waitForImages(function () {
                     loadPopup();
+                    // $('.modal-dialog').css({'max-width': '1024px'});
                     centerPopup();
                 });
             },
             error: function (jqXHR, error, errorThrown) {                
                 $('#popupContent').html(jqXHR.responseText);
                 loadPopup();
+                // $('.modal-dialog').css({'max-width': '1024px'});
                 centerPopup();
             }
         });

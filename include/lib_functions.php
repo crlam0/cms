@@ -222,31 +222,38 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height =
     }
     
     if($src && $fix_width && $fix_height) {
-        list($width_src, $height_src) = getimagesize($src_file['tmp_name']);
-        $dst = imagecreatetruecolor($fix_width, $fix_height);
-        imagecopyresampled($dst, $src, 0, 0, 0, 0, $fix_width, $fix_height, $width_src, $height_src);
-        if($ftype=='jpeg') {
-            imagejpeg($dst, $dst_file, 100);
-        } else {
-            imagepng($dst, $dst_file, 0);
-        }
-        return is_file($dst_file);
-    }elseif ( ($src && $max_width) || ($src && $max_height)) {
-        list($width_src, $height_src) = getimagesize($src_file['tmp_name']);        
-        if (  ($max_width>0) && (!$max_height>0) && (($width_src > $max_width) || ($height_src > $max_width))   ) {
+        list($src_width, $src_height) = getimagesize($src_file['tmp_name']);
+        if( ($src_width > $fix_width) || ($src_height > $fix_width) ) {
+            $dst = imagecreatetruecolor($fix_width, $fix_height);
+            imagecopyresampled($dst, $src, 0, 0, 0, 0, $fix_width, $fix_height, $src_width, $src_height);
+            if($ftype=='jpeg') {
+                imagejpeg($dst, $dst_file, 100);
+            } else {
+                imagepng($dst, $dst_file, 0);
+            }
+            return is_file($dst_file);
+        }    
+    } elseif ( ($src && $max_width) || ($src && $max_height)) {
+        list($src_width, $src_height) = getimagesize($src_file['tmp_name']);        
+        if (  ($max_width>0) && (!$max_height>0) && (($src_width > $max_width) || ($src_height > $max_width))   ) {
             $width = $max_width;
             $height = $max_width;
-            if ($width_src < $height_src) {
-                $width = ($max_width / $height_src) * $width_src;
+            if ($src_width < $src_height) {
+                $width = ($max_width / $src_height) * $src_width;
             } else {
-                $height = ($max_width / $width_src) * $height_src;
+                $height = ($max_width / $src_width) * $src_height;
             }
-        } else if($max_height && $height_src > $max_height) {
+        } else if($max_height && $src_height > $max_height) {
             $height = $max_height;
-            $width = ($max_height / $height_src) * $width_src;
+            $width = ($max_height / $src_height) * $src_width;
         }
         $dst = imagecreatetruecolor($width, $height);
-        imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $width_src, $height_src);
+        if($ftype=='png') {
+            $alpha = imagecolorallocatealpha($src, 255, 255, 255, 127);
+            imagecolortransparent($dst, $alpha);
+            imagefill($dst,0,0,$alpha);
+        }
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $src_width, $src_height);
         if($ftype=='jpeg') {
             imagejpeg($dst, $dst_file, 100);
         } else {

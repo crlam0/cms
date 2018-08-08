@@ -88,7 +88,20 @@ if ($input['add_image']) {
         $image_id = $mysqli->insert_id;
         $f_info = pathinfo($_FILES['img_file']['name']);
         $img = $input['id'] . '_' . $image_id . '.' . $f_info['extension'];
-        if (move_uploaded_image($_FILES['img_file'], $IMG_PATH . $img, $settings['catalog_item_img_max_width'])) {
+        
+        list($item_image_width,$item_image_height) = my_select_row("
+                select item_image_width,item_image_height from cat_item
+                left join cat_part on (cat_part.id=cat_item.part_id)
+                where cat_item.id = '{$input['id']}'", false);
+        
+        $upload_result=false;
+        if($item_image_width>0 && $item_image_height>0) {
+            $upload_result = move_uploaded_image($_FILES['img_file'], $IMG_PATH . $img, null, null, $item_image_width,$item_image_height);
+        } else {
+            $upload_result = move_uploaded_image($_FILES['img_file'], $IMG_PATH . $img, 0, $settings['catalog_item_img_max_width']);
+        }
+        
+        if ($upload_result) {
             $query = "update cat_item_images set fname='{$img}' where id='{$image_id}'";
             my_query($query);
             $query = "select id from cat_item_images where item_id='{$input['id']}'";

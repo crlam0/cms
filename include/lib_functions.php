@@ -201,26 +201,39 @@ $validImageTypes = array("image/pjpeg", "image/jpeg", "image/gif", "image/png", 
  *
  * @return boolean True if success
  */
-function move_uploaded_image($src_file, $dst_file, $max_width = 0) {
+function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height = 0, $fix_width = 0, $fix_height = 0) {
     global $settings, $validImageTypes;
     if (!is_file($src_file["tmp_name"])) {
-        print_erroror("Файл отсутствует !");
+        print_error("Файл отсутствует !");
         return false;
     }
     if (!in_array($src_file['type'], $validImageTypes)) {
-        print_erroror("Неверный тип файла !");
+        print_error("Неверный тип файла !");
         return false;
     }
-//	print_arrayay($src_file);
+//	print_array($src_file);
     unset($src);
     if (($src_file["type"] == 'image/jpeg') || ($src_file["type"] == 'image/pjpeg')) {
         $src = imagecreatefromjpeg($src_file["tmp_name"]);
+        $ftype='jpeg';
     } elseif (($src_file["type"] == 'image/png') || ($src_file["type"] == 'image/x-png')) {
         $src = imagecreatefrompng($src_file['tmp_name']);
+        $ftype='png';
     }
-    if ($src && $max_width) {
-        list($width_src, $height_src) = getimagesize($src_file["tmp_name"]);
-        if (($width_src > $max_width) || ($height_src > $max_width)) {
+    
+    if($src && $fix_width && $fix_height) {
+        list($width_src, $height_src) = getimagesize($src_file['tmp_name']);
+        $dst = imagecreatetruecolor($fix_width, $fix_height);
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $fix_width, $fix_height, $width_src, $height_src);
+        if($ftype=='jpeg') {
+            imagejpeg($dst, $dst_file, 100);
+        } else {
+            imagepng($dst, $dst_file, 0);
+        }
+        return is_file($dst_file);
+    }elseif ( ($src && $max_width) || ($src && $max_height)) {
+        list($width_src, $height_src) = getimagesize($src_file['tmp_name']);        
+        if (  ($max_width>0) && (!$max_height>0) && (($width_src > $max_width) || ($height_src > $max_width))   ) {
             $width = $max_width;
             $height = $max_width;
             if ($width_src < $height_src) {
@@ -228,13 +241,21 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0) {
             } else {
                 $height = ($max_width / $width_src) * $height_src;
             }
-            $dst = imagecreatetruecolor($width, $height);
-            imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $width_src, $height_src);
-            @imagejpeg($dst, $dst_file, 100);
-            return is_file($dst_file);
+        } else if($max_height && $height_src > $max_height) {
+            $height = $max_height;
+            $width = ($max_height / $height_src) * $width_src;
         }
+        $dst = imagecreatetruecolor($width, $height);
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $width_src, $height_src);
+        if($ftype=='jpeg') {
+            imagejpeg($dst, $dst_file, 100);
+        } else {
+            imagepng($dst, $dst_file, 0);
+        }
+        return is_file($dst_file);
     }
-    return move_uploaded_file($src_file["tmp_name"], $dst_file);
+    return move_uploaded_file($src_file['tmp_name'], $dst_file);
+
 }
 
 /**

@@ -14,12 +14,11 @@ $(document).ready(function() {
         var id = $(this).attr("item_id");
         var cnt_id='.cnt_' + id;
         cnt=$(cnt_id).val();
-        alert('test');
         $.ajax({
             type: "GET", url: DIR + "index.php", data: "add_buy=1&item_id="+id+"&cnt="+cnt,
             success: function(msg){
                 if(msg !== 'OK') alert(msg);
-                $('#popupContent').load(DIR + "buy.php?get_summary=1");
+                $('#popupContent').load(DIR + "../catalog/buy.php?get_summary=1");
                 loadPopup();                
                 centerPopup();
             }

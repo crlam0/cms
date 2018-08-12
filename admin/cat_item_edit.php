@@ -96,9 +96,9 @@ if ($input['add_image']) {
         
         $upload_result=false;
         if($item_image_width>0 && $item_image_height>0) {
-            $upload_result = move_uploaded_image($_FILES['img_file'], $IMG_PATH . $img, null, null, $item_image_width,$item_image_height);
+            $upload_result = move_uploaded_image($_FILES['img_file'], $IMG_PATH . $img, null, null, $item_image_width, $item_image_height);
         } else {
-            $upload_result = move_uploaded_image($_FILES['img_file'], $IMG_PATH . $img, 0, $settings['catalog_item_img_max_width']);
+            $upload_result = move_uploaded_image($_FILES['img_file'], $IMG_PATH . $img, $settings['catalog_item_img_max_width']);
         }
         
         if ($upload_result) {

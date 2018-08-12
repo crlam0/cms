@@ -97,7 +97,7 @@
 <!--DESCRIPTION: Список статей адм. разделе -->
 <!--[content]-->
 <center><form action=[%PHP_SELF%] method=get>
-	<input type=hidden name=add_text value=1>
+	<input type=hidden name=add_article value=1>
 	<input class="btn btn-primary" type=submit value="Добавить">
 </form></center>
 <br>
@@ -301,6 +301,8 @@ $(document).ready(function(){
 	<tr class=content align=left><td>Колонка 1:</td><td><input class="form-control" type=edit maxlength=255 size=16 name=form[price1_title] value="[%price1_title%]"></td></tr>
 	<tr class=content align=left><td>Колонка 2:</td><td><input class="form-control" type=edit maxlength=255 size=16 name=form[price2_title] value="[%price2_title%]"></td></tr>
 	<tr class=content align=left><td>Колонка 3:</td><td><input class="form-control" type=edit maxlength=255 size=16 name=form[price3_title] value="[%price3_title%]"></td></tr>
+	<tr class=content align=left><td>Фиксированая ширина для фотографий товаров:</td><td><input class="form-control" type=edit maxlength=255 size=16 name=form[item_image_width] value="[%item_image_width%]"></td></tr>
+	<tr class=content align=left><td>Фиксированая высота для фотографий товаров:</td><td><input class="form-control" type=edit maxlength=255 size=16 name=form[item_image_height] value="[%item_image_height%]"></td></tr>
 	<tr class=content>
 		<td>Картинка:</td>
 		<td align=center>[%img_tag%][%del_button%]<br>Загрузить: <input class="form-control" name=img_file type=file><br></td>
@@ -326,7 +328,7 @@ $(document).ready(function(){
 	<td width=5%>Номер</td>
 	<td width=20%>Название</td>
 	<td width=25%>Описание</td>
-	<td width=10%>Цена  с НДС по безналичному расчету руб/час</td>
+	<td width=10%>Цена</td>
 	<td width=10%>Изображение</td>
 	<td width=5%>&nbsp;</td>
 	<td width=5%>&nbsp;</td>
@@ -365,12 +367,16 @@ $(document).ready(function(){
 	<tr class=content align=left><td>Позиция:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[num] value="[%num%]"></td></tr>
 	<tr class=content align=left><td>Алиас:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
 	[%price_inputs%]
+	<tr class=content align=left><td>Вес/количество/объем:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[cnt_weight] value="[%cnt_weight%]"></td></tr>
 	<tr class=header><td colspan=2>Краткое описание</td></tr>
 	<tr class=content><td align=center colspan=2>
 		<textarea class="form-control" name=form[descr] rows=7 cols=90 maxlength=64000>[%descr%]</textarea>
 	</td></tr>
 	<tr class=content><td align=center colspan=2>
-                <center><a href=[%PHP_SELF%] class="btn btn-default"> << Назад</a></center>
+                <center>
+                    <a href=[%PHP_SELF%] class="btn btn-default"> << Назад</a>
+                    <input class="btn btn-primary" type=submit value="  Сохранить  ">
+                </center>
 	</td></tr>
 	<tr class=header><td colspan=2>Полное описание</td></tr>
 	<tr class=content><td align=center colspan=2>

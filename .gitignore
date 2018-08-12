@@ -2,22 +2,21 @@
 /.vscode/
 /*.code-workspace
 
-composer.phar
+/composer.phar
 /composer.lock
 
 /dump.cmd
 /*.html
 /*.sql
+/*.tpl
 
 /src/
-/vendor/
 /var/
 /templates/
 
 *.local.php
 *Local.php
 /admin/nav.php
-/main.tpl
 /favicon.png
 /sitemap.xml
 /include/dompdf/

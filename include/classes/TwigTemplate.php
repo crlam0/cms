@@ -78,11 +78,9 @@ class TwigTemplate {
     }
 
     /**
-     * Create twig object
+     * Add custom function
      *
-     * @param string $template_type Template type
-     * @param array $config_override Override config parameters
-     * @param array $content Template content for  string and array types
+     * @param string $name Function name
      *
      * @return null
      */

@@ -2,7 +2,7 @@
 
 $tags['Header'] = "Файлы";
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/media.css" type="text/css" rel=stylesheet />'."\n";
-$tags['nav_str'].="<a href=" . $_SERVER["PHP_SELF_DIR"] . " class=nav_next>{$tags['Header']}</a>";
+$tags['nav_str'].="<span class=nav_next><a href=\"{$SUBDIR}media/\">{$tags['Header']}</a></span>";
 
 if (isset($input["uri"])) {
     $params = explode("/", $input["uri"]);

@@ -1,3 +1,3 @@
 <?php
-include '../include/global.php';
+include '../include/common.php';
 redirect($BASE_HREF);

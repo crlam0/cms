@@ -221,20 +221,19 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height =
         $ftype='png';
     }
     
-    if($src && $fix_width && $fix_height) {
+    if($src && $fix_width && $fix_height) {        
         list($src_width, $src_height) = getimagesize($src_file['tmp_name']);
-        if( ($src_width > $fix_width) || ($src_height > $fix_width) ) {
-            $dst = imagecreatetruecolor($fix_width, $fix_height);
-            imagecopyresampled($dst, $src, 0, 0, 0, 0, $fix_width, $fix_height, $src_width, $src_height);
-            if($ftype=='jpeg') {
-                imagejpeg($dst, $dst_file, 100);
-            } else {
-                imagepng($dst, $dst_file, 0);
-            }
-            return is_file($dst_file);
-        }    
+        $dst = imagecreatetruecolor($fix_width, $fix_height);
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $fix_width, $fix_height, $src_width, $src_height);
+        if($ftype=='jpeg') {
+            imagejpeg($dst, $dst_file, 100);
+        } else {
+            imagepng($dst, $dst_file, 0);
+        }
+        return is_file($dst_file);
     } elseif ( ($src && $max_width) || ($src && $max_height)) {
-        list($src_width, $src_height) = getimagesize($src_file['tmp_name']);        
+        list($src_width, $src_height) = getimagesize($src_file['tmp_name']);  
+        $do_resize = false;
         if (  ($max_width>0) && (!$max_height>0) && (($src_width > $max_width) || ($src_height > $max_width))   ) {
             $width = $max_width;
             $height = $max_width;
@@ -243,23 +242,27 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height =
             } else {
                 $height = ($max_width / $src_width) * $src_height;
             }
+            $do_resize = true;
         } else if($max_height && $src_height > $max_height) {
             $height = $max_height;
             $width = ($max_height / $src_height) * $src_width;
+            $do_resize = true;
         }
-        $dst = imagecreatetruecolor($width, $height);
-        if($ftype=='png') {
-            $alpha = imagecolorallocatealpha($src, 255, 255, 255, 127);
-            imagecolortransparent($dst, $alpha);
-            imagefill($dst,0,0,$alpha);
+        if($do_resize) {
+            $dst = imagecreatetruecolor($width, $height);
+            if($ftype=='png') {
+                $alpha = imagecolorallocatealpha($src, 255, 255, 255, 127);
+                imagecolortransparent($dst, $alpha);
+                imagefill($dst,0,0,$alpha);
+            }
+            imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $src_width, $src_height);
+            if($ftype=='jpeg') {
+                imagejpeg($dst, $dst_file, 100);
+            } else {
+                imagepng($dst, $dst_file, 0);
+            }
+            return is_file($dst_file);
         }
-        imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $src_width, $src_height);
-        if($ftype=='jpeg') {
-            imagejpeg($dst, $dst_file, 100);
-        } else {
-            imagepng($dst, $dst_file, 0);
-        }
-        return is_file($dst_file);
     }
     return move_uploaded_file($src_file['tmp_name'], $dst_file);
 

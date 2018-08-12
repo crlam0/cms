@@ -92,8 +92,15 @@ class MyTemplate {
                     } elseif ($param[1] == 'yes_no') {
                         $replace_str = (($sql_row[$param[0]] == '1') || (($sql_row[$param[0]] == 'Y')) ? 'Да' : 'Нет') . '';
                     } elseif ($param[1] == 'if') {
-                        $replace_str = ( ($sql_row[$param[0]] == '1') || ($sql_row[$param[0]] == 'Y') ||
-                                (strlen($sql_row[$param[0]])) && $sql_row[$param[0]] != 'N' ? $param[2] : $param[3]) . '';
+                        if(!isset($param[3])) {
+                            $param[3] = '';
+                        }
+                        if( ($sql_row[$param[0]] == '1') || ($sql_row[$param[0]] == 'Y') ||
+                                (strlen($sql_row[$param[0]])) && $sql_row[$param[0]] != 'N'){
+                            $replace_str = $param[2];
+                        } else {
+                            $replace_str = $param[3];
+                        }
                     } elseif ( array_key_exists($param[0], $sql_row)) {
                         $replace_str = $sql_row[$param[0]] . "";
                     } else {

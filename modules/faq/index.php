@@ -1,10 +1,6 @@
 <?php
 $tags['Header'] = 'Вопрос/ответ';
-$tags['Add_CSS'].=';article_news_faq';
 $tags['INCLUDE_HEAD'].='<link href="article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
-
-// require_once $INC_DIR . 'lib_bbcode.php';
-// $editor = new BBCODE_EDITOR ();
 
 use Classes\BBCodeEditor;
 $editor = new BBCodeEditor ();
@@ -30,7 +26,7 @@ if (!isset($_SESSION["FAQ_PAGE"]))$_SESSION['FAQ_PAGE'] = 1;
 $TABLE = 'faq';
 $MSG_PER_PAGE = $settings['faq_msg_per_page'];
 
-if (!count($input))$list = 1;
+if (!$input->count())$list = 1;
 
 if ($input['added']) {
     $err = 0;
@@ -67,7 +63,7 @@ if ($input['added']) {
     }
 }
 
-if ($input["add"]) {
+if ($input['add']) {
     if (is_array($input['form'])) {
         $data = $input['form'];
         $tags = array_merge($tags, $data);
@@ -84,24 +80,21 @@ $result = my_query($query, true);
 list($PAGES) = $result->fetch_array();
 
 if ($PAGES > 1) {
-    $tags[pages_list] = "<center>";
+    $tags['pages_list'] = "<center>";
     for ($i = 1; $i <= $PAGES; $i++)
-        $tags[pages_list].=($i == $_SESSION["FAQ_PAGE"] ? "[ <b>$i</b> ]&nbsp;" : "[ <a href=" . $server["PHP_SELF"] . "?page=$i>$i</a> ]&nbsp;");
-    $tags[pages_list].="</center>";
+        $tags['pages_list'].=($i == $_SESSION["FAQ_PAGE"] ? "[ <b>$i</b> ]&nbsp;" : "[ <a href=" . $server["PHP_SELF"] . "?page=$i>$i</a> ]&nbsp;");
+    $tags['pages_list'].="</center>";
 }
 
-$limit = $MSG_PER_PAGE * ($_SESSION["FAQ_PAGE"] - 1);
-$query = "SELECT id from $TABLE where active='Y' order by id desc limit $limit";
-$result = my_query($query, true);
-while ($row = $result->fetch_array())
-    $LAST_ID = $row[id];
+$offset = $MSG_PER_PAGE * ($_SESSION["FAQ_PAGE"] - 1);
 
-$query = "SELECT $TABLE.* from $TABLE where $TABLE.active='Y'" . ($LAST_ID ? " and $TABLE.id<'$LAST_ID'" : "") . " group by $TABLE.id order by $TABLE.id desc limit $MSG_PER_PAGE";
+$query = "SELECT $TABLE.* from $TABLE where $TABLE.active='Y' group by $TABLE.id order by $TABLE.id desc limit $offset,$MSG_PER_PAGE";
 $result = my_query($query, true);
 
 if (!$result->num_rows) {
-    $content.=my_msg_to_str("$part_empty");
+    $content.=my_msg_to_str('part_empty');
 } else {
-    $content.=get_tpl_by_title("faq_list", $tags, $result);
+    $content.=get_tpl_by_title('faq_list', $tags, $result);
 }
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+

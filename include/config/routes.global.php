@@ -60,7 +60,7 @@ return [
         ]
     ],    
     'faq' => [
-        'pattern' => '^faq\/$',
+        'pattern' => '^faq\/.*$',
         'file' => 'modules/faq/index.php',
     ],    
     'gallery' => [

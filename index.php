@@ -12,6 +12,10 @@ if( ($request_uri==='' or $request_uri==='/') and file_exists('index.local.php')
     exit;
 }
 
+if(strstr($request_uri,'modules/')) {
+    $request_uri = str_replace('modules/', '', $request_uri);
+}
+
 $routes = require $INC_DIR . 'config/routes.global.php';
 
 if(file_exists($INC_DIR . 'config/routes.local.php')) {

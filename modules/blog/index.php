@@ -2,14 +2,12 @@
 $tags['Header'] = 'Блог';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 
-// include_once $INC_DIR . 'lib_comments.php';
-
 use Classes\Comments;
 
 $MSG_PER_PAGE = $settings["blog_msg_per_page"];
 $TABLE="blog_posts";
 
-if (isset($input["uri"])) {
+if (isset($input['uri'])) {
     $params = explode("#", $input["uri"]);
     $query="select id from {$TABLE} where seo_alias like '".$params[0]."'";    
     $result=my_query($query);
@@ -17,21 +15,21 @@ if (isset($input["uri"])) {
     $input['view_post'] = is_numeric($post_id) ? $post_id : $input['view_post'];
 
     if(strstr($input['uri'],'page')){
-        $_SESSION["BLOG_PAGE"]=str_replace("page","",$input["uri"]);
+        $blog_page=str_replace('page','',$input['uri']);
     }else{
-        $_SESSION["BLOG_PAGE"]=1;
+        $blog_page=1;
     }
 }
 
-if(isset($input) || !is_array($input)){
-    $_SESSION["BLOG_PAGE"] = 1;
+if(!$input->count()){
+    $blog_page = 1;
 }
 
-if(!isset($_SESSION["BLOG_PAGE"])) {
-    $_SESSION["BLOG_PAGE"] = 1;
+if(!isset($blog_page)) {
+    $blog_page = 1;
 }
 
-if(isset($input) && array_key_exists('view_post',$input)) {
+if(isset($input['view_post'])) {
     $comments = new Comments ('blog',$input['view_post']);
 } else {
     $comments = new Comments ('blog', null);
@@ -39,14 +37,12 @@ if(isset($input) && array_key_exists('view_post',$input)) {
 
 $content = '';
 
-// print_array($input);
-
-if(isset($input) && array_key_exists('view_post',$input) && is_numeric($input['view_post'])) {
+if($input->count() && is_numeric($input['view_post'])) {
     $query = "select {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid) where {$TABLE}.id='{$input["view_post"]}'";
     $result = my_query($query, true);
     $row = $result->fetch_array();
 
-    $tags['nav_str'].="<span class=nav_next><a href=\"{$server["PHP_SELF_DIR"]}\">$tags[Header]</a></span>";
+    $tags['nav_str'].="<span class=nav_next><a href=\"{$SUBDIR}blog/\">{$tags['Header']}</a></span>";
     $tags['nav_str'].="<span class=nav_next>{$row["title"]}</span>";
     $tags['Header'] .= " - ".$row["title"];
     
@@ -74,19 +70,19 @@ if(isset($input) && array_key_exists('view_post',$input) && is_numeric($input['v
     $content.=$comments->show_list();
     $tags["action"]=$SUBDIR.get_post_href(null,$row)."#comments";
     $content.=$comments->show_form($tags);
-    
+    $content.='<center><a href="'.$SUBDIR.'blog/" class="btn btn-default"> << Назад</a></center>';
 } else {
 
     $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
     
     $query = "SELECT ceiling(count(id)/$MSG_PER_PAGE) from {$TABLE} where active='Y'";
     list($PAGES) = my_select_row($query, false);
-    $offset=$MSG_PER_PAGE*($_SESSION["BLOG_PAGE"]-1);
+    $offset=$MSG_PER_PAGE*($blog_page-1);
 
     if ($PAGES > 1) {
         $tags['pages_list'] = "<div class=pages>Страницы: ";
         for ($i = 1; $i <= $PAGES; $i++)
-            $tags['pages_list'].=($i == $_SESSION["BLOG_PAGE"] ? "[ <b>$i</b> ]&nbsp;" : "[ <a href=" . dirname($server["PHP_SELF"]) . "/page" . $i ."/>$i</a> ]&nbsp;");
+            $tags['pages_list'].=($i == $blog_page ? "[ <b>$i</b> ]&nbsp;" : "[ <a href=" . $SUBDIR . "blog/page" . $i ."/>$i</a> ]&nbsp;");
         $tags['pages_list'].="</div>";
     }
 
@@ -102,20 +98,20 @@ if(isset($input) && array_key_exists('view_post',$input) && is_numeric($input['v
         $content.="<div id=blog>";
         $content.=$tags['pages_list'];
         while ($row = $result->fetch_array()) {
-            $row["post_title"]="<a href=\"".$SUBDIR.get_post_href(null,$row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
-            $row["content"] = replace_base_href($row["content"], false);
-            $row["content"] = preg_replace('/height: \d+px;/', 'max-width: 100%;', $row["content"]);
-            if(strlen($row["target_type"])){
+            $row['post_title']="<a href=\"".$SUBDIR.get_post_href(null,$row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
+            $row['content'] = replace_base_href($row["content"], false);
+            $row['content'] = preg_replace('/height: \d+px;/', 'max-width: 100%;', $row["content"]);
+            if(strlen($row['target_type'])){
                 $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );
-                $row["target_link"]="<a href=\"{$href}\" class=button>Перейти >></a>";
+                $row['target_link']="<a href=\"{$href}\" class=button>Перейти >></a>";
             }
             if(is_file($DIR.$settings['blog_img_path'].$row['image_name'])){
-                $row["image"]='  
+                $row['image']='  
                 <div id="featured_image">
                     <img width="150" height="150" src="'.$SUBDIR.$settings['blog_img_path'].$row['image_name'].'" class="attachment-150x150 wp-post-image" alt="'.$row['title'].'">    
                 </div>';
             }            
-            $row["comment_line"] = 
+            $row['comment_line'] = 
                     " [ <a href=\"".$SUBDIR.get_post_href(null,$row)."#comment_form\" title=\"{$row["title"]}\">Добавить комментарий</a> ] ".
                     " [ <a href=\"".$SUBDIR.get_post_href(null,$row)."#comments\" title=\"{$row["title"]}\">".
                     "Комментариев: " . $comments->show_count($row['id'])."</a> ]";

@@ -1,16 +1,12 @@
 <?php
 
-// echo 'test';
-// exit ();
-
-@include_once "../include/common.php";
-// include $INC_DIR . "lib_comments.php";
+@include_once "../../include/common.php";
 
 use Classes\Comments;
 
 $tags['Header'] = "Галерея";
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/gallery.css" type="text/css" rel=stylesheet />'."\n";;
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/gallery.css" type="text/css" rel=stylesheet />'."\n";
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";
 
 $settings["gallery_use_popup"]=true;
 

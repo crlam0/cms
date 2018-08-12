@@ -1,4 +1,7 @@
 <?php
+
+@include_once "../../include/common.php";
+
 $tags['Header']='Магазин';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/catalog.css" type="text/css" rel=stylesheet />'."\n";
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/price.css" type="text/css" rel=stylesheet />'."\n";
@@ -179,7 +182,12 @@ if(strlen($input['item_title'])){
         $row = $result->fetch_array();
         $item_id=$row['id'];
         $tags=array_merge($tags,$row);
-        if(is_file($IMG_ITEM_PATH.$row['fname']))$tags['default_image']="<img src=\"{$SUBDIR}modules/catalog/image.php?id={$row['cat_item_images_id']}&windowHeight=500&fix_size=1\" item_id={$row['id']} file_name={$row['fname']} image_id={$row['cat_item_images_id']} border=0 align=left class=cat_item_image_popup>";
+
+        if(is_file($IMG_ITEM_PATH.$row['fname'])){
+            $tags['default_image']="<img src=\"{$SUBDIR}modules/catalog/image.php?id={$row['cat_item_images_id']}&windowHeight=500&fix_size=1\" item_id={$row['id']} file_name={$row['fname']} image_id={$row['cat_item_images_id']} border=0 align=left class=cat_item_image_popup>";
+        } else {
+            $tags['default_image']='Изображение отсутствует';
+        }
 
         $tags['Header']=$row['title'];
         $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";
@@ -275,7 +283,7 @@ $content.=$tags['pages_list'];
 $offset=$settings['catalog_items_per_page']*($_SESSION["catalog_page"]-1);	
 
 $query="select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
-left join cat_item_images on (cat_item_images.id=default_img or cat_item_images.item_id=cat_item.id)"
+left join cat_item_images on (cat_item_images.id=default_img)"
 .(isset($_GET["show_all"])?"":" where part_id='".$current_part_id."'")." 
 group by cat_item.id   
 order by cat_item.id,b_code,title asc limit $offset,$settings[catalog_items_per_page]";

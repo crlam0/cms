@@ -1,14 +1,12 @@
-=== 2018-07-23
-
-alter table request add comment text;
-
-=======
 === 2018-07-24
 
 ALTER TABLE `slider_images`
 	ADD COLUMN `pos` INT(2) NOT NULL DEFAULT '1' AFTER `file_type`,
 	ADD COLUMN `url` VARCHAR(64) NOT NULL DEFAULT '' AFTER `pos`;
->>>>>>> current
+
+=== 2018-07-23
+
+alter table request add comment text;
 
 === 2018-06-17
 

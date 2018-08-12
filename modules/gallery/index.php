@@ -107,7 +107,7 @@ if ($input['view_image'] || (isset($input['load']))) {
     $gallery_id = $row['gallery_id'];
 
     list($title) = my_select_row("select title from gallery_list where id='{$gallery_id}'", true);
-    $tags["back_url"]=$server["PHP_SELF"] . "?view_gallery1&id=".$gallery_id;
+    $tags['back_url']=$server['PHP_SELF'] . "?view_gallery1&id=".$gallery_id;
     $tags['nav_str'].="<a href=" . $tags['back_url'] ." class=nav_next>$title</a><span class=nav_next>{$row['title']}</span>";
 
     list($prev_id) = my_select_row("select id from gallery_images where gallery_id='{$gallery_id}' and id<'{$tags['id']}' order by id desc limit 1", true);
@@ -135,11 +135,11 @@ if (isset($input['load'])) {
     if($next_id) {
         $next_add='<a class="btn btn-default gallery_button" item_id="'. $next_id. '">Следующая >></a>';
     }
-    echo "
+    
+    $json=$tags;
+    $json['content'] = "
 	<center>
         <div id=gallery>
-        <div class=title>$tags[title]</div>
-        <br>
         <div class=view_image>
         <img src=\"{$SUBDIR}modules/gallery/image.php?id={$tags['id']}&clientHeight=".$input['clientHeight']."\" border=0 id=popup_image>
         </div>
@@ -148,6 +148,7 @@ if (isset($input['load'])) {
         <div align=center>{$prev_add} {$next_add}</div>
         </div></center>
     ";
+    echo json_encode($json);
     exit();
 }
 

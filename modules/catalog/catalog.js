@@ -20,6 +20,7 @@ $(document).ready(function() {
             type: "GET", url: DIR + "index.php", data: "add_buy=1&item_id="+id+"&cnt="+cnt,
             success: function(msg){
                 if(msg !== 'OK') alert(msg);
+                $('#popupHeader').html('Сейчас в корзине :');
                 $('#popupContent').load(DIR + "buy.php?get_summary=1");
                 loadPopup();                
                 centerPopup();

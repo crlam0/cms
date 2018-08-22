@@ -33,6 +33,7 @@ class Template {
      */
     private function get_twig_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){
         global $DIR, $settings;
+        add_to_debug("Parse template '{$template['title']}'");    
         if ($template['file_name']) {        
             if(!strstr($template['file_name'],'.html.twig')) {
                 $template['file_name'].='.html.twig';
@@ -44,6 +45,7 @@ class Template {
             }    
             if ($fname) {
                 $twig = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => $settings['debug']]);
+                $template['title'] = $fname;
             } else {
                 $tags['file_name'] = $template['file_name'];
                 my_msg('file_not_found', $tags);
@@ -52,7 +54,6 @@ class Template {
         } else {
             $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, ['debug' => $settings['debug']], $template['content']);
         }
-        add_to_debug("Parse template '{$template['title']}'");    
 
         if($sql_result instanceof \mysqli_result) {
             $tags['rows'] = mysqli_fetch_all($sql_result, MYSQLI_ASSOC);
@@ -62,8 +63,9 @@ class Template {
         }
         if(is_array($tags['functions'])) {
             foreach($tags['functions'] as $function) {
-                $twig->AddFunction($function);
-            }        
+                $twig->add_function($function);
+            }
+            unset($tags['functions']);
         }
         return $twig->render($template['title'], $tags);
     }

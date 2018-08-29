@@ -93,12 +93,11 @@ class Blocks {
     protected function slider () {
         global $server, $SUBDIR;
         
-        $SCRIPT = $server['SCRIPT_NAME'];
+        $URI = $server['REQUEST_URI'];
         if (strlen($SUBDIR) > 1){
-            $SCRIPT = str_replace($SUBDIR, "/", $SCRIPT);
+            $URI = str_replace($SUBDIR, "/", $URI);
         }
-
-        if ($SCRIPT == '/index.php') {
+        if ($URI == '/') {
             $query = "SELECT * FROM slider_images WHERE length(file_name)>0 ORDER BY pos,title ASC";
             $result = MyGlobal::get('DB')->query($query, true);
             return get_tpl_by_title('slider_items', [], $result);

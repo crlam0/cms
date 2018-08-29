@@ -4,7 +4,6 @@
 
 $tags['Header']='Магазин';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/catalog.css" type="text/css" rel=stylesheet />'."\n";
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/price.css" type="text/css" rel=stylesheet />'."\n";
 $tags['INCLUDE_JS'] .=  
         '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
         '<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>'."\n".
@@ -135,34 +134,40 @@ if ($current_part_id) {
 
 if ($input['get_popup_content']) {
     
-    $nav_ins='';
-    list($default_img,$default_img_fname)=my_select_row("select default_img,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='".$input["item_id"]."'",false);
-   
-    list($prev_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id<'" . $input["image_id"] . "' and id<>'{$default_img}' order by id desc limit 1", false);
-    if ($input["image_id"] != $default_img){
-        if ($prev_id){
-            $nav_ins.= "<a image_id={$prev_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
-        }else{     
-            $nav_ins.= "<a image_id={$default_img} item_id={$input["item_id"]} file_name=\"{$default_img_fname}\" class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
-        }
-        list($next_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id>'" . $input["image_id"] . "' and id<>'{$default_img}' order by id asc limit 1", false);
-        if ($next_id){
-            $nav_ins.= "<a image_id={$next_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button btn btn-default\">Следующая >></a>";
-        }    
-    }else{
-        list($next_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id<>'{$default_img}' order by id asc limit 1", false);
-        if ($next_id) {
-            $nav_ins.= "<a image_id={$next_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button btn btn-default\">Следующая >></a>";
-        }    
-    }
+	$query="select cat_item.*,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img or cat_item_images.item_id=cat_item.id) where cat_item.id='".$_GET["item_id"]."' order by b_code,title asc";
+	$result=my_query($query);
+	$row = $result->fetch_array();
+	
+	$row[price]=($row[price]?"Цена: ".$row[price]." руб":"Цена договорная.");
+	
+	$tags=array_merge($tags,$row);
+	if(is_file($IMG_ITEM_PATH.$row[fname])){
+		$tags['default_image']="<img src={$IMG_ITEM_URL}$row[fname] border=0 align=left>";
+	}else{
+		$tags['default_image']="Изображение отсутствует.";
+	}
 
-    $content.="<center><img src=\"{$SUBDIR}modules/catalog/image.php?preview=500&file_name={$input["file_name"]}&windowHeight={$input['windowHeight']}\" border=0></center>";
-    if(strlen($nav_ins)) {
-        $content.="<br /><center>{$nav_ins}</center>";
-    }    
-    
-    echo $content;    
-    exit;
+/*	$query="select * from cat_item_images where item_id='".$_GET["item_id"]."' and id<>'$row[default_img]' order by id asc";
+	$result=mysql_query($query,$conn);
+	if(mysql_num_rows($result)){
+		$tags[images]="<div class=images>";
+		while ($row = mysql_fetch_array($result))if(is_file($IMG_ITEM_PATH.$row[fname])){
+			$tags[images].="<a href={$IMG_ITEM_URL}$row[fname] target=_blank title=\"$row[descr]\"><img src={$IMG_ITEM_URL}$row[fname] border=0></a>";
+		}
+		$tags[images].="</div>";
+	} */
+	$content=get_tpl_by_title("cat_item_view",$tags,$result);
+        $content.="
+            <br>
+            <input class=\"cnt_{$_GET["item_id"]}\" size=1 maxlength=2 value=1>
+            <a class=buy_button item_id=\"{$_GET["item_id"]}\">В корзину</a>
+        ";
+        $json['title'] = $tags['title'];
+        $json['content'] = $content;
+//	echo iconv('windows-1251', 'UTF-8', $content);
+        echo json_encode($json);
+	exit;
+
 }
 
 
@@ -256,27 +261,20 @@ $content.="</div>";
  * ====================================================================================
  */
 
-// echo $deep . '   '.$subparts;
-
-/*
-
-if($current_part_id){
-	$row_part=my_select_row("select * from cat_part where id='{$current_part_id}'",1);
-	//	if(is_file($IMG_PART_PATH.$row[img]))echo "<img src=$IMG_PART_URL$row[img] border=0 align=left>\n";
-	if(strlen($row_part[descr]))$content.="<div class=part_descr>$row_part[descr]</div>\n";
-	$tags[Header].=" - $row_part[title]";
+if (strlen($row_part['descr'])){
+    $content.="<div class=part_descr>".$row_part['descr']."</div>\n";
 }
-*/
+
 
 if(!isset($_SESSION["catalog_page"]))$_SESSION["catalog_page"]=1;
 if(isset($input["page"])){
 	$_SESSION["catalog_page"]=$input["page"];
 }
-list($PAGES)=my_select_row("SELECT ceiling(count(id)/$settings[catalog_items_per_page]) from cat_item where part_id='".$current_part_id."'",1);
+list($PAGES)=my_select_row("SELECT ceiling(count(id)/{$settings['catalog_items_per_page']}) from cat_item where part_id='".$current_part_id."'",1);
 $tags['pages_list']='';
 if($PAGES>1){
 	$tags['pages_list']="<div class=cat_pages>";
-	for($i=1;$i<=$PAGES;$i++)$tags['pages_list'].=($i==$_SESSION["catalog_page"]?"[ <b>$i</b> ]&nbsp;":"[ <a href=".$_SERVER["PHP_SELF"]."?page=$i>$i</a> ]&nbsp;");
+        for($i=1;$i<=$PAGES;$i++)$tags['pages_list'].=($i==$_SESSION["catalog_page"]?"[ <b>$i</b> ]&nbsp;":"[ <a href=".$SUBDIR.get_cat_part_href($current_part_id)."{$i}/>{$i}</a> ]&nbsp;");
 	$tags['pages_list'].="</div>";
 }
 $content.=$tags['pages_list'];
@@ -286,12 +284,12 @@ $query="select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as ima
 left join cat_item_images on (cat_item_images.id=default_img)"
 .(isset($_GET["show_all"])?"":" where part_id='".$current_part_id."'")." 
 group by cat_item.id   
-order by cat_item.id,b_code,title asc limit $offset,$settings[catalog_items_per_page]";
+order by cat_item.id,b_code,title asc limit $offset,{$settings['catalog_items_per_page']}";
 $result=my_query($query, true);
 if($result->num_rows){
     $content.="<div id=cat_items>\n";
     while ($row = $result->fetch_array()) {
-        $row['item_a']='<a href="'.$SUBDIR.get_cat_part_href($row['part_id']).$row['seo_alias'].'" title="'.$row['title'].'">';
+        // $row['item_a']='<a href="'.$SUBDIR.get_cat_part_href($row['part_id']).$row['seo_alias'].'" title="'.$row['title'].'">';
         $row['special_offer_ins']=($row['special_offer'] ? "<div class=cat_item_special_offer>Спецпредложение !</div>": "");
         $row['default_image']=(is_file($IMG_ITEM_PATH.$row['fname']) ? $row['item_a']."<img src=\"{$SUBDIR}modules/catalog/image.php?id={$row['image_id']}&windowHeight=500&fix_size=1\" alt=\"{$row['title']}\" title=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
         $row['descr']=nl2br($row['descr']);
@@ -304,9 +302,6 @@ if($result->num_rows){
 }
 
 if($current_part_id){
-    if (strlen($row_part['descr'])){
-        $content.="<div class=part_descr>".$row_part['descr']."</div>\n";
-    }
     list($href_id)=my_select_row("select prev_id from cat_part where id='{$current_part_id}'", true);
     $content.="
     <div class=cat_back>

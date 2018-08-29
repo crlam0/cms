@@ -39,4 +39,4 @@ imagerectangle ($im, 1, 1, $im_w-1, $im_h-1, $col3);
 
 ImagePng($im); 
 ImageDestroy($im); 
-?>
+

@@ -25,4 +25,4 @@ imagerectangle ($im, 0, 0, $im_w-1, $im_h-1, $col1);
 Header( "Content-type:  image/gif");
 ImageGif($im); 
 ImageDestroy($im); 
-?>
+

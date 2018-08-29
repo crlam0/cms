@@ -37,8 +37,13 @@ class MyArray implements \ArrayAccess {
             return $data;
         }
     }
+    
     public function count() {
         return count($this->container);
+    }
+    
+    public function merge($array) {
+        return array_merge($this->container, $array);
     }
 
 }

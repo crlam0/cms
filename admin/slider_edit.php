@@ -65,7 +65,7 @@ if ($input["edited_image"]) {
             }
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
-            if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, 1140, 488)) {
+            if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, $settings['slider']['image_width'], $settings['slider']['image_height'])) {
                 $input['form']['file_name'] = $file_name;
                 $input['form']['file_type'] = $_FILES["img_file"]["type"];
                 $content.=my_msg_to_str("", "", "Изображение успешно изменено.");

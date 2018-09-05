@@ -1744,7 +1744,7 @@ $(document).ready(function(){
 <!--[title]request_list[/title]-->
 <!--DESCRIPTION: Список заказов -->
 <!--[content]-->
-<br><center><table width=800 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
+<br><center><table width=800 border=0 cellspacing=1 cellpadding=1 class="table table-responsive table-bordered normal-form" align=center>
 <tr class=header align=center>
 <td>Дата</td>
 <td>Заказ</td>
@@ -1754,13 +1754,14 @@ $(document).ready(function(){
 [%loop_begin%]
         <tr [%row(active,if,bgcolor=#ffffff,bgcolor=#dddddd)%] align=left>
         <td align=center><b>[%row(date)%]</b></td>
-        <td>[%row(item_list,nl2br)%]</td>
+        <td>[%row(item_list,nl2br)%][%row(comment,nl2br)%][%func(file_info)%]</td>
         <td>[%row(contact_info,nl2br)%]</td>
         <td width=16><a href="[%PHP_SELF%]?active=Y&id=[%row(id)%]"><img src="../images/add.gif" alt="Активно" border=0 onClick="return test()"></a></td>
         <td width=16><a href="[%PHP_SELF%]?active=N&id=[%row(id)%]"><img src="../images/sub.gif" alt="Неактивно" border=0 onClick="return test()"></a></td>
         </tr>
 [%loop_end%]
 </table>
+
 <!--[/content]-->
 
 

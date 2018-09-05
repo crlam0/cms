@@ -4,5 +4,3 @@ Disallow: /css/
 Disallow: /include/
 Disallow: /login/
 Disallow: /logout/
-Disallow: /misc/
-Disallow: /media/

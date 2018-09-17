@@ -35,7 +35,7 @@ if ($src) {
         $gallery_fix_size=true;
         $max_width = $settings['gallery_icon_width'];
     }
-    if ($max_width && (($width_src > $max_width) || ($height_src > $max_width))) {
+    if ($max_width && (($width_src > $max_width) || ($height_src > $max_width)) || ($height_src>$input['clientHeight']-210)) {
         $width = $max_width;
         $height = $max_width;
         if(!$gallery_fix_size) { 

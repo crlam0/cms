@@ -177,12 +177,13 @@ if (($view_gallery)||($input['page'])) {
         $content = get_tpl_by_title('gallery_images_table', $tags, $result);
     }
     
-    $comments = new Comments ('gallery',$view_gallery);
-    
-    $comments->get_form_data($input);
-    $content.=$comments->show_list();
-    $tags["action"]=$SUBDIR.get_gallery_list_href($view_gallery)."#comments";
-    $content.=$comments->show_form($tags);    
+    if($settings['gallery_use_comments']) {
+        $comments = new Comments ('gallery',$view_gallery);
+        $comments->get_form_data($input);
+        $content.=$comments->show_list();
+        $tags["action"]=$SUBDIR.get_gallery_list_href($view_gallery)."#comments";
+        $content.=$comments->show_form($tags);
+    }
     
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();

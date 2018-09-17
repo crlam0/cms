@@ -73,12 +73,20 @@ add_to_debug('Library loaded');
 
 // Load settings into $settings[]
 $settings = new MyArray;
+if(file_exists($INC_DIR.'config/settings.local.php')) {
+    $settings_local=(require $INC_DIR . 'config/settings.local.php');
+    if(is_array($settings_local)) {
+        foreach ($settings_local as $key => $value){
+            $settings[$key]=$value;
+        }
+    }    
+}    
+
 $query='SELECT * FROM settings';
 $result=$DB->query($query,true);
 while ($row = $result->fetch_array()) {
     $settings[$row['title']] = $row['value'];
 }
-
 add_to_debug('Settings loaded');
 
 use Whoops\Handler\PrettyPageHandler;

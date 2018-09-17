@@ -1,12 +1,12 @@
 <?php
-
+@include_once "../../include/common.php";
 $tags['Header'] = 'Прайс-лист';
 
 $tags['INCLUDE_HEAD'] .= '<link href="' . $SUBDIR . 'theme/css/price.css" type="text/css" rel=stylesheet />' . "\n";
 $tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
 $tags['INCLUDE_JS'] .=  
         '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
-        '<script type="text/javascript" src="'.$BASE_HREF.'price/price.js"></script>'."\n";
+        '<script type="text/javascript" src="'.$BASE_HREF.'modules/price/price.js"></script>'."\n";
 
 
 if (isset($input['add_buy']) && isset($input['cnt'])) {

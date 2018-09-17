@@ -12,9 +12,10 @@ $(document).ready(function () {
         var id = $(this).attr("item_id");
         var clientHeight = document.documentElement.clientHeight;
         $.ajax({
-            type: "GET", url: DIR + "index.php", data: "load=1&id=" + id + "&clientHeight=" + clientHeight,
+            type: "GET", url: DIR + "index.php", dataType : "json", data: "load=1&id=" + id + "&clientHeight=" + clientHeight,
             success: function (msg) {
-                $('#popupContent').html(msg);
+                $('#popupHeader').html(msg.title);
+                $('#popupContent').html(msg.content);
                 $("#popupContent").waitForImages(function () {
                     loadPopup();
                     // $('.modal-dialog').css({'max-width': '1024px'});
@@ -36,9 +37,10 @@ $(document).ready(function () {
         $(".modal-dialog").fadeOut("slow", function () {
             var clientHeight = document.documentElement.clientHeight;
             $.ajax({
-                type: "GET", url: DIR + "index.php", data: "load=1&id=" + id + "&clientHeight=" + clientHeight,
+                type: "GET", url: DIR + "index.php", dataType : "json", data: "load=1&id=" + id + "&clientHeight=" + clientHeight,
                 success: function (msg) {
-                    $('#popupContent').html(msg);
+                    $('#popupHeader').html(msg.title);
+                    $('#popupContent').html(msg.content);
                     $("#popupContent").waitForImages(function () {
                         $(".modal-dialog").fadeIn("slow");
                         centerPopup();

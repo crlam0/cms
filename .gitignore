@@ -14,7 +14,7 @@
 /var/
 /templates/
 
-*.local.php
+*.local.*
 *Local.php
 /admin/nav.php
 /favicon.png

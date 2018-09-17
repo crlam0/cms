@@ -14,12 +14,12 @@ class Sitemap {
     private $static_pages = array(
         array(
             'url' => "",
-            'changefreq' => "daily",
+            'changefreq' => "weekly",
             'priority' => '1.00',
         ),
         array(
             'url' => "sitemap.xml",
-            'changefreq' => "weekly",
+            'changefreq' => "monthly",
             'priority' => '0.90',
         ),
     );

@@ -3,7 +3,11 @@
 $tags['Header'] = "Картинки для слайдера";
 include "../include/common.php";
 
-$image_path = $settings["slider_upload_path"];
+// print_array($settings);
+
+$image_path = $settings['slider']['upload_path'];
+
+echo $image_path;
 
 function show_img($tmp, $row) {
     global $DIR, $image_path;
@@ -38,7 +42,7 @@ if ($input["added_image"]) {
             $image_id = $mysqli->insert_id;
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
-            if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, 652, 488)) {
+            if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, $settings['slider']['image_width'], $settings['slider']['image_height'])) {
                 $query = "update slider_images set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
                 my_query($query);
                 $content.=my_msg_to_str("", "", "Изображение успешно добавлено.");
@@ -61,7 +65,7 @@ if ($input["edited_image"]) {
             }
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
-            if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, 652, 488)) {
+            if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, $settings['slider']['image_width'], $settings['slider']['image_height'])) {
                 $input['form']['file_name'] = $file_name;
                 $input['form']['file_type'] = $_FILES["img_file"]["type"];
                 $content.=my_msg_to_str("", "", "Изображение успешно изменено.");

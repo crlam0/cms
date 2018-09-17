@@ -135,5 +135,9 @@ return [
             '2' => 'item_title',
         ]
     ],    
+    'price' => [
+        'pattern' => '^price\/$',
+        'file' => 'modules/price/index.php'
+    ],    
 ];
 

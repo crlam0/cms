@@ -35,7 +35,7 @@ if ($src && $max_width && (($width_src > $max_width) || ($height_src > $max_widt
             $width = $max_width;
             $height = $max_width;
         } else {
-            if ($height > $input['windowHeight'] - 210) {
+            if (isset($input['windowHeight']) && $height > $input['windowHeight'] - 210) {
                 $height = $input['windowHeight'] - 210;
             }
             $width = ($height / $height_src) * $width_src;
@@ -46,14 +46,21 @@ if ($src && $max_width && (($width_src > $max_width) || ($height_src > $max_widt
             $width = $max_width;
         } else {
             $height = ($width / $width_src) * $height_src;
-            if ($height > $input['windowHeight'] - 210) {
+            if (isset($input['windowHeight']) && $height > $input['windowHeight'] - 210) {
                 $height = $input['windowHeight'] - 210;
-                $width = ($height / $height_src) * $width_src;
             }
+            $width = ($height / $height_src) * $width_src;
         }
     }
 //		echo "$width_src $height_src $width $height";exit();
     $dst = imagecreatetruecolor($width, $height);
+    if (stristr($file_name, '.png')) {
+        $alpha = imagecolorallocatealpha($src, 255, 255, 255, 127);
+        if ($alpha) {
+            imagecolortransparent($dst, $alpha);
+            imagefill($dst, 0, 0, $alpha);
+        }
+    }
     if ($fix_size) {
         if ($width_src < $height_src) {
             $aspect_ratio = $width_src / $width;

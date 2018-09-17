@@ -1,3 +1,7 @@
+=== 2018-09-11
+
+alter table cat_item add special_offer int(1) not null default '0';
+
 === 2018-07-24
 
 ALTER TABLE `slider_images`

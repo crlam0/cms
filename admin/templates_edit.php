@@ -39,6 +39,8 @@ if (($input['view']) || ($input['adding'])) {
     } else {
 	$tags['type'] = 'add';
 	$tags['form_title'] = 'Добавление';
+	$tags['content'] = '';
+	$tags['template_type'] = 'my';
     }
     $tags['content'] = str_replace('textarea', 'text_area', $tags['content']);
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_HTML_INC;

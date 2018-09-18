@@ -3,8 +3,8 @@
 $tags['Header'] = "Голосование";
 $tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
 
-if (is_array($input[vote])) {
-    if (!$_COOKIE[$COOKIE_NAME . "_VOTE"]) {
+if ($input['vote']) {
+    if (!check_key($COOKIE_NAME . "_VOTE", $_COOKIE)) {
         setcookie($COOKIE_NAME . "_VOTE", time(), time() + $settings['stats_cookie_hours'] * 3600);
         $dont_vote = 0;
     } else {
@@ -40,6 +40,7 @@ while ($row = $result->fetch_array()) {
     $total += $row['hits'];
 }
 $result->data_seek(0);
+$tags['vote_results'] = '';
 while ($row = $result->fetch_array()) {
     if (!$row['hits']) {
         $row['hits'] = 0;

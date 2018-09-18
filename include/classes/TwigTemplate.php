@@ -9,6 +9,7 @@ use Twig\Extension\DebugExtension;
 
 class TwigTemplate {
     private $twig;
+    private $environment;
     
     const TYPE_STRING = 0;
     const TYPE_ARRAY = 1;
@@ -20,7 +21,7 @@ class TwigTemplate {
         'debug' => false,
         'template_dir' => 'templates',
         'cache_dir' => 'var/cache/twig',
-        'autoescape' => 'name',
+        'autoescape' => 'html',
         'extensions' => [],
     ];
 
@@ -35,7 +36,7 @@ class TwigTemplate {
      */
     public function __construct($template_type, $config_override = [], $content = null)
     {
-        global $DIR;
+        global $DIR, $SUBDIR, $settings;
         $this->template_type = $template_type;
         
         if(is_array($config_override)) {
@@ -73,6 +74,8 @@ class TwigTemplate {
         if ($this->config['debug']) {
             $environment->addExtension(new DebugExtension());
         }
+        $environment->addGlobal('SUBDIR', $SUBDIR);
+        $environment->addGlobal('settings', $settings);
 
         $this->twig = $environment;
     }
@@ -84,7 +87,7 @@ class TwigTemplate {
      *
      * @return null
      */
-    public function AddFunction($name)
+    public function add_function($name)
     {
         $this->twig->registerUndefinedFunctionCallback(function ($name) {
             if (function_exists($name)) {
@@ -97,11 +100,11 @@ class TwigTemplate {
     /**
      * Create template from string
      *
-     * @param string $template_type Template type
+     * @param string $template Template content
      *
      * @return $template
      */
-    public function createTemplate($template)
+    public function create_template($template)
     {
         return $this->twig->createTemplate($template);
     }        

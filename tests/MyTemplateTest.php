@@ -26,7 +26,7 @@ class MyTemplateTest extends TestCase
     
     public function testSQLParse()            
     {
-        $result=my_query('select login from users where id=7');
+        $result=my_query("select login from users where login='boot'");
         $content=$this->MyTemplate->parse("[%loop_begin%]\n[%row(login)%]\n[%loop_end%]",[],$result);
         self::assertEquals('boot' . "\n", $content);
     }

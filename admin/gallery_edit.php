@@ -28,7 +28,7 @@ if ($_SESSION['view_gallery']) {
     $tags['Header'].=" -> $list_title";
 }
 
-if ($_POST['default_image_id']) {
+if (array_key_exists('default_image_id',$input)) {
     list($gallery_id) = my_select_row("select gallery_id from gallery_images where id='" . $_POST["default_image_id"] . "'", 1);
     $query = "update gallery_list set default_image_id='" . $_POST["default_image_id"] . "' where id='{$gallery_id}'";
     echo (my_query($query, true) ? "OK" : mysql_error() );
@@ -45,7 +45,7 @@ function is_default_image($tmp, $row) {
 function show_img($tmp, $row) {
     global $DIR, $settings;
     if (is_file($DIR . $settings["gallery_upload_path"] . $row['file_name'])) {
-    	return "<a href=../gallery/image.php?id={$row['id']}><img src=\"../gallery/image.php?preview=1&id={$row['id']}\" border=0></a>";
+    	return "<a href=../modules/gallery/image.php?id={$row['id']}><img src=\"../modules/gallery/image.php?preview=1&id={$row['id']}\" border=0></a>";
     } else {
 	    return "Отсутствует";
     }

@@ -7,6 +7,25 @@ if($SUBDIR !== '/') {
     $request_uri = substr($server['REQUEST_URI'], 1);
 }    
 
+if(strstr($request_uri,'?')) {
+    $get_param=substr($request_uri,strpos($request_uri,'?')+1);
+    $request_uri = substr($request_uri,0,strpos($request_uri,'?'));
+    if(strpos($get_param,'&')){
+        $get_array = explode('&',$get_param);
+    } else {
+        $get_array[] = $get_param;
+    }
+    foreach ($get_array as $param) {
+        if(strpos($param,'=')) {
+            $param_array = explode('=',$param);
+            $input[$param_array[0]] = $param_array[1];
+        } else {
+            $input[$param] = '';
+        }
+    }
+    unset($get_param, $get_array, $param, $param_array);
+}
+
 if( ($request_uri==='' or $request_uri==='/') and file_exists('index.local.php')) {
     require 'index.local.php';
     exit;

@@ -1,12 +1,12 @@
 <?php
-
+@include_once "../../include/common.php";
 $tags['Header'] = 'Прайс-лист';
 
-$tags['INCLUDE_HEAD'] .= '<link href="' . $SUBDIR . 'css/price.css" type="text/css" rel=stylesheet />' . "\n";
+$tags['INCLUDE_HEAD'] .= '<link href="' . $SUBDIR . 'theme/css/price.css" type="text/css" rel=stylesheet />' . "\n";
 $tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
 $tags['INCLUDE_JS'] .=  
         '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
-        '<script type="text/javascript" src="'.$BASE_HREF.'price/price.js"></script>'."\n";
+        '<script type="text/javascript" src="'.$BASE_HREF.'modules/price/price.js"></script>'."\n";
 
 
 if (isset($input['add_buy']) && isset($input['cnt'])) {
@@ -31,26 +31,7 @@ function part_items($part_id) {
     order by num,title asc";
     $result = my_query($query, true);
     if ($result->num_rows) {
-        $content .= "<br>
-            <table width=100% class=\"table table-striped table-responsive table-bordered normal-form\"
-            <tr class=price_header>
-            <td width=30% class=price>Наименование</td>
-            <td width=40% class=price>Описание</td>
-            <td width=10% class=price>Цена с НДС по безналичному расчету руб/час</td>
-            <td width=10% class=price>&nbsp;</td>
-            </tr>";
-        while ($row = $result->fetch_array()) {
-            $content .= "<tr valign=middle class=price_line>
-                    <td class=title>{$row['title']}</td>
-                    <td class=title>" . nl2br($row['descr']) . "</td>
-                    <td class=price>{$row['price']}</td>
-                    <td class=price>
-                        <input class=\"cnt_{$row['id']}\" size=1 maxlength=2 value=1>
-                        <a class=buy_button item_id=\"{$row['id']}\">Заказать</a>
-                    </td>    
-                    </tr>";
-        }
-        $content .= "</table><br>\n";
+        $content .= get_tpl_by_title('price_items', [], $result);
     }
     return $content;
 }

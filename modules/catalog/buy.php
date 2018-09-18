@@ -77,8 +77,7 @@ if ($input["get_summary_cost"]) {
 
 if ($input["get_summary"]) {
     if (count($_SESSION["BUY"])) {
-        $item_list="<div class=\"buy_summary\">
-            <h3>Сейчас в корзине :</h3><br>";
+        $item_list='<div class="buy_summary">';
         $where='';
         foreach ($_SESSION["BUY"] as $item_id => $cnt) {
             $where.=(!strlen($where) ? " id='$item_id'" : " or id='$item_id'");
@@ -164,7 +163,7 @@ if (isset($input["request_done"])) {
         
         unset($_SESSION["BUY"]);
         
-        $msg = iconv('UTF-8', 'windows-1251', $msg);
+        // $msg = iconv('UTF-8', 'windows-1251', $msg);
         send_mail($settings["email_to_addr"], "Request from site " . $BASE_HREF, $msg);
         $content.=my_msg_to_str('',[],"Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.");
        

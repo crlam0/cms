@@ -52,8 +52,9 @@ function have_flag($flag) {
 function add_zero($summ) {
     $rub = floor($summ);
     $kop = 100 * round($summ - $rub, 2);
-    if (strlen($kop) == 1)
+    if (strlen($kop) == 1) {
         $kop = "0" . $kop;
+    }
     return $rub . "." . $kop;
 }
 

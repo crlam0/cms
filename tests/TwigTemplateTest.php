@@ -27,14 +27,14 @@ class TwigTemplateTest extends TestCase
         function TwigTest($param){
             return 'TwigTestFunction: ' . $param;
         }
-        $twig->AddFunction('TwigTest');
+        $twig->add_function('TwigTest');
         $content = $twig->render('', []);
         self::assertEquals('TwigTestFunction: 123', $content);
     }
     
     public function testSQLParse()            
     {
-        $result=my_query('select login from users where id=7');
+        $result=my_query("select login from users where login='boot'");
         $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
         
         $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, true, '{% for row in rows %}{{ row.login }}{% endfor %}');

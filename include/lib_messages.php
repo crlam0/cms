@@ -133,10 +133,10 @@ function admin_log($message) {
 function send_mail($message_to, $subject, $message) {
     global $settings;
     $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type: text/plain; charset=windows-1251\r\n";
+    $headers .= "Content-type: text/plain; charset=utf-8\r\n";
     $headers .= "From: {$settings['email_from_addr']}\r\n";
-    $subject = iconv('UTF-8', 'windows-1251', $subject);
-    $message = iconv('UTF-8', 'windows-1251', $message);
+    // $subject = iconv('UTF-8', 'windows-1251', $subject);
+    // $message = iconv('UTF-8', 'windows-1251', $message);
     mail($message_to, $subject, $message, $headers);
 }
 

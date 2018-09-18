@@ -38,7 +38,7 @@ if ($input["added_image"]) {
             $image_id = $mysqli->insert_id;
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
-            if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, 652, 488)) {
+            if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, 790, 590)) {
                 $query = "update slider_images set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
                 my_query($query);
                 $content.=my_msg_to_str("", "", "Изображение успешно добавлено.");
@@ -61,7 +61,7 @@ if ($input["edited_image"]) {
             }
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
-            if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, 652, 488)) {
+            if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, 790, 590)) {
                 $input['form']['file_name'] = $file_name;
                 $input['form']['file_type'] = $_FILES["img_file"]["type"];
                 $content.=my_msg_to_str("", "", "Изображение успешно изменено.");

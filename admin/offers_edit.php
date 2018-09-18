@@ -39,7 +39,7 @@ if ($input['added_image']) {
             $image_id = $mysqli->insert_id;
             $f_info = pathinfo($_FILES['img_file']['name']);
             $file_name = encodestring($input['form']['title']) . '.' . $f_info['extension'];
-            if (move_uploaded_image($_FILES['img_file'], $DIR . $image_path . $file_name, null, 474)) {
+            if (move_uploaded_image($_FILES['img_file'], $DIR . $image_path . $file_name, null, 475)) {
                 $query = "update {$TABLE} set file_name='{$file_name}',file_type='" . $_FILES['img_file']['type'] . "' where id='{$image_id}'";
                 my_query($query, $conn);
                 $content.=my_msg_to_str('', '', 'Изображение успешно добавлено.');
@@ -62,7 +62,7 @@ if ($input['edited_image']) {
             }
             $f_info = pathinfo($_FILES['img_file']['name']);
             $file_name = encodestring($input[form][title]) . "." . $f_info['extension'];
-            if (move_uploaded_image($_FILES['img_file'], $DIR . $image_path . $file_name, null, 474)) {
+            if (move_uploaded_image($_FILES['img_file'], $DIR . $image_path . $file_name, null, 475)) {
                 $input['form']['file_name'] = $file_name;
                 $input['form']['file_type'] = $_FILES['img_file']['type'];
                 $content.=my_msg_to_str('', '', 'Изображение успешно изменено.');

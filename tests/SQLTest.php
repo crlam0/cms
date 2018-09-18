@@ -9,16 +9,16 @@ class SQLTest extends TestCase
 {
     public function testUsers()
     {
-        $row=my_select_row("select id from users where login='boot'");
-        self::assertEquals($row['id'], '7');
+        $row=my_select_row("select login from users where login='boot'");
+        self::assertEquals($row['login'], 'boot');
     }
 
     public function testDB()
     {
         global $DBHOST, $DBUSER, $DBPASSWD, $DBNAME;
         $DB = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
-        $row=$DB->select_row("select id from users where login='boot'");
-        self::assertEquals($row['id'], '7');
+        $row=$DB->select_row("select login from users where login='boot'");
+        self::assertEquals($row['login'], 'boot');
     }
 
     public function testInsert()

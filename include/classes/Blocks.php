@@ -97,6 +97,9 @@ class Blocks {
         if (strlen($SUBDIR) > 1){
             $URI = str_replace($SUBDIR, "/", $URI);
         }
+        if(strstr($URI,'?')) {
+            $URI = substr($URI,0,strpos($URI,'?'));
+        }
         if ($URI == '/') {
             $query = "SELECT * FROM slider_images WHERE length(file_name)>0 ORDER BY pos,title ASC";
             $result = MyGlobal::get('DB')->query($query, true);

@@ -51,17 +51,17 @@ class Blocks {
     }
     
     protected function menu_main () {
-        list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE root=1", 1);
+        list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE root=1", true);
         $tags['menu_content'] = $this->get_menu_items($menu_id, 'id="mainmenu"', '');
         return get_tpl_by_title('block_menu', $tags);
     }
     protected function menu_top () {
-        list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE top_menu=1", 1);
-        return $this->get_menu_items($menu_id, 'class="menu"', 'class="menu-item"');
+        list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE top_menu=1", true);
+        return $this->get_menu_items($menu_id, 'id="menu-top" class="nav navbar-nav navbar-left"', '');
     }
     protected function menu_bottom () {
-        list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE bottom_menu=1", 1);
-        return $this->get_menu_items($menu_id, 'id="menu-footer" class="menu"', 'class="menu-item"');
+        list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE bottom_menu=1", true);
+        return $this->get_menu_items($menu_id, 'id="menu-footer" class="nav navbar-nav navbar-right"', '');
     }
     
     protected function vote () {

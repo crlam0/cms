@@ -261,7 +261,7 @@ $content.="</div>";
  * ====================================================================================
  */
 
-if (strlen($row_part['descr'])){
+if (isset($row_part['descr'])){
     $content.="<div class=part_descr>".$row_part['descr']."</div>\n";
 }
 
@@ -289,7 +289,7 @@ $result=my_query($query, true);
 if($result->num_rows){
     $content.="<div id=cat_items>\n";
     while ($row = $result->fetch_array()) {
-        // $row['item_a']='<a href="'.$SUBDIR.get_cat_part_href($row['part_id']).$row['seo_alias'].'" title="'.$row['title'].'">';
+        $row['item_a']='<a href="'.$SUBDIR.get_cat_part_href($row['part_id']).$row['seo_alias'].'" title="'.$row['title'].'">';
         $row['special_offer_ins']=($row['special_offer'] ? "<div class=cat_item_special_offer>Спецпредложение !</div>": "");
         $row['default_image']=(is_file($IMG_ITEM_PATH.$row['fname']) ? $row['item_a']."<img src=\"{$SUBDIR}modules/catalog/image.php?id={$row['image_id']}&windowHeight=500&fix_size=1\" alt=\"{$row['title']}\" title=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
         $row['descr']=nl2br($row['descr']);

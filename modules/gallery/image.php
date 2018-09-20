@@ -54,6 +54,13 @@ if ($src) {
         } 
 	// echo "$width_src $height_src $width $height $height_full";exit();
         $dst = imagecreatetruecolor($width, $height);
+    if (stristr($file_name, '.png')) {
+        $alpha = imagecolorallocatealpha($src, 255, 255, 255, 127);
+        if ($alpha) {
+            imagecolortransparent($dst, $alpha);
+            imagefill($dst, 0, 0, $alpha);
+        }
+    }
 
         if($gallery_fix_size){
             if($width_src<$height_src){

@@ -85,6 +85,7 @@ $result=$DB->query($query,true);
 while ($row = $result->fetch_array()) {
     $settings[$row['title']] = $row['value'];
 }
+MyGlobal::set('settings', $settings );
 add_to_debug('Settings loaded');
 
 use Whoops\Handler\PrettyPageHandler;

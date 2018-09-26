@@ -56,9 +56,7 @@ if(is_array($_SERVER))foreach ($_SERVER as $key => $value){
 
 use Classes\MyGlobal;
 
-if(isset($input)) {
-    MyGlobal::set('input', $input );
-}    
+MyGlobal::set('input', $input );
 MyGlobal::set('server', $server );
 MyGlobal::set('DIR', $DIR );
 MyGlobal::set('SUBDIR', $SUBDIR );

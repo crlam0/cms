@@ -33,7 +33,6 @@
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="[%SUBDIR%]include/js/bootstrap.min.js"></script>
-        <script src="[%SUBDIR%]include/js/docs.min.js"></script>
         <script src="[%SUBDIR%]include/js/misc.js"></script>
     </body>
 </html>

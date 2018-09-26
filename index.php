@@ -18,7 +18,7 @@ if(strstr($request_uri,'?')) {
     foreach ($get_array as $param) {
         if(strpos($param,'=')) {
             $param_array = explode('=',$param);
-            $input[$param_array[0]] = $param_array[1];
+            $input[$param_array[0]] = MyGlobal::get('DB')->test_param($param_array[1]);
         } else {
             $input[$param] = '';
         }

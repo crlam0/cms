@@ -28,32 +28,31 @@ if ((stristr($file_name, '.jpg')) || (stristr($file_name, '.jpeg'))) {
 list($width_src, $height_src) = getimagesize($file_name);
 
 if ($src && $max_width && (($width_src > $max_width) || ($height_src > $max_width))) {
-    $width = $max_width;
-    $height = $max_width;
-    if ($width_src < $height_src) {
-        if ($fix_size) {
-            $width = $max_width;
-            $height = $max_width;
-        } else {
-            if ($height > $input['windowHeight'] - 210) {
-                $height = $input['windowHeight'] - 210;
-            }
-            $width = ($height / $height_src) * $width_src;
-        }
-    } else {
-        if ($fix_size) {
-            $height = $max_width;
-            $width = $max_width;
-        } else {
-            $height = ($width / $width_src) * $height_src;
-            if ($height > $input['windowHeight'] - 210) {
-                $height = $input['windowHeight'] - 210;
+        $width = $max_width;
+        $height = $max_width;
+        if(!$fix_size) { 
+            if ($width_src < $height_src) {
+                if( (!empty($input['clientHeight'])) && ($height>$input['clientHeight']-210) ){
+                    $height=$input['clientHeight']-210;
+                }
                 $width = ($height / $height_src) * $width_src;
+            } else {
+                if( (!empty($input['clientHeight'])) && ($height>$input['clientHeight']-210) ){
+                    $height=$input['clientHeight']-210;
+                    $width = ($height / $height_src) * $width_src;
+                }
+                $height = ($width / $width_src) * $height_src;
             }
-        }
-    }
+        } 
 //		echo "$width_src $height_src $width $height";exit();
     $dst = imagecreatetruecolor($width, $height);
+    if (stristr($file_name, '.png')) {
+        $alpha = imagecolorallocatealpha($src, 255, 255, 255, 127);
+        if ($alpha) {
+            imagecolortransparent($dst, $alpha);
+            imagefill($dst, 0, 0, $alpha);
+        }
+    }
     if ($fix_size) {
         if ($width_src < $height_src) {
             $aspect_ratio = $width_src / $width;

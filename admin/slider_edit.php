@@ -7,8 +7,6 @@ include "../include/common.php";
 
 $image_path = $settings['slider']['upload_path'];
 
-echo $image_path;
-
 function show_img($tmp, $row) {
     global $DIR, $image_path;
     if (is_file($DIR . $image_path . $row['file_name'])) {

@@ -76,7 +76,7 @@ if (isset($input['view'])) {
     $input['view_article'] = 1;
 }
 
-if (array_key_exists('view_items', $input) && $input['view_items']) {
+if ($input['view_items']) {
     $view_items = $input['id'];
 }
 

@@ -13,19 +13,23 @@ namespace Classes;
 class Sitemap {
     private $static_pages = array(
         array(
-            'url' => "",
-            'changefreq' => "weekly",
+            'url' => '',
+            'changefreq' => 'weekly',
             'priority' => '1.00',
         ),
         array(
-            'url' => "sitemap.xml",
-            'changefreq' => "monthly",
+            'url' => 'sitemap.xml',
+            'changefreq' => 'monthly',
             'priority' => '0.90',
         ),
     );
     public $pages;
     
     public function __construct(){
+        $settings = MyGlobal::get('settings');
+        if(isset($settings['sitemap_static_pages']) && is_array($settings['sitemap_static_pages'])){
+            $this->static_pages = array_merge($this->static_pages, $settings['sitemap_static_pages']);
+        }
         $this->pages=$this->static_pages;
     }
     

@@ -56,9 +56,7 @@ if(is_array($_SERVER))foreach ($_SERVER as $key => $value){
 
 use Classes\MyGlobal;
 
-if(isset($input)) {
-    MyGlobal::set('input', $input );
-}    
+MyGlobal::set('input', $input );
 MyGlobal::set('server', $server );
 MyGlobal::set('DIR', $DIR );
 MyGlobal::set('SUBDIR', $SUBDIR );
@@ -87,6 +85,7 @@ $result=$DB->query($query,true);
 while ($row = $result->fetch_array()) {
     $settings[$row['title']] = $row['value'];
 }
+MyGlobal::set('settings', $settings );
 add_to_debug('Settings loaded');
 
 use Whoops\Handler\PrettyPageHandler;

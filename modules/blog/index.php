@@ -1,4 +1,7 @@
 <?php
+if(!isset($input)) {
+    require '../../include/common.php';
+}
 $tags['Header'] = 'Блог';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 

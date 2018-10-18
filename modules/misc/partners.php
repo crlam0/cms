@@ -1,4 +1,7 @@
 <?php
+if(!isset($input)) {
+    require '../../include/common.php';
+}
 $tags['Header'] = 'Наши партнеры';
 
 $query = "select * from partners order by pos asc";

@@ -1,4 +1,7 @@
 <?php
+if(!isset($input)) {
+    require '../../include/common.php';
+}
 
 $tags['Header'] = 'Смена пароля';
 $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";

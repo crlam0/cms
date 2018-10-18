@@ -1,7 +1,7 @@
 <?php
-
-@include_once "../../include/common.php";
-
+if(!isset($input)) {
+    require '../../include/common.php';
+}
 use Classes\Comments;
 
 $tags['Header'] = "Галерея";
@@ -72,20 +72,11 @@ function show_img($tmp, $row) {
 
 function show_list_img($tmp, $row) {
     global $DIR, $settings, $SUBDIR;
-/*    $content="";
-    if (is_file($DIR . $settings['gallery_list_img_path'] . $row[image_name])) {
-        $content.="
-            <img src=\"" . $SUBDIR . $settings['gallery_list_img_path'] . $row[image_name] . "\" border=0 item_id={$row['id']} class=gallery_list_image alt=\"$row[title]\">
-            ";
-    } else {
-        $content = "<div class=empty_img>Изображение отсутствует</div>";
-    }
- */
     list($image_id) = my_select_row("select default_image_id from gallery_list where id='{$row["id"]}'", false);
     $row_image = my_select_row("select * from gallery_images where id='{$image_id}'", false);
     if (is_file($DIR . $settings["gallery_upload_path"] . $row_image["file_name"])) {
         $content="
-                <img src=\"" . $SUBDIR . "modules/gallery/image.php?preview=1&id={$row_image["id"]}\" border=0 alt=\"{$row['title']}\">
+                <img src=\"" . $SUBDIR . "modules/gallery/image.php?icon=1&id={$row_image["id"]}\" border=0 alt=\"{$row['title']}\">
                 ";
     } else {
         $content = "<div class=empty_img>Изображение отсутствует: {$row['file_name']}</div>";

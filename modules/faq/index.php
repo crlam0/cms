@@ -1,4 +1,7 @@
 <?php
+if(!isset($input)) {
+    require '../../include/common.php';
+}
 $tags['Header'] = 'Вопрос/ответ';
 $tags['INCLUDE_HEAD'].='<link href="article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
 

@@ -1,5 +1,7 @@
 <?php
-
+if(!isset($input)) {
+    require '../../include/common.php';
+}
 $tags['Header'] = "Файлы";
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/media.css" type="text/css" rel=stylesheet />'."\n";
 $tags['nav_str'].="<span class=nav_next><a href=\"{$SUBDIR}media/\">{$tags['Header']}</a></span>";

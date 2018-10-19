@@ -3,7 +3,7 @@ if(!isset($input)) {
     require '../../include/common.php';
 }
 $tags['Header'] = 'Вопрос/ответ';
-$tags['INCLUDE_HEAD'].='<link href="article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
 
 use Classes\BBCodeEditor;
 $editor = new BBCodeEditor ();
@@ -12,7 +12,7 @@ $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 
 $code_ok = 0;
 if (isset($input['send_img_code'])) {
-    if ($input['img_code'] == $_SESSION['IMG_CODE']) {
+    if ( array_key_exists('IMG_CODE', $_SESSION) && $input['img_code'] == $_SESSION['IMG_CODE']) {
         $code_ok = 1;
     } else {
         $code_err = 1;
@@ -24,7 +24,9 @@ if (isset($input['page'])) {
     $_SESSION['FAQ_PAGE'] = $input['page'];
 }
 
-if (!isset($_SESSION["FAQ_PAGE"]))$_SESSION['FAQ_PAGE'] = 1;
+if (!isset($_SESSION["FAQ_PAGE"])){
+    $_SESSION['FAQ_PAGE'] = 1;
+}
 
 $TABLE = 'faq';
 $MSG_PER_PAGE = $settings['faq_msg_per_page'];
@@ -33,7 +35,7 @@ if (!$input->count())$list = 1;
 
 if ($input['added']) {
     $err = 0;
-    $input['form'][txt] = $editor->GetValue();
+    $input['form']['txt'] = $editor->GetValue();
     if (strlen($input['form']['author']) < 3) {
         $content.=my_msg_to_str('form_error_name');
         $err = 1;
@@ -72,7 +74,7 @@ if ($input['add']) {
         $tags = array_merge($tags, $data);
         $editor->SetValue($input['form']['txt']);
     }
-    $tags[editor] = $editor->GetContol(400, 200, '../images/bbcode_editor');
+    $tags['editor'] = $editor->GetContol(400, 200, '../images/bbcode_editor');
     $content.=get_tpl_by_title('faq_edit_form', $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit;
@@ -82,6 +84,7 @@ $query = "SELECT ceiling(count(id)/$MSG_PER_PAGE) from $TABLE where active='Y'";
 $result = my_query($query, true);
 list($PAGES) = $result->fetch_array();
 
+$tags['pages_list'] = '';
 if ($PAGES > 1) {
     $tags['pages_list'] = "<center>";
     for ($i = 1; $i <= $PAGES; $i++)

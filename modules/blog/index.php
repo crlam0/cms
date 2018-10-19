@@ -40,34 +40,38 @@ if(isset($input['view_post'])) {
 
 $content = '';
 
+
+function get_post_content ($row) {
+    global $SUBDIR;
+    
+    $content = replace_base_href($row['content'], false);
+    $content = preg_replace('/height: \d+px;/', 'max-width: 100%;', $content);
+    
+    if(strlen($row['target_type'])){
+        $href=(strlen($row['href']) ? $row['href'] : $SUBDIR.get_menu_href(array(),$row) );
+        $content.="<br><a href=\"{$href}\">Перейти >></a>";
+    }
+    return $content;
+}
+
+function get_post_comments_count ($row) {
+    global $comments;
+    return $comments->show_count($row['id']);
+}
+
+
 if($input->count() && is_numeric($input['view_post'])) {
     $query = "select {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid) where {$TABLE}.id='{$input["view_post"]}'";
     $result = my_query($query, true);
     $row = $result->fetch_array();
+    $result->data_seek(0);
 
     $tags['nav_str'].="<span class=nav_next><a href=\"{$SUBDIR}blog/\">{$tags['Header']}</a></span>";
     $tags['nav_str'].="<span class=nav_next>{$row["title"]}</span>";
     $tags['Header'] .= " - ".$row["title"];
     
-    $content.="<div id=blog>";
-    $row["post_title"]=$row['title'];
-    $row["content"] = replace_base_href(check_key('content',$row), false);
-
-    if(strlen(check_key('target_type',$row))){
-        $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );
-        $row["target_link"]="<a href=\"{$href}\" class=button>Перейти >></a>";
-    }
-
-    if(is_file($DIR.$settings['blog_img_path'].check_key('image_name', $row))){
-        $row["image"]='  
-        <div id="featured_image">
-            <img width="150" height="150" src="'.$SUBDIR.$settings['blog_img_path'].$row['image_name'].'" class="attachment-150x150 wp-post-image" alt="'.$row['title'].'">    
-        </div>';
-    }            
-    $row["comment_line"] = "Комментариев: " . $comments->show_count(check_key('id',$row));
-    // unset($row['post_title']);
-    $content.=get_tpl_by_title("blog_post", $row, $result);
-    $content.="</div>";
+    $tags['functions'] = ['get_post_href', 'get_post_content', 'get_post_comments_count'];
+    $content.=get_tpl_by_title('blog_posts', $tags, $result);
 
     $comments->get_form_data($input);
     $content.=$comments->show_list();
@@ -98,35 +102,12 @@ if($input->count() && is_numeric($input['view_post'])) {
     if (!$result->num_rows) {
         $content.=my_msg_to_str("part_empty");
     } else {
-        $content.="<div id=blog>";
-        $content.=$tags['pages_list'];
-        while ($row = $result->fetch_array()) {
-            $row['post_title']="<a href=\"".$SUBDIR.get_post_href(null,$row)."\" title=\"{$row["title"]}\">".$row["title"]."</a>";
-            $row['content'] = replace_base_href($row["content"], false);
-            $row['content'] = preg_replace('/height: \d+px;/', 'max-width: 100%;', $row["content"]);
-            if(strlen($row['target_type'])){
-                $href=(strlen($row["href"]) ? $row["href"] : $SUBDIR.get_menu_href(array(),$row) );
-                $row['target_link']="<a href=\"{$href}\" class=button>Перейти >></a>";
-            }
-            if(is_file($DIR.$settings['blog_img_path'].$row['image_name'])){
-                $row['image']='  
-                <div id="featured_image">
-                    <img width="150" height="150" src="'.$SUBDIR.$settings['blog_img_path'].$row['image_name'].'" class="attachment-150x150 wp-post-image" alt="'.$row['title'].'">    
-                </div>';
-            }            
-            $row['comment_line'] = 
-                    " [ <a href=\"".$SUBDIR.get_post_href(null,$row)."#comment_form\" title=\"{$row["title"]}\">Добавить комментарий</a> ] ".
-                    " [ <a href=\"".$SUBDIR.get_post_href(null,$row)."#comments\" title=\"{$row["title"]}\">".
-                    "Комментариев: " . $comments->show_count($row['id'])."</a> ]";
-            $content.=get_tpl_by_title("blog_post", $row, $result);
+    
+    $tags['functions'] = ['get_post_href', 'get_post_content', 'get_post_comments_count'];
+    $content.=get_tpl_by_title('blog_posts', $tags, $result);
 
-        }
-        $content.=$tags['pages_list'];
-        $content.="</div>";
     }
 }
-
-// $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 
 echo get_tpl_by_title($part['tpl_name'], $tags, "", $content);
 

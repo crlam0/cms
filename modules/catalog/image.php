@@ -24,7 +24,7 @@ if ($input["preview"]) {
     $max_width = $input["preview"];
 }
 
-$cache_file_name = $DIR . 'var/cache/catalog/' . md5($file_name . $max_width);
+$cache_file_name = $DIR . 'var/cache/catalog/' . md5($file_name . $max_width) . '.jpeg';
 
 unset($src);
 if ((stristr($file_name, '.jpg')) || (stristr($file_name, '.jpeg'))) {

@@ -29,7 +29,7 @@ if ($input['icon'] && $settings['gallery_icon_width']) {
     $max_width = $settings['gallery_icon_width'];
 }
 
-$cache_file_name = $DIR . 'var/cache/gallery/' . md5($file_name.$max_width);
+$cache_file_name = $DIR . 'var/cache/gallery/' . md5($file_name.$max_width) . '.jpeg';
 
 unset($src);
 if (($file_type == 'image/jpeg') || ($file_type == 'image/pjpeg')) {

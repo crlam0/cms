@@ -6,9 +6,10 @@ $tags['Header'] = 'Блог';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 
 use Classes\Comments;
+use Classes\Pagination;
 
-$MSG_PER_PAGE = $settings["blog_msg_per_page"];
-$TABLE="blog_posts";
+$MSG_PER_PAGE = $settings['blog_msg_per_page'];
+$TABLE='blog_posts';
 
 if (isset($input['uri'])) {
     $params = explode("#", $input["uri"]);
@@ -59,7 +60,6 @@ function get_post_comments_count ($row) {
     return $comments->show_count($row['id']);
 }
 
-
 if($input->count() && is_numeric($input['view_post'])) {
     $query = "select {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid) where {$TABLE}.id='{$input["view_post"]}'";
     $result = my_query($query, true);
@@ -67,8 +67,8 @@ if($input->count() && is_numeric($input['view_post'])) {
     $result->data_seek(0);
 
     $tags['nav_str'].="<span class=nav_next><a href=\"{$SUBDIR}blog/\">{$tags['Header']}</a></span>";
-    $tags['nav_str'].="<span class=nav_next>{$row["title"]}</span>";
-    $tags['Header'] .= " - ".$row["title"];
+    $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";
+    $tags['Header'] .= " - ".$row['title'];
     
     $tags['functions'] = ['get_post_href', 'get_post_content', 'get_post_comments_count'];
     $content.=get_tpl_by_title('blog_posts', $tags, $result);
@@ -82,30 +82,23 @@ if($input->count() && is_numeric($input['view_post'])) {
 
     $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
     
-    $query = "SELECT ceiling(count(id)/$MSG_PER_PAGE) from {$TABLE} where active='Y'";
-    list($PAGES) = my_select_row($query, false);
-    $offset=$MSG_PER_PAGE*($blog_page-1);
+    $query = "SELECT count(id) from {$TABLE} where active='Y'";
+    list($total) = my_select_row($query, false);
 
-    if ($PAGES > 1) {
-        $tags['pages_list'] = "<div class=pages>Страницы: ";
-        for ($i = 1; $i <= $PAGES; $i++)
-            $tags['pages_list'].=($i == $blog_page ? "[ <b>$i</b> ]&nbsp;" : "[ <a href=" . $SUBDIR . "blog/page" . $i ."/>$i</a> ]&nbsp;");
-        $tags['pages_list'].="</div>";
-    }
+    $pager = new Pagination($total,$blog_page,$MSG_PER_PAGE);
+    $tags['pager'] = $pager;
 
     $query = "SELECT {$TABLE}.*,users.fullname as author,date_format(date_add,'%Y-%m-%dT%H:%i+06:00') as timestamp
         from {$TABLE} left join users on (users.id=uid)
         where {$TABLE}.active='Y'
-        group by {$TABLE}.id  order by {$TABLE}.id desc limit $offset,$MSG_PER_PAGE";
+        group by {$TABLE}.id  order by {$TABLE}.id desc limit {$pager->getOffset()},{$pager->getLimit()}";
     $result = my_query($query, false);
-
+    
     if (!$result->num_rows) {
         $content.=my_msg_to_str("part_empty");
-    } else {
-    
-    $tags['functions'] = ['get_post_href', 'get_post_content', 'get_post_comments_count'];
-    $content.=get_tpl_by_title('blog_posts', $tags, $result);
-
+    } else {    
+        $tags['functions'] = ['get_post_href', 'get_post_content', 'get_post_comments_count'];
+        $content.=get_tpl_by_title('blog_posts', $tags, $result);
     }
 }
 

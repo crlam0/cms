@@ -597,3 +597,21 @@ function replace_base_href($content, $direction = false) {
         return str_replace("[%SUBDIR%]", "http://" . $server["HTTP_HOST"] . $SUBDIR, $content);
     }
 }
+
+/**
+ * Return path with subdir
+ *
+ * @param string $route Route template
+ * @param array $params Params to replace in route
+ *
+ * @return string Output string
+ */
+function path($route,$params=[]){
+    global $SUBDIR;
+    if(count($params)){        
+        foreach ($params as $item => $value) {
+            $route = str_replace('{$'.$item.'}', $value, $route);
+        }
+    }
+    return $SUBDIR.$route;
+}

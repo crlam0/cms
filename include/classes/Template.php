@@ -61,6 +61,7 @@ class Template {
         if(strlen($inner_content)) {
             $tags['inner_content'] = $inner_content;        
         }
+        $twig->add_function('path');
         if(array_key_exists('functions',$tags) && is_array($tags['functions'])) {
             foreach($tags['functions'] as $function) {
                 $twig->add_function($function);

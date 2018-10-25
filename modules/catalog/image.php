@@ -1,6 +1,7 @@
 <?php
 
 include "../../include/common.php";
+include 'functions.php';
 
 if (isset($input["id"])) {
     list($file_name,$file_type) = my_select_row("select fname,file_type from cat_item_images where id='{$input['id']}'", true);
@@ -24,15 +25,17 @@ if ($input["preview"]) {
     $max_width = $input["preview"];
 }
 
-$cache_file_name = $DIR . 'var/cache/catalog/' . md5($file_name . $max_width) . '.jpeg';
+$cache_file_name = $DIR . get_cache_file_name($file_name, $max_width);
+
+
 
 unset($src);
 if ((stristr($file_name, '.jpg')) || (stristr($file_name, '.jpeg'))) {
     $src = imagecreatefromjpeg($file_name);
-    $file_type = $file_type ? $file_type : 'image/jpeg';
+    $file_type = isset($file_type) ? $file_type : 'image/jpeg';
 } elseif (stristr($file_name, '.png')) {
     $src = imagecreatefrompng($file_name);
-    $file_type = $file_type ? $file_type : 'image/png';
+    $file_type = isset($file_type) ? $file_type : 'image/png';
 }
 if ($src) {
     list($width_src, $height_src) = getimagesize($file_name);

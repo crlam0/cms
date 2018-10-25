@@ -2,6 +2,8 @@
 if(!isset($input)) {
     require '../../include/common.php';
 }
+
+include 'functions.php';
 use Classes\Comments;
 
 $tags['Header'] = "Галерея";
@@ -51,13 +53,19 @@ if (isset($input["page"])) {
 }
 
 function show_img($tmp, $row) {
-    global $DIR, $settings, $SUBDIR, $server;
-    if (is_file($DIR . $settings["gallery_upload_path"] . $row['file_name'])) {
+    global $DIR, $settings, $SUBDIR, $server, $input;
+    $file_name = $DIR . $settings['gallery_upload_path'] . $row['file_name'];
+    if (is_file($file_name)) {        
         $content="";
+        $input['preview']=true;
+        $cache_file_name = get_cache_file_name($file_name, get_max_width());
+        if(is_file($DIR . $cache_file_name)) {
+            $URL=$cache_file_name;
+        } else {
+            $URL="modules/gallery/image.php?preview=1&id={$row['id']}";
+        }
         if($settings["gallery_use_popup"]==true){
-            $content.="
-                <img src=\"" . $SUBDIR . "modules/gallery/image.php?preview=1&id={$row['id']}\" border=0 item_id={$row['id']} class=gallery_popup alt=\"{$row['title']}\">
-                ";
+            $content.="<img src=\"" . $SUBDIR . $URL . "\" border=0 item_id={$row['id']} class=gallery_popup alt=\"{$row['title']}\">";
         }else{
             $content.="
                 <a href=" . $server["PHP_SELF"] . "?view_image=1&id={$row['id']} title=\"{$row['title']}\">
@@ -71,13 +79,19 @@ function show_img($tmp, $row) {
 }
 
 function show_list_img($tmp, $row) {
-    global $DIR, $settings, $SUBDIR;
+    global $DIR, $settings, $SUBDIR, $input;
     list($image_id) = my_select_row("select default_image_id from gallery_list where id='{$row["id"]}'", false);
     $row_image = my_select_row("select * from gallery_images where id='{$image_id}'", false);
-    if (is_file($DIR . $settings["gallery_upload_path"] . $row_image["file_name"])) {
-        $content="
-                <img src=\"" . $SUBDIR . "modules/gallery/image.php?icon=1&id={$row_image["id"]}\" border=0 alt=\"{$row['title']}\">
-                ";
+    $file_name = $DIR . $settings['gallery_upload_path'] . $row_image['file_name'];
+    if ($file_name) {
+        $input['icon']=true;
+        $cache_file_name = get_cache_file_name($file_name, get_max_width());
+        if(is_file($DIR . $cache_file_name)) {
+            $URL=$cache_file_name;
+        } else {
+            $URL="modules/gallery/image.php?icon=1&id={$row_image["id"]}";
+        }
+        $content="<img src=\"" . $SUBDIR . $URL . "\" border=0 alt=\"{$row['title']}\">";
     } else {
         $content = "<div class=empty_img>Изображение отсутствует: {$row['file_name']}</div>";
     }
@@ -126,13 +140,21 @@ if (isset($input['load'])) {
     if($next_id) {
         $next_add='<a class="btn btn-default gallery_button" item_id="'. $next_id. '">Следующая >></a>';
     }
-    
+    $file_name = $DIR . $settings['gallery_upload_path'] . $row['file_name'];
+    if ($file_name) {
+        $cache_file_name = get_cache_file_name($file_name, get_max_width());
+        if(is_file($DIR . $cache_file_name)) {
+            $URL=$cache_file_name;
+        } else {
+            $URL="modules/gallery/image.php?id={$tags['id']}&clientHeight=".$input['clientHeight'];
+        }
+    }
     $json=$tags;
     $json['content'] = "
 	<center>
         <div id=gallery>
         <div class=view_image>
-        <img src=\"{$SUBDIR}modules/gallery/image.php?id={$tags['id']}&clientHeight=".$input['clientHeight']."\" border=0 id=popup_image>
+        <img src=\"{$SUBDIR}{$URL}\" border=0 id=popup_image>
         </div>
         <div class=descr>{$tags['descr']}</div><div class=date>Добавлена {$tags['date_add']}, просмотров {$tags['view_count']}</div>
         <br>

@@ -615,3 +615,26 @@ function path($route,$params=[]){
     }
     return $SUBDIR.$route;
 }
+
+
+function del_tree($dir) {
+    if(!file_exists($dir)) {
+        return true;
+    }
+    $files = array_diff(scandir($dir), array('.', '..'));
+    foreach ($files as $file) {
+        (is_dir("$dir/$file")) ? del_tree("$dir/$file") : unlink("$dir/$file");
+    }
+    return rmdir($dir);
+}
+
+function clear_cache_dir($subdir = '') {
+    global $DIR;
+    if (strlen($subdir)) {
+        return del_tree($DIR . 'var/cache/' . $subdir );
+    } else {
+        return del_tree($DIR . 'var/cache');
+    }
+}
+
+

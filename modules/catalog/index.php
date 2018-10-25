@@ -1,7 +1,7 @@
 <?php
-
-@include_once "../../include/common.php";
-
+if(!isset($input)) {
+    require '../../include/common.php';
+}
 $tags['Header']=isset($settings['catalog_header']) ? $settings['catalog_header'] : 'Магазин';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/catalog.css" type="text/css" rel=stylesheet />'."\n";
 $tags['INCLUDE_JS'] .=  

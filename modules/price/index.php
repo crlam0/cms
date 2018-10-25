@@ -1,5 +1,8 @@
 <?php
-@include_once "../../include/common.php";
+if(!isset($input)) {
+    require '../../include/common.php';
+}
+
 $tags['Header'] = 'Прайс-лист';
 
 $tags['INCLUDE_HEAD'] .= '<link href="' . $SUBDIR . 'css/price.css" type="text/css" rel=stylesheet />' . "\n";

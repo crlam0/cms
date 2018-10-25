@@ -101,6 +101,8 @@ if ($input["added"]) {
     if($num_rows>0){
         $seo_alias_duplicate=1;
     }
+    $input['form']['date_add']='now()';
+    $input['form']['date_change']='now()';
     $query = "insert into cat_part " . db_insert_fields($input['form']);
     my_query($query, true);
     $insert_id=$mysqli->insert_id;
@@ -129,6 +131,7 @@ if ($input['edited']) {
     if($num_rows>1){
         $input['form']['seo_alias'].='_'.$input['id'];
     }
+    $input['form']['date_change']='now()';
     $query = "update cat_part set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
     $content.=my_msg_to_str('','','Раздел успешно изменен.');

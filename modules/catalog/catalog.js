@@ -67,6 +67,12 @@ $(document).ready(function() {
                     loadPopup();                
                     centerPopup();
                 });
+            },
+                error: function (jqXHR, error, errorThrown) {                
+                $('#popupContent').html(jqXHR.responseText);
+                loadPopup();
+                // $('.modal-dialog').css({'max-width': '1024px'});
+                centerPopup();
             }
         });
     });
@@ -85,7 +91,13 @@ $(document).ready(function() {
                         centerPopup();
                         $("#popupItem").fadeIn("slow");
                     });
-                }
+                },
+                error: function (jqXHR, error, errorThrown) {                
+                $('#popupContent').html(jqXHR.responseText);
+                loadPopup();
+                // $('.modal-dialog').css({'max-width': '1024px'});
+                centerPopup();
+            }
             });
     });
 

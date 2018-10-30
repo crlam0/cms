@@ -174,6 +174,40 @@ if ($input['get_popup_content']) {
     exit;
 }
 
+if ($input['get_popup_image_content']) {
+    
+    list($default_img,$default_img_fname,$title)=my_select_row("select default_img,fname,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='".$input["item_id"]."'",false);
+    
+    $nav_ins = '';
+    
+    list($prev_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id<'" . $input["image_id"] . "' and id<>'{$default_img}' order by id desc limit 1", false);
+    if ($input["image_id"] != $default_img){
+        if ($prev_id){
+            $nav_ins.= "<a image_id={$prev_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
+        }else{     
+            $nav_ins.= "<a image_id={$default_img} item_id={$input["item_id"]} file_name=\"{$default_img_fname}\" class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
+        }
+        list($next_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id>'" . $input["image_id"] . "' and id<>'{$default_img}' order by id asc limit 1", false);
+        if ($next_id) {
+            $nav_ins.= "<a image_id={$next_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button btn btn-default\">Следующая >></a>";
+        }
+    }else{
+        list($next_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id<>'{$default_img}' order by id asc limit 1", false);
+        if ($next_id) {
+            $nav_ins.= "<a image_id={$next_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button btn btn-default\">Следующая >></a>";
+        }
+    }
+
+    $content.="<center><img src=\"{$SUBDIR}modules/catalog/image.php?preview=500&file_name={$input["file_name"]}&windowHeight={$input['windowHeight']}\" border=0></center>";
+    if(strlen($nav_ins)){
+        $content.="<br /><center>{$nav_ins}</center>";
+    }
+    
+    $json['title'] = $title;
+    $json['content'] = $content;
+    echo json_encode($json);
+    exit;
+}
 
 /*
  * ====================================================================================

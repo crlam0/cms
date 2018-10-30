@@ -12,7 +12,7 @@ if (isset($input["uri"])) {
     $query = "select id from media_list where seo_alias like '" . $params[0] . "'";
     $result = my_query($query);
     list($view_files) = $result->fetch_array();
-    if (strlen($params[1])) {
+    if (isset($params[1])) {
         $media_page = $params[1];
     } else {
         $media_page = 1;
@@ -70,18 +70,18 @@ function show_size($tmp, $row) {
 }
 
 if ($view_files) {
-    list($PAGES) = my_select_row("SELECT ceiling(count(id)/$settings[media_files_per_page]) from media_files where list_id=" . $view_files, 1);
+    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['media_files_per_page']}) from media_files where list_id=" . $view_files, 1);
     list($title) = my_select_row("select title from media_list where id=" . $view_files, 1);
-    $tags[Header] = $title;
-    $tags[nav_str].="<span class=nav_next>$title</span>";
+    $tags['Header'] = $title;
+    $tags['nav_str'].="<span class=nav_next>$title</span>";
 
     if ($PAGES > 1) {
-        $tags[pages_list] = "<center>";
+        $tags['pages_list'] = "<center>";
         for ($i = 1; $i <= $PAGES; $i++) {
             if ($i == $media_page) {
-                $tags[pages_list].= "[ <b>$i</b> ]&nbsp;";
+                $tags['pages_list'].= "[ <b>$i</b> ]&nbsp;";
             } else {
-                $tags[pages_list].= "[ <a href=" . $SUBDIR . get_media_list_href($view_files) . "$i/>$i</a> ]&nbsp;";
+                $tags['pages_list'].= "[ <a href=" . $SUBDIR . get_media_list_href($view_files) . "$i/>$i</a> ]&nbsp;";
             }
         }
         $tags[pages_list].="</center><br>";
@@ -111,7 +111,7 @@ left join media_files on (media_files.list_id=media_list.id)
 group by media_list.id order by media_list.date_add desc";
 $result = my_query($query, true);
 if (!$result->num_rows) {
-    $content = my_msg_to_str("$part_empty");
+    $content = my_msg_to_str("part_empty");
 } else {
     $content = get_tpl_by_title("media_list_table", $tags, $result);
 }

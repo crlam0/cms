@@ -11,7 +11,7 @@ if ($input["view_list"]) {
     $_SESSION["view_article"] = "";
 }
 
-if ($_SESSION["view_article"]) {
+if (isset($_SESSION["view_article"]) && $_SESSION["view_article"]) {
     list($list_title) = my_select_row("select title from article_list where id='" . $_SESSION["view_article"] . "'", 1);
     $tags['Header'].=" -> $list_title";
 }
@@ -71,7 +71,7 @@ if (($input["edit_article"]) || ($input["add_article"])) {
     exit();
 }
 
-if ($_SESSION["view_article"]) {
+if (isset($_SESSION["view_article"]) && $_SESSION["view_article"]) {
     $query = "SELECT * from article_item where list_id=" . $_SESSION["view_article"] . " order by date_add asc";
     $result = my_query($query, true);
     $content.=get_tpl_by_title("article_edit_table", $tags, $result);

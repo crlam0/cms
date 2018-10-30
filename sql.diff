@@ -1,3 +1,10 @@
+=== 2018-10-21
+
+
+ALTER TABLE `cat_item`
+	ADD COLUMN `cnt_weight` VARCHAR(50) NULL AFTER `special_offer`;
+
+
 === 2018-10-19
 
 ALTER TABLE `cat_item_images`

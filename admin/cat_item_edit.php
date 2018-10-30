@@ -192,7 +192,7 @@ if (($input['edit']) || ($input['add'])) {
         $tags['price'] = '';
     }
     $row_part = my_select_row("select * from cat_part where id=" . $_SESSION['ADMIN_PART_ID'], 1);
-    if ($tags['special_offer']){
+    if (isset($tags['special_offer']) && $tags['special_offer'] ){
         $tags['special_offer'] = ' checked';
     }
 

@@ -68,6 +68,16 @@ if (isset($input['add_buy']) && $input['cnt']) {
     exit;
 }
 
+function get_item_image_url($file_name, $width, $fix_size=1) {
+    global $DIR, $IMG_ITEM_PATH;
+    $cache_file_name = get_cache_file_name($IMG_ITEM_PATH . $file_name, $width);
+    if(is_file($DIR . $cache_file_name)) {
+        return $cache_file_name;
+    } else {
+        return "modules/catalog/image.php?file_name={$file_name}&preview={$width}&fix_size={$fix_size}";
+    }
+}
+
 function show_img($tmp, $row) {
     global $IMG_ITEM_PATH, $IMG_ITEM_URL;
     if (is_file($IMG_ITEM_PATH . $row['fname'])) {
@@ -198,7 +208,9 @@ if ($input['get_popup_image_content']) {
         }
     }
 
-    $content.="<center><img src=\"{$SUBDIR}modules/catalog/image.php?preview=500&file_name={$input["file_name"]}&windowHeight={$input['windowHeight']}\" border=0></center>";
+    $URL=get_item_image_url($input["file_name"], 500);
+    
+    $content.="<center><img src=\"{$SUBDIR}{$URL}\" border=0></center>";
     if(strlen($nav_ins)){
         $content.="<br /><center>{$nav_ins}</center>";
     }
@@ -228,12 +240,7 @@ if (strlen($input['item_title'])) {
 
         $file_name = $IMG_ITEM_PATH . $row['fname'];
         if (is_file($file_name)) {
-            $cache_file_name = get_cache_file_name($file_name, $settings["catalog_item_img_preview"]);
-            if(is_file($DIR . $cache_file_name)) {
-                $URL=$cache_file_name;
-            } else {
-                $URL="modules/catalog/image.php?id={$row['cat_item_images_id']}&preview={$settings["catalog_item_img_preview"]}&windowHeight=500&fix_size=1";
-            }            
+            $URL=get_item_image_url($row['fname'], $settings["catalog_item_img_preview"]);
             $tags['default_image'] = "<img src=\"{$SUBDIR}{$URL}\" item_id={$row['id']} file_name={$row['fname']} image_id={$row['cat_item_images_id']} border=0 align=left class=cat_item_image_popup>";
         } else {
             $tags['default_image'] = 'Изображение отсутствует';
@@ -251,12 +258,7 @@ if (strlen($input['item_title'])) {
             while ($row = $result->fetch_array()){
                 $file_name = $IMG_ITEM_PATH . $row['fname'];
                 if (is_file($file_name)) {
-                    $cache_file_name = get_cache_file_name($file_name, 50);
-                    if(is_file($DIR . $cache_file_name)) {
-                        $URL=$cache_file_name;
-                    } else {
-                        $URL="modules/catalog/image.php?preview=50&file_name={$row['fname']}&windowHeight=300&fix_size=1";
-                    }            
+                    $URL=get_item_image_url($row['fname'], 50);
                     $tags['images'] .= "<div class=image_item><img class=cat_images src=\"{$SUBDIR}{$URL}\" item_id={$item_id} file_name={$row['fname']} image_id={$row['id']} border=0></div>";
                 }
                 $tags['images'] .= "</div>";
@@ -351,7 +353,8 @@ if ($result->num_rows) {
     while ($row = $result->fetch_array()) {
         $row['item_a'] = '<a href="' . $SUBDIR . get_cat_part_href($row['part_id']) . $row['seo_alias'] . '" title="' . $row['title'] . '">';
         $row['special_offer_ins'] = ($row['special_offer'] ? "<div class=cat_item_special_offer>Спецпредложение !</div>" : "");
-        $row['default_image'] = (is_file($IMG_ITEM_PATH . $row['fname']) ? $row['item_a'] . "<img src=\"{$SUBDIR}modules/catalog/image.php?id={$row['image_id']}&windowHeight=500&fix_size=1\" alt=\"{$row['title']}\" title=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
+        $URL=get_item_image_url($row['fname'], $settings["catalog_item_img_preview"]);
+        $row['default_image'] = (is_file($IMG_ITEM_PATH . $row['fname']) ? $row['item_a'] . "<img src=\"{$SUBDIR}{$URL}\" alt=\"{$row['title']}\" title=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
         $row['descr'] = nl2br($row['descr']);
         $row['price'] = ($row['price'] ? "Цена $row[price]" : "");
         $content .= get_tpl_by_title('cat_item_list_view', $row, $result);

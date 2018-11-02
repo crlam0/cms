@@ -27,7 +27,7 @@ if(strstr($request_uri,'?')) {
     unset($get_param, $get_array, $param, $param_array);
 }
 
-if( ($request_uri==='' or $request_uri==='/') and file_exists('index.local.php')) {
+if( (!$request_uri or $request_uri==='' or $request_uri==='/') and file_exists('index.local.php')) {
     require 'index.local.php';
     exit;
 }

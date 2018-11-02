@@ -1,7 +1,7 @@
 <?php
-if(!isset($input)) {
-    require '../../include/common.php';
-}
+
+@include_once "../../include/common.php";
+
 $tags['Header']=isset($settings['catalog_header']) ? $settings['catalog_header'] : 'Магазин';
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/catalog.css" type="text/css" rel=stylesheet />'."\n";
 $tags['INCLUDE_JS'] .=  
@@ -133,15 +133,16 @@ if ($current_part_id) {
  */
 
 if ($input['get_popup_content']) {
+    
 	$query="select cat_item.*,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img or cat_item_images.item_id=cat_item.id) where cat_item.id='".$_GET["item_id"]."' order by b_code,title asc";
 	$result=my_query($query);
 	$row = $result->fetch_array();
 	
-	$row['price']=($row['price']?"Цена: ".$row['price']." руб":"Цена договорная.");
+	$row[price]=($row[price]?"Цена: ".$row[price]." руб":"Цена договорная.");
 	
 	$tags=array_merge($tags,$row);
-	if(is_file($IMG_ITEM_PATH.$row['fname'])){
-                $tags['default_image']="<img src={$IMG_ITEM_URL}{$row['fname']} border=0 align=left>";
+	if(is_file($IMG_ITEM_PATH.$row[fname])){
+		$tags['default_image']="<img src={$IMG_ITEM_URL}$row[fname] border=0 align=left>";
 	}else{
 		$tags['default_image']="Изображение отсутствует.";
 	}
@@ -161,46 +162,12 @@ if ($input['get_popup_content']) {
             <input class=\"cnt_{$_GET["item_id"]}\" size=1 maxlength=2 value=1>
             <a class=buy_button item_id=\"{$_GET["item_id"]}\">В корзину</a>
         ";
-
         $json['title'] = $tags['title'];
         $json['content'] = $content;
 //	echo iconv('windows-1251', 'UTF-8', $content);
         echo json_encode($json);
 	exit;
 
-}
-
-if ($input['get_popup_image_content']) {
-    
-    list($default_img,$default_img_fname,$title)=my_select_row("select default_img,fname,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='".$input["item_id"]."'",false);
-    
-    list($prev_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id<'" . $input["image_id"] . "' and id<>'{$default_img}' order by id desc limit 1", false);
-    if ($input["image_id"] != $default_img){
-        if ($prev_id){
-            $nav_ins.= "<a image_id={$prev_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button button\"><< Предыдущая</a>";
-        }else{     
-            $nav_ins.= "<a image_id={$default_img} item_id={$input["item_id"]} file_name=\"{$default_img_fname}\" class=\"cat_image_button button\"><< Предыдущая</a>";
-        }
-        list($next_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id>'" . $input["image_id"] . "' and id<>'{$default_img}' order by id asc limit 1", false);
-        if ($next_id) {
-            $nav_ins.= "<a image_id={$next_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button button\">Следующая >></a>";
-        }
-    }else{
-        list($next_id,$fname) = my_select_row("select id,fname from cat_item_images where item_id='" . $input["item_id"] . "' and id<>'{$default_img}' order by id asc limit 1", false);
-        if ($next_id) {
-            $nav_ins.= "<a image_id={$next_id} item_id={$input["item_id"]} file_name={$fname} class=\"cat_image_button button\">Следующая >></a>";
-        }
-    }
-
-    $content.="<center><img src=\"{$SUBDIR}modules/catalog/image.php?preview=500&file_name={$input["file_name"]}&windowHeight={$input['windowHeight']}\" border=0></center>";
-    if(strlen($nav_ins)){
-        $content.="<br /><center>{$nav_ins}</center>";
-    }
-    
-    $json['title'] = $title;
-    $json['content'] = $content;
-    echo json_encode($json);
-    exit;
 }
 
 

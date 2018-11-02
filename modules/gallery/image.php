@@ -1,6 +1,7 @@
 <?php
 
 include '../../include/common.php';
+include 'functions.php';
 
 list($file_name, $file_type) = my_select_row("select file_name,file_type from gallery_images where id='{$input['id']}'", true);
 $file_name = $DIR . $settings['gallery_upload_path'] . $file_name;
@@ -19,17 +20,13 @@ if (!$input['clientHeight']) {
 }
 $input['clientHeight'] = $input['clientHeight'] - 210;
 
-if ($input['preview']) {
-    $max_width = $settings['gallery_max_width_preview'];
-} else {
-    $max_width = $settings['gallery_max_width'];
-}
 if ($input['icon'] && $settings['gallery_icon_width']) {
     $fix_size = true;
-    $max_width = $settings['gallery_icon_width'];
 }
 
-$cache_file_name = $DIR . 'var/cache/gallery/' . md5($file_name.$max_width) . '.jpeg';
+$max_width = get_max_width();
+
+$cache_file_name = $DIR . get_cache_file_name($file_name, $max_width);
 
 unset($src);
 if (($file_type == 'image/jpeg') || ($file_type == 'image/pjpeg')) {

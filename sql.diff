@@ -1,3 +1,15 @@
+=== 2018-10-21
+
+
+ALTER TABLE `cat_item`
+	ADD COLUMN `cnt_weight` VARCHAR(50) NULL AFTER `special_offer`;
+
+
+=== 2018-10-19
+INSERT INTO `settings` (`title`, `comment`) VALUES ('contacts_phone', '<b>Контакты: телефон</b>');
+INSERT INTO `settings` (`title`, `comment`) VALUES ('contacts_email', '<b>Контакты: E-Mail</b>');
+INSERT INTO `settings` (`title`, `comment`) VALUES ('contacts_addr', '<b>Контакты: адрес</b>');
+
 === 2018-10-19
 
 ALTER TABLE `cat_item_images`

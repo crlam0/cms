@@ -81,11 +81,7 @@ if (isset($input['view'])) {
     $input['view_article'] = 1;
 }
 
-<<<<<<< HEAD
-if ($input['view_items']) {
-=======
 if (isset($input['view_items'])) {
->>>>>>> current
     $view_items = $input['id'];
 }
 

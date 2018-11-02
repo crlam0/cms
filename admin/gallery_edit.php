@@ -28,7 +28,12 @@ if ($_SESSION['view_gallery']) {
     $tags['Header'].=" -> $list_title";
 }
 
+<<<<<<< HEAD
 if ($input['default_image_id']) {list($gallery_id) = my_select_row("select gallery_id from gallery_images where id='" . $_POST["default_image_id"] . "'", 1);
+=======
+if ($input['default_image_id']) {
+    list($gallery_id) = my_select_row("select gallery_id from gallery_images where id='" . $_POST["default_image_id"] . "'", 1);
+>>>>>>> current
     $query = "update gallery_list set default_image_id='" . $_POST["default_image_id"] . "' where id='{$gallery_id}'";
     echo (my_query($query, true) ? "OK" : mysql_error() );
     exit;

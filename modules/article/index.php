@@ -1,5 +1,10 @@
 <?php
+if(!isset($input)) {
+    require '../../include/common.php';
+}
+
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
+
 
 if(file_exists($INC_DIR . 'dompdf/src/Autoloader.php')) {
     require_once $INC_DIR . 'dompdf/lib/html5lib/Parser.php';
@@ -76,9 +81,14 @@ if (isset($input['view'])) {
     $input['view_article'] = 1;
 }
 
+<<<<<<< HEAD
 if ($input['view_items']) {
+=======
+if (isset($input['view_items'])) {
+>>>>>>> current
     $view_items = $input['id'];
 }
+
 
 if (!$input->count()) {
     $view_items = '';
@@ -90,7 +100,7 @@ if ($input["view_article"]) {
     $result = my_query($query);
     $row = $result->fetch_array();
 
-    $tags['nav_str'].="<a href=" . $server['PHP_SELF_DIR'] . " class=nav_next>Статьи</a>";
+    $tags['nav_str'].="<a href=" . $SUBDIR . "article/ class=nav_next>Статьи</a>";
     list($id, $title) = my_select_row("select id,title from article_list where id='{$row['list_id']}'", 1);
     $tags['nav_str'].="<span class=nav_next><a href=\"".$SUBDIR.get_article_list_href($id)."\">$title</a></span>";
     $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";

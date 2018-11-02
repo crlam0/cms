@@ -100,7 +100,11 @@ if ($input["added"]) {
     $num_rows=my_select_row("select id from cat_part where seo_alias='{$input['form']['seo_alias']}'",1);
     if($num_rows>0){
         $seo_alias_duplicate=1;
+    } else {
+        $seo_alias_duplicate = 0;
     }
+    $input['form']['date_add']='now()';
+    $input['form']['date_change']='now()';
     $query = "insert into cat_part " . db_insert_fields($input['form']);
     my_query($query, true);
     $insert_id=$mysqli->insert_id;
@@ -129,6 +133,7 @@ if ($input['edited']) {
     if($num_rows>1){
         $input['form']['seo_alias'].='_'.$input['id'];
     }
+    $input['form']['date_change']='now()';
     $query = "update cat_part set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
     $content.=my_msg_to_str('','','Раздел успешно изменен.');
@@ -166,7 +171,7 @@ if (($input['edit']) || ($input['adding'])) {
 	$tags['type'] = "added";
 	$tags['Header'] = "Добавление раздела";
     }
-    $tags['head_inc'] = $EDITOR_SIMPLE_INC;
+    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_MINI_INC;
     
     $prev_id_select = '';
     function sub_part_select($prev_id, $deep) {
@@ -176,7 +181,7 @@ if (($input['edit']) || ($input['adding'])) {
         }
         $query = "select * from cat_part where prev_id='{$prev_id}' order by num,title asc";
         $result = my_query($query, true);
-
+        $arr = null;
         while ($row = $result->fetch_array()) {
             $title='';
             $arr=prev_part($row['prev_id'], 0, $arr);
@@ -187,7 +192,7 @@ if (($input['edit']) || ($input['adding'])) {
                 }
             }
             $row['title'] = $title . $row['title'];
-            $prev_id_select.="<option value={$row['id']}" . ($tags['prev_id'] == $row['id'] ? " selected" : "") . ">{$row['title']}</option>\n";
+            $prev_id_select.="<option value={$row['id']}" . (isset($tags['prev_id']) && $tags['prev_id'] == $row['id'] ? " selected" : "") . ">{$row['title']}</option>\n";
             sub_part_select($row['id'], $deep + 1);
         }
     }
@@ -195,8 +200,8 @@ if (($input['edit']) || ($input['adding'])) {
     
     $tags['prev_id_select'] = $prev_id_select;
 
-    $tags['img_tag'] = (is_file($IMG_PATH . $tags['img']) ? "<img src=../{$settings['catalog_part_img_path']}{$tags['img']} class=margin><br>" : "[ Отсутствует ]<br>");
-    $tags['del_button'] = (is_file($IMG_PATH . $tags['img']) ? "<a href=" . $_SERVER['PHP_SELF'] . "?del_img=1&id={$tags['id']}>Удалить</a><br>" : '');
+    $tags['img_tag'] = (isset($tags['img']) && is_file($IMG_PATH . $tags['img']) ? "<img src=../{$settings['catalog_part_img_path']}{$tags['img']} class=margin><br>" : "[ Отсутствует ]<br>");
+    $tags['del_button'] = (isset($tags['img']) && is_file($IMG_PATH . $tags['img']) ? "<a href=" . $_SERVER['PHP_SELF'] . "?del_img=1&id={$tags['id']}>Удалить</a><br>" : '');
 
     $content .= get_tpl_by_title('cat_part_form', $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

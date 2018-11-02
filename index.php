@@ -1,5 +1,6 @@
 <?php
 include 'include/common.php';
+use Classes\MyGlobal;
 
 if($SUBDIR !== '/') {
     $request_uri = str_replace($SUBDIR, '', $server['REQUEST_URI']);

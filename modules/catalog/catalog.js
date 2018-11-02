@@ -28,11 +28,13 @@ $(document).ready(function() {
         });
     });
 
-    $(".cat_item_image_popup").click(function() {
+    $("img.cat_item_image_popup").click(function() {
+        var file_name = $(this).attr("file_name");
         var item_id = $(this).attr("item_id");
+        var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
         $.ajax({
-            type: "GET", url: DIR + "index.php", dataType : "json", data: "get_popup_content=1&item_id=" + item_id + "&windowHeight="+windowHeight,
+            type: "GET", url: DIR + "index.php", dataType : "json", data: "get_popup_image_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,
             success: function(msg){
                 $('#popupHeader').html(msg.title);
                 $('#popupContent').html(msg.content);
@@ -40,7 +42,14 @@ $(document).ready(function() {
                     loadPopup();                
                     centerPopup();
                 });
+            },
+                error: function (jqXHR, error, errorThrown) {                
+                $('#popupContent').html(jqXHR.responseText);
+                loadPopup();
+                // $('.modal-dialog').css({'max-width': '1024px'});
+                centerPopup();
             }
+
         });
     });
 
@@ -50,13 +59,20 @@ $(document).ready(function() {
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
         $.ajax({
-            type: "GET", url: DIR + "index.php", data: "get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,
+            type: "GET", url: DIR + "index.php", dataType : "json", data: "get_popup_image_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,
             success: function(msg){
-                $('#popupContent').html(msg);
+                $('#popupHeader').html(msg.title);
+                $('#popupContent').html(msg.content);
                 $("#popupContent").waitForImages(function() {
                     loadPopup();                
                     centerPopup();
                 });
+            },
+                error: function (jqXHR, error, errorThrown) {                
+                $('#popupContent').html(jqXHR.responseText);
+                loadPopup();
+                // $('.modal-dialog').css({'max-width': '1024px'});
+                centerPopup();
             }
         });
     });
@@ -67,14 +83,21 @@ $(document).ready(function() {
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
             $.ajax({
-                type: "GET", url: DIR + "index.php", data: "get_popup_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,
+                type: "GET", url: DIR + "index.php", dataType : "json", data: "get_popup_image_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,
                 success: function(msg){
-                    $('#popupContent').html(msg);
+                $('#popupHeader').html(msg.title);
+                $('#popupContent').html(msg.content);
                     $("#popupContent").waitForImages(function() {
                         centerPopup();
                         $("#popupItem").fadeIn("slow");
                     });
-                }
+                },
+                error: function (jqXHR, error, errorThrown) {                
+                $('#popupContent').html(jqXHR.responseText);
+                loadPopup();
+                // $('.modal-dialog').css({'max-width': '1024px'});
+                centerPopup();
+            }
             });
     });
 

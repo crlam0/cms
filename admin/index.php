@@ -4,13 +4,22 @@ require '../include/common.php';
 
 use Classes\Sitemap;
 
+$content='';
+
+
+if($input['clear_cache']) {
+    if(clear_cache_dir()){
+        $content.=my_msg_to_str('','','Директория кэша очищена');
+    } else {
+        $content.=my_msg_to_str('error','','Директория кэша не очищена !');
+    }
+}
+
 $sitemap=$DIR . 'sitemap.xml';
 
 if(file_exists($sitemap)){
     $time_diff=time()-filemtime($sitemap);
 }
-
-$content='';
 
 if($time_diff>7*24*60*60){
     $content.=my_msg_to_str('','','Файл sitemap.xml не обновлялся более недели.');

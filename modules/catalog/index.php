@@ -208,7 +208,7 @@ if ($input['get_popup_image_content']) {
         }
     }
 
-    $URL=get_item_image_url($input["file_name"], 500);
+    $URL=get_item_image_url($input["file_name"], 500, 0);
     
     $content.="<center><img src=\"{$SUBDIR}{$URL}\" border=0></center>";
     if(strlen($nav_ins)){

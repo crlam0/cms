@@ -106,7 +106,19 @@ class Template {
         return $this->MyTemplate->parse($template['content'], $tags, $sql_result, $inner_content);
     }
 
-
+    protected function is_root () {
+        global $server, $SUBDIR;
+        
+        $URI = $server['REQUEST_URI'];
+        if (strlen($SUBDIR) > 1){
+            $URI = str_replace($SUBDIR, "/", $URI);
+        }
+        if(strstr($URI,'?')) {
+            $URI = substr($URI,0,strpos($URI,'?'));
+        }
+        return $URI == '/';
+    }
+    
     /**
      * Parse template by title
      *
@@ -121,7 +133,13 @@ class Template {
         global $server, $DIR;
         
         $template = null;
-
+        $is_root=$this->is_root();
+        
+        if(!$is_root && is_file($DIR.'theme/content.tpl') && isset($tags['conent_included'])) {
+            $tags['conent_included'] = true;
+            $inner_content = get_tpl_by_title($DIR.'theme/content.tpl', $tags, $sql_result, $inner_content);
+        }
+        
         if (file_exists(dirname($server['SCRIPT_FILENAME']) . '/templates.tpl')) {
             $temp = $this->MyTemplate->load_from_file(dirname($server['SCRIPT_FILENAME']) . '/templates.tpl', $title);
             if ($temp) {

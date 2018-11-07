@@ -119,6 +119,12 @@ class Template {
         return $URI == '/';
     }
     
+    protected function is_admin () {
+        global $server;        
+        $URI = $server['REQUEST_URI'];
+        return strstr($URI,'admin/');
+    }
+    
     /**
      * Parse template by title
      *
@@ -133,9 +139,8 @@ class Template {
         global $server, $DIR;
         
         $template = null;
-        $is_root=$this->is_root();
         
-        if(!$is_root && is_file($DIR.'theme/content.tpl') && !isset($tags['conent_included'])) {
+        if(!$this->is_root() && !$this->is_admin() && is_file($DIR.'theme/content.tpl') && !isset($tags['conent_included'])) {
             $tags['conent_included'] = true;
             $inner_content = get_tpl_by_title($DIR.'theme/content.tpl', $tags, $sql_result, $inner_content);
         }

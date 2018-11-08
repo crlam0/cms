@@ -6,6 +6,7 @@ $tags['Header'] = "Корзина";
 use Classes\SummToStr;
 $SummToStr = new SummToStr();
 
+$tags['nav_str'] .= "<span class=nav_next><a href=\"" . $SUBDIR . "catalog/\" class=top>Каталог</a></span>";
 $tags['nav_str'].="<span class=nav_next>Корзина</span>";
 
 $IMG_ITEM_PATH = $DIR . $settings['catalog_item_img_path'];
@@ -173,7 +174,7 @@ if (isset($input["request_done"])) {
 }
 
 
-if (is_array($_SESSION["BUY"]) && count($_SESSION["BUY"])) {
+if (isset($_SESSION["BUY"]) && is_array($_SESSION["BUY"]) && count($_SESSION["BUY"])) {
     $where = "";
     $count = 0;
     foreach ($_SESSION["BUY"] as $item_id => $cnt) {

@@ -140,7 +140,7 @@ if ($input['added']) {
         $seo_alias_duplicate=1;
     }
     $input['form']['part_id'] = $_SESSION['ADMIN_PART_ID'];
-    if (!isset($input['form'][special_offer])){
+    if (!isset($input['form']['special_offer'])){
         $input['form']['special_offer'] = 0;
     }
     $input['form']['date_add']='now()';

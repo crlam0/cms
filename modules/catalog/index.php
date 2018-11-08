@@ -262,6 +262,7 @@ if (strlen($input['item_title'])) {
                     $tags['images'] .= "<div class=image_item><img class=cat_images src=\"{$SUBDIR}{$URL}\" item_id={$item_id} file_name={$row['fname']} image_id={$row['id']} border=0></div>";
                 }
             }
+            $tags['images'] .= "</div>";
         }
 
         $content .= get_tpl_by_title("cat_item_detail_view", $tags, $result);

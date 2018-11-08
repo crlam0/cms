@@ -10,7 +10,7 @@ if ($input['view_gallery']) {
 }
 
 if ($input['list_gallery']) {
-    $_SESSION['view_gallery'] = "";
+    unset($_SESSION['view_gallery']);
 }
 
 if ($input['active']) {
@@ -23,7 +23,7 @@ if ($input['active']) {
     exit;
 }
 
-if ($_SESSION['view_gallery']) {
+if (isset($_SESSION['view_gallery'])) {
     list($list_title) = my_select_row("select title from gallery_list where id='" . $_SESSION["view_gallery"] . "'", 1);
     $tags['Header'].=" -> $list_title";
 }
@@ -69,12 +69,13 @@ function reArrayFiles(&$file_post) {
 
 if ($input['add_multiple']){
     if ($_FILES['files']) {
-        $file_ary = reArrayFiles($_FILES['files']);
+        $file_array = reArrayFiles($_FILES['files']);
 
-        foreach ($file_ary as $file) {
-            $input['form'][date_add] = "now()";
-            $input['form'][gallery_id] = $_SESSION['view_gallery'];
-            $query = "insert into gallery_images " . db_insert_fields($input['form']);
+        foreach ($file_array as $file) {
+            $data = [];
+            $data['date_add'] = "now()";
+            $data['gallery_id'] = $_SESSION['view_gallery'];
+            $query = "insert into gallery_images " . db_insert_fields($data);
             my_query($query);    
             if ($file["size"] > 100) {
                 if (!in_array($file["type"], $validImageTypes)) {
@@ -122,7 +123,7 @@ if ($input['added_image']) {
 	} else {
             $image_id=$mysqli->insert_id;
 	    $f_info = pathinfo($_FILES['img_file']['name']);
-	    $file_name = encodestring($input['form'][title]) . "." . $f_info['extension'];
+	    $file_name = encodestring($input['form']['title']) . "." . $f_info['extension'];
 	    if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['gallery_upload_path'] . $file_name, 1024)) {
 		$query = "update gallery_images set file_name='{$file_name}',file_type='" . $_FILES['img_file']['type'] . "' where id='{$image_id}'";
 		my_query($query);
@@ -145,7 +146,7 @@ if ($input['edited_image']) {
 		    )$content.=my_msg_to_str('error','','Ошибка удаления файла');
 	    }
 	    $f_info = pathinfo($_FILES['img_file']['name']);
-	    $file_name = encodestring($input['form'][title]) . "." . $f_info['extension'];
+	    $file_name = encodestring($input['form']['title']) . "." . $f_info['extension'];
 	    if (move_uploaded_image($_FILES['img_file'], $DIR . $settings['gallery_upload_path'] . $file_name, 1024)) {
 		$input['form']['file_name'] = $file_name;
 		$input['form']['file_type'] = $_FILES['img_file']['type'];
@@ -169,15 +170,16 @@ if (($input['edit_image']) || ($input['add_image'])) {
     } else {
 	$tags['type'] = "added_image";
 	$tags['form_title'] = "Добавление";
+        $tags['descr'] = '';
     }
-    $tags['descr'] = "<textarea name=form[descr] class=\"form-control\" rows=15 cols=100 maxlength=64000>$tags[descr]</textarea>";
-    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
+    $tags['descr'] = "<textarea name=form[descr] class=\"form-control\" rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
+    // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_title('gallery_image_edit_form', $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
-if ($_SESSION['view_gallery']) {
+if (isset($_SESSION['view_gallery'])) {
     $query = "SELECT * from gallery_images where gallery_id='" . $_SESSION['view_gallery'] . "' order by date_add asc";
     $result = my_query($query, true);
     $content.=get_tpl_by_title('gallery_image_edit_table', $tags, $result);
@@ -192,33 +194,29 @@ if ($input["del_gallery"]) {
     if ($result->num_rows) {
 	$content.=my_msg_to_str("error","","Этот раздел не пустой !");
     } else {
-        list($img) = my_select_row("select image_name from gallery_list where id=" . $_GET["id"]);
-        if (is_file($IMG_PATH . $img)) {
-            if (!unlink($IMG_PATH . $img))my_msg_to_str("", "", "Ошибка удаления файла");
-        }
 	$query = "delete from gallery_list where id='{$input['id']}'";
 	my_query($query);
 	$content.=my_msg_to_str("", "", "Галерея успешно удалена.");
     }
 }
 
-if ($_GET["del_gallery_list_image"]) {
-    list($img) = my_select_row("select image_name from gallery_list where id=" . $_GET["id"]);
+if (isset($input["del_gallery_list_image"])) {
+    list($img) = my_select_row("select image_name from gallery_list where id='{$input['id']}'");
     if (is_file($IMG_PATH . $img)) {
         if (!unlink($IMG_PATH . $img))my_msg_to_str("", "", "Ошибка удаления файла");
     }
-    $query = "update gallery_list set image_name='-' where id=" . $_GET["id"];
+    $query = "update gallery_list set image_name='-' where id=" . $input["id"];
     my_query($query);
-    $_GET["edit"] = 1;
+    $input["edit"] = 1;
 }
 
 
 if ($input["added_gallery"]) {
-    if (!strlen($input['form'][seo_alias]))$input['form'][seo_alias] = encodestring($input['form'][title]);
-    $input['form'][date_add] = "now()";
+    if (!strlen($input['form']['seo_alias']))$input['form']['seo_alias'] = encodestring($input['form']['title']);
+    $input['form']['date_add'] = "now()";
     $query = "insert into gallery_list " . db_insert_fields($input['form']);
     my_query($query);
-    if ($_FILES["img_file"]["size"]) {
+    if (isset($_FILES["img_file"]) && $_FILES["img_file"]["size"]) {
         $part_id = $mysqli->insert_id;
         $f_info = pathinfo($_FILES["img_file"]["name"]);
         $img = encodestring($input["form"]["title"]) . "." . $f_info["extension"];
@@ -256,7 +254,7 @@ if ($input["edited_gallery"]) {
 }
 
 if (($input['edit_gallery']) || ($input['add_gallery'])) {
-    if ($_GET["edit_gallery"]) {
+    if ($input["edit_gallery"]) {
 	$query = "select * from gallery_list where id='{$input['id']}'";
 	$result = my_query($query);
 	$tags = array_merge($tags, $result->fetch_array());
@@ -265,12 +263,13 @@ if (($input['edit_gallery']) || ($input['add_gallery'])) {
     } else {
 	$tags['type'] = 'added_gallery';
 	$tags['form_title'] = 'Добавление';
+        $tags['descr'] = '';
     }
     $tags['descr'] = "<textarea class=\"form-control\" name=form[descr] rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
-    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
+    // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     
-    $tags['img_tag'] = (is_file($IMG_PATH . $tags['image_name']) ? "<img src=../{$settings['gallery_list_img_path']}{$tags['image_name']} class=margin><br>" : "[ Отсутствует ]<br>");
-    $tags['del_button'] = (is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $server['PHP_SELF'] . "?del_gallery_list_image=1&id={$tags['id']}>Удалить</a><br>" : "");
+    $tags['img_tag'] = (isset($tags['image_name']) && is_file($IMG_PATH . $tags['image_name']) ? "<img src=../{$settings['gallery_list_img_path']}{$tags['image_name']} class=margin><br>" : "[ Отсутствует ]<br>");
+    $tags['del_button'] = (isset($tags['image_name']) && is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $server['PHP_SELF'] . "?del_gallery_list_image=1&id={$tags['id']}>Удалить</a><br>" : "");
 
     $content.=get_tpl_by_title('gallery_list_edit_form', $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

@@ -64,13 +64,13 @@ $(document).ready(function() {
                 $('#popupHeader').html(msg.title);
                 $('#popupContent').html(msg.content);
                 $("#popupContent").waitForImages(function() {
-                    loadPopup();                
+                    loadPopup();  
                     centerPopup();
                 });
             },
                 error: function (jqXHR, error, errorThrown) {                
                 $('#popupContent').html(jqXHR.responseText);
-                loadPopup();
+                loadPopup();  
                 // $('.modal-dialog').css({'max-width': '1024px'});
                 centerPopup();
             }
@@ -82,23 +82,25 @@ $(document).ready(function() {
         var item_id = $(this).attr("item_id");
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
+        $(".modal-dialog").fadeOut("slow", function () {
             $.ajax({
                 type: "GET", url: DIR + "index.php", dataType : "json", data: "get_popup_image_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight="+windowHeight,
                 success: function(msg){
                 $('#popupHeader').html(msg.title);
                 $('#popupContent').html(msg.content);
                     $("#popupContent").waitForImages(function() {
+                        $(".modal-dialog").fadeIn("slow");
                         centerPopup();
-                        $("#popupItem").fadeIn("slow");
                     });
                 },
                 error: function (jqXHR, error, errorThrown) {                
                 $('#popupContent').html(jqXHR.responseText);
-                loadPopup();
+                $(".modal-dialog").fadeIn("slow");
                 // $('.modal-dialog').css({'max-width': '1024px'});
                 centerPopup();
             }
             });
+        });
     });
 
 });

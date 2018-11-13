@@ -27,7 +27,9 @@ if ($input["added_article"]) {
     $input['form']['list_id'] = $_SESSION["view_article"];
     $input['form']['content'] = $_POST["form"]["content"];
     $input['form']['content']=replace_base_href($input['form']['content'],true);
-    if (!strlen($input['form'][seo_alias]))$input['form'][seo_alias] = encodestring($input['form']['title']);
+    if (!strlen($input['form']['seo_alias'])){
+        $input['form']['seo_alias'] = encodestring($input['form']['title']);
+    }
     $query = "insert into article_item" . db_insert_fields($input['form']);
     my_query($query, true);
     $content.=my_msg_to_str("", "", "Статья успешно добавлена.");
@@ -42,7 +44,9 @@ if ($input["edited_article"]) {
     $input['form']['date_add'] = "now()";
     $input['form']['content'] = $_POST["form"]["content"];
     $input['form']['content']=replace_base_href($input['form']['content'],true);
-    if (!strlen($input['form']['seo_alias']))$input['form']['seo_alias'] = encodestring($input['form']['title']);
+    if (!strlen($input['form']['seo_alias'])){
+        $input['form']['seo_alias'] = encodestring($input['form']['title']);
+    }
     $query = "update article_item set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
     $content.=my_msg_to_str("", "", "Статья успешно изменена.");
@@ -63,9 +67,10 @@ if (($input["edit_article"]) || ($input["add_article"])) {
 	$tags['type'] = "added_article";
 	$tags['form_title'] = "Добавление";
 	$tags['Header'] = "Добавление статьи";
+        $tags['content']= '';
     }
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
-    $tags["content"]=replace_base_href($tags["content"],false);
+    $tags['content']=replace_base_href($tags['content'],false);
     $content.=get_tpl_by_title("article_edit_form", $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();

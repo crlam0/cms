@@ -64,7 +64,7 @@ if (isset($input['pdf']) && $dompdf_enabled) {
 
 if (isset($input['uri'])) {
     $params = explode('/', $input['uri']);
-    if(strlen($params[1])){
+    if(isset($params[1]) && strlen($params[1])){
         $input["view"]=$params[1];
     }else{
         $query="select id from article_list where seo_alias like '".$params[0]."'";

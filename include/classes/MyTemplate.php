@@ -115,7 +115,7 @@ class MyTemplate {
                     if (file_exists($DIR . $tagparam)) {
                         $fname = $DIR . $tagparam;
                     }
-                    if (strlen($fname)) {
+                    if (isset($fname) && strlen($fname)) {
                         ob_start();
                         include_once($fname);
                         $replace_str = ob_get_contents();

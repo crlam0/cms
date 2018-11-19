@@ -72,7 +72,7 @@ if ($input['del']) {
     $query = 'select * from cat_item_images where item_id=' . $input['id'];
     $result = my_query($query);
     while ($row = $result->fetch_array()) {
-        if (!unlink($IMG_PATH . $row[fname]))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
+        if (!unlink($IMG_PATH . $row['fname']))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
     }
     $query = 'delete from cat_item_images where item_id=' . $input['id'];
     my_query($query);
@@ -83,7 +83,7 @@ if ($input['del']) {
 
 if ($input['add_image']) {
     if ($_FILES['img_file']['size']) {
-        $query = "insert into cat_item_images(item_id,descr) values('{$input["id"]}','{$input["descr"]}')";
+        $query = "insert into cat_item_images(date_add,item_id,descr) values(now(),'{$input["id"]}','{$input["descr"]}')";
         my_query($query);
         $image_id = $mysqli->insert_id;
         $f_info = pathinfo($_FILES['img_file']['name']);
@@ -102,7 +102,7 @@ if ($input['add_image']) {
         }
         
         if ($upload_result) {
-            $query = "update cat_item_images set fname='{$img}' where id='{$image_id}'";
+            $query = "update cat_item_images set fname='{$img}',file_type='" . $_FILES['img_file']['type'] . "' where id='{$image_id}'";
             my_query($query);
             $query = "select id from cat_item_images where item_id='{$input['id']}'";
             $result = my_query($query);
@@ -132,13 +132,20 @@ if ($input['added']) {
         list($input['form']['num'])=my_select_row("select max(num) from cat_item where part_id='{$_SESSION['ADMIN_PART_ID']}'", false);
         $input['form']['num']++;
     }
-    if (!strlen($input['form']['seo_alias']))$input['form']['seo_alias'] = encodestring($input['form']['title']);
+    if (!strlen($input['form']['seo_alias'])){
+        $input['form']['seo_alias'] = encodestring($input['form']['title']);
+    }
     $num_rows=my_select_row("select id from cat_item where seo_alias='{$input['form']['seo_alias']}'",1);
+    $seo_alias_duplicate = false;
     if($num_rows>0){
         $seo_alias_duplicate=1;
     }
     $input['form']['part_id'] = $_SESSION['ADMIN_PART_ID'];
-    if (!isset($input['form'][special_offer]))$input['form']['special_offer'] = 0;
+    if (!isset($input['form']['special_offer'])){
+        $input['form']['special_offer'] = 0;
+    }
+    $input['form']['date_add']='now()';
+    $input['form']['date_change']='now()';
     $query = "insert into cat_item " . db_insert_fields($input['form']);
     my_query($query);
     $insert_id=$mysqli->insert_id;
@@ -153,12 +160,17 @@ if ($input['added']) {
 
 if ($input['edited']) {
     $input['form']['part_id'] = $_SESSION['ADMIN_PART_ID'];
-    if (!strlen($input['form']['seo_alias']))$input['form']['seo_alias'] = encodestring($input['form']['title']);
+    if (!strlen($input['form']['seo_alias'])){
+        $input['form']['seo_alias'] = encodestring($input['form']['title']);
+    }
     $num_rows=my_select_row("select id from cat_item where seo_alias='{$input['form']['seo_alias']}' and id<>{$input['id']}", false);
     if($num_rows>1){
         $input['form']['seo_alias'].='_'.$input['id'];
     }
-    if (!isset($input['form']['special_offer']))$input['form']['special_offer'] = 0;
+    if (!isset($input['form']['special_offer'])){
+        $input['form']['special_offer'] = 0;
+    }
+    $input['form']['date_change']='now()';
     $query = "update cat_item set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
     $content.=my_msg_to_str('','','Изменения сохранены');
@@ -181,7 +193,9 @@ if (($input['edit']) || ($input['add'])) {
         $tags['price'] = '';
     }
     $row_part = my_select_row("select * from cat_part where id=" . $_SESSION['ADMIN_PART_ID'], 1);
-    if ($tags['special_offer'])$tags['special_offer'] = ' checked';
+    if (isset($tags['special_offer']) && $tags['special_offer'] ){
+        $tags['special_offer'] = ' checked';
+    }
 
     $tags['price_inputs'] = "<tr class=content align=left><td>{$row_part['price1_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price] value=\"{$tags['price']}\"></td></tr>";
     if ($row_part['price_cnt'] >= 2){ $tags['price_inputs'].="<tr class=content align=left><td>{$row_part['price2_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price2] value=\"{$tags['price2']}\"></td></tr>";}

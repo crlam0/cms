@@ -366,6 +366,7 @@ $(document).ready(function(){
 	<tr class=content align=left><td>Название:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[title] value="[%title%]"></td></tr>
 	<tr class=content align=left><td>Позиция:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[num] value="[%num%]"></td></tr>
 	<tr class=content align=left><td>Алиас:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
+        <tr class=content align=left><td>Специальное предложение:</td><td><input type=checkbox maxlength=255 size=64 name=form[special_offer] value="1" [%special_offer%]></td></tr>
 	[%price_inputs%]
 	<tr class=content align=left><td>Вес/количество/объем:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[cnt_weight] value="[%cnt_weight%]"></td></tr>
 	<tr class=header><td colspan=2>Краткое описание</td></tr>
@@ -663,7 +664,7 @@ tr.active_N { background: #dddddd; }
 	<td width=5% align=center>&nbsp;</td>
 </tr>
 [%loop_begin%]
-	<tr class=active_[%row(active)%] align=left id=tr_[%row(id)%]>
+	<tr class="active_[%row(active)%]" align="left" gallery_id="tr_[%row(id)%]">
 	<td>[%row(date_add)%]</td>
 	<td><b><a href=[%PHP_SELF%]?view_gallery=1&id=[%row(id)%]>[%row(title)%]</a></b></td>
 	<td align=center>[%row(seo_alias)%]</td>
@@ -677,14 +678,14 @@ tr.active_N { background: #dddddd; }
 <script type="text/javascript">
 $(document).ready(function(){  
     $('input:checkbox').change(function(){
-	var id=$(this).val();
+	var id=$(this).attr("gallery_id");
 	if( $(this).attr("checked") ){ var active='Y'; }else{ var active='N'; }
 	$.ajax({
 	   type: "POST", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
 	   success: function(msg){
 	     var tr_id="#tr_"+id;
-	     if(msg == 'Y') $(tr_id).attr("class","active_Y");
-	     else if(msg == 'N') $(tr_id).attr("class","active_N");
+	     if(msg === 'Y') $(tr_id).attr("class","active_Y");
+	     else if(msg === 'N') $(tr_id).attr("class","active_N");
 	     else alert(msg);
 	   }
 	});
@@ -770,7 +771,7 @@ $(document).ready(function(){
         $.ajax({
            type: "POST", url: "[%PHP_SELF%]", data: "default_image_id="+id,
            success: function(msg){
-                if(msg != 'OK') alert(msg);
+                if(msg !== 'OK') alert(msg);
                 $(this).prop("checked",true);
            }
         });

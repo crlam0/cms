@@ -1,5 +1,10 @@
 <?php
+if(!isset($input)) {
+    require '../../include/common.php';
+}
+
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
+
 
 if(file_exists($INC_DIR . 'dompdf/src/Autoloader.php')) {
     require_once $INC_DIR . 'dompdf/lib/html5lib/Parser.php';
@@ -59,7 +64,7 @@ if (isset($input['pdf']) && $dompdf_enabled) {
 
 if (isset($input['uri'])) {
     $params = explode('/', $input['uri']);
-    if(strlen($params[1])){
+    if(isset($params[1]) && strlen($params[1])){
         $input["view"]=$params[1];
     }else{
         $query="select id from article_list where seo_alias like '".$params[0]."'";
@@ -76,9 +81,10 @@ if (isset($input['view'])) {
     $input['view_article'] = 1;
 }
 
-if (array_key_exists('view_items', $input) && $input['view_items']) {
+if (isset($input['view_items'])) {
     $view_items = $input['id'];
 }
+
 
 if (!$input->count()) {
     $view_items = '';
@@ -90,7 +96,7 @@ if ($input["view_article"]) {
     $result = my_query($query);
     $row = $result->fetch_array();
 
-    $tags['nav_str'].="<a href=" . $server['PHP_SELF_DIR'] . " class=nav_next>Статьи</a>";
+    $tags['nav_str'].="<a href=" . $SUBDIR . "article/ class=nav_next>Статьи</a>";
     list($id, $title) = my_select_row("select id,title from article_list where id='{$row['list_id']}'", 1);
     $tags['nav_str'].="<span class=nav_next><a href=\"".$SUBDIR.get_article_list_href($id)."\">$title</a></span>";
     $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";

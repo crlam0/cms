@@ -1,3 +1,47 @@
+=== 2018-10-21
+
+
+ALTER TABLE `cat_item`
+	ADD COLUMN `cnt_weight` VARCHAR(50) NULL AFTER `special_offer`;
+
+
+=== 2018-10-19
+INSERT INTO `settings` (`title`, `comment`) VALUES ('contacts_phone', '<b>Контакты: телефон</b>');
+INSERT INTO `settings` (`title`, `comment`) VALUES ('contacts_email', '<b>Контакты: E-Mail</b>');
+INSERT INTO `settings` (`title`, `comment`) VALUES ('contacts_addr', '<b>Контакты: адрес</b>');
+
+=== 2018-10-19
+
+ALTER TABLE `cat_item_images`
+	ADD COLUMN `file_type` VARCHAR(16) NULL AFTER `descr`,
+	ADD COLUMN `date_add` DATETIME NULL DEFAULT NULL AFTER `item_id`;
+
+ALTER TABLE `cat_item`
+	CHANGE COLUMN `num` `num` INT(3) NULL DEFAULT NULL AFTER `part_id`,
+	CHANGE COLUMN `seo_alias` `seo_alias` VARCHAR(255) NULL DEFAULT NULL AFTER `title`,
+	CHANGE COLUMN `descr_full` `descr_full` TEXT NULL AFTER `descr`,
+	CHANGE COLUMN `default_img` `default_img` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `descr_full`,	
+        ADD COLUMN `date_add` DATETIME NULL DEFAULT NULL AFTER `seo_alias`,
+	ADD COLUMN `date_change` DATETIME NULL DEFAULT NULL AFTER `date_add`;
+
+ALTER TABLE `cat_part`
+	CHANGE COLUMN `num` `num` INT(3) NULL DEFAULT NULL AFTER `prev_id`,
+	CHANGE COLUMN `seo_alias` `seo_alias` VARCHAR(255) NULL DEFAULT NULL AFTER `title`,
+	ADD COLUMN `date_add` DATETIME NULL AFTER `seo_alias`,
+	ADD COLUMN `date_change` DATETIME NULL AFTER `date_add`;
+
+ALTER TABLE `cat_part`
+	ADD COLUMN `item_image_width` INT(4) NULL DEFAULT NULL AFTER `date_change`,
+	ADD COLUMN `item_image_height` INT(4) NULL DEFAULT NULL AFTER `item_image_width`;
+
+ALTER TABLE `media_files`
+	ADD COLUMN `download_count` INT(255) NOT NULL DEFAULT '0' AFTER `date_add`;
+
+UPDATE gallery_list 
+    SET default_image_id=(SELECT id FROM gallery_images WHERE gallery_id=gallery_list.id  ORDER BY date_add DESC LIMIT 1) 
+    WHERE default_image_id IS NULL OR default_image_id = 0;
+
+
 === 2018-09-11
 
 alter table cat_item add special_offer int(1) not null default '0';

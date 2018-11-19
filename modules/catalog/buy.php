@@ -6,6 +6,7 @@ $tags['Header'] = "Корзина";
 use Classes\SummToStr;
 $SummToStr = new SummToStr();
 
+$tags['nav_str'] .= "<span class=nav_next><a href=\"" . $SUBDIR . "catalog/\" class=top>Каталог</a></span>";
 $tags['nav_str'].="<span class=nav_next>Корзина</span>";
 
 $IMG_ITEM_PATH = $DIR . $settings['catalog_item_img_path'];
@@ -110,12 +111,12 @@ if ($input["get_summary"]) {
 if (isset($input["request_done"])) {
     $err = 0;
 //        if(!preg_match("/^[\w-]+$/",$input["lastname"])){
-    if (strlen($input["lastname"]<3)) {
+    if (strlen($input["lastname"])<3) {
         $content.=my_msg_to_str('error',[],"Неверно заполнено поле \"Фамилия\"");
         $err = 1;       
     }
 //        if(!preg_match("/^[\w-]+$/",$input["firstname"])){
-    if (!strlen($input["firstname"])) {
+    if (strlen($input["firstname"])<2) {
         $content.=my_msg_to_str('error',[],"Неверно заполнено поле \"Имя\"");
         $err = 1;
     }
@@ -153,7 +154,7 @@ if (isset($input["request_done"])) {
         $item_list.="Итого $cnt шт. на сумму " . add_zero($summ) . " руб.\n";
         $item_list.="Скидка: " . get_discount($summ) . "%\n";
         $item_list.="Сумма с учетом скидки: " . add_zero($summ_with_discount) . " руб.\n";
-        $contact_info.="ФИО: " . $input["lastname"] . " " . $input["firstname"] . " " . $input["middlename"] . "\n";
+        $contact_info="ФИО: " . $input["lastname"] . " " . $input["firstname"] . " " . $input["middlename"] . "\n";
         $contact_info.="E-Mail: " . $input["email"] . "\n";
         $contact_info.="Телефон: " . $input["phone"] . "\n";
         $contact_info.="IP адрес: " . $server["REMOTE_ADDR"] . "\n";
@@ -173,7 +174,7 @@ if (isset($input["request_done"])) {
 }
 
 
-if (is_array($_SESSION["BUY"]) && count($_SESSION["BUY"])) {
+if (isset($_SESSION["BUY"]) && is_array($_SESSION["BUY"]) && count($_SESSION["BUY"])) {
     $where = "";
     $count = 0;
     foreach ($_SESSION["BUY"] as $item_id => $cnt) {
@@ -183,7 +184,7 @@ if (is_array($_SESSION["BUY"]) && count($_SESSION["BUY"])) {
     $query = "select cat_item.*,fname from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
     $result = my_query($query, true);
     if ((isset($input["request_x"])) || (isset($input["request"]))) {
-        $tags[Header] = "Оформить заказ";
+        $tags['Header'] = "Оформить заказ";
         $content.= '<div align="center" style="max-width: 400px;margin-top:30px;">' . "<form action=" . $_SERVER["PHP_SELF"] . ' method=post>
             <input type=hidden name=request_done value=1>          
             

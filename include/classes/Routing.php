@@ -64,6 +64,7 @@ final class Routing {
     
     public function getFileName () {
         global $input;
+        $file = false;
         foreach($this->routes as $title => $route) {
             $matches = [];
             if (preg_match('/'.$route['pattern'].'/', $this->request_uri, $matches) === 1) {

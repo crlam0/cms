@@ -125,7 +125,7 @@ if ($view_items) {
 }
 
 
-if (!$_SESSION["view_items"]) {
+if (!isset($_SESSION["view_items"])) {
     $query = "select * from article_list";
     $result = my_query($query, true);
 

@@ -103,6 +103,13 @@ return [
         ]
     ],    
     'news' => [
+        'pattern' => '^news\/$',
+        'file' => 'modules/news/index.php',
+        'params' => [
+            '1' => 'uri',
+        ]
+    ],    
+    'news_uri' => [
         'pattern' => '^news\/(.*)\/$',
         'file' => 'modules/news/index.php',
         'params' => [

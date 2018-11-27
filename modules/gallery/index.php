@@ -35,7 +35,7 @@ if($settings["gallery_use_popup"]){
             '<script type="text/javascript" src="'.$BASE_HREF.'modules/gallery/gallery.js"></script>'."\n";
 }
 
-$tags['nav_str'].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>{$tags['Header']}</a>";
+$tags['nav_str'].="<a href=" . $SUBDIR . "gallery/ class=nav_next>{$tags['Header']}</a>";
 
 if(isset($input) && array_key_exists('view_gallery',$input)) {
 // if ($input["view_gallery"]) {
@@ -156,8 +156,7 @@ if (isset($input['load'])) {
         <div class=view_image>
         <img src=\"{$SUBDIR}{$URL}\" border=0 id=popup_image>
         </div>
-        <div class=descr>{$tags['descr']}</div><div class=date>Добавлена {$tags['date_add']}, просмотров {$tags['view_count']}</div>
-        <br>
+        <br />
         <div align=center>{$prev_add} {$next_add}</div>
         </div></center>
     ";

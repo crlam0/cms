@@ -28,7 +28,7 @@ if ( (isset($input['uri'])) && (!isset($input['load']))) {
     }
 }
 
-if($settings["gallery_use_popup"]){
+if($settings['gallery_use_popup']){
     $tags['INCLUDE_JS'] .= 
             '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
             '<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>'."\n".
@@ -220,6 +220,7 @@ from gallery_list
 left join gallery_images on (gallery_images.gallery_id=gallery_list.id)
 where gallery_list.active='Y'
 group by gallery_list.id order by last_images_date_add desc,gallery_list.date_add desc";
+
 $result = my_query($query, true);
 if (!$result->num_rows) {
     $content = my_msg_to_str("part_empty");

@@ -352,11 +352,11 @@ if ($result->num_rows) {
     $content .= "<div id=cat_items>\n";
     while ($row = $result->fetch_array()) {
         $row['item_a'] = '<a href="' . $SUBDIR . get_cat_part_href($row['part_id']) . $row['seo_alias'] . '" title="' . $row['title'] . '">';
-        $row['special_offer_ins'] = ($row['special_offer'] ? "<div class=cat_item_special_offer>Спецпредложение !</div>" : "");
+        $row['special_offer_ins'] = ($row['special_offer'] ? "<div class=cat_item_special_offer>Популярное</div>" : "");
         $URL=get_item_image_url($row['fname'], $settings["catalog_item_img_preview"]);
         $row['default_image'] = (is_file($IMG_ITEM_PATH . $row['fname']) ? $row['item_a'] . "<img src=\"{$SUBDIR}{$URL}\" alt=\"{$row['title']}\" title=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
         $row['descr'] = nl2br($row['descr']);
-        $row['price'] = ($row['price'] ? "Цена $row[price]" : "");
+        $row['price'] = ($row['price'] ? "Цена {$row['price']}" : "");
         $content .= get_tpl_by_title('cat_item_list_view', $row, $result);
     }
     $content .= "</div>\n";

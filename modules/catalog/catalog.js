@@ -1,9 +1,6 @@
 
 $(document).ready(function() {
     var pathArray = window.location.pathname.split( '/' );
-    for (i = 0; i < pathArray.length; i++) {
-        console.log(pathArray[i]);
-    }
     var domain = pathArray[1];
     if(domain.match(/^[\w-.]+\.\w{1,5}$/)) {
         var DIR = '/' + domain + '/';        
@@ -22,6 +19,7 @@ $(document).ready(function() {
                 if(msg !== 'OK') alert(msg);
                 $('#popupHeader').html('Сейчас в корзине :');
                 $('#popupContent').load(DIR + "buy.php?get_summary=1");
+		$('.basket-button').css('display','inline-block');
                 loadPopup();                
                 centerPopup();
             }

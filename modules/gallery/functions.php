@@ -11,6 +11,10 @@ function get_max_width() {
     if ($input['icon'] && $settings['gallery_icon_width']) {
         $max_width = $settings['gallery_icon_width'];
     }
+    if ($input['width'] && is_integer($input['width'])) {
+        $max_width = $input['width'];
+    }
+    
     return $max_width;
 }
 

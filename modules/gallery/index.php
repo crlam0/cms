@@ -37,7 +37,7 @@ if($settings['gallery_use_popup']){
 
 $tags['nav_str'].="<a href=" . $SUBDIR . "gallery/ class=nav_next>{$tags['Header']}</a>";
 
-if(isset($input) && array_key_exists('view_gallery',$input)) {
+if($input['view_gallery']) {
 // if ($input["view_gallery"]) {
     $view_gallery = $input["id"];
 }

@@ -77,7 +77,7 @@ if ($input["edited_image"]) {
 }
 
 if (($input["edit_image"]) || ($input["add_image"])) {
-    if ($_GET["edit_image"]) {
+    if ($input["edit_image"]) {
         $query = "select * from slider_images where id='{$input['id']}'";
         $result = my_query($query);
         $tags = array_merge($tags, $result->fetch_array());
@@ -86,6 +86,7 @@ if (($input["edit_image"]) || ($input["add_image"])) {
     } else {
         $tags['type'] = "added_image";
         $tags['form_title'] = "Добавление";
+        $tags['descr'] = '';
     }
     $tags['descr'] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
     $content.=get_tpl_by_title("slider_images_edit_form", $tags);

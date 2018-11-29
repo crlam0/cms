@@ -664,7 +664,7 @@ tr.active_N { background: #dddddd; }
 	<td width=5% align=center>&nbsp;</td>
 </tr>
 [%loop_begin%]
-	<tr class=active_[%row(active)%] align=left id=tr_[%row(id)%]>
+	<tr class="active_[%row(active)%]" align="left" gallery_id="tr_[%row(id)%]">
 	<td>[%row(date_add)%]</td>
 	<td><b><a href=[%PHP_SELF%]?view_gallery=1&id=[%row(id)%]>[%row(title)%]</a></b></td>
 	<td align=center>[%row(seo_alias)%]</td>
@@ -678,14 +678,14 @@ tr.active_N { background: #dddddd; }
 <script type="text/javascript">
 $(document).ready(function(){  
     $('input:checkbox').change(function(){
-	var id=$(this).val();
+	var id=$(this).attr("gallery_id");
 	if( $(this).attr("checked") ){ var active='Y'; }else{ var active='N'; }
 	$.ajax({
 	   type: "POST", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
 	   success: function(msg){
 	     var tr_id="#tr_"+id;
-	     if(msg == 'Y') $(tr_id).attr("class","active_Y");
-	     else if(msg == 'N') $(tr_id).attr("class","active_N");
+	     if(msg === 'Y') $(tr_id).attr("class","active_Y");
+	     else if(msg === 'N') $(tr_id).attr("class","active_N");
 	     else alert(msg);
 	   }
 	});
@@ -771,7 +771,7 @@ $(document).ready(function(){
         $.ajax({
            type: "POST", url: "[%PHP_SELF%]", data: "default_image_id="+id,
            success: function(msg){
-                if(msg != 'OK') alert(msg);
+                if(msg !== 'OK') alert(msg);
                 $(this).prop("checked",true);
            }
         });
@@ -1753,7 +1753,7 @@ $(document).ready(function(){
 <!--[title]request_list[/title]-->
 <!--DESCRIPTION: Список заказов -->
 <!--[content]-->
-<br><center><table width=800 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
+<br><center><table width=800 border=0 cellspacing=1 cellpadding=1 class="table table-responsive table-bordered normal-form" align=center>
 <tr class=header align=center>
 <td>Дата</td>
 <td>Заказ</td>
@@ -1763,13 +1763,14 @@ $(document).ready(function(){
 [%loop_begin%]
         <tr [%row(active,if,bgcolor=#ffffff,bgcolor=#dddddd)%] align=left>
         <td align=center><b>[%row(date)%]</b></td>
-        <td>[%row(item_list,nl2br)%]</td>
+        <td>[%row(item_list,nl2br)%][%row(comment,nl2br)%][%func(file_info)%]</td>
         <td>[%row(contact_info,nl2br)%]</td>
         <td width=16><a href="[%PHP_SELF%]?active=Y&id=[%row(id)%]"><img src="../images/add.gif" alt="Активно" border=0 onClick="return test()"></a></td>
         <td width=16><a href="[%PHP_SELF%]?active=N&id=[%row(id)%]"><img src="../images/sub.gif" alt="Неактивно" border=0 onClick="return test()"></a></td>
         </tr>
 [%loop_end%]
 </table>
+
 <!--[/content]-->
 
 

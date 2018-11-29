@@ -39,7 +39,7 @@ final class Routing {
     }
     
     public function hasGETParams () {
-        return strpos($this->request_uri,'?')>0;
+        return strpos($this->request_uri,'?')!==false;
     }
 
     public function proceedGETParams () {

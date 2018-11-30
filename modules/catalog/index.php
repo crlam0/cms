@@ -87,14 +87,14 @@ function show_img($tmp, $row) {
     }
 }
 
-function show_price($tmp, $row) {
-    global $row_part;
-    $result = "<td class=price>{$row['price']}</td>";
+function detail_view_show_price() {
+    global $row_part, $tags;
+    $result = "{$row_part['price1_title']} {$tags['price']}<br />";
     if ($row_part['price_cnt'] >= 2) {
-        $result .= "<td class=price>{$row['price2']}</td>";
+        $result .= "{$row_part['price2_title']} {$tags['price2']}<br />";
     }
     if ($row_part['price_cnt'] >= 3) {
-        $result .= "<td class=price>{$row['price3']}</td>";
+        $result .= "{$row_part['price3_title']} {$tags['price3']}<br />";
     }
     return $result;
 }

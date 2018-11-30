@@ -132,7 +132,7 @@ class Blocks {
         $result = MyGlobal::get('DB')->query($query, true);
         if ($result->num_rows) {
             function get_news_short_content($tmp, $row) {
-                return cut_stringing($row['content'], 100);
+                return cut_string($row['content'], 100);
             }
             return get_tpl_by_title('block_last_posts', [], $result);
         }

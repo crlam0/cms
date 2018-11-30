@@ -36,7 +36,7 @@ if ($view_item) {
 function get_news_full_content($tmp, $row) {
     global $tags;
     if($tags['content']==='cut') {
-        $tags['content'] = cut_stringing($row['content'], 150);
+        $tags['content'] = cut_string($row['content'], 150);
     } else {
         $tags['content'] = $row['content'];
     }

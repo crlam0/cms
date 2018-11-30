@@ -83,7 +83,7 @@ function my_cleanstring($string, $do_remove_spaces = false) {
  *
  * @return string Output string
  */
-function cut_stringing($string, $lenght) {
+function cut_string($string, $lenght) {
     $b_chars = array(" ", ",", ".", ";");
     $string = strip_tags($string);
     if (strlen($string) <= $lenght){

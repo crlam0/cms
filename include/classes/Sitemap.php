@@ -88,17 +88,17 @@ class Sitemap {
             }
         }
         if(in_array('catalog', $types)){
-            $this->add_page('catalog/', 'monthly', '0.50');
-            $query = 'SELECT * from cat_part order by num,title asc';
+            $this->add_page('catalog/', 'monthly', '0.80');
+            $query = 'SELECT id from cat_part order by num,title asc';
             $result = MyGlobal::get('DB')->query($query, true);
             while ($row = $result->fetch_array()) {
-                $this->add_page(get_cat_part_href($row['id']), 'monthly', '0.80');
+                $this->add_page(get_cat_part_href($row['id']), 'monthly', '0.40');
             }
-            $query = 'SELECT * from cat_item order by num,title asc';
+            $query = 'SELECT part_id,seo_alias from cat_item order by num,title asc';
             $result = MyGlobal::get('DB')->query($query, true);
             while ($row = $result->fetch_array()) {
                 $url = get_cat_part_href($row['part_id']) . $row['seo_alias'];
-                $this->add_page($url, 'monthly', '0.80');
+                $this->add_page($url, 'monthly', '0.30');
             }
         }
     }

@@ -25,7 +25,7 @@ if ($view_item) {
     $row = $result->fetch_array();
     $tags['nav_str'] .= "<a href=\"" . $SUBDIR . "news/\" class=nav_next>{$tags['Header']}</a>";
     $tags['nav_str'] .= "<span class=nav_next>{$row['title']}</span>";
-    $tags['Header'] .= " - " . $row['title'];
+    // $tags['Header'] .= " - " . $row['title'];
     $tags['content'] = $row['content'];
     $result->data_seek(0);
 } else {
@@ -42,6 +42,7 @@ function get_news_full_content($tmp, $row) {
     }
     return replace_base_href($tags['content']);
 }
+
 
 if (!$result->num_rows) {
     $content = my_msg_to_str('part_empty');

@@ -25,7 +25,7 @@ if ($input["del_article"]) {
 if ($input["added_article"]) {
     $input['form']['date_add'] = "now()";
     $input['form']['list_id'] = $_SESSION["view_article"];
-    $input['form']['content'] = $_POST["form"]["content"];
+    $input['form']['content'] = $input["form"]["content"];
     $input['form']['content']=replace_base_href($input['form']['content'],true);
     if (!strlen($input['form']['seo_alias'])){
         $input['form']['seo_alias'] = encodestring($input['form']['title']);
@@ -42,7 +42,7 @@ if($input["revert"]){
 
 if ($input["edited_article"]) {
     $input['form']['date_add'] = "now()";
-    $input['form']['content'] = $_POST["form"]["content"];
+    $input['form']['content'] = $input["form"]["content"];
     $input['form']['content']=replace_base_href($input['form']['content'],true);
     if (!strlen($input['form']['seo_alias'])){
         $input['form']['seo_alias'] = encodestring($input['form']['title']);
@@ -56,7 +56,7 @@ if ($input["edited_article"]) {
 }
 
 if (($input["edit_article"]) || ($input["add_article"])) {
-    if ($input["edit_article"]) {
+    if ($input['edit_article']) {
 	$query = "select * from article_item where id='{$input['id']}'";
 	$result = my_query($query);
 	$tags = array_merge($tags, $result->fetch_array());
@@ -97,7 +97,7 @@ if ($input["del_list"]) {
 }
 
 if ($input["added_list"]) {
-    $input['form'][date_add] = "now()";
+    $input['form']['date_add'] = "now()";
     if (!strlen($input['form']['seo_alias']))$input['form']['seo_alias'] = encodestring($input['form']['title']);
     $query = "insert into article_list " . db_insert_fields($input['form']);
     my_query($query);
@@ -112,7 +112,7 @@ if ($input["edited_list"]) {
 }
 
 if (($input["edit_list"]) || ($input["add_list"])) {
-    if ($_GET["edit_list"]) {
+    if ($input["edit_list"]) {
         $query = "select * from article_list where id='{$input['id']}'";
         $result = my_query($query);
         $tags = array_merge($tags, $result->fetch_array());
@@ -124,7 +124,7 @@ if (($input["edit_list"]) || ($input["add_list"])) {
         $tags['form_title'] = "Добавление";
         $tags['Header'] = "Добавление раздела";
     }
-    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
+    // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_title('article_list_edit_form', $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();

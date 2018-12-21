@@ -6,6 +6,7 @@ use Twig\TwigFunction;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
 use Twig\Extension\DebugExtension;
+use Stormiix\Twig\Extension\MixExtension;
 
 class TwigTemplate {
     private $twig;
@@ -21,8 +22,9 @@ class TwigTemplate {
         'debug' => false,
         'template_dir' => 'templates',
         'cache_dir' => 'var/cache/twig',
-        'autoescape' => 'html',
-        'extensions' => [],
+        'autoescape' => '',
+        'extensions' => [
+        ],
     ];
 
     /**
@@ -74,6 +76,13 @@ class TwigTemplate {
         if ($this->config['debug']) {
             $environment->addExtension(new DebugExtension());
         }
+        
+        $mix = new MixExtension(
+            $DIR . 'theme/',     // the absolute public directory
+            'mix-manifest.json'   // the manifest filename (default value is 'mix-manifest.json')
+        );
+        $environment->addExtension($mix);
+        
         $environment->addGlobal('SUBDIR', $SUBDIR);
         $environment->addGlobal('settings', $settings);
 

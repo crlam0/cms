@@ -3,7 +3,6 @@
 /*.code-workspace
 
 /composer.phar
-/composer.lock
 
 /dump.cmd
 /*.html
@@ -20,4 +19,7 @@
 /favicon.png
 /sitemap.xml
 /include/dompdf/
+
+
+/node_modules/
 

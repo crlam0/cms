@@ -13,4 +13,9 @@ $EDITOR_HTML_INC='<script type="text/javascript" src="'.$BASE_HREF.'include/edit
 '<script type="text/javascript" src="'.$BASE_HREF.'include/js/editor_html.js" charset="utf-8"></script>'."\n";
 
 $tags['nav_str']="<a href={$SUBDIR} class=nav_home>Главная</a>";
+$tags['nav_array'][] = [
+    'url' => '',
+    'title' => 'Главная'
+];
+
 

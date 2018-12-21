@@ -8,7 +8,7 @@ use Classes\MyTemplate;
 use Classes\TwigTemplate;
 
 class Template {
-    private $BlocksObject;
+    public $BlocksObject;
     private $MyTemplate;
     
     public function __construct () {
@@ -61,6 +61,8 @@ class Template {
         if(strlen($inner_content)) {
             $tags['inner_content'] = $inner_content;        
         }
+        
+        $twig->add_function('add_block');
         $twig->add_function('path');
         if(array_key_exists('functions',$tags) && is_array($tags['functions'])) {
             foreach($tags['functions'] as $function) {

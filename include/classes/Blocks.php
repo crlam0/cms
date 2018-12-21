@@ -41,8 +41,8 @@ class Blocks {
                     $href = $SUBDIR . $href;
                     $target_inc = '';
                 }
-                $output.="<li {$attr_li}><a href=\"{$href}\"{$target_inc} title=\"{$row['title']}\">{$row['title']}</a>";
-                $output.=$this->get_menu_items($row['submenu_id']);
+                $output.="<li {$attr_li}><a class=\"nav-link\" href=\"{$href}\"{$target_inc} title=\"{$row['title']}\">{$row['title']}</a>";
+                // $output.=$this->get_menu_items($row['submenu_id']);
                 $output.="</li>\n";
             }
             $output.="</ul>\n";
@@ -52,16 +52,16 @@ class Blocks {
     
     protected function menu_main () {
         list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE root=1", true);
-        $tags['menu_content'] = $this->get_menu_items($menu_id, 'id="mainmenu"', '');
+        $tags['menu_content'] = $this->get_menu_items($menu_id, 'id="menu-main" class="nav nav-pills flex-column"', 'class="nav-item"');
         return get_tpl_by_title('block_menu', $tags);
     }
     protected function menu_top () {
         list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE top_menu=1", true);
-        return $this->get_menu_items($menu_id, 'id="menu-top" class="nav navbar-nav navbar-left"', '');
+        return $this->get_menu_items($menu_id, 'id="menu-top" class="navbar-nav navbar-left"', 'class="nav-item"');
     }
     protected function menu_bottom () {
         list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE bottom_menu=1", true);
-        return $this->get_menu_items($menu_id, 'id="menu-footer" class="nav navbar-nav navbar-right"', '');
+        return $this->get_menu_items($menu_id, 'id="menu-footer" class="navbar-nav navbar-right"', 'class="nav-item"');
     }
     
     protected function vote () {

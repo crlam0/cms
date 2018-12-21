@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <phpunit bootstrap="./vendor/autoload.php"
          colors="true"
+         verbose="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
@@ -14,5 +15,10 @@
         <whitelist>
             <directory suffix=".php">./include/</directory>
         </whitelist>
+    <filter>
+        <blacklist>
+            <directory suffix=".php">./vendor/</directory>
+        </blacklist>
+    </filter>
     </filter>
 </phpunit>

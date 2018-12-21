@@ -68,8 +68,12 @@ if($input->count() && is_numeric($input['view_post'])) {
 
     $tags['nav_str'].="<span class=nav_next><a href=\"{$SUBDIR}blog/\">{$tags['Header']}</a></span>";
     $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";
-    $tags['Header'] .= " - ".$row['title'];
     
+    add_nav_item($tags['Header'],'blog/');
+    add_nav_item($row['title']);
+
+    $tags['Header'] .= " - ".$row['title'];
+       
     $tags['functions'] = ['get_post_href', 'get_post_content', 'get_post_comments_count'];
     $content.=get_tpl_by_title('blog_posts', $tags, $result);
 
@@ -81,6 +85,7 @@ if($input->count() && is_numeric($input['view_post'])) {
 } else {
 
     $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
+    add_nav_item($tags['Header']);
     
     $query = "SELECT count(id) from {$TABLE} where active='Y'";
     list($total) = my_select_row($query, false);

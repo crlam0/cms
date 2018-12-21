@@ -617,6 +617,46 @@ function path($route,$params=[]){
 }
 
 
+/**
+ * Return block content
+ *
+ * @param string $name Block name
+ *
+ * @return string Output string
+ */
+function get_block($name) {
+    global $Template;
+    return $Template->BlocksObject->content($name);
+}
+
+/**
+ * Add item to breadcrumbs
+ *
+ * @param string $title Item title
+ * @param string $url Item URL
+ *
+ */
+function add_nav_item($title, $url = null) {
+    global $tags;
+    if($url) {
+        $tags['nav_array'][] = [
+            'title' => $title,
+            'url' => $url
+        ];
+    } else {
+        $tags['nav_array'][] = [
+            'title' => $title,
+        ];        
+    }
+}
+
+/**
+ * Recursively delete filesystem tree
+ *
+ * @param string $dir Directory to remove
+ *
+ * @return bool True if complete
+ */
 function del_tree($dir) {
     if(!file_exists($dir)) {
         return true;
@@ -628,6 +668,13 @@ function del_tree($dir) {
     return rmdir($dir);
 }
 
+/**
+ * Recursively delete cache dir
+ *
+ * @param string $subdir Subdir to remove
+ *
+ * @return bool True if complete
+ */
 function clear_cache_dir($subdir = '') {
     global $DIR;
     if (strlen($subdir)) {

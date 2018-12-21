@@ -3,7 +3,7 @@ if(!isset($input)) {
     require '../../include/common.php';
 }
 
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
+$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";
 
 
 if(file_exists($INC_DIR . 'dompdf/src/Autoloader.php')) {
@@ -102,6 +102,10 @@ if ($input["view_article"]) {
     $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";
     $tags['Header'] = $row['title'];
 
+    add_nav_item('Статьи', 'article/');
+    add_nav_item($title, get_article_list_href($id));
+    add_nav_item($row['title']);
+    
     $row['content'] = replace_base_href($row['content']);
     
     $content = get_tpl_by_title('article_view', $row, $result);
@@ -113,11 +117,14 @@ if ($input["view_article"]) {
 if ($view_items) {
     $query = "select * from article_item where list_id='{$view_items}'";
     $result = my_query($query, true);
-
+    
     $tags['nav_str'].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
     list($title) = my_select_row("select title from article_list where id='{$view_items}'", 1);
     $tags['nav_str'].="<span class=nav_next>$title</span>";
     $tags['Header'] = $title;
+
+    add_nav_item('Статьи', 'article/');
+    add_nav_item($title);
 
     $content = get_tpl_by_title('article_items', $row, $result);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
@@ -130,6 +137,7 @@ if (!isset($_SESSION["view_items"])) {
     $result = my_query($query, true);
 
     $tags['nav_str'].="<span class=nav_next>Статьи</span>";
+    add_nav_item('Статьи');
 
     $content = get_tpl_by_title('article_list', $row, $result);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

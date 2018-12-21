@@ -9,6 +9,7 @@ if ($Routing->hasGETParams()) {
 }
 
 if( $Routing->isIndexPage() and file_exists('index.local.php')) {
+    $tags['isIndexPage'] = true;
     require 'index.local.php';
     exit;
 }

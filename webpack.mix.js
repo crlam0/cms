@@ -7,3 +7,4 @@ mix
     .js('theme/assets/js/full.js', 'js')
     .sass('theme/assets/sass/full.scss', 'css')
     .version();
+

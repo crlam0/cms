@@ -10,6 +10,7 @@ use Classes\BBCodeEditor;
 $editor = new BBCodeEditor ();
 
 $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
+add_nav_item($tags['Header']);
 
 $code_ok = 0;
 if (isset($input['send_img_code'])) {
@@ -34,7 +35,9 @@ if (isset($input['page'])) {
 $TABLE = 'faq';
 $MSG_PER_PAGE = $settings['faq_msg_per_page'];
 
-if (!$input->count())$list = 1;
+if (!$input->count()){
+    $list = 1;
+}
 
 if ($input['added']) {
     $err = 0;

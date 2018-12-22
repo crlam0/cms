@@ -8,10 +8,10 @@ if ($input["view_list"]) {
 }
 
 if ($input["list_media"]) {
-    $_SESSION["view_files"] = "";
+    unset($_SESSION["view_files"]);
 }
 
-if ($_SESSION["view_files"]) {
+if (isset($_SESSION["view_files"])) {
     list($list_title) = my_select_row("select title from media_list where id='" . $_SESSION["view_files"] . "'", 1);
     $tags['Header'].=" -> $list_title";
 }
@@ -96,8 +96,8 @@ if (($input["edit_file"]) || ($input["add_file"])) {
     exit();
 }
 
-if ($_SESSION["view_files"]) {
-    $query = "SELECT * from media_files where list_id=" . $_SESSION["view_files"] . " order by date_add asc";
+if (isset($_SESSION["view_files"])) {
+    $query = "SELECT * from media_files where list_id='" . $_SESSION["view_files"] . "' order by date_add asc";
     $result = my_query($query, true);
     $content.=get_tpl_by_title("media_files_edit_table", $tags, $result);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

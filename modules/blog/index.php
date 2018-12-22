@@ -49,7 +49,7 @@ function get_post_content ($row) {
     $content = preg_replace('/height: \d+px;/', 'max-width: 100%;', $content);
     
     if(strlen($row['target_type'])){
-        $href=(strlen($row['href']) ? $row['href'] : $SUBDIR.get_menu_href(array(),$row) );
+        $href=(strlen($row['target_type'] == 'link') ? $row['href'] : $SUBDIR.get_menu_href(array(),$row) );
         $content.="<br><a href=\"{$href}\">Перейти >></a>";
     }
     return $content;

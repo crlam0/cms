@@ -105,7 +105,7 @@ if ($input["added_post"]) {
         $input['form'][seo_alias] = encodestring($input['form']['title']);
     $query = "insert into blog_posts " . db_insert_fields($input['form']);
     my_query($query, true);
-    if ($_FILES["img_file"]["size"]) {
+    if (isset($_FILES["img_file"]) && $_FILES["img_file"]["size"]) {
         $f_info = pathinfo($_FILES["img_file"]["name"]);
         $img = encodestring($input["form"]["title"]) . "." . $f_info["extension"];
         if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings['blog_img_max_width'])) {
@@ -124,14 +124,14 @@ if ($input["revert"]) {
 }
 
 if ($input["edited_post"]) {
-    $input['form'][date_add] = "now()";
+    $input['form']['date_add'] = "now()";
     $input['form']['content'] = $input["form"]["content"];
     $input['form']['content'] = replace_base_href($input['form']['content'], true);
-    if (!strlen($input['form'][seo_alias]))
+    if (!strlen($input['form']['seo_alias']))
         $input['form'][seo_alias] = encodestring($input['form'][title]);
     $query = "update blog_posts set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
-    if ($_FILES["img_file"]["size"] > 100) {
+    if (isset($_FILES["img_file"]) && $_FILES["img_file"]["size"] > 100) {
         list($img) = my_select_row("select image_name from blog_posts where id=" . $input["id"]);
         if (is_file($IMG_PATH . $img)) {
             if (!unlink($IMG_PATH . $img))print_error("Ошибка удаления файла");

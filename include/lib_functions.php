@@ -389,6 +389,18 @@ function get_block($name) {
 }
 
 /**
+ * Return value from MyGlobal object
+ *
+ * @param string $key Value key
+ *
+ * @return string Value
+ */
+function myglobal($key) {
+    return MyGlobal::get($key);
+}
+
+
+/**
  * Recursively delete filesystem tree
  *
  * @param string $dir Directory to remove

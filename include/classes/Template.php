@@ -6,6 +6,7 @@ use Classes\Blocks;
 use Classes\BlocksLocal;
 use Classes\MyTemplate;
 use Classes\TwigTemplate;
+use Stormiix\Twig\Extension\MixExtension;
 
 class Template {
     public $BlocksObject;
@@ -66,12 +67,13 @@ class Template {
         
         $twig->add_function('add_block');
         $twig->add_function('path');
+        $twig->add_function('myglobal');
         if(array_key_exists('functions',$tags) && is_array($tags['functions'])) {
             foreach($tags['functions'] as $function) {
                 $twig->add_function($function);
             }
             unset($tags['functions']);
-        }
+        }        
         return $twig->render($template['title'], $tags);
     }
 

@@ -38,7 +38,7 @@ class TwigTemplate {
      */
     public function __construct($template_type, $config_override = [], $content = null)
     {
-        global $DIR, $SUBDIR, $settings;
+        global $DIR, $SUBDIR, $settings, $server;
         $this->template_type = $template_type;
         
         if(is_array($config_override)) {
@@ -76,14 +76,17 @@ class TwigTemplate {
         if ($this->config['debug']) {
             $environment->addExtension(new DebugExtension());
         }
-        
+      
         $mix = new MixExtension(
             $DIR . 'theme/',     // the absolute public directory
             'mix-manifest.json'   // the manifest filename (default value is 'mix-manifest.json')
         );
         $environment->addExtension($mix);
         
+        $environment->addGlobal('DIR', $SUBDIR);
         $environment->addGlobal('SUBDIR', $SUBDIR);
+        $environment->addGlobal('PHP_SELF', $server['PHP_SELF']);
+        $environment->addGlobal('PHP_SELF_DIR', $server['PHP_SELF_DIR']);
         $environment->addGlobal('settings', $settings);
 
         $this->twig = $environment;
@@ -105,7 +108,7 @@ class TwigTemplate {
             return false;
         });    
     }
-    
+
     /**
      * Create template from string
      *

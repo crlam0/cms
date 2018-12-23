@@ -10,7 +10,7 @@ use Classes\MyGlobal;
 class Blocks {
     
     /**
-     * Return menu ркуа
+     * Return menu HREF
      *
      * @param integer $row Current row
      *
@@ -93,7 +93,7 @@ class Blocks {
             while ($row = $result->fetch_array()) {
                 $tags['variants'].="
                     <div class=vote_variant>
-                    <input type={$type} name=vote[] value={$row['id']}" . ((!$i) && ($type == "radio") ? " checked" : "") . ">{$row['title']}
+                    <input type={$type} name=vote[] value={$row['id']}" . ((!$i) && ($type == "radio") ? " checked" : "") . "> {$row['title']}
                     </div>\n";
                 $i++;
             }

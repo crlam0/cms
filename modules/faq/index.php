@@ -51,9 +51,14 @@ if ($input['added']) {
     } elseif (strlen($input['form']['txt']) < 10) {
         $content.=my_msg_to_str('form_error_msg_too_short');
         $err = 1;
+    } elseif (strlen($input['form']['txt']) > 512) {
+        $content.=my_msg_to_str('form_error_msg_too_long');
+        $err = 1;
     } elseif (($code_err) || (!isset($input['send_img_code']))) {
         $content.=my_msg_to_str('form_error_code');
-        if(!$settings['debug'])$err = 1;
+        if(!$settings['debug']){
+            $err = 1;
+        }
     }
     if ($err) {
         $input['add'] = 1;

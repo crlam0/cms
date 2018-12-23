@@ -2,8 +2,11 @@
 include 'include/common.php';
 
 use Classes\Routing;
+use Classes\MyGlobal;
 
 $Routing = new Routing ($server['REQUEST_URI']);
+MyGlobal::set('Routing', $Routing );
+
 if ($Routing->hasGETParams()) {
     $Routing->proceedGETParams();
 }

@@ -107,6 +107,9 @@ class Comments
             } elseif (strlen($this->__editor->GetValue()) < 10) {
                 $output.=my_msg_to_str('form_error_msg_too_short');
                 $err = 1;
+            } elseif (strlen($this->__editor->GetValue()) > 512) {
+                $output.=my_msg_to_str('form_error_msg_too_long');
+                $err = 1;
             } elseif ( ($input['img_code'] != $_SESSION['IMG_CODE']) && (!$settings['debug']) ) {
                 $output.=my_msg_to_str('form_error_code');
                 $err = 1;

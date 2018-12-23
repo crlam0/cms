@@ -73,16 +73,6 @@ class BBCodeEditor {
                         break;
                     case 'img': $replacement = "<img src=\"$innertext\" border=0>";
                         break;
-                    case 'video':
-                        $videourl = parse_url($innertext);
-                        parse_str($videourl['query'], $videoquery);
-                        if (strpos($videourl['host'], 'youtube.com') !== FALSE) {
-                            $replacement = '<embed src="http://www.youtube.com/v/' . $videoquery['v'] . '" type="application/x-shockwave-flash" width="425" height="344"></embed>';
-                        }    
-                        if (strpos($videourl['host'], 'google.com') !== FALSE) {
-                            $replacement = '<embed src="http://video.google.com/googleplayer.swf?docid=' . $videoquery['docid'] . '" width="400" height="326" type="application/x-shockwave-flash"></embed>';
-                        }    
-                        break;
                 }
                 $string = str_ireplace($match, $replacement, $string);
             }
@@ -160,7 +150,7 @@ class BBCodeEditor {
                     </td>
                     <td class=color_select>
                         Цвет шрифта: <select name="fontcolor" 
-                                             onChange="tag_misc('[color=' + this.form.fontcolor.options[this.form.fontcolor.selectedIndex].value + ']', '[/color]');
+                                        onChange="tag_misc('[color=' + this.form.fontcolor.options[this.form.fontcolor.selectedIndex].value + ']', '[/color]');
                                         this.selectedIndex = 0;" onMouseOver="helpline('fontcolor')" class="color_select">
                             <option value="black" style="color:black">Black</option>
                             <option value="silver" style="color:silver">Silver</option>

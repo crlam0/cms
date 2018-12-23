@@ -235,9 +235,9 @@ function get_menu_href($tmp, $row) {
 function replace_base_href($content, $direction = false) {
     global $server, $SUBDIR;
     if ($direction) {
-        return str_replace("http://" . $server["HTTP_HOST"] . $SUBDIR, "[%SUBDIR%]", $content);
+        return str_replace($server['REQUEST_SCHEME'] . '://' . $server["HTTP_HOST"] . $SUBDIR, "[%SUBDIR%]", $content);
     } else {
-        return str_replace("[%SUBDIR%]", "http://" . $server["HTTP_HOST"] . $SUBDIR, $content);
+        return str_replace("[%SUBDIR%]", $server['REQUEST_SCHEME'] . '://' . $server["HTTP_HOST"] . $SUBDIR, $content);
     }
 }
 

@@ -28,16 +28,16 @@ if ( (isset($input['uri'])) && (!isset($input['load']))) {
     }
 }
 
-if($settings["gallery_use_popup"]){
+if($settings['gallery_use_popup']){
     $tags['INCLUDE_JS'] .= 
             '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
             '<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>'."\n".
             '<script type="text/javascript" src="'.$BASE_HREF.'modules/gallery/gallery.js"></script>'."\n";
 }
 
-$tags['nav_str'].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>{$tags['Header']}</a>";
+// $tags['nav_str'].="<a href=" . $SUBDIR . "gallery/ class=nav_next>{$tags['Header']}</a>";
 
-if(isset($input) && array_key_exists('view_gallery',$input)) {
+if($input['view_gallery']) {
 // if ($input["view_gallery"]) {
     $view_gallery = $input["id"];
 }
@@ -114,6 +114,10 @@ if ($input['view_image'] || (isset($input['load']))) {
     list($title) = my_select_row("select title from gallery_list where id='{$gallery_id}'", true);
     $tags['back_url']=$server['PHP_SELF'] . "?view_gallery1&id=".$gallery_id;
     $tags['nav_str'].="<a href=" . $tags['back_url'] ." class=nav_next>$title</a><span class=nav_next>{$row['title']}</span>";
+    
+    add_nav_item('Галерея', 'gallery/');
+    add_nav_item($title,$tags['back_url']);
+    add_nav_item($row['title']);
 
     list($prev_id) = my_select_row("select id from gallery_images where gallery_id='{$gallery_id}' and id<'{$tags['id']}' order by id desc limit 1", true);
     if ($prev_id){
@@ -156,8 +160,7 @@ if (isset($input['load'])) {
         <div class=view_image>
         <img src=\"{$SUBDIR}{$URL}\" border=0 id=popup_image>
         </div>
-        <div class=descr>{$tags['descr']}</div><div class=date>Добавлена {$tags['date_add']}, просмотров {$tags['view_count']}</div>
-        <br>
+        <br />
         <div align=center>{$prev_add} {$next_add}</div>
         </div></center>
     ";
@@ -171,6 +174,8 @@ if (($view_gallery)||($input['page'])) {
     list($title) = my_select_row("select title from gallery_list where id=" . $view_gallery, false);
     $tags['Header'] = $title;
     $tags['nav_str'].="<span class=nav_next>$title</span>";
+    add_nav_item('Галерея', 'gallery/');
+    add_nav_item($title);
     if ($PAGES > 1) {
         $tags['pages_list'] = "<center>";
         for ($i = 1; $i <= $PAGES; $i++){
@@ -221,11 +226,15 @@ from gallery_list
 left join gallery_images on (gallery_images.gallery_id=gallery_list.id)
 where gallery_list.active='Y'
 group by gallery_list.id order by last_images_date_add desc,gallery_list.date_add desc";
+
 $result = my_query($query, true);
 if (!$result->num_rows) {
     $content = my_msg_to_str("part_empty");
 } else {
     $content = get_tpl_by_title("gallery_list_table", $tags, $result);
 }
+
+add_nav_item('Галерея');
+
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 

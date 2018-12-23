@@ -72,7 +72,7 @@ if ($input['del']) {
     $query = 'select * from cat_item_images where item_id=' . $input['id'];
     $result = my_query($query);
     while ($row = $result->fetch_array()) {
-        if (!unlink($IMG_PATH . $row[fname]))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
+        if (!unlink($IMG_PATH . $row['fname']))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
     }
     $query = 'delete from cat_item_images where item_id=' . $input['id'];
     my_query($query);
@@ -136,11 +136,12 @@ if ($input['added']) {
         $input['form']['seo_alias'] = encodestring($input['form']['title']);
     }
     $num_rows=my_select_row("select id from cat_item where seo_alias='{$input['form']['seo_alias']}'",1);
+    $seo_alias_duplicate = false;
     if($num_rows>0){
         $seo_alias_duplicate=1;
     }
     $input['form']['part_id'] = $_SESSION['ADMIN_PART_ID'];
-    if (!isset($input['form'][special_offer])){
+    if (!isset($input['form']['special_offer'])){
         $input['form']['special_offer'] = 0;
     }
     $input['form']['date_add']='now()';

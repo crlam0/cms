@@ -23,7 +23,7 @@ function auth() {
   // If you use a session variable, you've got to start the session first (session_start())
   // return true;
 
-  include_once "../../../global.php";
+  include_once "../../../config/config.local.php";
 
   $_SESSION["UID"]=0;
   $_SESSION["FLAGS"]='';

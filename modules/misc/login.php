@@ -5,6 +5,7 @@ if(!isset($input)) {
 
 $tags['Header'] = 'Вход в систему';
 $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
+add_nav_item($tags['Header']);
 
 $content = '';
 

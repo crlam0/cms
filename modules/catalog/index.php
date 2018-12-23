@@ -87,14 +87,14 @@ function show_img($tmp, $row) {
     }
 }
 
-function show_price($tmp, $row) {
-    global $row_part;
-    $result = "<td class=price>{$row['price']}</td>";
+function detail_view_show_price() {
+    global $row_part, $tags;
+    $result = "{$row_part['price1_title']} {$tags['price']}<br />";
     if ($row_part['price_cnt'] >= 2) {
-        $result .= "<td class=price>{$row['price2']}</td>";
+        $result .= "{$row_part['price2_title']} {$tags['price2']}<br />";
     }
     if ($row_part['price_cnt'] >= 3) {
-        $result .= "<td class=price>{$row['price3']}</td>";
+        $result .= "{$row_part['price3_title']} {$tags['price3']}<br />";
     }
     return $result;
 }
@@ -114,6 +114,7 @@ function prev_part($prev_id, $deep, $arr) {
 
 $tags['nav_str'] .= "<span class=nav_next><a href=\"" . $SUBDIR . "catalog/\" class=top>{$tags['Header']}</a></span>";
 if ($current_part_id) {
+    add_nav_item(isset($settings['catalog_header']) ? $settings['catalog_header'] : 'Магазин', 'catalog/');
     $arr = prev_part($current_part_id, 0, array());
     $arr = array_reverse($arr);
     $max_size = sizeof($arr) - 1;
@@ -122,9 +123,11 @@ if ($current_part_id) {
         $current_part_deep++;
         if (($n < $max_size) || (strlen($input['item_title']))) {
             $tags['nav_str'] .= "<span class=nav_next><a href=" . $SUBDIR . get_cat_part_href($row['id']) . ">{$row['title']}</a></span>";
+            add_nav_item($row['title'],get_cat_part_href($row['id']));
             $tags['Header'] .= " - {$row['title']}";
         } else {
             $tags['nav_str'] .= "<span class=nav_next>{$row['title']}</span>";
+            add_nav_item($row['title']);
         }
     }
 }
@@ -248,6 +251,9 @@ if (strlen($input['item_title'])) {
 
         $tags['Header'] = $row['title'];
         $tags['nav_str'] .= "<span class=nav_next>{$row['title']}</span>";
+        
+        add_nav_item($row['title']);
+
         $part_id = $row['part_id'];
 
         $query = "select * from cat_item_images where item_id='{$item_id}' and id<>'{$row['default_img']}' order by id asc";
@@ -261,8 +267,8 @@ if (strlen($input['item_title'])) {
                     $URL=get_item_image_url($row['fname'], 50);
                     $tags['images'] .= "<div class=image_item><img class=cat_images src=\"{$SUBDIR}{$URL}\" item_id={$item_id} file_name={$row['fname']} image_id={$row['id']} border=0></div>";
                 }
-                $tags['images'] .= "</div>";
             }
+            $tags['images'] .= "</div>";
         }
 
         $content .= get_tpl_by_title("cat_item_detail_view", $tags, $result);
@@ -352,11 +358,11 @@ if ($result->num_rows) {
     $content .= "<div id=cat_items>\n";
     while ($row = $result->fetch_array()) {
         $row['item_a'] = '<a href="' . $SUBDIR . get_cat_part_href($row['part_id']) . $row['seo_alias'] . '" title="' . $row['title'] . '">';
-        $row['special_offer_ins'] = ($row['special_offer'] ? "<div class=cat_item_special_offer>Спецпредложение !</div>" : "");
+        $row['special_offer_ins'] = ($row['special_offer'] ? "<div class=cat_item_special_offer>Популярное</div>" : "");
         $URL=get_item_image_url($row['fname'], $settings["catalog_item_img_preview"]);
         $row['default_image'] = (is_file($IMG_ITEM_PATH . $row['fname']) ? $row['item_a'] . "<img src=\"{$SUBDIR}{$URL}\" alt=\"{$row['title']}\" title=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
         $row['descr'] = nl2br($row['descr']);
-        $row['price'] = ($row['price'] ? "Цена $row[price]" : "");
+        $row['price'] = ($row['price'] ? "Цена {$row['price']}" : "");
         $content .= get_tpl_by_title('cat_item_list_view', $row, $result);
     }
     $content .= "</div>\n";
@@ -373,5 +379,6 @@ if ($current_part_id) {
     ";
 }
 
+add_nav_item(isset($settings['catalog_header']) ? $settings['catalog_header'] : 'Магазин', null, true);
 
 echo get_tpl_by_title($part['tpl_name'], $tags, "", $content);

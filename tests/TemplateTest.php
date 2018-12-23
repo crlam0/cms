@@ -17,7 +17,7 @@ class TemplateTest extends TestCase
 
     public function testFileParse()
     {
-        $content=$this->Template->get_tpl_by_title('theme/main.tpl');
+        $content=$this->Template->get_tpl_by_title('tests/test.tpl');
         self::assertStringStartsWith('<!DOCTYPE html>', $content);
     }
     

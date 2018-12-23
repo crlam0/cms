@@ -192,7 +192,7 @@ tr.active_N { background: #dddddd; }
 $(document).ready(function(){  
     $('input:checkbox').change(function(){
 	var id=$(this).val();
-	if( $(this).attr("checked") ){ var active='Y'; }else{ var active='N'; }
+	if( $(this).prop("checked") ){ var active='Y'; }else{ var active='N'; }
 	$.ajax({
 	   type: "POST", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
 	   success: function(msg){
@@ -366,6 +366,7 @@ $(document).ready(function(){
 	<tr class=content align=left><td>Название:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[title] value="[%title%]"></td></tr>
 	<tr class=content align=left><td>Позиция:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[num] value="[%num%]"></td></tr>
 	<tr class=content align=left><td>Алиас:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
+        <tr class=content align=left><td>Специальное предложение:</td><td><input type=checkbox maxlength=255 size=64 name=form[special_offer] value="1" [%special_offer%]></td></tr>
 	[%price_inputs%]
 	<tr class=content align=left><td>Вес/количество/объем:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[cnt_weight] value="[%cnt_weight%]"></td></tr>
 	<tr class=header><td colspan=2>Краткое описание</td></tr>
@@ -492,7 +493,7 @@ tr.active_N { background: #dddddd; }
 $(document).ready(function(){  
     $('input:checkbox').change(function(){
 	var id=$(this).val();
-	if( $(this).attr("checked") ){ var active='Y'; }else{ var active='N'; }
+	if( $(this).prop("checked") ){ var active='Y'; }else{ var active='N'; }
 	$.ajax({
 	   type: "POST", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
 	   success: function(msg){
@@ -607,7 +608,7 @@ tr.active_N { background: #dddddd; }
 $(document).ready(function(){  
     $('input:checkbox').change(function(){
 	var id=$(this).val();
-	if( $(this).attr("checked") ){ var active='Y'; }else{ var active='N'; }
+	if( $(this).prop("checked") ){ var active='Y'; }else{ var active='N'; }
 	$.ajax({
 	   type: "POST", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
 	   success: function(msg){
@@ -652,7 +653,7 @@ $(document).ready(function(){
 tr.active_Y { background: #ffffff; }
 tr.active_N { background: #dddddd; }
 </style>
-<table width=600 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
+<table width=600 border=0 cellspacing=1 cellpadding=1 class="table table-responsive table-bordered normal-form" align=center>
 <tr class=header align=center>
 	<td width=15%>Дата</td>
 	<td width=25%>Тема</td>
@@ -663,7 +664,7 @@ tr.active_N { background: #dddddd; }
 	<td width=5% align=center>&nbsp;</td>
 </tr>
 [%loop_begin%]
-	<tr class=active_[%row(active)%] align=left id=tr_[%row(id)%]>
+	<tr class="active_[%row(active)%]" align="left" id="tr_[%row(id)%]">
 	<td>[%row(date_add)%]</td>
 	<td><b><a href=[%PHP_SELF%]?view_gallery=1&id=[%row(id)%]>[%row(title)%]</a></b></td>
 	<td align=center>[%row(seo_alias)%]</td>
@@ -678,13 +679,13 @@ tr.active_N { background: #dddddd; }
 $(document).ready(function(){  
     $('input:checkbox').change(function(){
 	var id=$(this).val();
-	if( $(this).attr("checked") ){ var active='Y'; }else{ var active='N'; }
+	if( $(this).prop("checked") ){ var active='Y'; }else{ var active='N'; }
 	$.ajax({
 	   type: "POST", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
 	   success: function(msg){
 	     var tr_id="#tr_"+id;
-	     if(msg == 'Y') $(tr_id).attr("class","active_Y");
-	     else if(msg == 'N') $(tr_id).attr("class","active_N");
+	     if(msg === 'Y') $(tr_id).attr("class","active_Y");
+	     else if(msg === 'N') $(tr_id).attr("class","active_N");
 	     else alert(msg);
 	   }
 	});
@@ -770,7 +771,7 @@ $(document).ready(function(){
         $.ajax({
            type: "POST", url: "[%PHP_SELF%]", data: "default_image_id="+id,
            success: function(msg){
-                if(msg != 'OK') alert(msg);
+                if(msg !== 'OK') alert(msg);
                 $(this).prop("checked",true);
            }
         });
@@ -1087,27 +1088,32 @@ $(document).ready(function(){
 
 
 <!--[title]news_edit_table[/title]-->
-<!--DESCRIPTION: Список новостей -->
+<!--DESCRIPTION: Список новостей в адм. разделе -->
 <!--[content]-->
-<table width=90% border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
+<center><form action=[%PHP_SELF%] method=get>
+	<input type=hidden name=add_news value=1>
+	<input class="btn btn-primary" type=submit value="Добавить">
+</form></center>
+<br>
+<table width=500 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
 <tr class=header align=center>
-	<td width=30%>Дата</td>
-	<td width=60%>Тема</td>
+	<td width=40%>Заголовок</td>
+	<td width=40%>Изображение</td>
 	<td width=5% align=center>&nbsp;</td>
 	<td width=5% align=center>&nbsp;</td>
 </tr>
 [%loop_begin%]
 	<tr class=content align=left>
-	<td>[%row(date)%]</td>
-	<td><b>[%row(title)%]</b></td>
-	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border=0></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border=0 onClick="return test()"></a></td>
+	<td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
+	<td align=center>[%func(show_img)%]</td>
+	<td width=16><a href=[%PHP_SELF%]?edit_news=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border=0></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_news=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border=0 onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
 <br>
 <center><form action=[%PHP_SELF%] method=get>
-	<input type=hidden name=adding value=1>
+	<input type=hidden name=add_news value=1>
 	<input class="btn btn-primary" type=submit value="Добавить">
 </form></center>
 
@@ -1118,13 +1124,16 @@ $(document).ready(function(){
 <!--[title]news_edit_form[/title]-->
 <!--DESCRIPTION: Форма редактирования новостей -->
 <!--[content]-->
-<form action=[%PHP_SELF%] method=post>
+<form action=[%PHP_SELF%] method=post enctype="multipart/form-data">
+<input type=hidden name=MAX_FILE_SIZE value=16000000>		
 <input type=hidden name=id value=[%id%]>
 <input type=hidden name=[%type%] value=1>
 <table width=500 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
 	<tr class=header><td colspan=2>[%form_title%]</td></tr>
-	<tr class=content align=left><td>Автор:</td><td><input class="form-control" type=edit maxlength=64 name=form[author] value="[%author%]"></td></tr>
-	<tr class=content align=left><td>Название:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[title] value="[%title%]"></td></tr>
+	<tr class=content align=left><td>Заголовок:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[title] value="[%title%]"></td></tr>
+	<tr class=content align=left><td>SEO:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
+	<tr class=content align=left><td>Ссылка:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[url] value="[%url%]"></td></tr>
+	<tr class=content align=left><td>Изображение:</td><td><input class="form-control" name=img_file type=file size=40></td></tr>
 	<tr class=content><td align=left colspan=2>[%content%]</td></tr>
 	<tr class=header align=left><td align=center colspan=2><input class="btn btn-primary" type=submit value="  Сохранить  "></td></tr>
 </table>
@@ -1744,7 +1753,7 @@ $(document).ready(function(){
 <!--[title]request_list[/title]-->
 <!--DESCRIPTION: Список заказов -->
 <!--[content]-->
-<br><center><table width=800 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
+<br><center><table width=800 border=0 cellspacing=1 cellpadding=1 class="table table-responsive table-bordered normal-form" align=center>
 <tr class=header align=center>
 <td>Дата</td>
 <td>Заказ</td>
@@ -1754,13 +1763,14 @@ $(document).ready(function(){
 [%loop_begin%]
         <tr [%row(active,if,bgcolor=#ffffff,bgcolor=#dddddd)%] align=left>
         <td align=center><b>[%row(date)%]</b></td>
-        <td>[%row(item_list,nl2br)%]</td>
+        <td>[%row(item_list,nl2br)%][%row(comment,nl2br)%][%func(file_info)%]</td>
         <td>[%row(contact_info,nl2br)%]</td>
         <td width=16><a href="[%PHP_SELF%]?active=Y&id=[%row(id)%]"><img src="../images/add.gif" alt="Активно" border=0 onClick="return test()"></a></td>
         <td width=16><a href="[%PHP_SELF%]?active=N&id=[%row(id)%]"><img src="../images/sub.gif" alt="Неактивно" border=0 onClick="return test()"></a></td>
         </tr>
 [%loop_end%]
 </table>
+
 <!--[/content]-->
 
 

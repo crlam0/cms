@@ -3,7 +3,7 @@ if(!isset($input)) {
     require '../../include/common.php';
 }
 $tags['Header'] = 'Блог';
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
+$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
 
 use Classes\Comments;
 use Classes\Pagination;
@@ -49,7 +49,7 @@ function get_post_content ($row) {
     $content = preg_replace('/height: \d+px;/', 'max-width: 100%;', $content);
     
     if(strlen($row['target_type'])){
-        $href=(strlen($row['href']) ? $row['href'] : $SUBDIR.get_menu_href(array(),$row) );
+        $href=(strlen($row['target_type'] == 'link') ? $row['href'] : $SUBDIR.get_menu_href(array(),$row) );
         $content.="<br><a href=\"{$href}\">Перейти >></a>";
     }
     return $content;
@@ -68,8 +68,12 @@ if($input->count() && is_numeric($input['view_post'])) {
 
     $tags['nav_str'].="<span class=nav_next><a href=\"{$SUBDIR}blog/\">{$tags['Header']}</a></span>";
     $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";
-    $tags['Header'] .= " - ".$row['title'];
     
+    add_nav_item($tags['Header'],'blog/');
+    add_nav_item($row['title']);
+
+    $tags['Header'] .= " - ".$row['title'];
+       
     $tags['functions'] = ['get_post_href', 'get_post_content', 'get_post_comments_count'];
     $content.=get_tpl_by_title('blog_posts', $tags, $result);
 
@@ -81,6 +85,7 @@ if($input->count() && is_numeric($input['view_post'])) {
 } else {
 
     $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
+    add_nav_item($tags['Header']);
     
     $query = "SELECT count(id) from {$TABLE} where active='Y'";
     list($total) = my_select_row($query, false);

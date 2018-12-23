@@ -32,7 +32,9 @@ function my_msg_to_str($title, $tags = array(), $str = '') {
             $message['type'] = $tags['type'];            
         }
         foreach ($tags as $key => $value) {
-            $message['content'] = str_replace('[%' . $key . '%]', $value, $message['content']);
+            if (!is_array($value)){
+                $message['content'] = str_replace('[%' . $key . '%]', $value, $message['content']);
+            }
         }
     }    
     if ($message) {

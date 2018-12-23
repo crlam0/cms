@@ -63,13 +63,6 @@ MyGlobal::set('SUBDIR', $SUBDIR );
 
 add_to_debug('Global arrays loaded');
 
-require $INC_DIR.'lib_messages.php';
-require $INC_DIR.'lib_templates.php';
-require $INC_DIR.'lib_functions.php';
-require $INC_DIR.'lib_url.php';
-
-add_to_debug('Library loaded');
-
 // Load settings into $settings[]
 $settings = new MyArray;
 if(file_exists($INC_DIR.'config/settings.local.php')) {
@@ -88,6 +81,14 @@ while ($row = $result->fetch_array()) {
 }
 MyGlobal::set('settings', $settings );
 add_to_debug('Settings loaded');
+
+require $INC_DIR.'lib_messages.php';
+require $INC_DIR.'lib_templates.php';
+require $INC_DIR.'lib_functions.php';
+require $INC_DIR.'lib_url.php';
+
+add_to_debug('Library loaded');
+
 
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;

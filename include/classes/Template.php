@@ -10,15 +10,17 @@ use Classes\TwigTemplate;
 class Template {
     public $BlocksObject;
     private $MyTemplate;
+    private $TwigTemplate;
     
     public function __construct () {
-        global $INC_DIR;
+        global $INC_DIR, $settings;
         if(file_exists($INC_DIR.'classes/BlocksLocal.php')) {
             $this->BlocksObject = new BlocksLocal();    
         } else {
             $this->BlocksObject = new Blocks();
         }
         $this->MyTemplate = new MyTemplate($this->BlocksObject);
+        $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => $settings['debug']]);
     }
 
     /**
@@ -44,7 +46,7 @@ class Template {
                 $fname = $template['file_name'];
             }    
             if ($fname) {
-                $twig = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => $settings['debug']]);
+                $twig = $this->TwigTemplate;
                 $template['title'] = $fname;
             } else {
                 $tags['file_name'] = $template['file_name'];

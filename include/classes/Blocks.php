@@ -8,6 +8,26 @@ use Classes\MyGlobal;
  *
  */
 class Blocks {
+    
+    /**
+     * Return menu ркуа
+     *
+     * @param integer $row Current row
+     *
+     * @return array HREF and TARGET
+     */
+    protected function get_href($row) {
+        global $SUBDIR;
+        $href = get_menu_href(null, $row);
+        if (preg_match('/^http.?:\/\/.+$/', $href)) {
+            $target_inc = ' target="_blank"';
+        } else {
+            $href = $SUBDIR . $href;
+            $target_inc = '';
+        }
+        return [$href,$target_inc];        
+    }
+
     /**
      * Return menu content
      *
@@ -33,16 +53,9 @@ class Blocks {
         if ($result->num_rows) {
             $output.="<ul {$attr_ul}>\n";
             while ($row = $result->fetch_array()) {
-                $tmp = null;
-                $href = get_menu_href($tmp, $row);
-                if (preg_match('/^http.?:\/\/.+$/', $href)) {
-                    $target_inc = ' target="_blank"';
-                } else {
-                    $href = $SUBDIR . $href;
-                    $target_inc = '';
-                }
+                list($href,$target_inc) = $this->get_href($row);
                 $output.="<li {$attr_li}><a class=\"nav-link\" href=\"{$href}\"{$target_inc} title=\"{$row['title']}\">{$row['title']}</a>";
-                // $output.=$this->get_menu_items($row['submenu_id']);
+                $output.=$this->get_menu_items($row['submenu_id']);
                 $output.="</li>\n";
             }
             $output.="</ul>\n";

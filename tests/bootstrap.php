@@ -9,6 +9,7 @@ require_once $DIR.'vendor/autoload.php';
 require_once $INC_DIR . 'lib_sql.php';
 require_once $INC_DIR . 'lib_messages.php';
 require_once $INC_DIR . 'lib_functions.php';
+require_once $INC_DIR . 'lib_url.php';
 require_once $INC_DIR . 'lib_templates.php';
 
 // require_once dirname(__FILE__) . '/../include/common.php';

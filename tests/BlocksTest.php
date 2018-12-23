@@ -18,7 +18,7 @@ class BlocksTest extends TestCase
     public function testBlocksMenuMain()
     {
         $content=$this->Blocks->content('menu_main');
-        self::assertStringStartsWith('<div id=menu>', $content);
+        self::assertContains('id="menu-main"', $content);
     }
     
 }

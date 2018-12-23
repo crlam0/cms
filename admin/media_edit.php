@@ -46,7 +46,7 @@ if ($input["added_file"]) {
 
 //	$file_name = str_replace(" ", "_", encodestring($_FILES["uploaded_file"]["name"]));
 	if (move_uploaded_file($_FILES["uploaded_file"]["tmp_name"], $DIR . $settings["media_upload_path"] . $file_name)) {
-	    $input['form'][file_name] = $file_name;
+	    $input['form']['file_name'] = $file_name;
 	} else {
 	    $content.=my_msg_to_str("error","","Ошибка копирования файла !");
 	}
@@ -61,8 +61,9 @@ if ($input["edited_file"]) {
     if ($_FILES["uploaded_file"]["size"] > 100) {
 	list($fname_old) = my_select_row("select file_name from media_files where id='{$input['id']}'");
 	if (is_file($DIR . $settings["media_upload_path"] . $fname_old)) {
-	    if (!unlink($DIR . $settings["media_upload_path"] . $fname_old)
-		)$content.=my_msg_to_str("error","","Ошибка удаления файла");
+	    if (!unlink($DIR . $settings["media_upload_path"] . $fname_old)){
+                $content.=my_msg_to_str("error","","Ошибка удаления файла");
+            }
 	}
       	$f_info = pathinfo($_FILES["uploaded_file"]["name"]);
 	$file_name = encodestring($f_info["filename"]) . "." . $f_info["extension"];
@@ -79,7 +80,7 @@ if ($input["edited_file"]) {
 }
 
 if (($input["edit_file"]) || ($input["add_file"])) {
-    if ($_GET["edit_file"]) {
+    if ($input["edit_file"]) {
 	$query = "select * from media_files where id='{$input['id']}'";
 	$result = my_query($query);
 	$tags = array_merge($tags, $result->fetch_array());
@@ -88,9 +89,10 @@ if (($input["edit_file"]) || ($input["add_file"])) {
     } else {
 	$tags['type'] = "added_file";
 	$tags['form_title'] = "Добавление";
+        $tags['descr'] = '';
     }
-    $tags['descr'] = "<textarea class=\"form-control\" name=form[descr] rows=15 cols=100 maxlength=64000>${tags['descr']}</textarea>";
-    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
+    $tags['descr'] = "<textarea class=\"form-control\" name=form[descr] rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
+    // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_title("media_files_edit_form", $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();
@@ -117,22 +119,26 @@ if ($input["del_list"]) {
 }
 
 if ($input["added_list"]) {
-    if (!strlen($input['form']['seo_alias']))$input['form']['seo_alias'] = encodestring($input['form']['title']);
-    $input['form'][date_add] = "now()";
+    if (!strlen($input['form']['seo_alias'])){
+        $input['form']['seo_alias'] = encodestring($input['form']['title']);
+    }
+    $input['form']['date_add'] = "now()";
     $query = "insert into media_list " . db_insert_fields($input['form']);
     my_query($query);
     $content.=my_msg_to_str("", "", "Раздел успешно добавлен.");
 }
 
 if ($input["edited_list"]) {
-    if (!strlen($input['form']['seo_alias']))$input['form']['seo_alias'] = encodestring($input['form']['title']);
+    if (!strlen($input['form']['seo_alias'])){
+        $input['form']['seo_alias'] = encodestring($input['form']['title']);
+    }
     $query = "update media_list set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
     $content.=my_msg_to_str("", "", "Раздел успешно изменен.");
 }
 
 if (($input["edit_list"]) || ($input["add_list"])) {
-    if ($_GET["edit_list"]) {
+    if ($input["edit_list"]) {
 	$query = "select * from media_list where id='{$input['id']}'";
 	$result = my_query($query);
 	$tags = array_merge($tags, $result->fetch_array());
@@ -141,9 +147,10 @@ if (($input["edit_list"]) || ($input["add_list"])) {
     } else {
 	$tags['type'] = "added_list";
 	$tags['form_title'] = "Добавление";
+        $tags['descr'] = '';
     }
     $tags['descr'] = "<textarea class=\"form-control\" name=form[descr] rows=15 cols=80 maxlength=64000>{$tags['descr']}</textarea>";
-    $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
+    // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_title("media_list_edit_form", $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();

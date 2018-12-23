@@ -141,24 +141,8 @@ add_to_debug('User flag checked');
 
 $server['PHP_SELF_DIR']=dirname($server['PHP_SELF']).'/';
 
-if(array_key_exists('Add_CSS', $tags)) {
-    $settings['css_list'] .= $tags['Add_CSS'];
-}
-
-$css_array=explode(';',$settings['css_list']);
-if(!array_key_exists('INCLUDE_CSS', $tags)) {
-    $tags['INCLUDE_CSS']='';
-}
-foreach ($css_array as $css){
-    $css='css/'.$css.'.css';
-    if(file_exists($DIR.$css)){
-        $tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.$css.'" type="text/css" rel=stylesheet />'."\n";
-    } else {
-        add_to_debug('CSS file missing: ' . $DIR.$css);
-    }
-}
-unset($css_array,$css);
 $tags['INCLUDE_HEAD']='';
+$tags['INCLUDE_CSS']='';
 $tags['INCLUDE_JS']='';
 
 add_to_debug('common.php complete');

@@ -2,13 +2,15 @@ let mix = require('laravel-mix');
 
 mix
     .setPublicPath('theme/')
-    .setResourceRoot('theme/')
+    .setResourceRoot('../')
     .js('theme/assets/js/full.js', 'js')
     .sass('theme/assets/sass/full.scss', 'css')
+/*  
     .copyDirectory('theme/assets/images', 'theme/images')
-    .copyDirectory('theme/assets/fonts', 'theme/fonts')
+    .copyDirectory('theme/assets/fonts', 'theme/fonts') 
+ */
     .options({
-       processCssUrls: false
+       processCssUrls: true
     })
     .version();
 

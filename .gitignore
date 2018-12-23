@@ -3,6 +3,7 @@
 /*.code-workspace
 
 /composer.phar
+/composer.lock
 
 /dump.cmd
 /*.html
@@ -11,7 +12,6 @@
 
 /src/
 /var/
-/templates/
 
 *.local.*
 *Local.php

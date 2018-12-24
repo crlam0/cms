@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Classes\Template;
+use Classes\Blocks;
 
 require_once 'tests/bootstrap.php';
 
@@ -12,7 +13,8 @@ class TemplateTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Template = new Template();
+        $BlocksObject = new Blocks();
+        $this->Template = new Template($BlocksObject);
     }
 
     public function testFileParse()

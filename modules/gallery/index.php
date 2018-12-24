@@ -7,8 +7,8 @@ include 'functions.php';
 use Classes\Comments;
 
 $tags['Header'] = "Галерея";
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/gallery.css" type="text/css" rel=stylesheet />'."\n";
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";
+$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/gallery.css" type="text/css" rel=stylesheet />'."\n";
+$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";
 
 $settings["gallery_use_popup"]=true;
 
@@ -129,7 +129,7 @@ if ($input['view_image'] || (isset($input['load']))) {
     }
     if ($input['view_image']){
         $content = get_tpl_by_title('gallery_image_view', $tags);
-        echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+        echo get_tpl_default($tags, '', $content);
         exit();
     }
 }
@@ -204,7 +204,7 @@ if (($view_gallery)||($input['page'])) {
         $content.=$comments->show_form($tags);
     }
     
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_default($tags, '', $content);
     exit();
 }
 
@@ -236,5 +236,5 @@ if (!$result->num_rows) {
 
 add_nav_item('Галерея');
 
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+echo get_tpl_default($tags, '', $content);
 

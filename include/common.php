@@ -86,12 +86,6 @@ while ($row = $result->fetch_array()) {
 MyGlobal::set('settings', $settings );
 add_to_debug('Settings loaded');
 
-require $INC_DIR.'lib_messages.php';
-require $INC_DIR.'lib_templates.php';
-require $INC_DIR.'lib_functions.php';
-require $INC_DIR.'lib_url.php';
-add_to_debug('Library loaded');
-
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 if($settings['debug']) {
@@ -102,8 +96,14 @@ if($settings['debug']) {
     $PrettyPageHandler->addDataTable('DEBUG Array',  $DEBUG['log']);
     $whoops->pushHandler($PrettyPageHandler);
     $whoops->register();
-    add_to_debug('Add exception handler');
+    add_to_debug('Added exception handler');
 }
+
+require $INC_DIR.'lib_messages.php';
+require $INC_DIR.'lib_templates.php';
+require $INC_DIR.'lib_functions.php';
+require $INC_DIR.'lib_url.php';
+add_to_debug('Library loaded');
 
 require_once $INC_DIR.'lib_stats.php';
 add_to_debug('Stats added');

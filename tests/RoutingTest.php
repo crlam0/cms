@@ -39,6 +39,11 @@ class RoutingTest extends TestCase
         self::assertEquals('modules/article/index.php', $result);
         self::assertEquals('item', $input['uri']);
     }
-    
+    public function testGetPartArray() {        
+        global $input;
+        $this->Routing->proceedGETParams();
+        $result=$this->Routing->getPartArray();
+        self::assertEquals('default', $result['title']);
+    }    
 }
 

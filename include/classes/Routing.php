@@ -11,14 +11,16 @@ final class Routing {
     public function __construct($request_uri) {
         global $SUBDIR;
         $this->routes = [];
+        $this->request_uri = $request_uri;
         
         $this->addRoutesFromConfig('routes.global.php');
         $this->addRoutesFromConfig('routes.local.php');       
         
         if($SUBDIR !== '/') {
-            $this->request_uri = str_replace($SUBDIR, '', $request_uri);
-        } else {
-            $this->request_uri = substr($request_uri, 1);
+            $this->request_uri = str_replace($SUBDIR, '', $this->request_uri);
+        }
+        if(substr($this->request_uri,0,1) === '/') {
+            $this->request_uri = substr($this->request_uri, 1);
         } 
         
         if(strstr($this->request_uri,'modules/')) {

@@ -5,7 +5,6 @@ include 'include/common.php';
 if( isset($REDIRECT_TO_HTTPS) && $server['REQUEST_SCHEME'] === 'http' ){
     $url = 'https://' . $server['HTTP_HOST'] . '' . $server['REQUEST_URI'];
     redirect($url);
-    unset($url);
 }
 
 use Classes\MyGlobal;

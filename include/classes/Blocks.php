@@ -65,8 +65,7 @@ class Blocks {
     
     protected function menu_main () {
         list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE root=1", true);
-        $tags['menu_content'] = $this->get_menu_items($menu_id, 'id="menu-main" class="nav nav-pills flex-column"', 'class="nav-item"');
-        return get_tpl_by_title('block_menu', $tags);
+        return $this->get_menu_items($menu_id, 'id="menu-main" class="nav navbar-nav"', 'class="nav-item"');
     }
     protected function menu_top () {
         list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE top_menu=1", true);

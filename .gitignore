@@ -8,7 +8,7 @@
 /package.json
 /package-lock.json
 
-/dump.cmd
+/*.cmd
 /*.html
 /*.sql
 /*.tpl

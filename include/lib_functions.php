@@ -377,19 +377,18 @@ function user_encrypt_password($passwd, $salt) {
 
 
 /**
- * Return block content
+ * Return block content (for Twig templates)
  *
  * @param string $name Block name
  *
  * @return string Output string
  */
 function get_block($name) {
-    global $Template;
-    return $Template->BlocksObject->content($name);
+    return MyGlobal::get('Blocks')->content($name);
 }
 
 /**
- * Return value from MyGlobal object
+ * Return value from MyGlobal object (for Twig templates)
  *
  * @param string $key Value key
  *
@@ -401,7 +400,7 @@ function myglobal($key) {
 
 
 /**
- * Recursively delete filesystem tree
+ * Recursively delete FS tree
  *
  * @param string $dir Directory to remove
  *
@@ -419,9 +418,9 @@ function del_tree($dir) {
 }
 
 /**
- * Recursively delete cache dir
+ * Recursively delete cache directory
  *
- * @param string $subdir Subdir to remove
+ * @param string $subdir Subdirectory to remove
  *
  * @return bool True if complete
  */

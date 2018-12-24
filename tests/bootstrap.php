@@ -14,6 +14,11 @@ require_once $INC_DIR . 'lib_templates.php';
 
 // require_once dirname(__FILE__) . '/../include/common.php';
 
+use Classes\Routing;
+use Classes\MyGlobal;
+$Routing = new Routing ('');
+MyGlobal::set('Routing', $Routing );
+
 $settings['debug'] = false;
 
 function add_to_debug () {

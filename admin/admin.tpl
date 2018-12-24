@@ -5,8 +5,8 @@
         <meta name="keywords" content="[%settings(base_keywords)%]">
         <meta name="description" content="Admin's part of BooT's site">
         <!-- Bootstrap core CSS -->
-        <link href="[%SUBDIR%]css/bootstrap.min.css" rel="stylesheet" />
-        <link href="[%SUBDIR%]css/admin.css" rel="stylesheet" />
+        <link href="[%SUBDIR%]admin/bootstrap.min.css" rel="stylesheet" />
+        <link href="[%SUBDIR%]admin/admin.css" rel="stylesheet" />
         <link rel="icon" type="image/png" href="[%BASE_HREF%]favicon.png" />
         [%INCLUDE_HEAD%]
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -29,9 +29,6 @@
                 </td>
             </tr>
         </table>
-        <!-- Bootstrap core JavaScript
-        ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
         <script src="[%SUBDIR%]include/js/bootstrap.min.js"></script>
         <script src="[%SUBDIR%]include/js/misc.js"></script>
     </body>

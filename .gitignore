@@ -5,6 +5,9 @@
 /composer.phar
 /composer.lock
 
+/package.json
+/package-lock.json
+
 /dump.cmd
 /*.html
 /*.sql

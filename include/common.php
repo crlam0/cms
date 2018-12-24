@@ -28,7 +28,6 @@ if($_SERVER['SERVER_PROTOCOL']) {
     $DIR=dirname(dirname(__FILE__)) . '/';
     $INC_DIR=$DIR.'include/';
 }
-
 add_to_debug('Local configs loaded, session started');
 
 if(file_exists($DIR.'vendor/autoload.php')) {
@@ -55,13 +54,19 @@ if(is_array($_SERVER))foreach ($_SERVER as $key => $value){
 }
 
 use Classes\MyGlobal;
-
 MyGlobal::set('input', $input );
 MyGlobal::set('server', $server );
 MyGlobal::set('DIR', $DIR );
 MyGlobal::set('SUBDIR', $SUBDIR );
-
 add_to_debug('Global arrays loaded');
+
+use Classes\Routing;
+$Routing = new Routing ($server['REQUEST_URI']);
+MyGlobal::set('Routing', $Routing );
+if ($Routing->hasGETParams()) {
+    $Routing->proceedGETParams();
+}
+add_to_debug('Routing added');
 
 // Load settings into $settings[]
 $settings = new MyArray;
@@ -73,7 +78,6 @@ if(file_exists($INC_DIR.'config/settings.local.php')) {
         }
     }    
 }    
-
 $query='SELECT * FROM settings';
 $result=$DB->query($query,true);
 while ($row = $result->fetch_array()) {
@@ -86,13 +90,10 @@ require $INC_DIR.'lib_messages.php';
 require $INC_DIR.'lib_templates.php';
 require $INC_DIR.'lib_functions.php';
 require $INC_DIR.'lib_url.php';
-
 add_to_debug('Library loaded');
-
 
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
-
 if($settings['debug']) {
     $whoops = new Run();
     $whoops->writeToOutput(true);
@@ -104,32 +105,22 @@ if($settings['debug']) {
     add_to_debug('Add exception handler');
 }
 
-
 require_once $INC_DIR.'lib_stats.php';
-
 add_to_debug('Stats added');
 
-$query = "SELECT * FROM parts WHERE uri='" . $server["REQUEST_URI"] . "'";
-$part = my_select_row($query, 1);
-if (!$part['id']) {
-    $query = "SELECT * FROM parts WHERE '" . $server["REQUEST_URI"] . "' LIKE concat('%',uri,'%') AND title<>'default'";
-    $part = my_select_row($query, 1);
-}
-if (!$part['id']) {
-    $query = "SELECT * FROM parts WHERE title='default'";
-    $part = my_select_row($query, 1);
-}
+$part = $Routing->getPartArray();
 if (!$part['id']) {
     my_msg('default_tpl_not_found');
     exit();
 }
+MyGlobal::set('tpl_default', $part['title']);
 
 add_to_debug('Part data loaded');
 
 if ((strlen($part['user_flag'])) && (!have_flag($part['user_flag'])) && (!have_flag('global')) ) {
     if (isset($_SESSION['UID'])) {
         $content ='<h1 align=center>У вас нет соответствующих прав !</h1>';
-        echo get_tpl_by_title($part['tpl_name'], [], null, $content);
+        echo get_tpl_default([], null, $content);
     } else {
         $_SESSION['GO_TO_URI'] = $server['REQUEST_URI'];
         redirect($SUBDIR . 'login/');

@@ -387,6 +387,18 @@ function get_block($name) {
     return MyGlobal::get('Blocks')->content($name);
 }
 
+function include_php($file_name) {
+    $DIR =  MyGlobal::get('DIR');
+    if(is_file($DIR . $file_name)) {
+        ob_start();
+        include_once($DIR . $file_name);
+        $content = ob_get_clean();
+    } else {
+        $content = my_msg('error', [], 'Файл ' . $file_name . ' не найден !');
+    }
+    return $content;
+}
+
 /**
  * Return value from MyGlobal object (for Twig templates)
  *

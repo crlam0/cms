@@ -30,7 +30,6 @@ $(document).ready(function () {
                 centerPopup();
             }
         });
-
     });
 
 //    $("a.gallery_button").live('click', function () {

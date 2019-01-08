@@ -62,6 +62,7 @@ class Template {
         }
         
         $twig->add_function('add_block');
+        $twig->add_function('include_php');
         $twig->add_function('path');
         $twig->add_function('myglobal');
         if(array_key_exists('functions',$tags) && is_array($tags['functions'])) {

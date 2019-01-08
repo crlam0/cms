@@ -15,7 +15,7 @@ if ((isset($input['uri'])) && (!isset($input['load']))) {
 }
 
 $tags['Header'] = 'Новости';
-$tags['INCLUDE_HEAD'] .= '<link href="' . $SUBDIR . 'css/article_news_faq.css" type="text/css" rel=stylesheet />' . "\n";
+$tags['INCLUDE_CSS'] .= '<link href="' . $SUBDIR . 'css/article_news_faq.css" type="text/css" rel=stylesheet />' . "\n";
 
 
 $query = "select * from news " . ($view_item ? " where id='" . $view_item . "' " : '') . "order by date desc";

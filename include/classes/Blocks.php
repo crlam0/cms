@@ -174,8 +174,7 @@ class Blocks {
                 if(file_exists($DIR . 'banners.local.php')) {
                     ob_start();
                     include_once($DIR . 'banners.local.php');
-                    $content = ob_get_contents();
-                    ob_end_clean();
+                    $content = ob_get_clean();
                     return $content;
                 } else {
                     return '';
@@ -184,23 +183,20 @@ class Blocks {
             case 'calendar':
                 ob_start();
                 show_month(date('n'), 0);
-                $content = ob_get_contents();
-                ob_end_clean();
+                $content = ob_get_clean();
                 return $content;
 
             case 'menu_admin':
                 ob_start();
                 include_once($DIR . 'admin/nav.php');
-                $content = ob_get_contents();
-                ob_end_clean();
+                $content = ob_get_clean();
                 return $content;
                 
             case 'debug':
                 if ($settings['debug']) {
                     ob_start();
                     print_array($DEBUG);
-                    $content = ob_get_contents();
-                    ob_end_clean();
+                    $content = ob_get_clean();
                     return $content;
                 }
                 return '';

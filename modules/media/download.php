@@ -1,7 +1,7 @@
 <?php
 include "../../include/common.php";
 
-$file_name=$DIR.$input["file_name"];
+$file_name=$DIR.urldecode($input["file_name"]);
 $download_file_name=$input["download_file_name"];
 
 if(strstr($file_name,".php")){
@@ -68,8 +68,8 @@ if(!function_exists('mime_content_type')) {
             'odt' => 'application/vnd.oasis.opendocument.text',
             'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
         );
-
-        $ext = strtolower(array_pop(explode('.',$filename)));
+        $arr=explode('.',$filename);
+        $ext = strtolower(array_pop($arr));
         if (array_key_exists($ext, $mime_types)) {
             return $mime_types[$ext];
         } elseif (function_exists('finfo_open')) {
@@ -84,6 +84,7 @@ if(!function_exists('mime_content_type')) {
 }
 
 $mime_type=mime_content_type($file_name);
+// echo $mime_type.$file_name;exit;
 
 if(file_exists($file_name)) {
     header('Content-Description: File Transfer');

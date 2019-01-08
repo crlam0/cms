@@ -6,6 +6,9 @@ $tags['Header'] = "Файлы";
 $tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/media.css" type="text/css" rel=stylesheet />'."\n";
 $tags['nav_str'].="<span class=nav_next><a href=\"{$SUBDIR}media/\">{$tags['Header']}</a></span>";
 
+$view_files = '';
+$player_show = 0;
+
 if (isset($input["uri"])) {
     $params = explode("/", $input["uri"]);
 
@@ -31,7 +34,7 @@ if(!$input->count()){
 $player_num=0;
 
 function show_size($tmp, $row) {
-    global $DIR, $settings, $SUBDIR, $player_num, $server;
+    global $DIR, $settings, $SUBDIR, $player_num, $player_show, $server;
     $file_name = $settings['media_upload_path'] . $row['file_name'];
     $content='';
     

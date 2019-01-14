@@ -74,7 +74,7 @@ function show_size($tmp, $row) {
 
 if ($view_files) {
     list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['media_files_per_page']}) from media_files where list_id=" . $view_files, 1);
-    list($title) = my_select_row("select title from media_list where id=" . $view_files, 1);
+    list($title,$list_descr) = my_select_row("select title,descr from media_list where id=" . $view_files, 1);
     $tags['Header'] = $title;
     $tags['nav_str'].="<span class=nav_next>$title</span>";
     add_nav_item('Файлы','media/');
@@ -97,6 +97,9 @@ if ($view_files) {
     if (!$result->num_rows) {
         $content = my_msg_to_str("list_empty", $tags, "");
     } else {
+        if(strlen($list_descr) > 0){
+            $tags['list_descr'] = '<div class="list_descr">' . $list_descr . '</div>';
+        }
         $content = get_tpl_by_title("media_files_table", $tags, $result);
     }
     if($player_num>0){
@@ -104,8 +107,8 @@ if ($view_files) {
         <link rel="stylesheet" href="'.$SUBDIR.'modules/media/player/mediaelementplayer.min.css" />    
         ';
         $content.="<script>$('audio,video').mediaelementplayer();</script>";
-    }
-
+    }    
+    
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();
 }

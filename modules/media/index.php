@@ -92,7 +92,7 @@ if ($view_files) {
         $tags['pages_list'].="</center><br>";
     }
     $offset = $settings['media_files_per_page'] * ($media_page - 1);
-    $query = "SELECT * from media_files where list_id=" . $view_files . " order by date_add desc limit $offset,$settings[media_files_per_page]";
+    $query = "SELECT * from media_files where list_id=" . $view_files . " order by num asc, date_add desc limit $offset,$settings[media_files_per_page]";
     $result = my_query($query, true);
     if (!$result->num_rows) {
         $content = my_msg_to_str("list_empty", $tags, "");

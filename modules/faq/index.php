@@ -3,7 +3,7 @@ if(!isset($input)) {
     require '../../include/common.php';
 }
 $tags['Header'] = 'Вопрос/ответ';
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
+$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
 
 use Classes\Pagination;
 use Classes\BBCodeEditor;

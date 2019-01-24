@@ -3,7 +3,7 @@ if(!isset($input)) {
     require '../../include/common.php';
 }
 
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";
+$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";
 
 
 if(file_exists($INC_DIR . 'dompdf/src/Autoloader.php')) {

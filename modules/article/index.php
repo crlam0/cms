@@ -3,8 +3,7 @@ if(!isset($input)) {
     require '../../include/common.php';
 }
 
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";
-
+$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";
 
 if(file_exists($INC_DIR . 'dompdf/src/Autoloader.php')) {
     require_once $INC_DIR . 'dompdf/lib/html5lib/Parser.php';
@@ -62,37 +61,31 @@ if (isset($input['pdf']) && $dompdf_enabled) {
     exit();        
 }
 
+$content = '';
+
 if (isset($input['uri'])) {
     $params = explode('/', $input['uri']);
     if(isset($params[1]) && strlen($params[1])){
-        $input["view"]=$params[1];
+        $input['view']=$params[1];
     }else{
-        $query="select id from article_list where seo_alias like '".$params[0]."'";
-        $result=my_query($query);
-        list($view_items)=$result->fetch_array();
+        $view_items = get_id_by_alias('article_list', $params[0], true);
     }
 }
 
 if (isset($input['view'])) {
-    $query="select id from article_item where seo_alias like '".$input['view']."'";
-    $result=my_query($query);
-    list($article_id)=$result->fetch_array();
-    $input['id'] = ( is_numeric($article_id) ? $article_id : $input['view']);
-    $input['view_article'] = 1;
+    $view_article = get_id_by_alias('article_item', $input['view'], true);
 }
 
 if (isset($input['view_items'])) {
     $view_items = $input['id'];
 }
 
-
 if (!$input->count()) {
-    $view_items = '';
-    $tags['Header'] = 'Статьи';
+    $view_items = null;
 }
 
-if ($input["view_article"]) {
-    $query = "select * from article_item where id='" . $input['id'] . "'";
+if ($view_article) {
+    $query = "select * from article_item where id='" . $view_article . "'";
     $result = my_query($query);
     $row = $result->fetch_array();
 
@@ -109,7 +102,7 @@ if ($input["view_article"]) {
     $row['content'] = replace_base_href($row['content']);
     
     $content = get_tpl_by_title('article_view', $row, $result);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_default($tags, null, $content);
     exit;
 }
 
@@ -127,19 +120,18 @@ if ($view_items) {
     add_nav_item($title);
 
     $content = get_tpl_by_title('article_items', $row, $result);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_default($tags, null, $content);
     exit;
 }
 
 
-if (!isset($_SESSION["view_items"])) {
-    $query = "select * from article_list";
-    $result = my_query($query, true);
+$tags['Header'] = 'Статьи';
 
-    $tags['nav_str'].="<span class=nav_next>Статьи</span>";
-    add_nav_item('Статьи');
+$query = "select * from article_list";
+$result = my_query($query, true);
 
-    $content = get_tpl_by_title('article_list', $row, $result);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
-    exit;
-}
+$tags['nav_str'].="<span class=nav_next>Статьи</span>";
+add_nav_item('Статьи');
+
+$content .= get_tpl_by_title('article_list', $row, $result);
+echo get_tpl_default($tags, null, $content);

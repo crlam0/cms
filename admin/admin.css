@@ -1,0 +1,119 @@
+body {
+    font-size: 10pt;
+    color: #000044;
+    font-family: Tahoma,sans-serif;
+    background-color: #fff;
+    margin-bottom: 40px;
+}
+form {
+    padding: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+input,select,textarea {
+    font-size: 10pt;
+    color: #000044;
+    font-family: Tahoma,sans-serif;
+    background-color: #eeeeff;
+}
+p {
+    font-size: 10pt;
+    font-family: Tahoma,sans-serif;
+}
+
+font.header {
+    font-size: 10pt;
+    font-family: Tahoma;
+    font-weight: bold;
+    text-align: CENTER;
+    color: #FFFFFF;
+}
+font.title {
+    font-size: 12pt;
+    font-family: Tahoma;
+    font-weight: bold;
+    text-align: CENTER;
+    color: #000000;
+}
+font.small {
+    font-size: 8pt;
+    font-family: Tahoma;
+    font-weight: normal;
+    text-align: CENTER;
+}
+TD,BLOCKQUOTE,FORM,SELECT,OPTION,INPUT,TEXTAREA {
+    font-size: 10pt;
+    font-family: Tahoma,sans-serif
+}
+table.admin {
+    background-color: #7799ee;        
+}
+table.admin td{
+    padding: 3px;
+}
+tr.header {
+    font-size: 10pt;
+    font-family: Tahoma;
+    font-weight: bold;
+    text-align: CENTER;
+}
+tr.content {
+    font-size: 10pt;
+    font-family: Tahoma;
+    text-align: left;
+    background-color: #ffffff;
+}
+tr.content_gray {
+    font-size: 10pt;
+    font-family: Tahoma;
+    text-align: left;
+    background-color: #dddddd;
+}
+A:link {
+    font-weight: bold;
+    color: #1111aa;
+    TEXT-DECORATION: underline;
+}
+A:visited {
+    font-weight: bold;
+    color: #777788;
+    TEXT-DECORATION: underline;
+}
+A:active, A:hover {
+    font-weight: bold;
+    color: #CC0000;
+    TEXT-DECORATION: none
+}
+
+H1 {font-weight: normal; font-size: 16pt; font-family: Arial,sans-serif; LETTER-SPACING: 1pt; }
+H2 {font-weight: bold; font-size: 14pt; font-family: Arial,sans-serif; LETTER-SPACING: 1pt; TEXT-DECORATION: none;}
+H3 {font-weight: bold; font-size: 12pt; font-family: Arial,sans-serif; LETTER-SPACING: 1pt; TEXT-DECORATION: none;}
+H4 {font-weight: bold; font-size: 8pt; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; TEXT-DECORATION: none;}
+H5 {font-weight: bold; font-size: 9pt; font-family: Arial,sans-serif; TEXT-DECORATION: none;}
+H6 {font-weight: bold; font-size: 8pt; font-family: Arial,sans-serif; TEXT-DECORATION: none;}
+
+font.info {font-size: 12pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #444499;}
+font.notice {font-size: 12pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #449944;}
+font.error {font-size: 12pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #330000;}
+font.debug {font-size: 8pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #999999;}
+div.msg_info { margin:10px 0; text-align: center;width: 400px;line-height: 40px;background: #eeeeee;border: 1px solid #777777;}
+div.msg_notice { margin:10px 0; text-align: center;width: 400px;line-height: 40px;background: #ffeeee;border: 1px solid #777777;}
+div.msg_error { margin:10px 0; text-align: center; width: 400px;line-height: 40px;background: #ff5555;border: 1px solid #777777;}
+
+a.button {
+    margin: 0px 0px 0px 0px;
+    padding: 3px 7px 3px 7px;
+    height: 30px;
+    border: 1px solid #c8c8c8;
+    background: #ffffff;
+    line-height: 30px;
+    font-size: 90%;
+}
+img.margin {
+    margin: 5px;
+}
+
+
+.normal-form {
+    width: 800px;
+}

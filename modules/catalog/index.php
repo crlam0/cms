@@ -5,7 +5,7 @@ if (!isset($input)) {
 }
 include 'functions.php';
 $tags['Header'] = isset($settings['catalog_header']) ? $settings['catalog_header'] : 'Магазин';
-$tags['INCLUDE_HEAD'] .= '<link href="' . $SUBDIR . 'css/catalog.css" type="text/css" rel=stylesheet />' . "\n";
+$tags['INCLUDE_CSS'] .= '<link href="' . $SUBDIR . 'css/catalog.css" type="text/css" rel=stylesheet />' . "\n";
 $tags['INCLUDE_JS'] .= '<script type="text/javascript" src="' . $BASE_HREF . 'include/js/popup.js"></script>' . "\n" .
         '<script type="text/javascript" src="' . $BASE_HREF . 'include/js/jquery.waitforimages.min.js"></script>' . "\n" .
         '<script type="text/javascript" src="' . $BASE_HREF . 'modules/catalog/catalog.js"></script>' . "\n";

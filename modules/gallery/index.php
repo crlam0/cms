@@ -5,10 +5,11 @@ if(!isset($input)) {
 
 include 'functions.php';
 use Classes\Comments;
+use Classes\Pagination;
 
 $tags['Header'] = "Галерея";
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/gallery.css" type="text/css" rel=stylesheet />'."\n";
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";
+$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/gallery.css" type="text/css" rel=stylesheet />'."\n";
+$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";
 
 $settings["gallery_use_popup"]=true;
 
@@ -17,9 +18,9 @@ $view_gallery = null;
 if ( (isset($input['uri'])) && (!isset($input['load']))) {
     $params = explode("/", $input['uri']);
     
-    $query="select id from gallery_list where seo_alias like '".$params[0]."'";
-    $result=my_query($query);
-    list($view_gallery)=$result->fetch_array();
+    $query="select id,title,seo_alias from gallery_list where seo_alias like '".$params[0]."'";
+    $current_gallery = my_select_row($query);
+    $view_gallery = $current_gallery['id'];
     
     if(isset($params[1]) && strlen($params[1])){
         $gallery_page=$params[1];
@@ -129,7 +130,7 @@ if ($input['view_image'] || (isset($input['load']))) {
     }
     if ($input['view_image']){
         $content = get_tpl_by_title('gallery_image_view', $tags);
-        echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+        echo get_tpl_default($tags, '', $content);
         exit();
     }
 }
@@ -170,25 +171,27 @@ if (isset($input['load'])) {
 
 
 if (($view_gallery)||($input['page'])) {
-    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['gallery_images_per_page']}) from gallery_images where gallery_id=" . $view_gallery, false);
-    list($title) = my_select_row("select title from gallery_list where id=" . $view_gallery, false);
-    $tags['Header'] = $title;
-    $tags['nav_str'].="<span class=nav_next>$title</span>";
+    $tags['Header'] = $current_gallery['title'];
+    
+    $tags['nav_str'].='<span class="nav_next"><a href="gallery/">Галерея</a></span>';
+    $tags['nav_str'].='<span class="nav_next">'.$tags['Header'].'</span>';
     add_nav_item('Галерея', 'gallery/');
-    add_nav_item($title);
-    if ($PAGES > 1) {
-        $tags['pages_list'] = "<center>";
-        for ($i = 1; $i <= $PAGES; $i++){
-            if($i == $gallery_page) {
-                $tags['pages_list'].= "[ <b>$i</b> ]&nbsp;";
-            }else{
-                $tags['pages_list'].= "[ <a href=" . $SUBDIR . get_gallery_list_href($view_gallery) . "$i/>$i</a> ]&nbsp;";
-            }
-        }    
-        $tags['pages_list'].="</center><br>";
+    add_nav_item($tags['Header']);
+    
+    list($total) = my_select_row("SELECT count(id) from gallery_images where gallery_id='{$view_gallery}'", false);
+    $pager = new Pagination($total,$gallery_page,$settings['gallery_images_per_page']);
+    $list_href = 'gallery/'.$current_gallery['seo_alias'].'/';
+    
+    if($pager->getPagesCount() > 1) {        
+        $params=[
+            'pager' => $pager,
+            'main_route' => $list_href,
+            'route' => $list_href.'{$page}/',
+        ];
+        $tags['pages_list'] = get_tpl_by_title('pager.html.twig', $params);        
     }
-    $offset = $settings['gallery_images_per_page'] * ($gallery_page - 1);
-    $query = "SELECT * from gallery_images where gallery_id=" . $view_gallery . " order by id asc limit {$offset},{$settings['gallery_images_per_page']}";
+    
+    $query = "SELECT * from gallery_images where gallery_id=" . $view_gallery . " order by id asc limit {$pager->getOffset()},{$pager->getLimit()}";
     $result = my_query($query, false);
     if (!$result->num_rows) {
         $content = my_msg_to_str('list_empty', $tags, "");
@@ -200,11 +203,11 @@ if (($view_gallery)||($input['page'])) {
         $comments = new Comments ('gallery',$view_gallery);
         $comments->get_form_data($input);
         $content.=$comments->show_list();
-        $tags["action"]=$SUBDIR.get_gallery_list_href($view_gallery)."#comments";
+        $tags["action"]=$SUBDIR.$list_href."#comments";
         $content.=$comments->show_form($tags);
     }
     
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_default($tags, '', $content);
     exit();
 }
 
@@ -236,5 +239,6 @@ if (!$result->num_rows) {
 
 add_nav_item('Галерея');
 
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+echo get_tpl_default($tags, '', $content);
+
 

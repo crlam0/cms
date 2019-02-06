@@ -2,24 +2,20 @@
 
 namespace Classes;
 
-use Classes\Blocks;
-use Classes\BlocksLocal;
+
 use Classes\MyTemplate;
 use Classes\TwigTemplate;
-use Stormiix\Twig\Extension\MixExtension;
+use Classes\MyGlobal;
 
 class Template {
-    public $BlocksObject;
+    private $BlocksObject;
     private $MyTemplate;
     private $TwigTemplate;
     
-    public function __construct () {
-        global $INC_DIR, $settings;
-        if(file_exists($INC_DIR.'classes/BlocksLocal.php')) {
-            $this->BlocksObject = new BlocksLocal();    
-        } else {
-            $this->BlocksObject = new Blocks();
-        }
+    public function __construct ($BlocksObject) {
+        global $settings;
+        
+        $this->BlocksObject = $BlocksObject;
         $this->MyTemplate = new MyTemplate($this->BlocksObject);
         $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => $settings['debug']]);
     }
@@ -66,6 +62,7 @@ class Template {
         }
         
         $twig->add_function('add_block');
+        $twig->add_function('include_php');
         $twig->add_function('path');
         $twig->add_function('myglobal');
         if(array_key_exists('functions',$tags) && is_array($tags['functions'])) {
@@ -112,20 +109,11 @@ class Template {
         return $this->MyTemplate->parse($template['content'], $tags, $sql_result, $inner_content);
     }
 
-    protected function is_root () {
-        global $server, $SUBDIR;
-        
-        $URI = $server['REQUEST_URI'];
-        if (strlen($SUBDIR) > 1){
-            $URI = str_replace($SUBDIR, "/", $URI);
-        }
-        if(strstr($URI,'?')) {
-            $URI = substr($URI,0,strpos($URI,'?'));
-        }
-        return $URI == '/';
+    private function is_root () {
+        return MyGlobal::get('Routing')->isIndexPage();
     }
     
-    protected function is_admin () {
+    private function is_admin () {
         global $server;        
         $URI = $server['REQUEST_URI'];
         return strstr($URI,'admin/');

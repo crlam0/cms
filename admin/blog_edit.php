@@ -97,8 +97,8 @@ if ($input["del_img"]) {
 }
 
 if ($input["added_post"]) {
-    $input['form'][date_add] = "now()";
-    $input['form'][uid] = $_SESSION["UID"];
+    $input['form']['date_add'] = "now()";
+    $input['form']['uid'] = $_SESSION["UID"];
     // $input['form']['content'] = $input["form"]["content"];
     $input['form']['content'] = replace_base_href($input['form']['content'], true);
     if (!strlen($input['form']['seo_alias']))

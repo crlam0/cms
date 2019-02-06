@@ -1,32 +1,8 @@
-ErrorDocument 404 index.php
+ErrorDocument 404 /index.php
 
 <IfModule mod_rewrite.c>
 
 RewriteEngine On
-
-# RewriteRule ^article/(.*)/$ article/index.php?uri=$1 [L]
-
-# RewriteRule ^blog/(.*)/$ blog/index.php?uri=$1 [L]
-
-# RewriteRule ^catalog/(.*)/index.php$ catalog/index.php [L]
-# RewriteRule ^catalog/(.*)/buy.php$ catalog/buy.php [L]
-# RewriteRule ^catalog/(.*)/$ catalog/index.php?uri=$1 [L]
-# RewriteRule ^catalog/(.*)/(.*)$ catalog/index.php?uri=$1&item_title=$2 [L]
-
-
-# RewriteRule ^gallery/(.*)/$ gallery/index.php?uri=$1 [L]
-# RewriteRule ^gallery/(.*)/index.php$ gallery/index.php [L]
-
-# RewriteRule ^media/(.*)/$ media/index.php?uri=$1 [L]
-
-# RewriteRule ^news/(.*)/$ news/index.php?uri=$1 [L]
-
-# RewriteRule ^login/$ misc/login.php?uri=$1 [L]
-# RewriteRule ^logout/$ misc/logout.php?uri=$1 [L]
-# RewriteRule ^passwd_change/$ misc/passwd_change.php?uri=$1 [L]
-# RewriteRule ^search/$ misc/search.php?uri=$1 [L]
-# RewriteRule ^request/$ misc/request.php?uri=$1 [L]
-# RewriteRule ^vote/$ misc/vote.php?uri=$1 [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

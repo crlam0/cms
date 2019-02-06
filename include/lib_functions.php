@@ -287,7 +287,6 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height =
  *
  */
 function show_month($month, $show_day_func = null) {
-    global $_SESSION, $server;
     $month_names = array(1 => 'Январь', 2 => 'Февраль', 3 => 'Март', 4 => 'Апрель', 5 => 'Май', 6 => 'Июнь', 7 => 'Июль', 8 => 'Август', 9 => 'Сентябрь', 10 => 'Октябрь', 11 => 'Ноябрь', 12 => 'Декабрь');
     $day_names = array('Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс');
     $allow_past = false;
@@ -377,19 +376,30 @@ function user_encrypt_password($passwd, $salt) {
 
 
 /**
- * Return block content
+ * Return block content (for Twig templates)
  *
  * @param string $name Block name
  *
  * @return string Output string
  */
 function get_block($name) {
-    global $Template;
-    return $Template->BlocksObject->content($name);
+    return MyGlobal::get('Blocks')->content($name);
+}
+
+function include_php($file_name) {
+    $DIR =  MyGlobal::get('DIR');
+    if(is_file($DIR . $file_name)) {
+        ob_start();
+        include_once($DIR . $file_name);
+        $content = ob_get_clean();
+    } else {
+        $content = my_msg('error', [], 'Файл ' . $file_name . ' не найден !');
+    }
+    return $content;
 }
 
 /**
- * Return value from MyGlobal object
+ * Return value from MyGlobal object (for Twig templates)
  *
  * @param string $key Value key
  *
@@ -401,7 +411,7 @@ function myglobal($key) {
 
 
 /**
- * Recursively delete filesystem tree
+ * Recursively delete FS tree
  *
  * @param string $dir Directory to remove
  *
@@ -419,9 +429,9 @@ function del_tree($dir) {
 }
 
 /**
- * Recursively delete cache dir
+ * Recursively delete cache directory
  *
- * @param string $subdir Subdir to remove
+ * @param string $subdir Subdirectory to remove
  *
  * @return bool True if complete
  */

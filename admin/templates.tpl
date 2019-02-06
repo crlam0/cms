@@ -868,21 +868,23 @@ $(document).ready(function(){
 </form>
 </center>
 <br>
-<table width=500 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
+<table width="500" class="table table-striped table-responsive table-bordered normal-form" align="center">
 <tr class=header align=center>
-	<td width=10%>Дата</td>
-	<td width=40%>Название </td>
-	<td width=40%>Имя файла, размер</td>
-	<td width=5% align=center>&nbsp;</td>
-	<td width=5% align=center>&nbsp;</td>
+	<td width="5%" align="center">№</td>
+	<td width="15%">Дата</td>
+	<td width="30%">Название </td>
+	<td width="20%">Имя файла, размер</td>
+	<td width="5%" align="center">&nbsp;</td>
+	<td width="5%" align="center">&nbsp;</td>
 </tr>
 [%loop_begin%]
-	<tr class=content align=left>
-	<td>[%row(date_add)%]</td>
+	<tr class="content" align="left">
+	<td align="center">[%row(num)%]</td>
+	<td align="center">[%row(date_add)%]</td>
 	<td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
-	<td align=center><b>[%row(file_name%]</b><br>[%func(show_size)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_file=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border=0></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_file=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border=0 onClick="return test()"></a></td>
+	<td align="center"><b>[%row(file_name%]</b><br>[%func(show_size)%]</td>
+	<td width="16"><a href="[%PHP_SELF%]?edit_file=1&id=[%row(id)%]"><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width="16"><a href="[%PHP_SELF%]?del_file=1&id=[%row(id)%]"><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -906,6 +908,7 @@ $(document).ready(function(){
 <table width=500 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
 	<tr class=header><td colspan=2>[%form_title%]</td></tr>
 	<tr class=content align=left><td>Название:</td><td><input class="form-control" type=edit maxlength=255 size=64 name=form[title] value="[%title%]"></td></tr>
+	<tr class=content align=left><td>Позиция:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[num] value="[%num%]"></td></tr>
 	<tr class=content align=left><td>Файл:</td><td><input class="form-control" name=uploaded_file type=file size=40></td></tr>
 	<tr class=content><td align=left colspan=2>[%descr%]</td></tr>
 	<tr class=header align=left><td align=center colspan=2><input class="btn btn-primary" type=submit value="  Сохранить  "></td></tr>

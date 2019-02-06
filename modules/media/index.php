@@ -3,8 +3,11 @@ if(!isset($input)) {
     require '../../include/common.php';
 }
 $tags['Header'] = "Файлы";
-$tags['INCLUDE_HEAD'].='<link href="'.$SUBDIR.'css/media.css" type="text/css" rel=stylesheet />'."\n";
+$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/media.css" type="text/css" rel=stylesheet />'."\n";
 $tags['nav_str'].="<span class=nav_next><a href=\"{$SUBDIR}media/\">{$tags['Header']}</a></span>";
+
+$view_files = '';
+$player_show = 0;
 
 if (isset($input["uri"])) {
     $params = explode("/", $input["uri"]);
@@ -31,7 +34,7 @@ if(!$input->count()){
 $player_num=0;
 
 function show_size($tmp, $row) {
-    global $DIR, $settings, $SUBDIR, $player_num, $server;
+    global $DIR, $settings, $SUBDIR, $player_num, $player_show, $server;
     $file_name = $settings['media_upload_path'] . $row['file_name'];
     $content='';
     
@@ -39,7 +42,7 @@ function show_size($tmp, $row) {
     $href=dirname($server['PHP_SELF']) . "/download.php?media_file_id={$row['id']}&file_name=" . urlencode($file_name) . "&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];
     
     if (is_file($DIR . $file_name)) {
-        $content = "<a href=\"{$href}\"> Скачать файл ( размер: " . convert_bytes(filesize($DIR . $file_name)) . ", загрузок {$row['download_count']} )</a>";
+        $content = '<a href="'.$href.'" class="btn btn-primary"> <b>Скачать файл</b> ( размер: ' . convert_bytes(filesize($DIR . $file_name)) . ', загрузок '.$row['download_count'].' )</a>';
     } else {
         $content = "Файл отсутствует";
     }
@@ -71,7 +74,7 @@ function show_size($tmp, $row) {
 
 if ($view_files) {
     list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['media_files_per_page']}) from media_files where list_id=" . $view_files, 1);
-    list($title) = my_select_row("select title from media_list where id=" . $view_files, 1);
+    list($title,$list_descr) = my_select_row("select title,descr from media_list where id=" . $view_files, 1);
     $tags['Header'] = $title;
     $tags['nav_str'].="<span class=nav_next>$title</span>";
     add_nav_item('Файлы','media/');
@@ -89,11 +92,14 @@ if ($view_files) {
         $tags['pages_list'].="</center><br>";
     }
     $offset = $settings['media_files_per_page'] * ($media_page - 1);
-    $query = "SELECT * from media_files where list_id=" . $view_files . " order by date_add desc limit $offset,$settings[media_files_per_page]";
+    $query = "SELECT * from media_files where list_id=" . $view_files . " order by num asc, date_add desc limit $offset,$settings[media_files_per_page]";
     $result = my_query($query, true);
     if (!$result->num_rows) {
         $content = my_msg_to_str("list_empty", $tags, "");
     } else {
+        if(strlen($list_descr) > 0){
+            $tags['list_descr'] = '<div class="list_descr">' . $list_descr . '</div>';
+        }
         $content = get_tpl_by_title("media_files_table", $tags, $result);
     }
     if($player_num>0){
@@ -101,8 +107,8 @@ if ($view_files) {
         <link rel="stylesheet" href="'.$SUBDIR.'modules/media/player/mediaelementplayer.min.css" />    
         ';
         $content.="<script>$('audio,video').mediaelementplayer();</script>";
-    }
-
+    }    
+    
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
     exit();
 }

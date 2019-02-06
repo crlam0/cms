@@ -37,7 +37,7 @@ final class Routing {
     }
     
     public function isIndexPage () {
-        return !$this->request_uri or $this->request_uri==='' or $this->request_uri==='/';
+        return !$this->request_uri or $this->request_uri==='' or $this->request_uri==='index.php';
     }
     
     public function hasGETParams () {
@@ -82,6 +82,16 @@ final class Routing {
             }
         }
         return $file;
+    }
+    
+    public function getPartArray () {
+        $query = "SELECT * FROM parts WHERE '" . $this->request_uri . "' LIKE concat(uri,'%') AND title<>'default'";
+        $part = MyGlobal::get('DB')->select_row($query, true);        
+        if (!$part['id']) {
+            $query = "SELECT * FROM parts WHERE title='default'";
+            $part = my_select_row($query, 1);
+        }
+        return $part;        
     }
     
 }

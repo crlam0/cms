@@ -99,7 +99,7 @@ if (($input["edit_file"]) || ($input["add_file"])) {
 }
 
 if (isset($_SESSION["view_files"])) {
-    $query = "SELECT * from media_files where list_id='" . $_SESSION["view_files"] . "' order by date_add asc";
+    $query = "SELECT * from media_files where list_id='" . $_SESSION["view_files"] . "' order by num asc, date_add desc";
     $result = my_query($query, true);
     $content.=get_tpl_by_title("media_files_edit_table", $tags, $result);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);

@@ -65,8 +65,7 @@ class Blocks {
     
     protected function menu_main () {
         list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE root=1", true);
-        $tags['menu_content'] = $this->get_menu_items($menu_id, 'id="menu-main" class="nav nav-pills flex-column"', 'class="nav-item"');
-        return get_tpl_by_title('block_menu', $tags);
+        return $this->get_menu_items($menu_id, 'id="menu-main" class="nav navbar-nav"', 'class="nav-item"');
     }
     protected function menu_top () {
         list($menu_id) = my_select_row("SELECT id FROM menu_list WHERE top_menu=1", true);
@@ -175,8 +174,7 @@ class Blocks {
                 if(file_exists($DIR . 'banners.local.php')) {
                     ob_start();
                     include_once($DIR . 'banners.local.php');
-                    $content = ob_get_contents();
-                    ob_end_clean();
+                    $content = ob_get_clean();
                     return $content;
                 } else {
                     return '';
@@ -185,23 +183,20 @@ class Blocks {
             case 'calendar':
                 ob_start();
                 show_month(date('n'), 0);
-                $content = ob_get_contents();
-                ob_end_clean();
+                $content = ob_get_clean();
                 return $content;
 
             case 'menu_admin':
                 ob_start();
                 include_once($DIR . 'admin/nav.php');
-                $content = ob_get_contents();
-                ob_end_clean();
+                $content = ob_get_clean();
                 return $content;
                 
             case 'debug':
                 if ($settings['debug']) {
                     ob_start();
                     print_array($DEBUG);
-                    $content = ob_get_contents();
-                    ob_end_clean();
+                    $content = ob_get_clean();
                     return $content;
                 }
                 return '';

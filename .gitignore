@@ -5,7 +5,10 @@
 /composer.phar
 /composer.lock
 
-/dump.cmd
+/package.json
+/package-lock.json
+
+/*.cmd
 /*.html
 /*.sql
 /*.tpl

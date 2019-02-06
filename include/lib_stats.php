@@ -62,7 +62,7 @@ if (!$deny) {
     $data['unique_visitor']=$unique;
     $uid = 0;
     if (array_key_exists('UID', $_SESSION) && $_SESSION['UID']){
-        $data['uid'] = $_SESSION["UID"];
+        $data['uid'] = $_SESSION['UID'];
     }
     $data['remote_addr']=$server['REMOTE_ADDR'];
     $data['remote_host']=(array_key_exists('REMOTE_HOST', $server) && $server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );

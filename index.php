@@ -5,18 +5,11 @@ include 'include/common.php';
 if( isset($REDIRECT_TO_HTTPS) && $server['REQUEST_SCHEME'] === 'http' ){
     $url = 'https://' . $server['HTTP_HOST'] . '' . $server['REQUEST_URI'];
     redirect($url);
-    unset($url);
 }
 
-use Classes\Routing;
 use Classes\MyGlobal;
 
-$Routing = new Routing ($server['REQUEST_URI']);
-MyGlobal::set('Routing', $Routing );
-
-if ($Routing->hasGETParams()) {
-    $Routing->proceedGETParams();
-}
+$Routing = MyGlobal::get('Routing');
 
 if( $Routing->isIndexPage() and file_exists('index.local.php')) {
     $tags['isIndexPage'] = true;
@@ -37,8 +30,8 @@ if($file && is_file($DIR . $file)) {
 
 $tags['Header'] = 'Ошибка 404';
 $tags['file_name'] = $server['REQUEST_URI'];
-$content = my_msg_to_str('file_not_found', $tags, '');
+$content = my_msg_to_str('file_not_found');
 header($server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+echo get_tpl_default($tags, null, $content);
 
 

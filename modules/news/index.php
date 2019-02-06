@@ -24,12 +24,16 @@ $result = my_query($query, true);
 if ($view_item) {
     $row = $result->fetch_array();
     $tags['nav_str'] .= "<a href=\"" . $SUBDIR . "news/\" class=nav_next>{$tags['Header']}</a>";
-    $tags['nav_str'] .= "<span class=nav_next>{$row['title']}</span>";
+    $tags['nav_str'] .= "<span class=nav_next>{$row['title']}</span>";    
+    add_nav_item($tags['Header'], 'news/');
+    add_nav_item($row['title']);
+    
     // $tags['Header'] .= " - " . $row['title'];
     $tags['content'] = $row['content'];
     $result->data_seek(0);
 } else {
     $tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
+    add_nav_item($tags['Header']);
     $tags['content'] = 'cut';
 }
 

@@ -18,7 +18,8 @@ $(document).ready(function () {
                 $('#popupContent').html(msg.content);
                 $("#popupContent").waitForImages(function () {
                     loadPopup();
-                    // $('.modal-dialog').css({'max-width': '1024px'});
+                    $('.modal').removeClass('modal-fs');
+                    $('.modal').addClass('modal-fs');
                     centerPopup();
                 });
             },
@@ -32,7 +33,8 @@ $(document).ready(function () {
 
     });
 
-    $("a.gallery_button").live('click', function () {
+//    $("a.gallery_button").live('click', function () {
+    $('body').on('click', 'a.gallery_button' , function () {
         var id = $(this).attr("item_id");
         $(".modal-dialog").fadeOut("slow", function () {
             var clientHeight = document.documentElement.clientHeight;

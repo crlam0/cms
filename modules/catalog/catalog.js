@@ -9,7 +9,7 @@ $(document).ready(function() {
     }
     DIR = DIR + 'modules/catalog/';
 
-    $("a.buy_button").live('click', function() {
+    $('body').on('click', 'a.buy_button' , function () {
         var id = $(this).attr("item_id");
         var cnt_id=".cnt_"+id;
         cnt=$(cnt_id).attr("value");
@@ -51,7 +51,7 @@ $(document).ready(function() {
         });
     });
 
-    $("img.cat_images").live('click',function() {        
+    $('body').on('click', 'img.cat_images' , function () {
         var file_name = $(this).attr("file_name");
         var item_id = $(this).attr("item_id");
         var image_id = $(this).attr("image_id");
@@ -75,7 +75,7 @@ $(document).ready(function() {
         });
     });
 
-    $("a.cat_image_button").live('click',function(){ 
+    $('body').on('click', 'a.cat_image_button' , function () {
         var file_name = $(this).attr("file_name");
         var item_id = $(this).attr("item_id");
         var image_id = $(this).attr("image_id");

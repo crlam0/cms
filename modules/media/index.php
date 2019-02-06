@@ -74,6 +74,8 @@ if ($view_files) {
     list($title) = my_select_row("select title from media_list where id=" . $view_files, 1);
     $tags['Header'] = $title;
     $tags['nav_str'].="<span class=nav_next>$title</span>";
+    add_nav_item('Файлы','media/');
+    add_nav_item($title);
 
     if ($PAGES > 1) {
         $tags['pages_list'] = "<center>";
@@ -84,9 +86,9 @@ if ($view_files) {
                 $tags['pages_list'].= "[ <a href=" . $SUBDIR . get_media_list_href($view_files) . "$i/>$i</a> ]&nbsp;";
             }
         }
-        $tags[pages_list].="</center><br>";
+        $tags['pages_list'].="</center><br>";
     }
-    $offset = $settings[media_files_per_page] * ($media_page - 1);
+    $offset = $settings['media_files_per_page'] * ($media_page - 1);
     $query = "SELECT * from media_files where list_id=" . $view_files . " order by date_add desc limit $offset,$settings[media_files_per_page]";
     $result = my_query($query, true);
     if (!$result->num_rows) {
@@ -115,5 +117,8 @@ if (!$result->num_rows) {
 } else {
     $content = get_tpl_by_title("media_list_table", $tags, $result);
 }
+
+add_nav_item('Файлы', null, true);
+
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 

@@ -27,7 +27,8 @@ if (($input["view"])||($input["adding"])){
         	$tags['form_title']="Редактирование";
         }else{
         	$tags['form_type']="add";
-        	$tags['form_title']="Добавление";        	
+        	$tags['form_title']="Добавление";
+                $tags['type']="info";
         }
         $tags['types']="<select name=form[type]>
         <option value=info".($tags['type']=="info"?" selected":"").">Info</option>

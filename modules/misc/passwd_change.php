@@ -5,6 +5,7 @@ if(!isset($input)) {
 
 $tags['Header'] = 'Смена пароля';
 $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
+add_nav_item($tags['Header']);
 
 if ($input['passwd_change']) {    
     $query = "select passwd,salt from users where id='".$_SESSION['UID']."'";

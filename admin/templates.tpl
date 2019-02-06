@@ -192,7 +192,7 @@ tr.active_N { background: #dddddd; }
 $(document).ready(function(){  
     $('input:checkbox').change(function(){
 	var id=$(this).val();
-	if( $(this).attr("checked") ){ var active='Y'; }else{ var active='N'; }
+	if( $(this).prop("checked") ){ var active='Y'; }else{ var active='N'; }
 	$.ajax({
 	   type: "POST", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
 	   success: function(msg){
@@ -493,7 +493,7 @@ tr.active_N { background: #dddddd; }
 $(document).ready(function(){  
     $('input:checkbox').change(function(){
 	var id=$(this).val();
-	if( $(this).attr("checked") ){ var active='Y'; }else{ var active='N'; }
+	if( $(this).prop("checked") ){ var active='Y'; }else{ var active='N'; }
 	$.ajax({
 	   type: "POST", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
 	   success: function(msg){
@@ -608,7 +608,7 @@ tr.active_N { background: #dddddd; }
 $(document).ready(function(){  
     $('input:checkbox').change(function(){
 	var id=$(this).val();
-	if( $(this).attr("checked") ){ var active='Y'; }else{ var active='N'; }
+	if( $(this).prop("checked") ){ var active='Y'; }else{ var active='N'; }
 	$.ajax({
 	   type: "POST", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
 	   success: function(msg){
@@ -653,7 +653,7 @@ $(document).ready(function(){
 tr.active_Y { background: #ffffff; }
 tr.active_N { background: #dddddd; }
 </style>
-<table width=600 border=0 cellspacing=1 cellpadding=1 class="table table-striped table-responsive table-bordered normal-form" align=center>
+<table width=600 border=0 cellspacing=1 cellpadding=1 class="table table-responsive table-bordered normal-form" align=center>
 <tr class=header align=center>
 	<td width=15%>Дата</td>
 	<td width=25%>Тема</td>
@@ -664,7 +664,7 @@ tr.active_N { background: #dddddd; }
 	<td width=5% align=center>&nbsp;</td>
 </tr>
 [%loop_begin%]
-	<tr class="active_[%row(active)%]" align="left" gallery_id="tr_[%row(id)%]">
+	<tr class="active_[%row(active)%]" align="left" id="tr_[%row(id)%]">
 	<td>[%row(date_add)%]</td>
 	<td><b><a href=[%PHP_SELF%]?view_gallery=1&id=[%row(id)%]>[%row(title)%]</a></b></td>
 	<td align=center>[%row(seo_alias)%]</td>
@@ -678,8 +678,8 @@ tr.active_N { background: #dddddd; }
 <script type="text/javascript">
 $(document).ready(function(){  
     $('input:checkbox').change(function(){
-	var id=$(this).attr("gallery_id");
-	if( $(this).attr("checked") ){ var active='Y'; }else{ var active='N'; }
+	var id=$(this).val();
+	if( $(this).prop("checked") ){ var active='Y'; }else{ var active='N'; }
 	$.ajax({
 	   type: "POST", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
 	   success: function(msg){

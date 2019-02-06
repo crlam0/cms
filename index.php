@@ -1,14 +1,25 @@
 <?php
+
 include 'include/common.php';
 
+if( isset($REDIRECT_TO_HTTPS) && $server['REQUEST_SCHEME'] === 'http' ){
+    $url = 'https://' . $server['HTTP_HOST'] . '' . $server['REQUEST_URI'];
+    redirect($url);
+    unset($url);
+}
+
 use Classes\Routing;
+use Classes\MyGlobal;
 
 $Routing = new Routing ($server['REQUEST_URI']);
+MyGlobal::set('Routing', $Routing );
+
 if ($Routing->hasGETParams()) {
     $Routing->proceedGETParams();
 }
 
 if( $Routing->isIndexPage() and file_exists('index.local.php')) {
+    $tags['isIndexPage'] = true;
     require 'index.local.php';
     exit;
 }

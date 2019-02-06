@@ -12,7 +12,6 @@
 
 /src/
 /var/
-/templates/
 
 *.local.*
 *Local.php
@@ -20,4 +19,7 @@
 /favicon.png
 /sitemap.xml
 /include/dompdf/
+
+
+/node_modules/
 

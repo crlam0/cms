@@ -12,7 +12,7 @@ class RoutingTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Routing = new Routing('article/item/?test=1');
+        $this->Routing = new Routing('/article/item/?test=1');
     }
 
     public function testHasGETParams() {

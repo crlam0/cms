@@ -74,7 +74,7 @@ if($input["get_target_select"]){
             $result = my_query($query, true);
             $output = "<td>Раздел файлов:</td><td><select name=form[target_id] class=\"form-control\">";
             while ($row = $result->fetch_array()) {
-                $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row[title]}</option>";
+                $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? " selected" : "") . ">{$row['title']}</option>";
             }
             $output.="</select></td>";
             break;

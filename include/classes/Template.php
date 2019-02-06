@@ -6,19 +6,22 @@ use Classes\Blocks;
 use Classes\BlocksLocal;
 use Classes\MyTemplate;
 use Classes\TwigTemplate;
+use Stormiix\Twig\Extension\MixExtension;
 
 class Template {
-    private $BlocksObject;
+    public $BlocksObject;
     private $MyTemplate;
+    private $TwigTemplate;
     
     public function __construct () {
-        global $INC_DIR;
+        global $INC_DIR, $settings;
         if(file_exists($INC_DIR.'classes/BlocksLocal.php')) {
             $this->BlocksObject = new BlocksLocal();    
         } else {
             $this->BlocksObject = new Blocks();
         }
         $this->MyTemplate = new MyTemplate($this->BlocksObject);
+        $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => $settings['debug']]);
     }
 
     /**
@@ -44,7 +47,7 @@ class Template {
                 $fname = $template['file_name'];
             }    
             if ($fname) {
-                $twig = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => $settings['debug']]);
+                $twig = $this->TwigTemplate;
                 $template['title'] = $fname;
             } else {
                 $tags['file_name'] = $template['file_name'];
@@ -61,13 +64,16 @@ class Template {
         if(strlen($inner_content)) {
             $tags['inner_content'] = $inner_content;        
         }
+        
+        $twig->add_function('add_block');
         $twig->add_function('path');
+        $twig->add_function('myglobal');
         if(array_key_exists('functions',$tags) && is_array($tags['functions'])) {
             foreach($tags['functions'] as $function) {
                 $twig->add_function($function);
             }
             unset($tags['functions']);
-        }
+        }        
         return $twig->render($template['title'], $tags);
     }
 

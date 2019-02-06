@@ -44,7 +44,7 @@ class MyTemplate {
      * @return string Output string
      */
     private function parse_string($content, $tags = array(), $sql_row = array(), $sql_row_summ = array(), $inner_content = '') {
-        global $input, $settings, $_SESSION, $server, $DIR, $SUBDIR;
+        global $input, $settings, $server, $DIR, $SUBDIR;
         preg_match_all("@\[\%(.*?)\%\]@", $content, $temp, PREG_SET_ORDER);
         $total = count($temp);
         $a = 0;

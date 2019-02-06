@@ -287,7 +287,6 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height =
  *
  */
 function show_month($month, $show_day_func = null) {
-    global $_SESSION, $server;
     $month_names = array(1 => 'Январь', 2 => 'Февраль', 3 => 'Март', 4 => 'Апрель', 5 => 'Май', 6 => 'Июнь', 7 => 'Июль', 8 => 'Август', 9 => 'Сентябрь', 10 => 'Октябрь', 11 => 'Ноябрь', 12 => 'Декабрь');
     $day_names = array('Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс');
     $allow_past = false;

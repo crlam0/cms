@@ -290,3 +290,23 @@ function add_nav_item($title, $url = null, $skip_duplicates = false) {
 }
 
 
+function get_id_by_alias ($table, $seo_alias, $exit_with_404 = false) {
+    global $tags;
+    $query="select id from {$table} where seo_alias = '{$seo_alias}'";
+    $result=MyGlobal::get('DB')->query($query);
+    list($id)=$result->fetch_array();
+    if ((int)$id > 0) {
+        return $id;
+    } elseif ($exit_with_404) {
+        header(MyGlobal::get('server')['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
+        $tags['Header'] = 'Страница "' . $seo_alias . '" не найдена.';
+        $content = my_msg_to_str('error', [], $tags['Header']);
+        echo get_tpl_default($tags, null, $content);
+        exit;
+    } else {
+        return null;
+    }
+}
+
+
+

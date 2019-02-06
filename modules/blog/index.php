@@ -3,7 +3,7 @@ if(!isset($input)) {
     require '../../include/common.php';
 }
 $tags['Header'] = 'Блог';
-$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";;
+$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";
 
 use Classes\Comments;
 use Classes\Pagination;
@@ -11,17 +11,15 @@ use Classes\Pagination;
 $MSG_PER_PAGE = $settings['blog_msg_per_page'];
 $TABLE='blog_posts';
 
-if (isset($input['uri'])) {
-    $params = explode("#", $input["uri"]);
-    $query="select id from {$TABLE} where seo_alias like '".$params[0]."'";    
-    $result=my_query($query);
-    list($post_id)=$result->fetch_array();
-    $input['view_post'] = is_numeric($post_id) ? $post_id : $input['view_post'];
+$content = '';
 
+if (isset($input['uri'])) {
     if(strstr($input['uri'],'page')){
-        $blog_page=str_replace('page','',$input['uri']);
+        $page_num=str_replace('page','',$input['uri']);
+        $blog_page=is_integer($page_num) ? $page_num : null;
     }else{
         $blog_page=1;
+        $input['view_post'] = get_id_by_alias($TABLE, $input['uri'], true);
     }
 }
 
@@ -38,9 +36,6 @@ if(isset($input['view_post'])) {
 } else {
     $comments = new Comments ('blog', null);
 }
-
-$content = '';
-
 
 function get_post_content ($row) {
     global $SUBDIR;
@@ -60,7 +55,7 @@ function get_post_comments_count ($row) {
     return $comments->show_count($row['id']);
 }
 
-if($input->count() && is_numeric($input['view_post'])) {
+if($input->count() && $input['view_post']) {
     $query = "select {$TABLE}.*,users.fullname as author from {$TABLE} left join users on (users.id=uid) where {$TABLE}.id='{$input["view_post"]}'";
     $result = my_query($query, true);
     $row = $result->fetch_array();
@@ -79,7 +74,7 @@ if($input->count() && is_numeric($input['view_post'])) {
 
     $comments->get_form_data($input);
     $content.=$comments->show_list();
-    $tags["action"]=$SUBDIR.get_post_href(null,$row)."#comments";
+    $tags['action']=$SUBDIR.get_post_href(null,$row).'#comments';
     $content.=$comments->show_form($tags);
     $content.='<center><a href="'.$SUBDIR.'blog/" class="btn btn-default"> << Назад</a></center>';
 } else {
@@ -107,6 +102,6 @@ if($input->count() && is_numeric($input['view_post'])) {
     }
 }
 
-echo get_tpl_by_title($part['tpl_name'], $tags, "", $content);
+echo get_tpl_default($tags, null, $content);
 
 

@@ -368,6 +368,7 @@ $(document).ready(function(){
 	<tr class=content align=left><td>Алиас:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[seo_alias] value="[%seo_alias%]"></td></tr>
         <tr class=content align=left><td>Специальное предложение:</td><td><input type=checkbox maxlength=255 size=64 name=form[special_offer] value="1" [%special_offer%]></td></tr>
 	[%price_inputs%]
+	<tr class=content align=left><td>Остаток на складе:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[balance] value="[%balance%]"></td></tr>
 	<tr class=content align=left><td>Вес/количество/объем:</td><td><input class="form-control" type=edit maxlength=45 size=64 name=form[cnt_weight] value="[%cnt_weight%]"></td></tr>
 	<tr class=header><td colspan=2>Краткое описание</td></tr>
 	<tr class=content><td align=center colspan=2>
@@ -451,6 +452,37 @@ $(document).ready(function(){
 });
 </script>
 <!--[/content]-->
+
+<!--[title]price_items_edit[/title]-->
+<!--DESCRIPTION: Список товаров -->
+<!--[content]-->
+
+
+<br />
+<table width="100%" class="table table-striped table-responsive table-bordered normal-form">
+    
+    <form action=[%PHP_SELF%] method="POST" id="upload_form" enctype="multipart/form-data">
+<tr class="price_header" valign="middle">
+	<td width="30%" class="price_header">Наименование</td>
+	<td width="50%" class="price_header">Описание</td>
+	<td width="10%" class="price_header">Цена с НДС по безналичному расчету руб/час</td>
+	<td width="50%" class="price_header">Остаток</td>
+</tr>
+[%loop_begin%]
+	<tr valign="middle" class="price"_line>
+	<td class="title">[%row(title)%]</td>
+	<td class="title">[%row(descr,nl2br)%]</td>
+	<td class="price">[%row(price)%]</td>
+	<td class="price"><input type="edit" value="[%row(balance)%]" class="price_change" id="[%row(id)%]" /></td>
+	</tr>
+[%loop_end%]</form>
+    
+</table>
+<br />
+
+<!--[/content]-->
+
+
 
 
 <!--[title]comments_edit_table[/title]-->

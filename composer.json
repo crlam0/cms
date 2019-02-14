@@ -20,6 +20,6 @@
     },
     "scripts": {
         "test": "phpunit --colors=always",
-        "phinx" : "vendor/robmorgan/phinx/bin/phinx"
+        "phinx": "vendor/robmorgan/phinx/bin/phinx"
     }
 }

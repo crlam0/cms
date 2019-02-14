@@ -457,7 +457,6 @@ $(document).ready(function(){
 <!--DESCRIPTION: Список товаров -->
 <!--[content]-->
 
-
 <br />
 <table width="100%" class="table table-striped table-responsive table-bordered normal-form">
     
@@ -474,8 +473,8 @@ $(document).ready(function(){
 	<td class="title">[%row(title)%]</td>
 	<td class="title">[%row(descr,nl2br)%]</td>
 	<td class="price">[%row(used_price)%]</td>
-	<td class="price"><input type="edit" size="4" value="[%row(balance)%]" class="balance_change" id="[%row(id)%]" /></td>
-	<td class="price"><input type="edit" size =4" value="[%row(used_balance)%]" class="used_balance_change" id="[%row(id)%]" /></td>
+	<td class="price"><input type="edit" size="4" value="[%row(balance)%]" class="attr_change" attr_name="balance" id="[%row(id)%]" /></td>
+	<td class="price"><input type="edit" size =4" value="[%row(used_balance)%]" class="attr_change" attr_name="used_balance" id="[%row(id)%]" /></td>
 	</tr>
 [%loop_end%]</form>
     

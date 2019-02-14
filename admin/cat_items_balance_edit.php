@@ -15,10 +15,10 @@ $tags['INCLUDE_JS'] .=
         '<script type="text/javascript" src="'.$BASE_HREF.'modules/price/price.js"></script>'."\n";
 
 
-if (isset($input['balance'])) {
+if (isset($input['attr_name'])) {
     $input['id'] = intval($input['id']);
-    $input['balance'] = intval($input['balance']);
-    $query = "update cat_item set balance='{$input['balance']}' where id='{$input['id']}'";
+    $input['value'] = intval($input['value']);
+    $query = "update cat_item set {$input['attr_name']}='{$input['value']}' where id='{$input['id']}'";
     $result = my_query($query, true);
     if($result) {
         echo "OK";
@@ -27,34 +27,6 @@ if (isset($input['balance'])) {
     }
     exit();
 }
-
-
-if (isset($input['used_balance'])) {
-    $input['id'] = intval($input['id']);
-    $input['used_balance'] = intval($input['used_balance']);
-    $query = "update cat_item set used_balance='{$input['used_balance']}' where id='{$input['id']}'";
-    $result = my_query($query, true);
-    if($result) {
-        echo "OK";
-    } else {
-        echo "Fuck";
-    }
-    exit();
-}
-
-
-
-if (isset($input['add_buy']) && isset($input['cnt'])) {
-    $cnt=(int)$input['cnt'];
-    if($cnt>0 && $cnt<99) {
-        $_SESSION['BUY'][$input['item_id']]['count']+=$cnt;
-        echo 'OK';
-    } else {
-        echo 'ERR';
-    }
-    exit;
-}
-
 
 function part_items($part_id) {
     $content = '';
@@ -123,23 +95,12 @@ $final_content = '
     
 <script type="text/javascript">
 $(document).ready(function(){  
-    $("input.balance_change").change(function(){
-	var id=$(this).prop("id");
-	var balance=$(this).val();
+    $("input.attr_change").change(function(){
+	var id=$(this).attr("id");
+        var attr_name=$(this).attr("attr_name");
+	var value=$(this).val();
 	$.ajax({
-	   type: "POST", url: "'.$server['PHP_SELF'].'", data: "balance="+balance+"&id="+id,
-	   success: function(msg){
-            if(msg !== "OK") {
-                  alert(msg);
-            }
-	   }
-	});
-    });
-    $("input.used_balance_change").change(function(){
-	var id=$(this).prop("id");
-	var balance=$(this).val();
-	$.ajax({
-	   type: "POST", url: "'.$server['PHP_SELF'].'", data: "used_balance="+balance+"&id="+id,
+	   type: "POST", url: "'.$server['PHP_SELF'].'", data: "attr_name="+attr_name + "&value="+value + "&id="+id,
 	   success: function(msg){
             if(msg !== "OK") {
                   alert(msg);

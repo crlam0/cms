@@ -147,6 +147,21 @@ class SQLHelper {
     }
 
     /**
+     * Return htmlspecialchars() for $value if needed.
+     *
+     * @param string $field Field name
+     * @param string $value Field value
+     *
+     * @return string Complete string for query
+     */
+    public function special_chars($field, $value) {
+        if($field == 'title' || $field == 'name') {
+            $value = htmlspecialchars($value);
+        }
+        return $value;
+    }
+    
+    /**
      * Return string for insert query
      *
      * @param array $fields Fields and data for query
@@ -174,6 +189,7 @@ class SQLHelper {
                 if(strstr($value,'date_format')){
                     $str_values.=stripcslashes($value) . "$str";
                 }else{
+                    $value=$this->special_chars($key, $value);
                     $value=$this->mysqli->escape_string($value);
                     $str_values.= ( $value == 'now()' ? "$value" . "$str" : "'$value'$str");
                 }    
@@ -184,7 +200,7 @@ class SQLHelper {
             return 0;
         }
     }
-
+    
     /**
      * Return string for update query
      *
@@ -209,6 +225,7 @@ class SQLHelper {
             if(strstr($value,'date_format')){
                 $output.="$key=".stripcslashes($value) . $str;
             }else{
+                $value=$this->special_chars($key, $value);
                 $value=$this->mysqli->escape_string($value);
                 $output.= ( $value == 'now()' ? "$key=$value" . $str : "$key='$value'$str");
             }    

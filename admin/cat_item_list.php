@@ -29,6 +29,20 @@ if (isset($input['balance'])) {
 }
 
 
+if (isset($input['used_balance'])) {
+    $input['id'] = intval($input['id']);
+    $input['used_balance'] = intval($input['used_balance']);
+    $query = "update cat_item set used_balance='{$input['used_balance']}' where id='{$input['id']}'";
+    $result = my_query($query, true);
+    if($result) {
+        echo "OK";
+    } else {
+        echo "Fuck";
+    }
+    exit();
+}
+
+
 
 if (isset($input['add_buy']) && isset($input['cnt'])) {
     $cnt=(int)$input['cnt'];
@@ -109,11 +123,23 @@ $final_content = '
     
 <script type="text/javascript">
 $(document).ready(function(){  
-    $("input.price_change").change(function(){
+    $("input.balance_change").change(function(){
 	var id=$(this).prop("id");
 	var balance=$(this).val();
 	$.ajax({
 	   type: "POST", url: "'.$server['PHP_SELF'].'", data: "balance="+balance+"&id="+id,
+	   success: function(msg){
+            if(msg !== "OK") {
+                  alert(msg);
+            }
+	   }
+	});
+    });
+    $("input.used_balance_change").change(function(){
+	var id=$(this).prop("id");
+	var balance=$(this).val();
+	$.ajax({
+	   type: "POST", url: "'.$server['PHP_SELF'].'", data: "used_balance="+balance+"&id="+id,
 	   success: function(msg){
             if(msg !== "OK") {
                   alert(msg);

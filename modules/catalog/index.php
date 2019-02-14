@@ -96,6 +96,12 @@ function detail_view_show_price() {
     if ($row_part['price_cnt'] >= 3) {
         $result .= "{$row_part['price3_title']} {$tags['price3']}<br />";
     }
+    if ($tags['balance'] > 0) {
+        $result .= "<span class=\"balance\">Остаток: {$tags['balance']}</span><br />";
+    }
+    if ($tags['used_balance'] > 0) {
+        $result .= "<span class=\"used_balance\">Остаток Б/У: {$tags['used_balance']}</span><br />";
+    }
     return $result;
 }
 

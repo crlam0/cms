@@ -467,13 +467,15 @@ $(document).ready(function(){
 	<td width="50%" class="price_header">Описание</td>
 	<td width="10%" class="price_header">Цена с НДС по безналичному расчету руб/час</td>
 	<td width="50%" class="price_header">Остаток</td>
+	<td width="50%" class="price_header">Остаток Б/У</td>
 </tr>
 [%loop_begin%]
 	<tr valign="middle" class="price"_line>
 	<td class="title">[%row(title)%]</td>
 	<td class="title">[%row(descr,nl2br)%]</td>
-	<td class="price">[%row(price)%]</td>
-	<td class="price"><input type="edit" value="[%row(balance)%]" class="price_change" id="[%row(id)%]" /></td>
+	<td class="price">[%row(used_price)%]</td>
+	<td class="price"><input type="edit" size="4" value="[%row(balance)%]" class="balance_change" id="[%row(id)%]" /></td>
+	<td class="price"><input type="edit" size =4" value="[%row(used_balance)%]" class="used_balance_change" id="[%row(id)%]" /></td>
 	</tr>
 [%loop_end%]</form>
     

@@ -97,10 +97,10 @@ function detail_view_show_price() {
         $result .= "{$row_part['price3_title']} {$tags['price3']}<br />";
     }
     if ($tags['balance'] > 0) {
-        $result .= "<span class=\"balance\">Остаток: {$tags['balance']}</span><br />";
+        $result .= "<span class=\"balance\">В наличии: {$tags['balance']}</span><br />";
     }
     if ($tags['used_balance'] > 0) {
-        $result .= "<span class=\"used_balance\">Остаток Б/У: {$tags['used_balance']}</span><br />";
+        $result .= "<span class=\"used_balance\">В наличии Б/У: {$tags['used_balance']}</span><br />";
     }
     return $result;
 }

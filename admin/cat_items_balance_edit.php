@@ -17,7 +17,7 @@ $tags['INCLUDE_JS'] .=
 
 if (isset($input['attr_name'])) {
     $input['id'] = intval($input['id']);
-    $input['value'] = intval($input['value']);
+    // $input['value'] = intval($input['value']);
     $query = "update cat_item set {$input['attr_name']}='{$input['value']}' where id='{$input['id']}'";
     $result = my_query($query, true);
     if($result) {

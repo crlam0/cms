@@ -96,7 +96,9 @@ function detail_view_show_price() {
     if ($row_part['price_cnt'] >= 3) {
         $result .= "{$row_part['price3_title']} {$tags['price3']}<br />";
     }
-    if ($tags['balance'] > 0) {
+    if ($tags['balance'] == '0') {
+        $result .= "<span class=\"balance\">Под заказ</span><br />";
+    } else {
         $result .= "<span class=\"balance\">В наличии: {$tags['balance']}</span><br />";
     }
     if ($tags['used_balance'] > 0) {

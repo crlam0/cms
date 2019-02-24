@@ -27,6 +27,7 @@ function my_msg_to_str($title, $tags = array(), $str = '') {
     if (!strlen($message['content'])) {
         return '';
     }
+        
     if (is_array($tags)){
         if(strlen(check_key('type',$tags))) {
             $message['type'] = $tags['type'];            

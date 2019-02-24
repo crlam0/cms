@@ -108,10 +108,11 @@ if ($input['view_image'] || (isset($input['load']))) {
     $query = "SELECT * from gallery_images where id='{$input['id']}'";
     $row = my_select_row($query, true);
     $tags = array_merge($row, $tags);
-    $tags['Header'] = $row['title'];
-    $tags['gallery_id'] = $row['gallery_id'];
     $gallery_id = $row['gallery_id'];
 
+    /*
+    $tags['Header'] = $row['title'];
+    $tags['gallery_id'] = $row['gallery_id'];
     list($title) = my_select_row("select title from gallery_list where id='{$gallery_id}'", true);
     $tags['back_url']=$server['PHP_SELF'] . "?view_gallery1&id=".$gallery_id;
     $tags['nav_str'].="<a href=" . $tags['back_url'] ." class=nav_next>$title</a><span class=nav_next>{$row['title']}</span>";
@@ -119,6 +120,8 @@ if ($input['view_image'] || (isset($input['load']))) {
     add_nav_item('Галерея', 'gallery/');
     add_nav_item($title,$tags['back_url']);
     add_nav_item($row['title']);
+     * 
+     */
 
     list($prev_id) = my_select_row("select id from gallery_images where gallery_id='{$gallery_id}' and id<'{$tags['id']}' order by id desc limit 1", true);
     if ($prev_id){
@@ -225,10 +228,10 @@ function get_icons($tmp,$input_row){
 }
 
 $query = "SELECT gallery_list.*,count(gallery_images.id) as images,max(gallery_images.date_add) as last_images_date_add
-from gallery_list
-left join gallery_images on (gallery_images.gallery_id=gallery_list.id)
-where gallery_list.active='Y'
-group by gallery_list.id order by last_images_date_add desc,gallery_list.date_add desc";
+    from gallery_list
+    left join gallery_images on (gallery_images.gallery_id=gallery_list.id)
+    where gallery_list.active='Y'
+    group by gallery_list.id order by last_images_date_add desc,gallery_list.date_add desc";
 
 $result = my_query($query, true);
 if (!$result->num_rows) {

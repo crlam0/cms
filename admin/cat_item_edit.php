@@ -144,6 +144,9 @@ if ($input['added']) {
     if (!isset($input['form']['special_offer'])){
         $input['form']['special_offer'] = 0;
     }
+    if (!isset($input['form']['novelty'])){
+        $input['form']['novelty'] = 0;
+    }
     $input['form']['date_add']='now()';
     $input['form']['date_change']='now()';
     $query = "insert into cat_item " . db_insert_fields($input['form']);
@@ -170,6 +173,9 @@ if ($input['edited']) {
     if (!isset($input['form']['special_offer'])){
         $input['form']['special_offer'] = 0;
     }
+    if (!isset($input['form']['novelty'])){
+        $input['form']['novelty'] = 0;
+    }
     $input['form']['date_change']='now()';
     $query = "update cat_item set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
@@ -195,6 +201,8 @@ if (($input['edit']) || ($input['add'])) {
     $row_part = my_select_row("select * from cat_part where id=" . $_SESSION['ADMIN_PART_ID'], 1);
     if (isset($tags['special_offer']) && $tags['special_offer'] ){
         $tags['special_offer'] = ' checked';
+    }if (isset($tags['novelty']) && $tags['novelty'] ){
+        $tags['novelty'] = ' checked';
     }
 
     $tags['price_inputs'] = "<tr class=content align=left><td>{$row_part['price1_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price] value=\"{$tags['price']}\"></td></tr>";

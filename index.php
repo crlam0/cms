@@ -30,7 +30,7 @@ if($file && is_file($DIR . $file)) {
 
 $tags['Header'] = 'Ошибка 404';
 $tags['file_name'] = $server['REQUEST_URI'];
-$content = my_msg_to_str('file_not_found');
+$content = my_msg_to_str('file_not_found',$tags);
 header($server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
 echo get_tpl_default($tags, null, $content);
 

@@ -1,3 +1,9 @@
+=== 2019-02-21
+
+ALTER TABLE `cat_item`
+	ADD COLUMN `novelty` INT(1) NOT NULL DEFAULT '0' AFTER `special_offer`;
+
+
 === 2019-01-15
 
 ALTER TABLE `media_list`

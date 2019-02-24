@@ -4,6 +4,8 @@ if (!isset($input)) {
     require '../../include/common.php';
 }
 include 'functions.php';
+use Classes\Pagination;
+
 $tags['Header'] = isset($settings['catalog_header']) ? $settings['catalog_header'] : 'Магазин';
 $tags['INCLUDE_CSS'] .= '<link href="' . $SUBDIR . 'css/catalog.css" type="text/css" rel=stylesheet />' . "\n";
 $tags['INCLUDE_JS'] .= '<script type="text/javascript" src="' . $BASE_HREF . 'include/js/popup.js"></script>' . "\n" .
@@ -19,10 +21,15 @@ if (isset($input['uri'])) {
     $params = explode('/', $input['uri']);
     $prev_id = 0;
     foreach ($params as $alias) {
-        $query = "select id from cat_part where seo_alias like '$alias' and prev_id='{$prev_id}'";
-        $row = my_select_row($query, true);
-        if (is_numeric($row['id'])) {
-            $prev_id = $row['id'];
+        // if(strstr($alias,'page')){
+        if(preg_match("/^page\d{1,2}$/", $alias)) {
+            $input['page']=str_replace('page','',$alias);
+        } else {
+            $query = "select id from cat_part where seo_alias like '$alias' and prev_id='{$prev_id}'";
+            $row = my_select_row($query, true);
+            if (is_numeric($row['id'])) {
+                $prev_id = $row['id'];
+            }
         }
     }
     $input['part_id'] = $prev_id;
@@ -307,9 +314,10 @@ $subparts = 0;
 
 function sub_part($prev_id, $deep, $max_deep) {
     global $tags, $content, $IMG_PART_PATH, $IMG_PART_URL, $subparts, $SUBDIR;
-    if ($deep)
+    if ($deep){
         $subparts++;
-    $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='$prev_id' group by cat_part.id order by cat_part.num,cat_part.title asc";
+    }
+    $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='{$prev_id}' group by cat_part.id order by cat_part.num,cat_part.title asc";
     $result = my_query($query, true);
     while ($row = $result->fetch_array()) {
         $pan_ins = "";
@@ -317,8 +325,9 @@ function sub_part($prev_id, $deep, $max_deep) {
         $row['href'] = $SUBDIR . get_cat_part_href($row["id"]);
         $row['image'] = (is_file($IMG_PART_PATH . $row['img']) ? "<img src=\"{$IMG_PART_URL}{$row['img']}\" alt=\"{$row['title']}\" title=\"{$row['title']}\">" : "<br>Изображение отсутствует");
         $content .= get_tpl_by_title('cat_part_list_view', $row, $result);
-        if ($deep < $max_deep)
+        if ($deep < $max_deep) {
             sub_part($row['id'], $deep + 1, $max_deep);
+        }
     }
 }
 
@@ -339,36 +348,41 @@ if (isset($row_part['descr'])) {
 }
 
 
-if (!isset($_SESSION["catalog_page"]))
-    $_SESSION["catalog_page"] = 1;
-if (isset($input["page"])) {
-    $_SESSION["catalog_page"] = $input["page"];
+if (!isset($_SESSION['catalog_page'])){
+    $_SESSION['catalog_page'] = 1;
 }
-list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['catalog_items_per_page']}) from cat_item where part_id='" . $current_part_id . "'", 1);
-$tags['pages_list'] = '';
-if ($PAGES > 1) {
-    $tags['pages_list'] = "<div class=cat_pages>";
-    for ($i = 1; $i <= $PAGES; $i++) {
-        $tags['pages_list'] .= ($i == $_SESSION["catalog_page"] ? "[ <b>$i</b> ]&nbsp;" : "[ <a href=" . $SUBDIR . get_cat_part_href($current_part_id) . "{$i}/>{$i}</a> ]&nbsp;");
-    }
-    $tags['pages_list'] .= "</div>";
+if (isset($input['page'])) {
+    $_SESSION['catalog_page'] = $input['page'];
 }
+list($total) = my_select_row("SELECT count(id) from cat_item where part_id='" . $current_part_id . "'", 1);
+$pager = new Pagination($total,$_SESSION["catalog_page"],$settings['catalog_items_per_page']);
+$list_href = get_cat_part_href($current_part_id);
+
+if($pager->getPagesCount() > 1) {        
+    $params=[
+        'pager' => $pager,
+        'main_route' => $list_href,
+        'route' => $list_href.'page{$page}/',
+    ];
+    $tags['pages_list'] = get_tpl_by_title('pager.html.twig', $params);        
+}
+
 $content .= $tags['pages_list'];
-$offset = $settings['catalog_items_per_page'] * ($_SESSION["catalog_page"] - 1);
 
 $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
         left join cat_item_images on (cat_item_images.id=default_img)"
-        . (isset($_GET["show_all"]) ? "" : " where part_id='" . $current_part_id . "'") . " 
+        . (isset($input["show_all"]) ? "" : " where part_id='" . $current_part_id . "'") . " 
         group by cat_item.id   
-        order by cat_item.id,b_code,title asc limit $offset,{$settings['catalog_items_per_page']}";
+        order by cat_item.id,b_code,title asc limit {$pager->getOffset()},{$pager->getLimit()}";
 $result = my_query($query, true);
 if ($result->num_rows) {
     $content .= "<div id=cat_items>\n";
     while ($row = $result->fetch_array()) {
         $row['item_a'] = '<a href="' . $SUBDIR . get_cat_part_href($row['part_id']) . $row['seo_alias'] . '" title="' . $row['title'] . '">';
-        $row['special_offer_ins'] = ($row['special_offer'] ? "<div class=cat_item_special_offer>Популярное</div>" : "");
+        $row['special_offer_ins'] = ($row['special_offer'] ? "cat_item_special_offer" : "");
+        $row['novelty_ins'] = ($row['novelty'] ? "cat_item_novelty" : "");
         $URL=get_item_image_url($row['fname'], $settings["catalog_item_img_preview"]);
-        $row['default_image'] = (is_file($IMG_ITEM_PATH . $row['fname']) ? $row['item_a'] . "<img src=\"{$SUBDIR}{$URL}\" alt=\"{$row['title']}\" title=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
+        $row['default_image'] = (is_file($IMG_ITEM_PATH . $row['fname']) ? $row['item_a'] . "<img src=\"{$SUBDIR}{$URL}\" alt=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
         $row['descr'] = nl2br($row['descr']);
         $row['price'] = ($row['price'] ? "Цена {$row['price']}" : "");
         $content .= get_tpl_by_title('cat_item_list_view', $row, $result);

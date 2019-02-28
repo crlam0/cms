@@ -309,7 +309,7 @@ if (strlen($input['item_title'])) {
  * ====================================================================================
  */
 
-$content .= "<div id=cat_parts>";
+$content .= "<div id=\"cat_parts\"><center>";
 $subparts = 0;
 
 function sub_part($prev_id, $deep, $max_deep) {
@@ -332,7 +332,7 @@ function sub_part($prev_id, $deep, $max_deep) {
 }
 
 sub_part($input['part_id'], 0, 0);
-$content .= "</div>";
+$content .= "</center></div>";
 
 
 /*

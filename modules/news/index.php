@@ -34,13 +34,15 @@ if ($view_item) {
 } else {
     $tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
     add_nav_item($tags['Header']);
-    $tags['content'] = 'cut';
+    $tags['content-cut'] = 'cut';
+    var_dump($tags['content']);
 }
 
 function get_news_full_content($tmp, $row) {
     global $tags;
-    if($tags['content']==='cut') {
-        $tags['content'] = cut_string($row['content'], 150);
+    if($tags['content-cut']==='cut') {
+        $tags['content'] = strip_tags($row['content']);
+        $tags['content'] = cut_string($tags['content'], 250);
     } else {
         $tags['content'] = $row['content'];
     }

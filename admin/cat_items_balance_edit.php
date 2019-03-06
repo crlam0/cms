@@ -131,7 +131,6 @@ if (true) {
             }
 
             $content .= part_items($row['id']);
-                echo $row['id'] . ' rere ' . $part_id . '<br>';
             if ($deep < $max_deep){
                 sub_part($row['id'], $deep + 1, $max_deep);
             }

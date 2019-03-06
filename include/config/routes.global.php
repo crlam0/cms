@@ -102,16 +102,25 @@ return [
             '1' => 'uri',
         ]
     ],    
+    
     'news' => [
         'pattern' => '^news\/$',
+        'file' => 'modules/news/index.php',
+    ],    
+    'news_uri' => [
+        'pattern' => '^news\/(.*)\/$',
         'file' => 'modules/news/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
-    'news_uri' => [
-        'pattern' => '^news\/(.*)\/$',
-        'file' => 'modules/news/index.php',
+    'offers' => [
+        'pattern' => '^offers\/$',
+        'file' => 'modules/offers/index.php',
+    ],    
+    'offers_uri' => [
+        'pattern' => '^offers\/(.*)\/$',
+        'file' => 'modules/offers/index.php',
         'params' => [
             '1' => 'uri',
         ]

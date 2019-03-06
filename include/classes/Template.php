@@ -59,6 +59,8 @@ class Template {
         }
         if(strlen($inner_content)) {
             $tags['inner_content'] = $inner_content;        
+        } else {
+            $tags['inner_content'] = '';
         }
         
         $twig->add_function('add_block');

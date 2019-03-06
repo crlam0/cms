@@ -35,7 +35,6 @@ if ($view_item) {
     $tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
     add_nav_item($tags['Header']);
     $tags['content-cut'] = 'cut';
-    var_dump($tags['content']);
 }
 
 function get_news_full_content($tmp, $row) {

@@ -61,7 +61,6 @@ final class Routing {
                 $input[$param] = true;
             }
         }
-        unset($get_param, $get_array, $param, $param_array);
     }
     
     public function getFileName () {
@@ -89,7 +88,7 @@ final class Routing {
         $part = MyGlobal::get('DB')->select_row($query, true);        
         if (!$part['id']) {
             $query = "SELECT * FROM parts WHERE title='default'";
-            $part = my_select_row($query, 1);
+            $part = my_select_row($query, true);
         }
         return $part;        
     }

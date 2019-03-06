@@ -171,7 +171,7 @@ if (($input['edit']) || ($input['adding'])) {
 	$tags['type'] = "added";
 	$tags['Header'] = "Добавление раздела";
     }
-    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_MINI_INC;
+    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_MINI_INC . $EDITOR_HTML_INC;
     
     $prev_id_select = '';
     function sub_part_select($prev_id, $deep) {

@@ -1,5 +1,11 @@
 === 2019-03-07
 
+ALTER TABLE `cat_part`
+	ADD COLUMN `items_props` TEXT NULL DEFAULT NULL AFTER `price3_title`;
+
+ALTER TABLE `cat_item`
+	ADD COLUMN `props` TEXT NULL DEFAULT NULL AFTER `used_balance`;
+
 CREATE TABLE `offers` (
 	`id` INT(255) NOT NULL AUTO_INCREMENT,
 	`date` DATETIME NULL DEFAULT NULL,

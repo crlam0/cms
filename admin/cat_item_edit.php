@@ -135,12 +135,27 @@ if ($input['added']) {
     if (!strlen($input['form']['seo_alias'])){
         $input['form']['seo_alias'] = encodestring($input['form']['title']);
     }
-    $num_rows=my_select_row("select id from cat_item where seo_alias='{$input['form']['seo_alias']}'",1);
+    $num_rows=my_select_row("select id from cat_item where seo_alias='{$input['form']['seo_alias']}'", true);
     $seo_alias_duplicate = false;
     if($num_rows>0){
         $seo_alias_duplicate=1;
     }
     $input['form']['part_id'] = $_SESSION['ADMIN_PART_ID'];
+    
+    
+    if($input['props']) {
+        $props_array=[];
+        foreach($input['props'] as $name => $value) {
+            $props_array[$name] = $value;
+        }
+        $json = json_encode($props_array);
+        if(json_last_error() == JSON_ERROR_NONE) {
+            $input['form']['props'] = $json;
+        } else {
+            $content.=my_msg_to_str('','',json_last_error_msg());            
+        }        
+    }
+
     if (!isset($input['form']['special_offer'])){
         $input['form']['special_offer'] = 0;
     }
@@ -162,7 +177,23 @@ if ($input['added']) {
 }
 
 if ($input['edited']) {
-    $input['form']['part_id'] = $_SESSION['ADMIN_PART_ID'];
+    $input['form']['part_id'] = $_SESSION['ADMIN_PART_ID'];    
+    
+    if($input['props']) {
+        $props_array=[];
+        foreach($input['props'] as $name => $value) {
+            $props_array[$name] = $value;
+        }
+        $json = json_encode($props_array);
+        if(json_last_error() == JSON_ERROR_NONE) {
+            $input['form']['props'] = $json;
+        } else {
+            $content.=my_msg_to_str('','',json_last_error_msg());            
+        }        
+    }
+    
+    
+    
     if (!strlen($input['form']['seo_alias'])){
         $input['form']['seo_alias'] = encodestring($input['form']['title']);
     }
@@ -199,6 +230,35 @@ if (($input['edit']) || ($input['add'])) {
         $tags['price'] = '';
     }
     $row_part = my_select_row("select * from cat_part where id=" . $_SESSION['ADMIN_PART_ID'], 1);
+    
+    $tags['props_inputs']='';
+    if(strlen($row_part['items_props'])) {
+        $props_array = json_decode($row_part['items_props'], true);
+        // print_array($props_array);
+        if(!is_array($props_array)) {
+            $content.=my_msg_to_str('','','Массив свойств неверен');
+        } else {
+            $props_values=json_decode($tags['props'], true);
+            // print_array($props_values);
+            if(is_array($props_values)){
+                foreach ($props_values as $input_name => $value) {
+                    $param_value[$input_name]=$value;
+                }
+            }
+            foreach ($props_array as $input_name => $params) {
+                $tags['props_inputs'] .= ''
+                        . '<tr class=content align=left>'
+                        . '<td>'.$params['name'].'</td><td>' . PHP_EOL;
+                if($params['type'] == 'boolean') {
+                    $tags['props_inputs'] .= '<input type="checkbox" maxlength="45" size="64" name="props['.$input_name.']" '.($param_value[$input_name]? ' checked' : '').'>';
+                } else {
+                    $tags['props_inputs'] .= '<input type="edit" class="form-control" maxlength="45" size="64" name="props['.$input_name.']" value="'.$param_value[$input_name].'">';
+                }
+                $tags['props_inputs'] .= '</td></tr>' . PHP_EOL;
+            }
+        }
+    }
+    
     if (isset($tags['special_offer']) && $tags['special_offer'] ){
         $tags['special_offer'] = ' checked';
     }if (isset($tags['novelty']) && $tags['novelty'] ){

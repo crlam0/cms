@@ -10,18 +10,33 @@ $tags['Header'] = 'Прайс-лист';
 
 $tags['INCLUDE_CSS'] .= '<link href="' . $SUBDIR . 'css/price.css" type="text/css" rel=stylesheet />' . "\n";
 $tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
-$tags['INCLUDE_JS'] .=  
-        '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
-        '<script type="text/javascript" src="'.$BASE_HREF.'modules/price/price.js"></script>'."\n";
 
 
 if (isset($input['attr_name'])) {
     $input['id'] = intval($input['id']);
     // $input['value'] = intval($input['value']);
-    $query = "update cat_item set {$input['attr_name']}='{$input['value']}' where id='{$input['id']}'";
-    $result = my_query($query, true);
+    if($input['attr_type'] == "simple") {
+        $query = "update cat_item set {$input['attr_name']}='{$input['value']}' where id='{$input['id']}'";
+        $result = my_query($query, true);
+    } else if($input['attr_type'] == "json") {
+        $query = "select props from cat_item where id='{$input['id']}'";
+        $row = my_select_row($query, true);
+        if($row){
+            if(strlen($row['props'])) {
+                $props_values=json_decode($row['props'], true);
+                if(json_last_error() != JSON_ERROR_NONE) {
+                    echo json_last_error_msg() . ' JSON: ' . $row['props'];
+                    exit;
+                }
+            }
+            $props_values[$input['attr_name']] = $input['value'];
+            $props_json = json_encode($props_values);
+            $query = "update cat_item set props='{$props_json}' where id='{$input['id']}'";
+            $result = my_query($query, true);
+        }
+    }
     if($result) {
-        echo "OK";
+        echo 'OK';
     } else {
         echo "Fuck";
     }
@@ -30,24 +45,74 @@ if (isset($input['attr_name'])) {
 
 function part_items($part_id) {
     $content = '';
-
-    $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
-    left join cat_item_images on (cat_item_images.id=default_img or cat_item_images.item_id=cat_item.id)
+    $query = "select cat_item.*,cat_item.id as item_id,cat_part.items_props
+        from cat_item
+        left join cat_part on (cat_part.id=part_id)
     where part_id='{$part_id}'
     group by cat_item.id
     order by num,title asc";
     $result = my_query($query, true);
+    $content = '<table class="table table-striped table-responsive table-bordered">';
     if ($result->num_rows) {
-        $content .= get_tpl_by_title('price_items_edit', [], $result);
+        $content .= '<tr>';
+        $tags = $result->fetch_array();
+        $content .= '<td>Название</td>'. '<td>Базовая цена</td>' . PHP_EOL;
+        if(strlen($tags['items_props'])) {
+            $props_array = json_decode($tags['items_props'], true);
+            // print_array($props_array);
+            if(!is_array($props_array)) {
+                $content.=my_msg_to_str('','','Массив свойств неверен');
+            } else {
+                $props_values=json_decode($tags['props'], true);
+                // print_array($props_values);
+                if(is_array($props_values)){
+                    foreach ($props_values as $input_name => $value) {
+                        $param_value[$input_name]=$value;
+                    }
+                }
+                foreach ($props_array as $input_name => $params) {
+                    $content .= '<td>'.$params['name'].'</td>' . PHP_EOL;
+                }
+            }
+        }
+        $result->data_seek(0);
+        $content .= '</tr>' . PHP_EOL;
+        while ($tags = $result->fetch_array()) {
+            $content .= '<tr><td>'.$tags['title'].'</td>';
+            $content .= '<td><input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="simple" attr_name="price" value="'.$tags['price'].'"></td>';
+            // echo $tags['items_props'];
+            if(strlen($tags['items_props'])) {
+                $props_array = json_decode($tags['items_props'], true);
+                // print_array($props_array);
+                if(!is_array($props_array)) {
+                    $content.=my_msg_to_str('','','Массив свойств неверен');
+                } else {
+                    $props_values=json_decode($tags['props'], true);
+                    // print_array($props_values);
+                    $param_value = [];
+                    if(is_array($props_values)){
+                        foreach ($props_values as $input_name => $value) {
+                            $param_value[$input_name]=$value;
+                        }
+                    }
+                    foreach ($props_array as $input_name => $params) {
+                        $content .= '<td align="center">' . PHP_EOL;
+                        if($params['type'] == 'boolean') {
+                            $content .= '<input type="checkbox" class="attr_change" size="8" id="'.$tags['id'].'"  attr_type="json" attr_name="'.$input_name.'" '.($param_value[$input_name]? ' checked' : '').'>';
+                        } else {
+                            $content .= '<input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="json" attr_name="'.$input_name.'" value="'.$param_value[$input_name].'">';
+                        }
+                        $content .= '</td>' . PHP_EOL;
+                    }
+                }
+            }
+        }
     }
+    $content .= '</table>';
     return $content;
 }
 
 if (true) {
-    $content .= "<div id=cat_parts>";
-    $query = "select content from article_item where seo_alias='before_price'";
-    list($before_price) = my_select_row($query);
-    $content .= $before_price . "<br />";
     $subparts = 0;
 
     function sub_part($prev_id, $deep, $max_deep) {
@@ -60,14 +125,13 @@ if (true) {
         while ($row = $result->fetch_array()) {
 //          $subparts++;
             if ((!$deep) && (!$prev_id)) {
-                $content .= "<div class=root_part><a name={$row['seo_alias']}></a><h3>{$row['title']}</h3></div>";
+                $content .= "<h3>{$row['title']}</h3>";
             } else {
-                $content .= "
-                <div class=sub_part>
-                    <h4>{$row['title']}</h4>                    
-                </div>";
+                $content .= "<h4>{$row['title']}</h4>";
             }
+
             $content .= part_items($row['id']);
+                echo $row['id'] . ' rere ' . $part_id . '<br>';
             if ($deep < $max_deep){
                 sub_part($row['id'], $deep + 1, $max_deep);
             }
@@ -75,32 +139,23 @@ if (true) {
     }
 
     sub_part(0, 0, 2);
-    $content .= "</div>";
-    $content .= "</div>";
 }
 
 
-$price_parts_content = "";
-$query = "SELECT cat_part.*from cat_part where prev_id='0' order by cat_part.num,cat_part.title asc";
-$result = my_query($query, true);
-while ($row = $result->fetch_array()) {
-    $price_parts_content .= "<a href=#{$row['seo_alias']}>{$row['title']}<a><br />";
-}
-
-$final_content = '
-    <div id="price">
-    <div class="col-md-8">' . $content . '</div>
-    <div class="col-md-4" id="price_parts">' . $price_parts_content . '</div>
-    </div>
+$final_content = $content . '
     
 <script type="text/javascript">
 $(document).ready(function(){  
     $("input.attr_change").change(function(){
 	var id=$(this).attr("id");
+        var attr_type=$(this).attr("attr_type");
         var attr_name=$(this).attr("attr_name");
 	var value=$(this).val();
+        var data = "attr_type=" + attr_type + "&attr_name="+attr_name + "&value=" +value + "&id=" + id;
+        console.log(data);
+        
 	$.ajax({
-	   type: "POST", url: "'.$server['PHP_SELF'].'", data: "attr_name="+attr_name + "&value="+value + "&id="+id,
+	   type: "POST", url: "'.$server['PHP_SELF'].'", data: data,
 	   success: function(msg){
             if(msg !== "OK") {
                   alert(msg);
@@ -112,13 +167,6 @@ $(document).ready(function(){
 </script>
 
     ';
-
-/*
-if (strlen($row_part['descr_bottom'])) {
-    $content .= "<div class=part_descr>" . nl2br($row_part['descr_bottom']) . "</div>\n";
-}
- * 
- */
 
 
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $final_content);

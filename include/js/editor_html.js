@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
 	editAreaLoader.init({
-		id: "editor"
+		id: "editor_html"
 		,start_highlight: true
 		,allow_resize: "both"
 		,allow_toggle: true

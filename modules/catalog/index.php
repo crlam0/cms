@@ -94,6 +94,7 @@ function show_img($tmp, $row) {
     }
 }
 
+/*
 function detail_view_show_price() {
     global $row_part, $tags;
     $result = "{$row_part['price1_title']} {$tags['price']}<br />";
@@ -112,7 +113,43 @@ function detail_view_show_price() {
         $result .= "<span class=\"used_balance\">В наличии Б/У: {$tags['used_balance']}</span><br />";
     }
     return $result;
+}*/
+
+function detail_view_show_price() {
+    global $row_part, $tags;
+    if( !get_prop_value(null,$tags,'price1') && get_prop_value(null,$tags,'price2')) {
+        $result = "{$row_part['price1_title']} {$tags['price']}<br />";
+    } else {
+        if (get_prop_value(null,$tags,'price1')) {
+            $result .= get_prop_name($tags,'price1'). ': ' . get_prop_value(null,$tags,'price1') . "<br />";
+        }
+        if (get_prop_value(null,$tags,'price2')) {
+            $result .= get_prop_name($tags,'price2'). ': ' . get_prop_value(null,$tags,'price2') . "<br />";
+        }
+    }
+    if (!get_prop_value(null,$tags,'balance_01') && !get_prop_value(null,$tags,'balance_02')) {
+        $result .= "<span class=\"balance\">Под заказ</span><br />";
+    } else {
+        if(get_prop_value(null,$tags,'balance_01')) {
+            $result .= "<span class=\"balance\">".get_prop_name($tags,'balance_01'). ': ' . get_prop_value(null,$tags,'balance_01')."</span><br />";
+        }
+        if(get_prop_value(null,$tags,'balance_02')) {
+            $result .= "<span class=\"balance\">".get_prop_name($tags,'balance_02'). ': ' . get_prop_value(null,$tags,'balance_02')."</span><br />";
+        }
+    }
+    if (!get_prop_value(null,$tags,'balance_01_used') && !get_prop_value(null,$tags,'balance_02_used')) {
+        $result .= "";
+    } else {
+        if(get_prop_value(null,$tags,'balance_01_used')) {
+            $result .= "<span class=\"used_balance\">".get_prop_name($tags,'balance_01_used'). ': ' . get_prop_value(null,$tags,'balance_01_used')."</span><br />";
+        }
+        if(get_prop_value(null,$tags,'balance_02_used')) {
+            $result .= "<span class=\"used_balance\">".get_prop_name($tags,'balance_02_used'). ': ' . get_prop_value(null,$tags,'balance_02_used')."</span><br />";
+        }
+    }
+    return $result;
 }
+
 
 function prev_part($prev_id, $deep, $arr) {
     $query = "SELECT id,title,prev_id from cat_part where id='$prev_id' order by title asc";
@@ -379,8 +416,12 @@ if ($result->num_rows) {
     $content .= "<div id=cat_items>\n";
     while ($row = $result->fetch_array()) {
         $row['item_a'] = '<a href="' . $SUBDIR . get_cat_part_href($row['part_id']) . $row['seo_alias'] . '" title="' . $row['title'] . '">';
-        $row['special_offer_ins'] = ($row['special_offer'] ? "cat_item_special_offer" : "");
-        $row['novelty_ins'] = ($row['novelty'] ? "cat_item_novelty" : "");
+        
+        // $row['special_offer_ins'] = ($row['special_offer'] ? "cat_item_special_offer" : "");
+        $row['special_offer_ins'] = (get_prop_value(null,$row,'special_offer') ? "cat_item_special_offer" : "");
+        // $row['novelty_ins'] = ($row['novelty'] ? "cat_item_novelty" : "");
+        $row['novelty_ins'] = (get_prop_value(null,$row,'novelty') ? "cat_item_novelty" : "");
+        
         $URL=get_item_image_url($row['fname'], $settings["catalog_item_img_preview"]);
         $row['default_image'] = (is_file($IMG_ITEM_PATH . $row['fname']) ? $row['item_a'] . "<img src=\"{$SUBDIR}{$URL}\" alt=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
         $row['descr'] = nl2br($row['descr']);

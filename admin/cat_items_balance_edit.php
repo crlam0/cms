@@ -18,7 +18,7 @@ if (isset($input['attr_name'])) {
     if($input['attr_type'] == "simple") {
         $query = "update cat_item set {$input['attr_name']}='{$input['value']}' where id='{$input['id']}'";
         $result = my_query($query, true);
-    } else if($input['attr_type'] == "json") {
+    } else if($input['attr_type'] == "json" || $input['attr_type'] == "boolean") {
         $query = "select props from cat_item where id='{$input['id']}'";
         $row = my_select_row($query, true);
         if($row){
@@ -98,7 +98,7 @@ function part_items($part_id) {
                     foreach ($props_array as $input_name => $params) {
                         $content .= '<td align="center">' . PHP_EOL;
                         if($params['type'] == 'boolean') {
-                            $content .= '<input type="checkbox" class="attr_change" size="8" id="'.$tags['id'].'"  attr_type="json" attr_name="'.$input_name.'" '.($param_value[$input_name]? ' checked' : '').'>';
+                            $content .= '<input type="checkbox" class="attr_change" size="8" id="'.$tags['id'].'"  attr_type="boolean" attr_name="'.$input_name.'" '.($param_value[$input_name]? ' checked' : '').'>';
                         } else {
                             $content .= '<input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="json" attr_name="'.$input_name.'" value="'.$param_value[$input_name].'">';
                         }
@@ -149,9 +149,16 @@ $(document).ready(function(){
 	var id=$(this).attr("id");
         var attr_type=$(this).attr("attr_type");
         var attr_name=$(this).attr("attr_name");
-	var value=$(this).val();
+        if(attr_type == "boolean") {
+            var value=$(this).prop("checked");
+            if (!value) {
+                value = "";
+            }
+        } else {
+            var value=$(this).val();
+        }
         var data = "attr_type=" + attr_type + "&attr_name="+attr_name + "&value=" +value + "&id=" + id;
-        console.log(data);
+        // console.log(data);
         
 	$.ajax({
 	   type: "POST", url: "'.$server['PHP_SELF'].'", data: data,

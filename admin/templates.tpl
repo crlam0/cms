@@ -370,10 +370,12 @@ $(document).ready(function(){
 	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[title] value="[%title%]"></td></tr>
 	<tr class="content" align="left"><td>Позиция:</td><td><input class="form-control" type="edit" maxlength=45 size="64" name=form[num] value="[%num%]"></td></tr>
 	<tr class="content" align="left"><td>Алиас:</td><td><input class="form-control" type="edit" maxlength=45 size="64" name=form[seo_alias] value="[%seo_alias%]"></td></tr>
+<!--
         <tr class="content" align="left"><td>Специальное предложение:</td><td><input type=checkbox maxlength="255" size="64" name=form[special_offer] value="1" [%special_offer%]></td></tr>
         <tr class="content" align="left"><td>Новинка:</td><td><input type=checkbox maxlength="255" size="64" name=form[novelty] value="1" [%novelty%]></td></tr>
-	[%price_inputs%]
 	<tr class="content" align="left"><td>Остаток на складе:</td><td><input class="form-control" type="edit" maxlength=64 size=128 name=form[balance] value="[%balance%]"></td></tr>
+-->        
+	[%price_inputs%]
 	<tr class="content" align="left"><td>Вес/количество/объем:</td><td><input class="form-control" type="edit" maxlength=45 size="64" name=form[cnt_weight] value="[%cnt_weight%]"></td></tr>
         
         [%props_inputs%]

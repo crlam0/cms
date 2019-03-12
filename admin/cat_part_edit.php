@@ -128,6 +128,9 @@ if ($input["added"]) {
 }
 
 if ($input['edited']) {
+    if($input['form']['prev_id'] == $input['id']) {
+        $input['form']['prev_id'] = 0;
+    }
     if (!strlen($input['form']['seo_alias']))$input['form']['seo_alias'] = encodestring($input['form']['title']);
     $num_rows=my_select_row("select id from cat_part where seo_alias='{$input['form']['seo_alias']}' and id<>'{$input['id']}'", false);
     if($num_rows>1){

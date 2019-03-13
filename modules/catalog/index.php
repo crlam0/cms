@@ -61,6 +61,9 @@ $IMG_ITEM_URL = $BASE_HREF . $settings['catalog_item_img_path'];
 $IMG_PART_PATH = $DIR . $settings['catalog_part_img_path'];
 $IMG_PART_URL = $BASE_HREF . $settings['catalog_part_img_path'];
 
+
+
+
 if (isset($input['add_buy']) && $input['cnt']) {
     if (!isset($_SESSION['BUY'][$input['item_id']]['count'])) {
         $_SESSION['BUY'][$input['item_id']]['count'] = 0;
@@ -68,12 +71,17 @@ if (isset($input['add_buy']) && $input['cnt']) {
     $cnt = (int) $input['cnt'];
     if ($cnt > 0 && $cnt < 99) {
         $_SESSION['BUY'][$input['item_id']]['count'] += $cnt;
-        echo 'OK';
+        $json['result'] = 'OK';
+        $json['count'] = count($_SESSION['BUY']);
     } else {
-        echo 'ERR';
+        $json['result'] = 'ERR';
     }
+    echo json_encode($json);
     exit;
 }
+
+
+
 
 function get_item_image_url($file_name, $width, $fix_size=1) {
     global $DIR, $IMG_ITEM_PATH;

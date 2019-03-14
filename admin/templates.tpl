@@ -1353,6 +1353,64 @@ $(document).ready(function(){
 <!--[/content]-->
 
 
+<!--[title]reviews_edit_table[/title]-->
+<!--DESCRIPTION: Список отзывов в адм. разделе -->
+<!--[content]-->
+<center><form action="[%PHP_SELF%]" method=get>
+	<input type="hidden" name=add_reviews value=1>
+	<input class="btn btn-primary" type="submit" value="Добавить">
+</form></center>
+<br>
+<table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
+<tr class=header align="center">
+	<td width=40%>Отзыв</td>
+	<td width=40%>Изображение</td>
+	<td width=5% align="center">&nbsp;</td>
+	<td width=5% align="center">&nbsp;</td>
+</tr>
+[%loop_begin%]
+	<tr class="content" align="left">
+	<td><b>[%row(author)%]</b><br>[%row(content)%]</td>
+	<td align="center">[%func(show_img)%]</td>
+	<td width=16><a href=[%PHP_SELF%]?edit_reviews=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_reviews=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	</tr>
+[%loop_end%]
+</table>
+<br>
+<center><form action="[%PHP_SELF%]" method=get>
+	<input type="hidden" name=add_reviews value=1>
+	<input class="btn btn-primary" type="submit" value="Добавить">
+</form></center>
+
+<!--[/content]-->
+
+
+
+<!--[title]reviews_edit_form[/title]-->
+<!--DESCRIPTION: Форма редактирования отзывов -->
+<!--[content]-->
+<form action="[%PHP_SELF%]" method="POST" enctype="multipart/form-data">
+<input type="hidden" name=MAX_FILE_SIZE value=16000000>		
+<input type="hidden" name="id" value=[%id%]>
+<input type="hidden" name=[%type%] value=1>
+<table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
+	<tr class=header><td colspan="2">[%form_title%]</td></tr>
+	<tr class="content" align="left"><td>Автор:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[author] value="[%author%]"></td></tr>
+	<tr class="content" align="left"><td>Дата:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[date] value="[%date%]"></td></tr>
+	<tr class="content" align="left"><td>Изображение:</td><td><input class="form-control" name=img_file type=file size=40></td></tr>
+	<tr class="content"><td align="left" colspan="2">[%content%]</td></tr>
+	<tr class=header align="left"><td align="center" colspan="2"><input class="btn btn-primary" type="submit" value="  Сохранить  "></td></tr>
+</table>
+</form>
+<center><a href=[%PHP_SELF%] class="btn btn-default"><<  Назад</a></center>
+<!--[/content]-->
+
+
+
+
+
+
 
 <!--[title]settings_edit_table[/title]-->
 <!--DESCRIPTION: Таблица настроек -->

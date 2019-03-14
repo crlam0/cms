@@ -6,8 +6,11 @@ $tags['Header'] = "Корзина";
 use Classes\SummToStr;
 $SummToStr = new SummToStr();
 
-$tags['nav_str'] .= "<span class=nav_next><a href=\"" . $SUBDIR . "catalog/\" class=top>Каталог</a></span>";
-$tags['nav_str'].="<span class=nav_next>Корзина</span>";
+// $tags['nav_str'] .= "<span class=nav_next><a href=\"" . $SUBDIR . "catalog/\" class=top>Каталог</a></span>";
+// $tags['nav_str'].="<span class=nav_next>Корзина</span>";
+
+      
+add_nav_item($tags['Header']);
 
 $IMG_ITEM_PATH = $DIR . $settings['catalog_item_img_path'];
 $IMG_ITEM_URL = $BASE_HREF . $settings['catalog_item_img_path'];
@@ -22,7 +25,7 @@ if (isset($input["add_buy"])) {
     while (list ($n, $item_id) = @each($input["buy_item"])) {
         $_SESSION["BUY"][$item_id]["count"] = 1;
     }
-    header("Location: buy.php");
+    Redirect($SUBDIR . ' modules/basket/');
     exit;
 }
 
@@ -201,7 +204,7 @@ if (isset($_SESSION["BUY"]) && is_array($_SESSION["BUY"]) && count($_SESSION["BU
             ';
     } else {
         $content.= "
-                <center>
+                <center id=\"basket-content\">
                 <form action=" . $server["PHP_SELF"] . " method=post name=request_form>
                 <input type=hidden name=calc value=1>
                 <table width=100% border=0 cellspacing=17 cellpadding=17 align=center>";
@@ -211,7 +214,8 @@ if (isset($_SESSION["BUY"]) && is_array($_SESSION["BUY"]) && count($_SESSION["BU
             $summ+=$row['price'] * $_SESSION["BUY"][$row['id']]["count"];
             $cnt+=$_SESSION["BUY"][$row['id']]["count"];
             $content.= "<tr valign=middle>
-                <td align=center width=50%>" . (file_exists($IMG_ITEM_PATH) . $row['fname'] ? "<img src=\"{$SUBDIR}modules/catalog/image.php?id={$row['default_img']}&windowHeight=500&fix_size=1\">" : "&nbsp;") . "</td>
+
+                <td align=center width=200>" . (file_exists($IMG_ITEM_PATH) . $row['fname'] ? "<img src=\"{$SUBDIR}modules/catalog/image.php?id={$row['default_img']}&windowHeight=500&fix_size=1\">" : "&nbsp;") . "</td>
                 <td class=price><b>$row[title]</b> &nbsp;&nbsp;(Кол-во: {$_SESSION["BUY"][$row['id']]["count"]})<br>
                 Цена: <b>" . add_zero($row['price']) . " руб.</b><br>" . nl2br($row['descr']) . "<br>
                 <input type=hidden name=buy_cnt[{$row['id']}] value=1>
@@ -221,19 +225,16 @@ if (isset($_SESSION["BUY"]) && is_array($_SESSION["BUY"]) && count($_SESSION["BU
         }
         $summ_with_discount = calc_discount($summ, get_discount($summ));
         $content.= "
-            <tr><td colspan=2>
+            </table>
             <center>Итого на сумму <b>" . add_zero($summ) . " руб.</b>
             " . (get_discount($summ) ? " С учетом скидки <b>" . get_discount($summ) . "%</b> сумма составлет: <b>" . add_zero($summ_with_discount) . "</b>" : "") . "
             </center><center>Итого к оплате: <b>" . $SummToStr($summ_with_discount) . "</b></center>
-            </td></tr>    
-            <tr><td colspan=2 align=center>
-            <table border=0 cellspacing=7 cellpadding=7 align=center><tr align=center>
-            <td width=33%><a onClick=\"document.request_form.submit();\" style=\"cursor: pointer\" class=\"btn btn-success\"> Посчитать </a></td>
-            <td width=33% nowrap><a href=" . $server["PHP_SELF"] . "?request=1 class=\"btn btn-success\"> Оформить заказ </a></td>
-            <td width=33% nowrap><a href=" . $server["PHP_SELF"] . "?clear=1 class=\"btn btn-success\"> Очистить список </a></td>
-            </tr></table></form>
+            <br />
+            <a onClick=\"document.request_form.submit();\" style=\"cursor: pointer\" class=\"btn btn-default\"> Посчитать </a>
+            <a href=" . $server["PHP_SELF"] . "?request=1 class=\"btn btn-default\"> Оформить заказ </a>
+            <a href=" . $server["PHP_SELF"] . "?clear=1 class=\"btn btn-default\"> Очистить список </a>
+            </form>
             </td></tr>
-            </table>
             </center>
             ";
     }

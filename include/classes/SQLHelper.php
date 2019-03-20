@@ -105,15 +105,20 @@ class SQLHelper {
      *
      * @return string Output string
      */
-    public function test_param($str,$param="") {
+    public function test_param($str,$param='') {
         global $server;
         if (is_array($str)) {
+            foreach ($str as $key => $value) {
+                $str[$key]=$this->escape_string($value);
+                // $str[$key]=$this->test_param($value);
+            }
             return $str;
         }    
         if(!strstr($server['PHP_SELF'], 'admin/')) {
             $str=htmlspecialchars($str);
         }  
         $str=$this->escape_string($str);
+        
         foreach($this->DENIED_WORDS as $word) {
             if(stristr($str, $word)){
                 header($server['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);

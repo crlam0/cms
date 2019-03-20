@@ -16,6 +16,18 @@
         <![endif]-->
 </head>
     <body bgcolor="#ffffff">
+<div class="modal fade modal-wide" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header"><button class="close" type="button" data-dismiss="modal">x</button>
+                <h4 class="modal-title" id="popupHeader"></h4>
+            </div>
+            <div class="modal-body">
+                <div id=popupContent></div>                        
+            </div>
+        </div>
+    </div>
+</div>
         <table border=0 cellspacing=3 cellpadding=3 width=100% height=100% align=center bgcolor=#fff>
             <tr valign=top>
                 <td width=150 align=center>

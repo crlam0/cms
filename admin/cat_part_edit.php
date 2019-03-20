@@ -11,6 +11,86 @@ while ($row = $result->fetch_array()) {
     my_query($query, true);
 }
 */
+if (isset($input['part_id'])) {
+    $part_id = intval($input['part_id']);
+    $item_id = intval($input['item_id']);
+    $value = strlen($input['value']);
+
+    list($json) = my_select_row("select related_products from cat_part where id='{$part_id}'", true);
+    if(strlen($json)) {
+        $related_products=json_decode($json, true);
+        if(json_last_error() != JSON_ERROR_NONE) {
+            echo json_last_error_msg() . ' JSON: ' . $json;
+            exit;
+        }
+    } else {
+        $related_products=[];
+    }
+    if($value>0) {
+        $related_products[$item_id] = 'true';
+    } else {
+        unset($related_products[$item_id]);
+    }
+    $json = json_encode($related_products);
+    $query = "update cat_part set related_products='{$json}' where id='{$part_id}'";
+    $result = my_query($query, true);    
+    if($result) {
+        echo 'OK';
+    } else {
+        echo 'SQL Error: ' . $query;
+    }
+    exit;
+}
+
+
+if($input['get_related_products_list']) {
+    $content = '<input type="hidden" id="part_id" value="'.$input['id'].'"';
+    list($json_row) = my_select_row("select related_products from cat_part where id='{$input['id']}'", true);
+    if(strlen($json_row)) {
+        $related_products=json_decode($json_row, true);
+        if(json_last_error() != JSON_ERROR_NONE) {
+            $json['result'] = json_last_error_msg() . ' JSON: ' . $json_row;
+            echo json_encode($json);
+            exit;
+        }
+    } else {
+        $related_products=[];
+    }
+    $query = "SELECT id,title from cat_part order by num,title asc";
+    $result = my_query($query, true);
+    while($row=$result->fetch_array()){
+        $content .= '        
+        <div class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading" data-toggle="collapse" href="#collapse'.$row['id'].'">
+            <h4 class="panel-title">
+              '.$row['title'].'
+            </h4>
+          </div>
+          <div id="collapse'.$row['id'].'" class="panel-collapse collapse">
+            <ul class="list-group">';
+            $query = "SELECT cat_item.* from cat_item where part_id='{$row['id']}' order by num,title asc";
+            $result_item = my_query($query, true);
+            while($row_item=$result_item->fetch_array()){
+                $state = '';
+                if(array_key_exists($row_item['id'], $related_products)) {
+                    $state = ' checked';
+                }
+                $content .= '<li class="list-group-item">'.$row_item['title'].
+                        '<input type="checkbox" class="related_products_input" item_id="'.$row_item['id'].'" '.$state.' />'
+                        . '</li>';
+            }
+            $content .= '
+            </ul>
+          </div>
+        </div>
+        </div>';
+    }
+    $json['content'] = $content;
+    $json['result'] = 'OK';    
+    echo json_encode($json);
+    exit;
+}
 
 function prev_part($prev_id, $deep, $arr) {
     if($deep > 1) {

@@ -85,13 +85,6 @@ A:active, A:hover {
     TEXT-DECORATION: none
 }
 
-H1 {font-weight: normal; font-size: 16pt; font-family: Arial,sans-serif; LETTER-SPACING: 1pt; }
-H2 {font-weight: bold; font-size: 14pt; font-family: Arial,sans-serif; LETTER-SPACING: 1pt; TEXT-DECORATION: none;}
-H3 {font-weight: bold; font-size: 12pt; font-family: Arial,sans-serif; LETTER-SPACING: 1pt; TEXT-DECORATION: none;}
-H4 {font-weight: bold; font-size: 8pt; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; TEXT-DECORATION: none;}
-H5 {font-weight: bold; font-size: 9pt; font-family: Arial,sans-serif; TEXT-DECORATION: none;}
-H6 {font-weight: bold; font-size: 8pt; font-family: Arial,sans-serif; TEXT-DECORATION: none;}
-
 font.info {font-size: 12pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #444499;}
 font.notice {font-size: 12pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #449944;}
 font.error {font-size: 12pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #330000;}
@@ -116,4 +109,34 @@ img.margin {
 
 .normal-form {
     width: 800px;
+}
+.modal {
+    text-align: center;
+}
+
+.modal-dialog {
+    text-align: left;
+    min-width: 300px;
+} 
+
+.modal-fs .modal-dialog {
+  width: 800px;
+  max-width: 99%;
+}
+
+.modal-wide .modal-body {
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.modal-header {
+    padding: 8px 16px;
+}
+
+div#request-result {
+    margin-top: 10px;
 }

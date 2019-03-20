@@ -26,9 +26,7 @@ function get_prop_value($row,$name) {
             print_debug(json_last_error_msg() . ' JSON: ' . $row['props']);
             return false;
         }
-        // echo $row['id'] . ': ' . $name .': '. $props_values[$name] . ' rere '. strlen($props_values[$name]) .'<br />';
-        $result = $props_values[$name];
-        
+        $result = $props_values[$name];        
         return strlen($result)>0 ? $result : false;
     }
     return false;
@@ -42,9 +40,12 @@ function get_props_array($props) {
             print_debug(json_last_error_msg() . ' JSON: ' . $props);
             return false;
         }
-        // echo $row['id'] . ': ' . $name .': '. $props_values[$name] . ' rere '. strlen($props_values[$name]) .'<br />';
-        
         if(is_array($props_values)) {
+            foreach($props_values as $key => $value ){
+                if(!strlen($props_values[$key])) {
+                    unset($props_values[$key]);
+                }
+            }
             return $props_values;
         } else {
             return false;

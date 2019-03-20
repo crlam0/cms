@@ -300,18 +300,75 @@ $(document).ready(function(){
 	<tr class="content" align="left"><td>Цена:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[price1_title] value="[%price1_title%]"></td></tr>
 	<tr class="content" align="left"><td>Фиксированая ширина для фотографий товаров:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[item_image_width] value="[%item_image_width%]"></td></tr>
 	<tr class="content" align="left"><td>Фиксированая высота для фотографий товаров:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[item_image_height] value="[%item_image_height%]"></td></tr>
+        <tr class="content" align="left"><td>Сопутствующие товары:</td><td><button class="btn btn-default" part_id="[%id%]" id="related_products">Показать список</button></td></tr>
 	<tr class="content">
 		<td>Картинка:</td>
-		<td align="center">[%img_tag%][%del_button%]<br>Загрузить: <input class="form-control" name=img_file type=file><br></td>
+		<td align="center">[%img_tag%][%del_button%]<br>Загрузить: <input class="form-control" name="img_file" type="file"><br></td>
 	</tr>
 	<tr class=header align="left"><td align="center" colspan="2"><input class="btn btn-primary" type="submit" value="  Сохранить  "></td></tr>
 	<tr class="header"><td colspan=2>Properties (изменять если вы ТОЧНО знаете что делаете):</td></tr>
 	<tr class="content"><td align="left" colspan=2>
-		<textarea class="form-control" rows="15" cols="100" id="editor_html" maxlength="6400"0 name="form[items_props]">[%items_props%]</textarea>
+		<textarea class="form-control" rows="15" cols="100" id="editor_html" maxlength="64000" name="form[items_props]">[%items_props%]</textarea>
 	</td></tr>
 </table>
 </form>
 <center><a href=[%PHP_SELF%] class="btn btn-default"> << Назад</a></center>
+
+<style>
+.modal-wide .modal-body {
+    overflow-x: auto;
+    overflow-y: scroll;
+    max-height: 600px;
+}    
+.related_products_input {
+    float: right;
+}
+</style>
+
+<script language="javascript">
+$(document).ready(function () {
+    $('body').on('click', '#related_products', function () {
+        var id = $(this).attr("part_id");
+        $.ajax({
+            type: "GET", url:  "[%PHP_SELF%]", dataType: "json", data: "get_related_products_list=1&id=" + id,
+            success: function (msg) {
+                if (msg.result !== 'OK') {
+                    console.log(msg.result);
+                } else {
+                    $('#popupHeader').html('<h4>Сопутствующие товары</h4>');
+                    $('#popupContent').html(msg.content);
+                    // $('.modal').removeClass('modal-fs');
+                    // $('.modal').addClass('modal-fs');
+                    $('#myModal').modal();
+                }
+            }
+        });
+        return false;
+    });
+    $('body').on('change', ".related_products_input", function(){
+        var part_id=$("#part_id").val();
+        var item_id=$(this).attr("item_id");
+        var value=$(this).prop("checked");
+        if (!value) {
+            value = "";
+        }
+        var data = "part_id=" + part_id + "&item_id="+item_id + "&value=" +value;
+        // console.log(data);
+
+        $.ajax({
+           type: "POST", url: "[%PHP_SELF%]", data: data,
+           success: function(msg){
+            if(msg !== "OK") {
+                console.log(msg);
+            }
+           }
+        });
+    });
+});
+    
+
+</script>
+
 <!--[/content]-->
 
 

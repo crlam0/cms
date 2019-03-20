@@ -16,7 +16,6 @@ if (is_array($input) && !count($input)) {
     $input['part_id'] = 0;
 }
 
-
 if (isset($input['uri'])) {
     $params = explode('/', $input['uri']);
     $part_id = 0;
@@ -38,7 +37,7 @@ if (isset($input['uri'])) {
 
 $input['view_item'] = null;
 if (isset($input['item_title'])) {
-    $query = "select id from cat_item where seo_alias like '{$input['item_title']}' and part_id='{$input['part_id']}'";
+    $query = "select id from cat_item where seo_alias = '{$input['item_title']}' and part_id='{$input['part_id']}'";
     $row = my_select_row($query, true);
     if (is_numeric($row['id'])) {
         $input['view_item'] = $row['id'];
@@ -149,15 +148,6 @@ if ($input['get_popup_content']) {
         $tags['default_image'] = "Изображение отсутствует.";
     }
 
-    /* 	$query="select * from cat_item_images where item_id='".$_GET["item_id"]."' and id<>'$row[default_img]' order by id asc";
-      $result=mysql_query($query,$conn);
-      if(mysql_num_rows($result)){
-      $tags[images]="<div class=images>";
-      while ($row = mysql_fetch_array($result))if(is_file($IMG_ITEM_PATH.$row[fname])){
-      $tags[images].="<a href={$IMG_ITEM_URL}$row[fname] target=_blank title=\"$row[descr]\"><img src={$IMG_ITEM_URL}$row[fname] border=0></a>";
-      }
-      $tags[images].="</div>";
-      } */
     $content = get_tpl_by_title("cat_item_view", $tags, $result);
     $content .= "
             <br>
@@ -166,7 +156,6 @@ if ($input['get_popup_content']) {
         ";
     $json['title'] = $tags['title'];
     $json['content'] = $content;
-//	echo iconv('windows-1251', 'UTF-8', $content);
     echo json_encode($json);
     exit;
 }
@@ -216,36 +205,57 @@ if ($input['get_popup_image_content']) {
  * ====================================================================================
  */
 
-
 if ($input['view_item']) {
     $query = "select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='" . $input['view_item'] . "' order by b_code,title asc";
     $result = my_query($query);
     if ($result->num_rows) {
         $row = $result->fetch_array();
-        $item_id = $row['id'];
         $tags = array_merge($tags, $row);
 
         $tags['Header'] = $row['title'];
         $tags['nav_str'] .= "<span class=nav_next>{$row['title']}</span>";
         add_nav_item($row['title']);
 
-        $query = "select * from cat_item_images where item_id='{$item_id}' and id<>'{$row['default_img']}' order by id asc";
+        $query = "select * from cat_item_images where item_id='{$row['id']}' and id<>'{$row['default_img']}' order by id asc";
         $result = my_query($query);
         if ($result->num_rows) {
             $tags['images'] = mysqli_fetch_all($result, MYSQLI_ASSOC);
         }
-
-        $content .= get_tpl_by_title('cat_item_view_twig', $tags, $result);
-        
+    
+        $json = $row_part['related_products'];
+        if(strlen($json)>2) {
+            $related_products=json_decode($json, true);
+            if(json_last_error() != JSON_ERROR_NONE) {
+                add_to_debug(json_last_error_msg() . ' JSON: ' . $json);
+                $related_products=[];
+            }
+        } else {
+            $related_products=[];
+        }
+        if(count($related_products)) {
+            $where_str='';
+            foreach ($related_products as $key => $value) {
+                $where_str.=$key.',';
+            }
+            $where_str=substr($where_str,0,strlen($where_str)-1);
+            $query ="select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
+                left join cat_item_images on (cat_item_images.id=default_img)
+                where cat_item.id in (" . $where_str . ")
+                group by cat_item.num   
+                order by cat_item.num,b_code,title asc";
+            $result = my_query($query);
+            if ($result->num_rows) {
+                $tags['related_products'] .= get_tpl_by_title('cat_item_list_twig', $tags, $result);
+            }
+        }
+        $content .= get_tpl_by_title('cat_item_view_twig', $tags, $result);        
     } else {
         $content .= my_msg_to_str('notice', [], 'Товар не найден');
     }
 
-    echo get_tpl_default($tags, "", $content);
+    echo get_tpl_default($tags, '', $content);
     exit;
 }
-
-
 
 /*
  * ====================================================================================
@@ -255,42 +265,13 @@ if ($input['view_item']) {
  * ====================================================================================
  */
 
-/*
-$content .= "<div id=\"cat_parts\"><center>";
-$subparts = 0;
-
-function sub_part($prev_id, $deep, $max_deep) {
-    global $tags, $content, $IMG_PART_PATH, $IMG_PART_URL, $subparts, $SUBDIR;
-    if ($deep){
-        $subparts++;
-    }
-    $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='{$prev_id}' group by cat_part.id order by cat_part.num,cat_part.title asc";
-    $result = my_query($query, true);
-    while ($row = $result->fetch_array()) {
-        $pan_ins = "";
-        $subparts++;
-        $row['href'] = $SUBDIR . get_cat_part_href($row["id"]);
-        $row['image'] = (is_file($IMG_PART_PATH . $row['img']) ? "<img src=\"{$IMG_PART_URL}{$row['img']}\" alt=\"{$row['title']}\" title=\"{$row['title']}\">" : "<br>Изображение отсутствует");
-        $content .= get_tpl_by_title('cat_part_list_view', $row, $result);
-        if ($deep < $max_deep) {
-            sub_part($row['id'], $deep + 1, $max_deep);
-        }
-    }
-}
-
-sub_part($input['part_id'], 0, 0);
-$content .= "</center></div>";
-*/
-
 $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='{$input['part_id']}' group by cat_part.id order by cat_part.num,cat_part.title asc";
 $result = my_query($query);
 
 if ($result->num_rows) {
     $tags['functions'] = [];
     $content .= get_tpl_by_title('cat_part_list_twig', $row, $result);
-} else {
-    $content .= my_msg_to_str("list_empty");
-}
+} 
 
 /*
  * ====================================================================================

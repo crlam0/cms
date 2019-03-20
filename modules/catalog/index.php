@@ -19,22 +19,24 @@ if (is_array($input) && !count($input)) {
 
 if (isset($input['uri'])) {
     $params = explode('/', $input['uri']);
-    $prev_id = 0;
+    $part_id = 0;
     foreach ($params as $alias) {
         // if(strstr($alias,'page')){
         if(preg_match("/^page\d{1,2}$/", $alias)) {
             $input['page']=str_replace('page','',$alias);
         } else {
-            $query = "select id from cat_part where seo_alias like '$alias' and prev_id='{$prev_id}'";
+            $query = "select id from cat_part where seo_alias like '$alias' and prev_id='{$part_id}'";
             $row = my_select_row($query, true);
             if (is_numeric($row['id'])) {
-                $prev_id = $row['id'];
+                $part_id = $row['id'];
             }
         }
     }
-    $input['part_id'] = $prev_id;
+    $input['part_id'] = $part_id;
+    unset($part_id);
 }
 
+$input['view_item'] = null;
 if (isset($input['item_title'])) {
     $query = "select id from cat_item where seo_alias like '{$input['item_title']}' and part_id='{$input['part_id']}'";
     $row = my_select_row($query, true);
@@ -52,7 +54,7 @@ if (!isset($current_part_id)) {
     $current_part_id = '0';
 }
 
-if (isset($input['view_item'])) {
+if ($input['view_item']) {
     list($current_part_id) = my_select_row("select part_id from cat_item where id='{$input["view_item"]}'", 1);
 }
 
@@ -102,57 +104,46 @@ function show_img($tmp, $row) {
     }
 }
 
-/*
-function detail_view_show_price() {
-    global $row_part, $tags;
-    $result = "{$row_part['price1_title']} {$tags['price']}<br />";
-    if ($row_part['price_cnt'] >= 2) {
-        $result .= "{$row_part['price2_title']} {$tags['price2']}<br />";
-    }
-    if ($row_part['price_cnt'] >= 3) {
-        $result .= "{$row_part['price3_title']} {$tags['price3']}<br />";
-    }
-    if ($tags['balance'] == '0') {
-        $result .= "<span class=\"balance\">Под заказ</span><br />";
+function get_image_filename($fname) {
+    global $IMG_ITEM_PATH, $settings;
+        
+    if (is_file($IMG_ITEM_PATH . $fname)) {
+        return get_item_image_url($fname, $settings["catalog_item_img_preview"]);
     } else {
-        $result .= "<span class=\"balance\">В наличии: {$tags['balance']}</span><br />";
+        return false;
     }
-    if ($tags['used_balance'] > 0) {
-        $result .= "<span class=\"used_balance\">В наличии Б/У: {$tags['used_balance']}</span><br />";
-    }
-    return $result;
-}*/
+}
 
 function detail_view_show_price() {
     global $row_part, $tags;
-    if( !get_prop_value(null,$tags,'price1') && get_prop_value(null,$tags,'price2')) {
+    if( !get_prop_value($tags,'price1') && get_prop_value($tags,'price2')) {
         $result = "{$row_part['price1_title']} {$tags['price']}<br />";
     } else {
-        if (get_prop_value(null,$tags,'price1')) {
-            $result .= get_prop_name($tags,'price1'). ': ' . get_prop_value(null,$tags,'price1') . "<br />";
+        if (get_prop_value($tags,'price1')) {
+            $result .= get_prop_name($tags,'price1'). ': ' . get_prop_value($tags,'price1') . "<br />";
         }
-        if (get_prop_value(null,$tags,'price2')) {
-            $result .= get_prop_name($tags,'price2'). ': ' . get_prop_value(null,$tags,'price2') . "<br />";
+        if (get_prop_value($tags,'price2')) {
+            $result .= get_prop_name($tags,'price2'). ': ' . get_prop_value($tags,'price2') . "<br />";
         }
     }
-    if (!get_prop_value(null,$tags,'balance_01') && !get_prop_value(null,$tags,'balance_02')) {
+    if (!get_prop_value($tags,'balance_01') && !get_prop_value($tags,'balance_02')) {
         $result .= "<span class=\"balance\">Под заказ</span><br />";
     } else {
-        if(get_prop_value(null,$tags,'balance_01')) {
-            $result .= "<span class=\"balance\">".get_prop_name($tags,'balance_01'). ': ' . get_prop_value(null,$tags,'balance_01')."</span><br />";
+        if(get_prop_value($tags,'balance_01')) {
+            $result .= "<span class=\"balance\">".get_prop_name($tags,'balance_01'). ': ' . get_prop_value($tags,'balance_01')."</span><br />";
         }
-        if(get_prop_value(null,$tags,'balance_02')) {
-            $result .= "<span class=\"balance\">".get_prop_name($tags,'balance_02'). ': ' . get_prop_value(null,$tags,'balance_02')."</span><br />";
+        if(get_prop_value($tags,'balance_02')) {
+            $result .= "<span class=\"balance\">".get_prop_name($tags,'balance_02'). ': ' . get_prop_value($tags,'balance_02')."</span><br />";
         }
     }
-    if (!get_prop_value(null,$tags,'balance_01_used') && !get_prop_value(null,$tags,'balance_02_used')) {
+    if (!get_prop_value($tags,'balance_01_used') && !get_prop_value($tags,'balance_02_used')) {
         $result .= "";
     } else {
-        if(get_prop_value(null,$tags,'balance_01_used')) {
-            $result .= "<span class=\"used_balance\">".get_prop_name($tags,'balance_01_used'). ': ' . get_prop_value(null,$tags,'balance_01_used')."</span><br />";
+        if(get_prop_value($tags,'balance_01_used')) {
+            $result .= "<span class=\"used_balance\">".get_prop_name($tags,'balance_01_used'). ': ' . get_prop_value($tags,'balance_01_used')."</span><br />";
         }
-        if(get_prop_value(null,$tags,'balance_02_used')) {
-            $result .= "<span class=\"used_balance\">".get_prop_name($tags,'balance_02_used'). ': ' . get_prop_value(null,$tags,'balance_02_used')."</span><br />";
+        if(get_prop_value($tags,'balance_02_used')) {
+            $result .= "<span class=\"used_balance\">".get_prop_name($tags,'balance_02_used'). ': ' . get_prop_value($tags,'balance_02_used')."</span><br />";
         }
     }
     return $result;
@@ -293,8 +284,8 @@ if ($input['get_popup_image_content']) {
  */
 
 
-if (strlen($input['item_title'])) {
-    $query = "select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.seo_alias='" . $input["item_title"] . "' order by b_code,title asc";
+if ($input['view_item']) {
+    $query = "select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='" . $input['view_item'] . "' order by b_code,title asc";
     $result = my_query($query);
     if ($result->num_rows) {
         $row = $result->fetch_array();
@@ -340,7 +331,7 @@ if (strlen($input['item_title'])) {
         $content .= my_msg_to_str('notice', [], 'Товар не найден');
     }
 
-    echo get_tpl_by_title($part['tpl_name'], $tags, "", $content);
+    echo get_tpl_default($tags, "", $content);
     exit;
 }
 
@@ -388,11 +379,9 @@ $content .= "</center></div>";
  * ====================================================================================
  */
 
-if (isset($row_part['descr'])) {
-    $content .= "<div class=part_descr>" . $row_part['descr'] . "</div>\n";
+if (isset($row_part['descr']) && strlen($row_part['descr'])) {
+    $tags['part_descr'] = $row_part['descr'];
 }
-
-
 if (!isset($_SESSION['catalog_page'])){
     $_SESSION['catalog_page'] = 1;
 }
@@ -400,43 +389,20 @@ if (isset($input['page'])) {
     $_SESSION['catalog_page'] = $input['page'];
 }
 list($total) = my_select_row("SELECT count(id) from cat_item where part_id='" . $current_part_id . "'", 1);
+
 $pager = new Pagination($total,$_SESSION["catalog_page"],$settings['catalog_items_per_page']);
-$list_href = get_cat_part_href($current_part_id);
-
-if($pager->getPagesCount() > 1) {        
-    $params=[
-        'pager' => $pager,
-        'main_route' => $list_href,
-        'route' => $list_href.'page{$page}/',
-    ];
-    $tags['pages_list'] = get_tpl_by_title('pager.html.twig', $params);        
-}
-
-$content .= $tags['pages_list'];
+$tags['pager'] = $pager;
 
 $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
         left join cat_item_images on (cat_item_images.id=default_img)"
         . (isset($input["show_all"]) ? "" : " where part_id='" . $current_part_id . "'") . " 
-        group by cat_item.id   
-        order by cat_item.id,b_code,title asc limit {$pager->getOffset()},{$pager->getLimit()}";
+        group by cat_item.num   
+        order by cat_item.num,b_code,title asc limit {$pager->getOffset()},{$pager->getLimit()}";
 $result = my_query($query, true);
 if ($result->num_rows) {
-    $content .= "<div id=cat_items>\n";
-    while ($row = $result->fetch_array()) {
-        $row['item_a'] = '<a href="' . $SUBDIR . get_cat_part_href($row['part_id']) . $row['seo_alias'] . '" title="' . $row['title'] . '">';
-        
-        // $row['special_offer_ins'] = ($row['special_offer'] ? "cat_item_special_offer" : "");
-        $row['special_offer_ins'] = (get_prop_value(null,$row,'special_offer') ? "cat_item_special_offer" : "");
-        // $row['novelty_ins'] = ($row['novelty'] ? "cat_item_novelty" : "");
-        $row['novelty_ins'] = (get_prop_value(null,$row,'novelty') ? "cat_item_novelty" : "");
-        
-        $URL=get_item_image_url($row['fname'], $settings["catalog_item_img_preview"]);
-        $row['default_image'] = (is_file($IMG_ITEM_PATH . $row['fname']) ? $row['item_a'] . "<img src=\"{$SUBDIR}{$URL}\" alt=\"{$row['title']}\"></a>" : "<br>Изображение отсутствует");
-        $row['descr'] = nl2br($row['descr']);
-        $row['price'] = ($row['price'] ? "Цена {$row['price']}" : "");
-        $content .= get_tpl_by_title('cat_item_list_view', $row, $result);
-    }
-    $content .= "</div>\n";
+    $tags['cat_part_href'] = get_cat_part_href($current_part_id);
+    $tags['functions'] = [];
+    $content .= get_tpl_by_title('cat_item_list_twig', $tags, $result);
 } elseif (($current_part_id) && (!$subparts)) {
     $content .= my_msg_to_str("list_empty");
 }
@@ -452,4 +418,4 @@ if ($current_part_id) {
 
 add_nav_item(isset($settings['catalog_header']) ? $settings['catalog_header'] : 'Магазин', null, true);
 
-echo get_tpl_by_title($part['tpl_name'], $tags, "", $content);
+echo get_tpl_default($tags, '', $content);

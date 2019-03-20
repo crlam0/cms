@@ -156,12 +156,6 @@ if ($input['added']) {
         }        
     }
 
-    if (!isset($input['form']['special_offer'])){
-        $input['form']['special_offer'] = 0;
-    }
-    if (!isset($input['form']['novelty'])){
-        $input['form']['novelty'] = 0;
-    }
     $input['form']['date_add']='now()';
     $input['form']['date_change']='now()';
     $query = "insert into cat_item " . db_insert_fields($input['form']);
@@ -266,8 +260,6 @@ if (($input['edit']) || ($input['add'])) {
     }
 
     $tags['price_inputs'] = "<tr class=content align=left><td>{$row_part['price1_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price] value=\"{$tags['price']}\"></td></tr>";
-    if ($row_part['price_cnt'] >= 2){ $tags['price_inputs'].="<tr class=content align=left><td>{$row_part['price2_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price2] value=\"{$tags['price2']}\"></td></tr>";}
-    if ($row_part['price_cnt'] >= 3){ $tags['price_inputs'].="<tr class=content align=left><td>{$row_part['price3_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price3] value=\"{$tags['price3']}\"></td></tr>";}
 
 //	$tags[images]=get_image_list($input["id"]);
 
@@ -287,14 +279,10 @@ $result = my_query($query);
 
 $row_part = my_select_row("select * from cat_part where id=" . $_SESSION['ADMIN_PART_ID'], 1);
 $tags['price_header']="<td width=10%>{$row_part['price1_title']}</td>";
-if ($row_part['price_cnt'] >= 2){ $tags['price_header'].="<td width=10%>{$row_part['price2_title']}</td>"; }
-if ($row_part['price_cnt'] >= 3){ $tags['price_header'].="<td width=10%>{$row_part['price3_title']}</td>"; }
 
 function price_content($tmp,$row){
     $row_part = my_select_row("select * from cat_part where id='{$_SESSION['ADMIN_PART_ID']}'", true);
     $content = "<td align=center>{$row['price']}</td>";
-    if ($row_part['price_cnt'] >= 2){ $content .= "<td align=center>{$row['price2']}</td>"; }
-    if ($row_part['price_cnt'] >= 3){ $content .= "<td align=center>{$row['price3']}</td>"; }
     return $content;
 }
 

@@ -297,10 +297,7 @@ $(document).ready(function(){
 		[%prev_id_select%]
 		</select>
 	</td></tr>
-	<tr class="content" align="left"><td>Колонок с ценами:</td><td><input class="form-control" type="edit" maxlength=1 size="16" name=form[price_cnt] value="[%price_cnt%]"></td></tr>
-	<tr class="content" align="left"><td>Колонка 1:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[price1_title] value="[%price1_title%]"></td></tr>
-	<tr class="content" align="left"><td>Колонка 2:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[price2_title] value="[%price2_title%]"></td></tr>
-	<tr class="content" align="left"><td>Колонка 3:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[price3_title] value="[%price3_title%]"></td></tr>
+	<tr class="content" align="left"><td>Цена:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[price1_title] value="[%price1_title%]"></td></tr>
 	<tr class="content" align="left"><td>Фиксированая ширина для фотографий товаров:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[item_image_width] value="[%item_image_width%]"></td></tr>
 	<tr class="content" align="left"><td>Фиксированая высота для фотографий товаров:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[item_image_height] value="[%item_image_height%]"></td></tr>
 	<tr class="content">

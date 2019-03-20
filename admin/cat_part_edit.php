@@ -166,10 +166,7 @@ if (($input['edit']) || ($input['adding'])) {
 	$tags['type'] = 'edited';
 	$tags['Header'] = 'Редактирование раздела';
     } else {
-	$tags['price_cnt'] = 1;
 	$tags['price1_title'] = 'Цена, руб.';
-	$tags['price2_title'] = 'Цена 2, руб.';
-	$tags['price3_title'] = 'Цена 3, руб.';
 	$tags['form_title'] = "Добавление";
 	$tags['type'] = "added";
 	$tags['Header'] = "Добавление раздела";

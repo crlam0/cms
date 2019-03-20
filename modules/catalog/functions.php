@@ -18,7 +18,7 @@ function get_cache_file_name($file_name, $max_width) {
     return 'var/cache/catalog/' . md5($file_name.$max_width) . '.jpeg';
 }
 
-function get_prop_value($tmp,$row,$name) {
+function get_prop_value($row,$name) {
     $props_values = [];
     if(strlen($row['props'])) {
         $props_values=json_decode($row['props'], true);
@@ -33,6 +33,26 @@ function get_prop_value($tmp,$row,$name) {
     }
     return false;
 }
+
+function get_props_array($row) {
+    $props_values = [];
+    if(strlen($row['props'])) {
+        $props_values=json_decode($row['props'], true);
+        if(json_last_error() != JSON_ERROR_NONE) {
+            print_debug(json_last_error_msg() . ' JSON: ' . $row['props']);
+            return false;
+        }
+        // echo $row['id'] . ': ' . $name .': '. $props_values[$name] . ' rere '. strlen($props_values[$name]) .'<br />';
+        
+        if(is_array($props_values)) {
+            return $props_values;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
+
 
 function get_prop_name($row,$name) {
     $query = "select items_props from cat_part where id='{$row['part_id']}'";
@@ -49,5 +69,6 @@ function get_prop_name($row,$name) {
     return false;
     
 }
+
 
 

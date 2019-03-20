@@ -22,12 +22,8 @@ if (isset($input['attr_name'])) {
         $query = "select props from cat_item where id='{$input['id']}'";
         $row = my_select_row($query, true);
         if($row){
-            if(strlen($row['props'])) {
-                $props_values=json_decode($row['props'], true);
-                if(json_last_error() != JSON_ERROR_NONE) {
-                    echo json_last_error_msg() . ' JSON: ' . $row['props'];
-                    exit;
-                }
+            if(!$props_values = my_json_decode($row['props'])) {
+                $props_values=[];
             }
             $props_values[$input['attr_name']] = $input['value'];
             $props_json = json_encode($props_values);

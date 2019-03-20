@@ -221,15 +221,7 @@ if ($input['view_item']) {
         if ($result->num_rows) {
             $tags['images'] = mysqli_fetch_all($result, MYSQLI_ASSOC);
         }
-    
-        $json = $row_part['related_products'];
-        if(strlen($json)>2) {
-            $related_products=json_decode($json, true);
-            if(json_last_error() != JSON_ERROR_NONE) {
-                add_to_debug(json_last_error_msg() . ' JSON: ' . $json);
-                $related_products=[];
-            }
-        } else {
+        if(!$related_products = my_json_decode($row_part['related_products'])) {
             $related_products=[];
         }
         if(count($related_products)) {

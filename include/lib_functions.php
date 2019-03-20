@@ -444,4 +444,26 @@ function clear_cache_dir($subdir = '') {
     }
 }
 
+/**
+ * Decode JSON to array.
+ *
+ * @param string $json Input string
+ *
+ * @return mixed Array if complete, false if error.
+ */
+function my_json_decode($json) {
+    if(strlen($json)) {
+        $result = json_decode($json, true);
+        if(json_last_error() != JSON_ERROR_NONE) {
+            add_to_debug( 'JSON decode error: ' . json_last_error_msg() . ' JSON: ' . $json);
+            return false;
+        }
+    } else {
+        return false;
+    }
+    return $result;
+}
+
+
+
 

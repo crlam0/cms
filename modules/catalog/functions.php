@@ -19,37 +19,21 @@ function get_cache_file_name($file_name, $max_width) {
 }
 
 function get_prop_value($row,$name) {
-    $props_values = [];
-    if(strlen($row['props'])) {
-        $props_values=json_decode($row['props'], true);
-        if(json_last_error() != JSON_ERROR_NONE) {
-            print_debug(json_last_error_msg() . ' JSON: ' . $row['props']);
-            return false;
-        }
+    if($props_values = my_json_decode($row['props'])) {
         $result = $props_values[$name];        
         return strlen($result)>0 ? $result : false;
     }
     return false;
 }
 
-function get_props_array($props) {
-    $props_values = [];
-    if(strlen($props)) {
-        $props_values=json_decode($props, true);
-        if(json_last_error() != JSON_ERROR_NONE) {
-            print_debug(json_last_error_msg() . ' JSON: ' . $props);
-            return false;
-        }
-        if(is_array($props_values)) {
-            foreach($props_values as $key => $value ){
-                if(!strlen($props_values[$key])) {
-                    unset($props_values[$key]);
-                }
+function get_props_array($props) {    
+    if($props_values = my_json_decode($props)) {
+        foreach($props_values as $key => $value ){
+            if(!strlen($props_values[$key])) {
+                unset($props_values[$key]);
             }
-            return $props_values;
-        } else {
-            return false;
         }
+        return $props_values;
     }
     return false;
 }
@@ -58,37 +42,23 @@ function get_props_array($props) {
 function get_prop_name($part_id,$name) {
     $query = "select items_props from cat_part where id='{$part_id}'";
     list($items_props) = my_select_row($query, true);
-    if(strlen($items_props)) {
-        $props_values=json_decode($items_props, true);
-        if(json_last_error() != JSON_ERROR_NONE) {
-            print_debug(json_last_error_msg() . ' JSON: ' . $items_props);
-            return false;
-        }
-        // echo $row['id'] . ': ' . $name .': '. $props_values[$name] .'<br />';
+    if($props_values = my_json_decode($items_props)) {
         return $props_values[$name]['name'];
     }
     return false;
-    
 }
 
 function get_prop_names_array($part_id) {
     $query = "select items_props from cat_part where id='{$part_id}'";
     list($items_props) = my_select_row($query, true);
-    if(strlen($items_props)) {
-        $props_values=json_decode($items_props, true);
-        if(json_last_error() != JSON_ERROR_NONE) {
-            print_debug(json_last_error_msg() . ' JSON: ' . $items_props);
-            return false;
-        }
-        // echo $row['id'] . ': ' . $name .': '. $props_values[$name] .'<br />';
+    if($props_values = my_json_decode($items_props)) {        
         $result=[];
         foreach($props_values as $name){
             // $result[$name]=$props_values[$name]['name'];
         }
         return $result;
     }
-    return false;
-    
+    return false;    
 }
 
 function get_item_image_url($file_name, $width, $fix_size=1) {

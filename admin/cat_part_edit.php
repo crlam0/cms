@@ -16,14 +16,8 @@ if (isset($input['part_id'])) {
     $item_id = intval($input['item_id']);
     $value = strlen($input['value']);
 
-    list($json) = my_select_row("select related_products from cat_part where id='{$part_id}'", true);
-    if(strlen($json)) {
-        $related_products=json_decode($json, true);
-        if(json_last_error() != JSON_ERROR_NONE) {
-            echo json_last_error_msg() . ' JSON: ' . $json;
-            exit;
-        }
-    } else {
+    list($json_row) = my_select_row("select related_products from cat_part where id='{$part_id}'", true);
+    if(!$related_products = my_json_decode($json_row)) {
         $related_products=[];
     }
     if($value>0) {
@@ -46,14 +40,7 @@ if (isset($input['part_id'])) {
 if($input['get_related_products_list']) {
     $content = '<input type="hidden" id="part_id" value="'.$input['id'].'"';
     list($json_row) = my_select_row("select related_products from cat_part where id='{$input['id']}'", true);
-    if(strlen($json_row)) {
-        $related_products=json_decode($json_row, true);
-        if(json_last_error() != JSON_ERROR_NONE) {
-            $json['result'] = json_last_error_msg() . ' JSON: ' . $json_row;
-            echo json_encode($json);
-            exit;
-        }
-    } else {
+    if(!$related_products = my_json_decode($json_row)) {
         $related_products=[];
     }
     $query = "SELECT id,title from cat_part order by num,title asc";

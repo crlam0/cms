@@ -73,7 +73,7 @@ class SQLHelper {
             echo 'SQL Error: '.$this->mysqli->error;
             if($settings['debug']){
                 echo '<br />Query is: '.$sql;
-                throw new \InvalidArgumentException('SQL Error: ' . $sql);
+                throw new \InvalidArgumentException('SQL Error: ' . $sql . ' Query is: ' . $sql);
             }
             exit();
         }
@@ -99,7 +99,7 @@ class SQLHelper {
     }
 
     /**
-     * Test field parameter for deny sql injections
+     * Test field parameter for deny SQL injections
      *
      * @param string $sql Input string
      *
@@ -110,28 +110,16 @@ class SQLHelper {
         if (is_array($str)) {
             return $str;
         }    
-        if (get_magic_quotes_gpc()){
-            $str=stripslashes($str);
-        }
         if(!strstr($server['PHP_SELF'], 'admin/')) {
             $str=htmlspecialchars($str);
-        }    
-        if($param=="title") { 
-            $str=str_replace("\"",'&quot;',$str);
-        }    
-        $str=str_replace("'","\\'",$str);
-        $str=str_replace("\"","\\\"",$str);
-    //    $str=mysql_real_escape_string($str);
-    //    echo $str."<br>";
-
+        }  
+        $str=$this->escape_string($str);
         foreach($this->DENIED_WORDS as $word) {
             if(stristr($str, $word)){
                 header($server['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
                 exit();
             }
         }
-
-        $str=str_replace("\\r\\n","",$str);
         return $str;
     }
     
@@ -154,7 +142,7 @@ class SQLHelper {
      *
      * @return string Complete string for query
      */
-    public function special_chars($field, $value) {
+    public function special_chars($value, $field = '') {
         if($field == 'title' || $field == 'name') {
             $value = htmlspecialchars($value);
         }
@@ -178,20 +166,20 @@ class SQLHelper {
             while (list($key, $value) = each($fields)) {
                 $a++;
                 if (is_array($value)){ 
-                    $value = implode(";", $value);
+                    $value = implode(';', $value);
                 }    
                 if ($a == $total) {
-                    $str = "";
+                    $str = '';
                 } else {
-                    $str = ",";
+                    $str = ',';
                 }
                 $str_fields.=$key . $str;
                 if(strstr($value,'date_format')){
-                    $str_values.=stripcslashes($value) . "$str";
+                    $str_values.=stripcslashes($value) . $str;
                 }else{
-                    $value=$this->special_chars($key, $value);
-                    $value=$this->mysqli->escape_string($value);
-                    $str_values.= ( $value == 'now()' ? "$value" . "$str" : "'$value'$str");
+                    $value=$this->special_chars($value, $key);
+                    // $value=$this->escape_string($value);
+                    $str_values.= ( $value == 'now()' ? $value . $str : "'$value'$str");
                 }    
             }
             $output = "({$str_fields}) VALUES({$str_values})";
@@ -225,8 +213,8 @@ class SQLHelper {
             if(strstr($value,'date_format')){
                 $output.="$key=".stripcslashes($value) . $str;
             }else{
-                $value=$this->special_chars($key, $value);
-                $value=$this->mysqli->escape_string($value);
+                $value=$this->special_chars($value, $key);
+                // $value=$this->escape_string($value);
                 $output.= ( $value == 'now()' ? "$key=$value" . $str : "$key='$value'$str");
             }    
         }

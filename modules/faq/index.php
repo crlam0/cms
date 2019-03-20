@@ -74,7 +74,9 @@ if ($input['added']) {
         $message.='IP: ' . $input['form']['ip'] . "\n";
         $message.="Сообщение: \n";
         $message.=str_replace('\r\n',"\n",$input['form']['txt']) . "\n";
-        send_mail($settings['email_to_addr'], 'На сайте http://' . $_SERVER['HTTP_HOST'] . $SUBDIR . ' оставлено новое сообщение.', $message);
+        if(!$settings['debug']){
+            send_mail($settings['email_to_addr'], 'На сайте http://' . $_SERVER['HTTP_HOST'] . $SUBDIR . ' оставлено новое сообщение.', $message);
+        }
         $list = 1;
     }
 }

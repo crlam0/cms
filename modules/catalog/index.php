@@ -206,7 +206,7 @@ if ($input['get_popup_image_content']) {
  */
 
 if ($input['view_item']) {
-    $query = "select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='" . $input['view_item'] . "' order by b_code,title asc";
+    $query = "select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='" . $input['view_item'] . "'";
     $result = my_query($query);
     if ($result->num_rows) {
         $row = $result->fetch_array();
@@ -225,11 +225,7 @@ if ($input['view_item']) {
             $related_products=[];
         }
         if(count($related_products)) {
-            $where_str='';
-            foreach ($related_products as $key => $value) {
-                $where_str.=$key.',';
-            }
-            $where_str=substr($where_str,0,strlen($where_str)-1);
+            $where_str=implode(',',array_keys($related_products));
             $query ="select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
                 left join cat_item_images on (cat_item_images.id=default_img)
                 where cat_item.id in (" . $where_str . ")

@@ -45,8 +45,6 @@ class BBCodeEditor {
     private function bb_parse($string) {
         global $mysqli;
         $string = strip_tags($string);
-        $string = $mysqli->real_escape_string($string);
-
         while (preg_match_all('`\[(.+?)=?(.*?)\](.+?)\[/\1\]`', $string, $matches))
             foreach ($matches[0] as $key => $match) {
                 list($tag, $param, $innertext) = array($matches[1][$key], $matches[2][$key], $matches[3][$key]);

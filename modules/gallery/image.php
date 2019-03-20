@@ -24,9 +24,9 @@ if ($input['icon'] && $settings['gallery_icon_width']) {
     $fix_size = true;
 }
 
-$max_width = get_max_width();
+$max_width = gallery_get_max_width();
 
-$cache_file_name = $DIR . get_cache_file_name($file_name, $max_width);
+$cache_file_name = $DIR . gallery_get_cache_file_name($file_name, $max_width);
 
 unset($src);
 if (($file_type == 'image/jpeg') || ($file_type == 'image/pjpeg')) {

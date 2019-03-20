@@ -83,73 +83,6 @@ if (isset($input['add_buy']) && $input['cnt']) {
 }
 
 
-
-
-function get_item_image_url($file_name, $width, $fix_size=1) {
-    global $DIR, $IMG_ITEM_PATH;
-    $cache_file_name = get_cache_file_name($IMG_ITEM_PATH . $file_name, $width);
-    if(is_file($DIR . $cache_file_name)) {
-        return $cache_file_name;
-    } else {
-        return "modules/catalog/image.php?file_name={$file_name}&preview={$width}&fix_size={$fix_size}";
-    }
-}
-
-function show_img($tmp, $row) {
-    global $IMG_ITEM_PATH, $IMG_ITEM_URL;
-    if (is_file($IMG_ITEM_PATH . $row['fname'])) {
-        return "<img src={$IMG_ITEM_URL}{$row['fname']} border=0>";
-    } else {
-        return 'Отсутствует';
-    }
-}
-
-function get_image_filename($fname) {
-    global $IMG_ITEM_PATH, $settings;
-        
-    if (is_file($IMG_ITEM_PATH . $fname)) {
-        return get_item_image_url($fname, $settings["catalog_item_img_preview"]);
-    } else {
-        return false;
-    }
-}
-
-function detail_view_show_price() {
-    global $row_part, $tags;
-    if( !get_prop_value($tags,'price1') && get_prop_value($tags,'price2')) {
-        $result = "{$row_part['price1_title']} {$tags['price']}<br />";
-    } else {
-        if (get_prop_value($tags,'price1')) {
-            $result .= get_prop_name($tags,'price1'). ': ' . get_prop_value($tags,'price1') . "<br />";
-        }
-        if (get_prop_value($tags,'price2')) {
-            $result .= get_prop_name($tags,'price2'). ': ' . get_prop_value($tags,'price2') . "<br />";
-        }
-    }
-    if (!get_prop_value($tags,'balance_01') && !get_prop_value($tags,'balance_02')) {
-        $result .= "<span class=\"balance\">Под заказ</span><br />";
-    } else {
-        if(get_prop_value($tags,'balance_01')) {
-            $result .= "<span class=\"balance\">".get_prop_name($tags,'balance_01'). ': ' . get_prop_value($tags,'balance_01')."</span><br />";
-        }
-        if(get_prop_value($tags,'balance_02')) {
-            $result .= "<span class=\"balance\">".get_prop_name($tags,'balance_02'). ': ' . get_prop_value($tags,'balance_02')."</span><br />";
-        }
-    }
-    if (!get_prop_value($tags,'balance_01_used') && !get_prop_value($tags,'balance_02_used')) {
-        $result .= "";
-    } else {
-        if(get_prop_value($tags,'balance_01_used')) {
-            $result .= "<span class=\"used_balance\">".get_prop_name($tags,'balance_01_used'). ': ' . get_prop_value($tags,'balance_01_used')."</span><br />";
-        }
-        if(get_prop_value($tags,'balance_02_used')) {
-            $result .= "<span class=\"used_balance\">".get_prop_name($tags,'balance_02_used'). ': ' . get_prop_value($tags,'balance_02_used')."</span><br />";
-        }
-    }
-    return $result;
-}
-
-
 function prev_part($prev_id, $deep, $arr) {
     $query = "SELECT id,title,prev_id from cat_part where id='$prev_id' order by title asc";
     $result = my_query($query);
@@ -292,41 +225,18 @@ if ($input['view_item']) {
         $item_id = $row['id'];
         $tags = array_merge($tags, $row);
 
-        $file_name = $IMG_ITEM_PATH . $row['fname'];
-        if (is_file($file_name)) {
-            $URL=get_item_image_url($row['fname'], $settings["catalog_item_img_preview"]);
-            $tags['default_image'] = "<img src=\"{$SUBDIR}{$URL}\" item_id={$row['id']} file_name={$row['fname']} image_id={$row['cat_item_images_id']} border=0 align=left class=cat_item_image_popup>";
-        } else {
-            $tags['default_image'] = 'Изображение отсутствует';
-        }
-
         $tags['Header'] = $row['title'];
         $tags['nav_str'] .= "<span class=nav_next>{$row['title']}</span>";
-        
         add_nav_item($row['title']);
-
-        $part_id = $row['part_id'];
 
         $query = "select * from cat_item_images where item_id='{$item_id}' and id<>'{$row['default_img']}' order by id asc";
         $result = my_query($query);
-        $tags['images'] = "<div style=\"width:100%;height:1px;float:left;\">&nbsp;</div>";
         if ($result->num_rows) {
-            $tags['images'] .= "<div class=item_images>";
-            while ($row = $result->fetch_array()){
-                $file_name = $IMG_ITEM_PATH . $row['fname'];
-                if (is_file($file_name)) {
-                    $URL=get_item_image_url($row['fname'], 50);
-                    $tags['images'] .= "<div class=image_item><img class=cat_images src=\"{$SUBDIR}{$URL}\" item_id={$item_id} file_name={$row['fname']} image_id={$row['id']} border=0></div>";
-                }
-            }
-            $tags['images'] .= "</div>";
+            $tags['images'] = mysqli_fetch_all($result, MYSQLI_ASSOC);
         }
 
-        $content .= get_tpl_by_title("cat_item_detail_view", $tags, $result);
-        $content .= "
-        <div class=cat_back>
-        <center><a href=" . $SUBDIR . get_cat_part_href($part_id) . " class=\"btn btn-default\"> << Назад</a></center>
-        </div>";
+        $content .= get_tpl_by_title('cat_item_view_twig', $tags, $result);
+        
     } else {
         $content .= my_msg_to_str('notice', [], 'Товар не найден');
     }
@@ -345,6 +255,7 @@ if ($input['view_item']) {
  * ====================================================================================
  */
 
+/*
 $content .= "<div id=\"cat_parts\"><center>";
 $subparts = 0;
 
@@ -369,7 +280,17 @@ function sub_part($prev_id, $deep, $max_deep) {
 
 sub_part($input['part_id'], 0, 0);
 $content .= "</center></div>";
+*/
 
+$query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='{$input['part_id']}' group by cat_part.id order by cat_part.num,cat_part.title asc";
+$result = my_query($query);
+
+if ($result->num_rows) {
+    $tags['functions'] = [];
+    $content .= get_tpl_by_title('cat_part_list_twig', $row, $result);
+} else {
+    $content .= my_msg_to_str("list_empty");
+}
 
 /*
  * ====================================================================================
@@ -409,11 +330,11 @@ if ($result->num_rows) {
 
 if ($current_part_id) {
     list($href_id) = my_select_row("select prev_id from cat_part where id='{$current_part_id}'", true);
-    $content .= "
-    <div class=cat_back>
-    <center><a href=" . $SUBDIR . get_cat_part_href($href_id) . " class=\"btn btn-default\"> << Назад</a></center>
+    $content .= '
+    <div class="cat_back">
+    <center><a href="' . $SUBDIR . get_cat_part_href($href_id) . '" class="btn btn-default"> << Назад</a></center>
     </div>
-    ";
+    ';
 }
 
 add_nav_item(isset($settings['catalog_header']) ? $settings['catalog_header'] : 'Магазин', null, true);

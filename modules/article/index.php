@@ -5,6 +5,8 @@ if(!isset($input)) {
 
 $tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";
 
+add_nav_item('Статьи', 'article/');
+
 if(file_exists($INC_DIR . 'dompdf/src/Autoloader.php')) {
     require_once $INC_DIR . 'dompdf/lib/html5lib/Parser.php';
     require_once $INC_DIR . 'dompdf/lib/php-font-lib/src/FontLib/Autoloader.php';
@@ -89,13 +91,9 @@ if ($view_article) {
     $result = my_query($query);
     $row = $result->fetch_array();
 
-    $tags['nav_str'].="<a href=" . $SUBDIR . "article/ class=nav_next>Статьи</a>";
     list($id, $title) = my_select_row("select id,title from article_list where id='{$row['list_id']}'", 1);
-    $tags['nav_str'].="<span class=nav_next><a href=\"".$SUBDIR.get_article_list_href($id)."\">$title</a></span>";
-    $tags['nav_str'].="<span class=nav_next>{$row['title']}</span>";
     $tags['Header'] = $row['title'];
 
-    add_nav_item('Статьи', 'article/');
     add_nav_item($title, get_article_list_href($id));
     add_nav_item($row['title']);
     
@@ -111,12 +109,9 @@ if ($view_items) {
     $query = "select * from article_item where list_id='{$view_items}'";
     $result = my_query($query, true);
     
-    $tags['nav_str'].="<a href=" . $server["PHP_SELF_DIR"] . " class=nav_next>Статьи</a>";
     list($title) = my_select_row("select title from article_list where id='{$view_items}'", 1);
-    $tags['nav_str'].="<span class=nav_next>$title</span>";
     $tags['Header'] = $title;
 
-    add_nav_item('Статьи', 'article/');
     add_nav_item($title);
 
     $content = get_tpl_by_title('article_items', $row, $result);
@@ -124,14 +119,10 @@ if ($view_items) {
     exit;
 }
 
-
 $tags['Header'] = 'Статьи';
 
 $query = "select * from article_list";
 $result = my_query($query, true);
-
-$tags['nav_str'].="<span class=nav_next>Статьи</span>";
-add_nav_item('Статьи');
 
 $content .= get_tpl_by_title('article_list', $row, $result);
 echo get_tpl_default($tags, null, $content);

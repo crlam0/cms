@@ -4,19 +4,26 @@ if(!isset($input)) {
 }
 $tags['Header'] = "Файлы";
 $tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/media.css" type="text/css" rel=stylesheet />'."\n";
-$tags['nav_str'].="<span class=nav_next><a href=\"{$SUBDIR}media/\">{$tags['Header']}</a></span>";
+
+add_nav_item('Файлы', 'media/');
 
 $view_files = '';
 $player_show = 0;
 
-if (isset($input["uri"])) {
-    $params = explode("/", $input["uri"]);
+use Classes\Pagination;
 
+if (isset($input['uri'])) {
+    $params = explode("/", $input['uri']);
+
+    /*
     $query = "select id from media_list where seo_alias like '" . $params[0] . "'";
     $result = my_query($query);
     list($view_files) = $result->fetch_array();
+     * 
+     */
+    $view_files = get_id_by_alias('media_list', $params[0], true);
     if (isset($params[1])) {
-        $media_page = $params[1];
+        $media_page = (int)$params[1];
     } else {
         $media_page = 1;
     }
@@ -33,7 +40,7 @@ if(!$input->count()){
 
 $player_num=0;
 
-function show_size($tmp, $row) {
+function show_size($row) {
     global $DIR, $settings, $SUBDIR, $player_num, $player_show, $server;
     $file_name = $settings['media_upload_path'] . $row['file_name'];
     $content='';
@@ -73,34 +80,23 @@ function show_size($tmp, $row) {
 }
 
 if ($view_files) {
-    list($PAGES) = my_select_row("SELECT ceiling(count(id)/{$settings['media_files_per_page']}) from media_files where list_id=" . $view_files, 1);
-    list($title,$list_descr) = my_select_row("select title,descr from media_list where id=" . $view_files, 1);
+    list($title,$list_descr) = my_select_row("select title,descr from media_list where id='" . $view_files . "'", true);
     $tags['Header'] = $title;
-    $tags['nav_str'].="<span class=nav_next>$title</span>";
-    add_nav_item('Файлы','media/');
     add_nav_item($title);
-
-    if ($PAGES > 1) {
-        $tags['pages_list'] = "<center>";
-        for ($i = 1; $i <= $PAGES; $i++) {
-            if ($i == $media_page) {
-                $tags['pages_list'].= "[ <b>$i</b> ]&nbsp;";
-            } else {
-                $tags['pages_list'].= "[ <a href=" . $SUBDIR . get_media_list_href($view_files) . "$i/>$i</a> ]&nbsp;";
-            }
-        }
-        $tags['pages_list'].="</center><br>";
-    }
-    $offset = $settings['media_files_per_page'] * ($media_page - 1);
-    $query = "SELECT * from media_files where list_id=" . $view_files . " order by num asc, date_add desc limit $offset,$settings[media_files_per_page]";
+    
+    $tags['media_list_href'] = get_media_list_href($view_files);
+    $tags['list_descr'] = $list_descr;
+    
+    list($total) = my_select_row("SELECT count(id) from media_files where list_id='" . $view_files . "'", true);
+    $pager = new Pagination($total, $media_page, $settings['media_files_per_page']);
+    $tags['pager'] = $pager;
+    
+    $query = "SELECT * from media_files where list_id=" . $view_files . " order by num asc, id asc limit {$pager->getOffset()},{$pager->getLimit()}";
     $result = my_query($query, true);
     if (!$result->num_rows) {
-        $content = my_msg_to_str("list_empty", $tags, "");
+        $content = my_msg_to_str('list_empty', $tags, '');
     } else {
-        if(strlen($list_descr) > 0){
-            $tags['list_descr'] = '<div class="list_descr">' . $list_descr . '</div>';
-        }
-        $content = get_tpl_by_title("media_files_table", $tags, $result);
+        $content = get_tpl_by_title("media_files_list", $tags, $result);
     }
     if($player_num>0){
         $tags['INCLUDE_HEAD'].='<script src="'.$SUBDIR.'modules/media/player/mediaelement-and-player.min.js"></script>
@@ -109,7 +105,7 @@ if ($view_files) {
         $content.="<script>$('audio,video').mediaelementplayer();</script>";
     }    
     
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_default($tags, '', $content);
     exit();
 }
 
@@ -119,12 +115,10 @@ left join media_files on (media_files.list_id=media_list.id)
 group by media_list.id order by media_list.date_add desc";
 $result = my_query($query, true);
 if (!$result->num_rows) {
-    $content = my_msg_to_str("part_empty");
+    $content = my_msg_to_str('part_empty');
 } else {
-    $content = get_tpl_by_title("media_list_table", $tags, $result);
+    $content = get_tpl_by_title('media_part_list', $tags, $result);
 }
 
-add_nav_item('Файлы', null, true);
-
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+echo get_tpl_default($tags, '', $content);
 

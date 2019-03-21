@@ -19,7 +19,7 @@ class SQLHelper {
     /**
     * @var Array Array of denied words for input strings
     */
-    private $DENIED_WORDS=array('union','insert','update ','delete ','alter ','drop ','\$_[','<?php','javascript');
+    private $DENIED_WORDS=array('union','insert','update ','delete ','alter ','drop ','\$_[','<?php','<script','javascript');
     
     /**
      * Connect to database
@@ -106,15 +106,14 @@ class SQLHelper {
      * @return string Output string
      */
     public function test_param($str,$param='') {
-        global $server;
+        global $_SERVER;
         if (is_array($str)) {
             foreach ($str as $key => $value) {
-                $str[$key]=$this->escape_string($value);
-                // $str[$key]=$this->test_param($value);
+                $str[$key]=$this->test_param($value);
             }
             return $str;
         }    
-        if(!strstr($server['PHP_SELF'], 'admin/')) {
+        if(!strstr($_SERVER['PHP_SELF'], 'admin/')) {
             $str=htmlspecialchars($str);
         }  
         $str=$this->escape_string($str);

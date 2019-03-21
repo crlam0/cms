@@ -74,7 +74,7 @@ final class Routing {
                     if($key==0){
                         $file=$route['file'];
                     } elseif (array_key_exists('params', $route)) {
-                        $input[$route['params'][$key]]=htmlspecialchars($value);
+                        $input[$route['params'][$key]]=MyGlobal::get('DB')->test_param($value);
                     }
                 }
                 break;

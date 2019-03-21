@@ -95,7 +95,6 @@ function prev_part($prev_id, $deep, $arr) {
     return $arr;
 }
 
-$tags['nav_str'] .= "<span class=nav_next><a href=\"" . $SUBDIR . "catalog/\" class=top>{$tags['Header']}</a></span>";
 if ($current_part_id) {
     add_nav_item(isset($settings['catalog_header']) ? $settings['catalog_header'] : 'Магазин', 'catalog/');
     $arr = prev_part($current_part_id, 0, array());
@@ -105,11 +104,9 @@ if ($current_part_id) {
     while (list ($n, $row) = @each($arr)) {
         $current_part_deep++;
         if (($n < $max_size) || (strlen($input['item_title']))) {
-            $tags['nav_str'] .= "<span class=nav_next><a href=" . $SUBDIR . get_cat_part_href($row['id']) . ">{$row['title']}</a></span>";
             add_nav_item($row['title'],get_cat_part_href($row['id']));
             $tags['Header'] .= " - {$row['title']}";
         } else {
-            $tags['nav_str'] .= "<span class=nav_next>{$row['title']}</span>";
             add_nav_item($row['title']);
         }
     }
@@ -213,7 +210,6 @@ if ($input['view_item']) {
         $tags = array_merge($tags, $row);
 
         $tags['Header'] = $row['title'];
-        $tags['nav_str'] .= "<span class=nav_next>{$row['title']}</span>";
         add_nav_item($row['title']);
 
         $query = "select * from cat_item_images where item_id='{$row['id']}' and id<>'{$row['default_img']}' order by id asc";
@@ -294,7 +290,7 @@ if ($result->num_rows) {
     $tags['functions'] = [];
     $content .= get_tpl_by_title('cat_item_list_twig', $tags, $result);
 } elseif (($current_part_id) && (!$subparts)) {
-    $content .= my_msg_to_str("list_empty");
+    $content .= my_msg_to_str('list_empty');
 }
 
 if ($current_part_id) {

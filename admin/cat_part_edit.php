@@ -194,7 +194,7 @@ if ($input["added"]) {
     }
 }
 
-if ($input['edited']) {    
+if ($input['edited']) {
     if(isset($input['form']['prev_id']) && $input['form']['prev_id'] == $input['id']) {
         $input['form']['prev_id'] = 0;
     }

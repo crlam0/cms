@@ -2,20 +2,17 @@
     <head>
         <title>[%settings(site_title)%] > Адм. раздел > [%Header%]</title>
         <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-        <meta name="keywords" content="[%settings(base_keywords)%]">
-        <meta name="description" content="Admin's part of BooT's site">
+        <meta name="keywords" content="">
+        <meta name="description" content="">
         <!-- Bootstrap core CSS -->
         <link href="[%SUBDIR%]admin/bootstrap.min.css" rel="stylesheet" />
         <link href="[%SUBDIR%]admin/admin.css" rel="stylesheet" />
         <link rel="icon" type="image/png" href="[%BASE_HREF%]favicon.png" />
+        <script type="text/javascript" src="[%BASE_HREF%]include/js/jquery.min.js"></script>        
         [%INCLUDE_HEAD%]
-        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
+        
 </head>
-    <body bgcolor="#ffffff">
+    <body bgcolor="#fff">
 <div class="modal fade modal-wide" id="myModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">

@@ -9,10 +9,27 @@ if ($input['del']) {
     my_query($query, true);
 }
 
+function twig_tpl_load($filename){
+    global $DIR;
+    $filename = $DIR . 'templates/' . $filename;
+    if(file_exists($filename)) {
+        return file_get_contents($filename);
+    } else {
+        return '';
+    }    
+}
+
+function twig_tpl_save($filename, $content){
+    global $DIR;
+    $filename = $DIR . 'templates/' . $filename;
+    return file_put_contents($filename, $content);
+}
+
+
 if ($input['add']) {
-    $input['content'] = str_replace('text_area', 'textarea', $input['content']);
     $query = "insert into templates " . db_insert_fields($input['form']);
     my_query($query, true);
+    $input['view'] = $mysqli->insert_id;    
 }
 
 if($input['revert']){
@@ -21,7 +38,6 @@ if($input['revert']){
 }
 
 if ($input['edit']) {
-    $input['form']['content'] = str_replace('text_area', 'textarea', $input['form']['content']);
     $query = "update templates set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
     if($input['update']){
@@ -36,6 +52,10 @@ if (($input['view']) || ($input['adding'])) {
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags['type'] = 'edit';
 	$tags['form_title'] = 'Редактирование';
+        if($tags['template_type']==='twig') {
+            $tags['content'] = twig_tpl_load($tags['file_name']);
+        }
+        
     } else {
 	$tags['type'] = 'add';
 	$tags['form_title'] = 'Добавление';

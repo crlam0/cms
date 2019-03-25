@@ -280,8 +280,8 @@ $pager = new Pagination($total,$_SESSION["catalog_page"],$settings['catalog_item
 $tags['pager'] = $pager;
 
 $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
-        left join cat_item_images on (cat_item_images.id=default_img)"
-        . (isset($input["show_all"]) ? "" : " where part_id='" . $current_part_id . "'") . " 
+        left join cat_item_images on (cat_item_images.id=default_img)
+        where part_id='" . $current_part_id . "'
         group by cat_item.num   
         order by cat_item.num,b_code,title asc limit {$pager->getOffset()},{$pager->getLimit()}";
 $result = my_query($query, true);

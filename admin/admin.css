@@ -102,6 +102,12 @@ a.button {
     line-height: 30px;
     font-size: 90%;
 }
+
+a.btn {
+    text-decoration: none;
+    margin-top: 5px;
+}
+
 img.margin {
     margin: 5px;
 }

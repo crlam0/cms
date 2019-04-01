@@ -283,13 +283,14 @@ $(document).ready(function(){
 <input type="hidden" name=[%type%] value=1>
 <table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
 	<tr class=header><td colspan="2">[%form_title%]</td></tr>
-	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[title] value="[%title%]"></td></tr>
+	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[title] value="[%title%]" autofocus></td></tr>
 	<tr class="content" align="left"><td>Позиция:</td><td><input class="form-control" type="edit" maxlength=45 size="64" name=form[num] value="[%num%]"></td></tr>
 	<tr class="content" align="left"><td>Алиас:</td><td><input class="form-control" type="edit" maxlength=45 size="64" name=form[seo_alias] value="[%seo_alias%]"></td></tr>
 	<tr class=header><td colspan="2">Описание :</td></tr>
 	<tr class="content"><td align="left" colspan="2">
 		<textarea class="form-control" rows=15 cols=100 id=editor maxlength=64000 name=form[descr]>[%descr%]</textarea>
 	</td></tr>
+	<tr class=header align="left"><td align="center" colspan="2"><input class="btn btn-primary" type="submit" value="  Сохранить  "></td></tr>
 	<tr class=header><td colspan="2">Прочее :</td></tr>
 	<tr class="content" align="left"><td>Находится в разделе:</td><td>
 		<select class="form-control" name=form[prev_id]>
@@ -305,7 +306,6 @@ $(document).ready(function(){
 		<td>Картинка:</td>
 		<td align="center">[%img_tag%][%del_button%]<br>Загрузить: <input class="form-control" name="img_file" type="file"><br></td>
 	</tr>
-	<tr class=header align="left"><td align="center" colspan="2"><input class="btn btn-primary" type="submit" value="  Сохранить  "></td></tr>
 	<tr class="header"><td colspan=2>Properties (изменять если вы ТОЧНО знаете что делаете):</td></tr>
 	<tr class="content"><td align="left" colspan=2>
 		<textarea class="form-control" rows="15" cols="100" id="editor_html" maxlength="64000" name="form[items_props]">[%items_props%]</textarea>

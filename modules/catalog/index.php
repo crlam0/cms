@@ -290,7 +290,7 @@ if ($result->num_rows) {
     $tags['functions'] = [];
     $content .= get_tpl_by_title('cat_item_list_twig', $tags, $result);
 } elseif (($current_part_id) && (!$subparts)) {
-    $content .= my_msg_to_str('list_empty');
+    // $content .= my_msg_to_str('list_empty');
 }
 
 if ($current_part_id) {

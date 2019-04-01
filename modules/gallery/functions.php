@@ -28,7 +28,7 @@ function show_img($tmp, $row) {
     if (is_file($file_name)) {        
         $content='';
         $input['preview']=true;
-        $cache_file_name = gallery_get_cache_file_name($file_name, get_max_width());
+        $cache_file_name = gallery_get_cache_file_name($file_name, gallery_get_max_width());
         if(is_file($DIR . $cache_file_name)) {
             $URL=$cache_file_name;
         } else {

@@ -96,23 +96,26 @@ class Comments
     public function get_form_data($input){
         global $server,$SUBDIR,$settings;
         if ($input['add_comment']) { 
-            $err = 0;
+            $err = false;
             $output = '';
-            if (!isset($input['form']['author']) || strlen($input['form']['author']) < 3) {
+            if (!check_csrf_token()) {
+                $output.=my_msg_to_str('error', [] ,'CSRF Error');
+                $err = true;
+            } elseif (!isset($input['form']['author']) || strlen($input['form']['author']) < 3) {
                 $output.=my_msg_to_str('form_error_name');
-                $err = 1;
+                $err = true;
             } elseif (!isset($input['form']['email']) || !preg_match('/^[A-Za-z0-9-_]+@[A-Za-z0-9-\.]+\.[A-Za-z0-9-\.]{2,3}$/', $input['form']['email'])) {
                 $output.=my_msg_to_str('form_error_email');
-                $err = 1;
+                $err = true;
             } elseif (strlen($this->__editor->GetValue()) < 10) {
                 $output.=my_msg_to_str('form_error_msg_too_short');
-                $err = 1;
+                $err = true;
             } elseif (strlen($this->__editor->GetValue()) > 512) {
                 $output.=my_msg_to_str('form_error_msg_too_long');
-                $err = 1;
+                $err = true;
             } elseif ( ($input['img_code'] != $_SESSION['IMG_CODE']) && (!$settings['debug']) ) {
                 $output.=my_msg_to_str('form_error_code');
-                $err = 1;
+                $err = true;
             }
             if ( $err ) {
                 $this->__new_form = false;

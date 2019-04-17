@@ -374,6 +374,30 @@ function user_encrypt_password($passwd, $salt) {
     }
 }
 
+/**
+ * Return CSRF token value from session. 
+ *
+ * @return string Output string
+ */
+function get_csrf_token() {
+    global $_SESSION;
+    if(!check_key('CSRF_Token',$_SESSION)) {
+        $token = user_encrypt_password(user_generate_salt(), user_generate_salt());
+        $_SESSION['CSRF_Token'] = $token;
+    }
+    return $_SESSION['CSRF_Token'];
+}
+
+/**
+ * Compare CSRF token from session and input. 
+ *
+ * @return string Output string
+ */
+function check_csrf_token() {
+    global $input, $_SESSION;
+    return $input['CSRF_Token'] === $_SESSION['CSRF_Token'];
+}
+
 
 /**
  * Return block content (for Twig templates)

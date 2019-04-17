@@ -11,6 +11,9 @@ if ($input['del']) {
 
 function twig_tpl_load($filename){
     global $DIR;
+    if(!strstr($filename,'.html.twig')) {
+        $filename.='.html.twig';
+    }
     $filename = $DIR . 'templates/' . $filename;
     if(file_exists($filename)) {
         return file_get_contents($filename);
@@ -21,15 +24,12 @@ function twig_tpl_load($filename){
 
 function twig_tpl_save($filename, $content){
     global $DIR;
+    if(!strstr($filename,'.html.twig')) {
+        $filename.='.html.twig';
+    }
     $filename = $DIR . 'templates/' . $filename;
+    $content = stripcslashes($content);
     return file_put_contents($filename, $content);
-}
-
-
-if ($input['add']) {
-    $query = "insert into templates " . db_insert_fields($input['form']);
-    my_query($query, true);
-    $input['view'] = $mysqli->insert_id;    
 }
 
 if($input['revert']){
@@ -37,7 +37,24 @@ if($input['revert']){
     $input['view']=1;
 }
 
-if ($input['edit']) {
+if ($input['add']) {
+    if($input['form']['template_type']==='twig' && strlen($input['form']['file_name'])) {
+        if(!twig_tpl_save($input['form']['file_name'],$input['form']['content'])) {
+            $content.=my_msg_to_str('error', '', 'Ошибка сохранения файла шаблона.');
+        }
+    }    
+    $query = "insert into templates " . db_insert_fields($input['form']);
+    my_query($query, true);
+    $input['view'] = true;
+    $input['id'] = $mysqli->insert_id;    
+}
+
+if ($input['edit']) {    
+    if($input['form']['template_type']==='twig' && strlen($input['form']['file_name'])) {
+        if(!twig_tpl_save($input['form']['file_name'],$input['form']['content'])) {
+            $content.=my_msg_to_str('error', '', 'Ошибка сохранения файла шаблона.');
+        }
+    }    
     $query = "update templates set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
     if($input['update']){
@@ -52,17 +69,15 @@ if (($input['view']) || ($input['adding'])) {
 	$tags = array_merge($tags, $result->fetch_array());
 	$tags['type'] = 'edit';
 	$tags['form_title'] = 'Редактирование';
-        if($tags['template_type']==='twig') {
+        if($tags['template_type']==='twig' && strlen($tags['file_name'])) {
             $tags['content'] = twig_tpl_load($tags['file_name']);
-        }
-        
+        }        
     } else {
 	$tags['type'] = 'add';
 	$tags['form_title'] = 'Добавление';
 	$tags['content'] = '';
 	$tags['template_type'] = 'my';
     }
-    $tags['content'] = str_replace('textarea', 'text_area', $tags['content']);
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_HTML_INC;
     $tags['template_type_select'] = 
             '<option value="my"'.($tags['template_type']==='my' ? ' selected' : '').'>My</option>' . 

@@ -114,10 +114,9 @@ class SQLHelper {
             return $str;
         }    
         if(!strstr($_SERVER['PHP_SELF'], 'admin/')) {
-            $str=htmlspecialchars($str);
-        }  
-        $str=$this->escape_string($str);
-        
+            $str=htmlspecialchars($str);            
+        }
+        $str=$this->escape_string($str);        
         foreach($this->DENIED_WORDS as $word) {
             if(stristr($str, $word)){
                 header($server['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);

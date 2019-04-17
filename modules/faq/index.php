@@ -40,28 +40,31 @@ if (!$input->count()){
 }
 
 if ($input['added']) {
-    $err = 0;
+    $err = false;
     $input['form']['txt'] = $editor->GetValue();
-    if (strlen($input['form']['author']) < 3) {
+    if (!check_csrf_token()) {
+        $content.=my_msg_to_str('error', [] ,'CSRF Error');
+        $err = true;
+    } elseif (strlen($input['form']['author']) < 3) {
         $content.=my_msg_to_str('form_error_name');
-        $err = 1;
+        $err = true;
     } elseif (!preg_match("/^[A-Za-z0-9-_\.]+@[A-Za-z0-9-\.]+\.[A-Za-z0-9-\.]{2,3}$/", $input['form']['email'])) {
         $content.=my_msg_to_str('form_error_email');
-        $err = 1;
+        $err = true;
     } elseif (strlen($input['form']['txt']) < 10) {
         $content.=my_msg_to_str('form_error_msg_too_short');
-        $err = 1;
+        $err = true;
     } elseif (strlen($input['form']['txt']) > 512) {
         $content.=my_msg_to_str('form_error_msg_too_long');
-        $err = 1;
+        $err = true;
     } elseif (($code_err) || (!isset($input['send_img_code']))) {
         $content.=my_msg_to_str('form_error_code');
         if(!$settings['debug']){
-            $err = 1;
+            $err = true;
         }
     }
     if ($err) {
-        $input['add'] = 1;
+        $input['add'] = true;
     } else {
         $input['form']['ip'] = $server["REMOTE_ADDR"];
         $input['form']['date'] = 'now()';
@@ -85,7 +88,7 @@ if ($input['add']) {
     if (is_array($input['form'])) {
         $data = $input['form'];
         $tags = array_merge($tags, $data);
-        $editor->SetValue($input['form']['txt']);
+        $editor->SetValue(stripcslashes($input['form']['txt']));
     }
     $tags['editor'] = $editor->GetContol(400, 200, '../images/bbcode_editor');
     $content.=get_tpl_by_title('faq_edit_form', $tags);

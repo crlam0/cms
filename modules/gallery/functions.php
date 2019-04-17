@@ -48,7 +48,7 @@ function show_list_img($tmp, $row) {
     $file_name = $DIR . $settings['gallery_upload_path'] . $row_image['file_name'];
     if ($file_name) {
         $input['icon']=true;
-        $cache_file_name = gallery_get_cache_file_name($file_name, get_max_width());
+        $cache_file_name = gallery_get_cache_file_name($file_name, gallery_get_max_width());
         if(is_file($DIR . $cache_file_name)) {
             $URL=$cache_file_name;
         } else {

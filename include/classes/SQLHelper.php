@@ -119,7 +119,7 @@ class SQLHelper {
         $str=$this->escape_string($str);        
         foreach($this->DENIED_WORDS as $word) {
             if(stristr($str, $word)){
-                header($server['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
+                header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
                 exit();
             }
         }

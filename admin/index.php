@@ -21,7 +21,7 @@ if(file_exists($sitemap)){
     $time_diff=time()-filemtime($sitemap);
 }
 
-if($time_diff>7*24*60*60){
+if(!isset($time_diff) || $time_diff>7*24*60*60){
     $content.=my_msg_to_str('','','Файл sitemap.xml не обновлялся более недели.');
     $sitemap= new Sitemap();
     $types = explode(';', $settings['sitemap_types']);

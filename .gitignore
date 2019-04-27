@@ -7,11 +7,13 @@
 
 /package.json
 /package-lock.json
+/yarn.lock
 
 /*.cmd
 /*.html
 /*.sql
 /*.tpl
+/*.sh
 
 /src/
 /var/

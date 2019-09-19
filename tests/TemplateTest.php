@@ -2,7 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 use Classes\Template;
-use Classes\Blocks;
 
 require_once 'tests/bootstrap.php';
 
@@ -13,8 +12,7 @@ class TemplateTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $BlocksObject = new Blocks();
-        $this->Template = new Template($BlocksObject);
+        $this->Template = new Template();
     }
 
     public function testFileParse()
@@ -25,8 +23,8 @@ class TemplateTest extends TestCase
     
     public function testSQLParse()            
     {
-        $content=$this->Template->get_tpl_by_title('blog_post');
-        self::assertStringStartsWith('<div class=post_wrapper>', $content);
+        $content=$this->Template->get_tpl_by_title('user_login_promt');
+        self::assertStringStartsWith('<div class="center-block" align="center">', $content);
     }
     
 }

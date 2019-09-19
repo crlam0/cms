@@ -10,10 +10,10 @@ if(file_exists($INC_DIR.'classes/BlocksLocal.php')) {
 } else {
     $BlocksObject = new Blocks();
 }
-MyGlobal::set('Blocks', $BlocksObject );
+MyGlobal::set('Blocks', $BlocksObject);
 
-$Template = new Template($BlocksObject);
-MyGlobal::set('Template', $Template );
+$Template = new Template();
+MyGlobal::set('Template', $Template);
 
 
 /**

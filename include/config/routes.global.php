@@ -2,11 +2,11 @@
 
 return [
     'login' => [
-        'pattern' => '^login\/$',
+        'pattern' => '^login\/?$',
         'file' => 'modules/misc/login.php'
     ],    
     'logout' => [
-        'pattern' => '^logout\/$',
+        'pattern' => '^logout\/?$',
         'file' => 'modules/misc/logout.php'
     ],    
     'passwd_change' => [
@@ -14,11 +14,11 @@ return [
         'file' => 'modules/misc/passwd_change.php'
     ],    
     'search' => [
-        'pattern' => '^search\/$',
+        'pattern' => '^search\/?$',
         'file' => 'modules/misc/search.php'
     ],    
     'request' => [
-        'pattern' => '^request\/$',
+        'pattern' => '^request\/?$',
         'file' => 'modules/misc/request.php'
     ],    
     'request_php' => [
@@ -35,30 +35,31 @@ return [
         ]
     ],    
     'article' => [
-        'pattern' => '^article\/$',
+        'pattern' => '^article\/?$',
         'file' => 'modules/article/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
     'article_uri' => [
-        'pattern' => '^article\/(.*)\/$',
+        'pattern' => '^article\/(.*)\/?$',
         'file' => 'modules/article/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
     'blog_uri' => [
-        'pattern' => '^blog\/(.*)\/$',
+        'pattern' => '^blog\/(.*)\/?$',
         'file' => 'modules/blog/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
     'blog' => [
-        'pattern' => '^blog\/$',
+        'pattern' => '^blog\/?$',
         'file' => 'modules/blog/index.php',
     ],    
+    
     'faq_uri' => [
         'pattern' => '^faq\/(.*)\/$',
         'file' => 'modules/faq/index.php',
@@ -70,12 +71,13 @@ return [
         'pattern' => '^faq\/.*$',
         'file' => 'modules/faq/index.php',
     ],    
+    
     'gallery' => [
-        'pattern' => '^gallery\/$',
+        'pattern' => '^gallery\/?$',
         'file' => 'modules/gallery/index.php',
     ],    
     'gallery_uri' => [
-        'pattern' => '^gallery\/(.*)\/$',
+        'pattern' => '^gallery\/(.*)\/?$',
         'file' => 'modules/gallery/index.php',
         'params' => [
             '1' => 'uri',
@@ -88,15 +90,16 @@ return [
             '1' => 'uri',
         ]
     ],    
+    
     'media' => [
-        'pattern' => '^media\/$',
+        'pattern' => '^media\/?$',
         'file' => 'modules/media/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
     'media_uri' => [
-        'pattern' => '^media\/(.*)\/$',
+        'pattern' => '^media\/(.*)\/?$',
         'file' => 'modules/media/index.php',
         'params' => [
             '1' => 'uri',
@@ -104,22 +107,22 @@ return [
     ],    
     
     'news' => [
-        'pattern' => '^news\/$',
+        'pattern' => '^news\/?$',
         'file' => 'modules/news/index.php',
     ],    
     'news_uri' => [
-        'pattern' => '^news\/(.*)\/$',
+        'pattern' => '^news\/(.*)\/?$',
         'file' => 'modules/news/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
     'offers' => [
-        'pattern' => '^offers\/$',
+        'pattern' => '^offers\/?$',
         'file' => 'modules/offers/index.php',
     ],    
     'offers_uri' => [
-        'pattern' => '^offers\/(.*)\/$',
+        'pattern' => '^offers\/(.*)\/?$',
         'file' => 'modules/offers/index.php',
         'params' => [
             '1' => 'uri',

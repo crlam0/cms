@@ -25,13 +25,10 @@
 
 namespace Classes;
 
-class MyTemplate {
-    private $Blocks;
-    
-    public function __construct($Blocks) {
-        $this->Blocks = $Blocks;
-    }
-    
+use Classes\MyGlobal;
+
+class MyTemplate {    
+
     /**
      * Parse one string from template
      *
@@ -140,7 +137,7 @@ class MyTemplate {
                         return "";
                     }
                 } elseif ($tagclass == 'block') {
-                    $replace_str = $this->Blocks->content($tagparam);
+                    $replace_str = MyGlobal::get('Blocks')->content($tagparam);
                 } elseif (($tagclass == 'inner_content') && (strlen($inner_content))) {
                     $replace_str = $inner_content;
                 } elseif (isset($tags[$tagclass])) {

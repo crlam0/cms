@@ -8,15 +8,12 @@ use Classes\TwigTemplate;
 use Classes\MyGlobal;
 
 class Template {
-    private $BlocksObject;
     private $MyTemplate;
     private $TwigTemplate;
     
-    public function __construct ($BlocksObject) {
+    public function __construct () {
         global $settings;
-        
-        $this->BlocksObject = $BlocksObject;
-        $this->MyTemplate = new MyTemplate($this->BlocksObject);
+        $this->MyTemplate = new MyTemplate();
         $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => $settings['debug']]);
     }
 

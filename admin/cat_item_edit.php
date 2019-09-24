@@ -259,7 +259,7 @@ if (($input['edit']) || ($input['add'])) {
         $tags['novelty'] = ' checked';
     }
 
-    $tags['price_inputs'] = "<tr class=content align=left><td>{$row_part['price1_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price] value=\"{$tags['price']}\"></td></tr>";
+    $tags['price_inputs'] = "<tr class=content align=left><td>{$row_part['price_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price] value=\"{$tags['price']}\"></td></tr>";
 
 //	$tags[images]=get_image_list($input["id"]);
 
@@ -278,7 +278,7 @@ where part_id='{$_SESSION['ADMIN_PART_ID']}' order by num,cat_item.id,title asc"
 $result = my_query($query);
 
 $row_part = my_select_row("select * from cat_part where id=" . $_SESSION['ADMIN_PART_ID'], 1);
-$tags['price_header']="<td width=10%>{$row_part['price1_title']}</td>";
+$tags['price_header']="<td width=10%>{$row_part['price_title']}</td>";
 
 function price_content($tmp,$row){
     $row_part = my_select_row("select * from cat_part where id='{$_SESSION['ADMIN_PART_ID']}'", true);

@@ -18,8 +18,6 @@ $DB = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
 $mysqli=$DB->mysqli;
 
-$GLOBALS['DB'] = $DB;
-
 MyGlobal::set('DB', $DB );
 
 /**

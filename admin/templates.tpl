@@ -298,7 +298,7 @@ $(document).ready(function(){
 		[%prev_id_select%]
 		</select>
 	</td></tr>
-	<tr class="content" align="left"><td>Цена:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[price1_title] value="[%price1_title%]"></td></tr>
+	<tr class="content" align="left"><td>Цена:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[price_title] value="[%price_title%]"></td></tr>
 	<tr class="content" align="left"><td>Фиксированая ширина для фотографий товаров:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[item_image_width] value="[%item_image_width%]"></td></tr>
 	<tr class="content" align="left"><td>Фиксированая высота для фотографий товаров:</td><td><input class="form-control" type="edit" maxlength="255" size="16" name=form[item_image_height] value="[%item_image_height%]"></td></tr>
         <tr class="content" align="left"><td>Сопутствующие товары:</td><td><button class="btn btn-default" part_id="[%id%]" id="related_products">Показать список</button></td></tr>

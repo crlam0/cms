@@ -105,8 +105,10 @@ require $INC_DIR.'lib_functions.php';
 require $INC_DIR.'lib_url.php';
 add_to_debug('Library loaded');
 
-require_once $INC_DIR.'lib_stats.php';
-add_to_debug('Stats added');
+if($server['SERVER_PROTOCOL']) {
+    require_once $INC_DIR.'lib_stats.php';
+    add_to_debug('Stats added');
+}
 
 $part = $Routing->getPartArray();
 if (!$part['id']) {

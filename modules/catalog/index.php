@@ -36,26 +36,25 @@ if (isset($input['uri'])) {
 }
 
 $input['view_item'] = null;
-if (isset($input['item_title'])) {
-    $query = "select id from cat_item where seo_alias = '{$input['item_title']}' and part_id='{$input['part_id']}'";
-    $row = my_select_row($query, true);
-    if (is_numeric($row['id'])) {
-        $input['view_item'] = $row['id'];
-    }
-}
+$current_part_id = null;
 
-if (isset($input['part_id'])) {
+if (isset($input['part_id']) && !isset($input['item_title'])) {
     $current_part_id = $input['part_id'];
     unset($_SESSION['catalog_page']);
 }
 
-if (!isset($current_part_id)) {
-    $current_part_id = '0';
+if (isset($input['item_title'])) {
+    $query = "select id,part_id from cat_item where seo_alias = '{$input['item_title']}' and part_id='{$input['part_id']}'";
+    $row = my_select_row($query, true);
+    if (is_numeric($row['id'])) {
+        $input['view_item'] = $row['id'];
+        $current_part_id = $row['part_id'];
+    }
 }
 
-if ($input['view_item']) {
-    list($current_part_id) = my_select_row("select part_id from cat_item where id='{$input["view_item"]}'", 1);
-}
+// if ($input['view_item']) {
+//     list($current_part_id) = my_select_row("select part_id from cat_item where id='{$input["view_item"]}'", 1);
+// }
 
 $IMG_ITEM_PATH = $DIR . $settings['catalog_item_img_path'];
 $IMG_ITEM_URL = $BASE_HREF . $settings['catalog_item_img_path'];

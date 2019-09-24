@@ -290,6 +290,15 @@ function add_nav_item($title, $url = null, $skip_duplicates = false) {
 }
 
 
+/**
+ * Add item to breadcrumbs
+ *
+ * @param string $table Table for search
+ * @param string $seo_alias SEO alias
+ * @param boolean $exit_with_404 Exit with 404 error if SEO alias not found
+ *
+ * @return integer ID of found item
+ */
 function get_id_by_alias ($table, $seo_alias, $exit_with_404 = false) {
     global $tags;
     $query="select id from {$table} where seo_alias = '{$seo_alias}'";

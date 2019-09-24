@@ -235,7 +235,7 @@ if (($input['edit']) || ($input['adding'])) {
 	$tags['type'] = 'edited';
 	$tags['Header'] = 'Редактирование раздела';
     } else {
-	$tags['price1_title'] = 'Цена, руб.';
+	$tags['price_title'] = 'Цена, руб.';
 	$tags['form_title'] = "Добавление";
 	$tags['type'] = "added";
 	$tags['Header'] = "Добавление раздела";

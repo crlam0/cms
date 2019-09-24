@@ -1,3 +1,20 @@
+=== 2019-09-24
+
+ALTER TABLE `cat_item`
+	CHANGE COLUMN `b_code` `b_code` VARCHAR(45) NULL DEFAULT '-' AFTER `num`,
+	ADD COLUMN `cnt_weight` VARCHAR(32) NULL AFTER `price`,
+	DROP COLUMN `price2`,
+	DROP COLUMN `price3`,
+	DROP COLUMN `address`,
+	DROP COLUMN `special_offer`;
+ALTER TABLE `cat_part`
+	DROP COLUMN `price_cnt`,
+	DROP COLUMN `price2_title`,
+	DROP COLUMN `price3_title`;
+ALTER TABLE `cat_part`
+	CHANGE COLUMN `price1_title` `price_title` VARCHAR(255) NOT NULL DEFAULT 'Цена, руб.' AFTER `img`;
+
+
 === 2019-03-07
 
 ALTER TABLE `cat_part`

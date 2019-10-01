@@ -61,9 +61,6 @@ $IMG_ITEM_URL = $BASE_HREF . $settings['catalog_item_img_path'];
 $IMG_PART_PATH = $DIR . $settings['catalog_part_img_path'];
 $IMG_PART_URL = $BASE_HREF . $settings['catalog_part_img_path'];
 
-
-
-
 if (isset($input['add_buy']) && $input['cnt']) {
     if (!isset($_SESSION['BUY'][$input['item_id']]['count'])) {
         $_SESSION['BUY'][$input['item_id']]['count'] = 0;
@@ -231,6 +228,9 @@ if ($input['view_item']) {
                 $tags['related_products'] .= get_tpl_by_title('cat_item_list_twig', $tags, $result);
             }
         }
+        if($_SESSION['catalog_page']>1) {
+            $tags['page'] = 'page' . $_SESSION['catalog_page'] . '/';
+        }
         $content .= get_tpl_by_title('cat_item_view_twig', $tags, $result);        
     } else {
         $content .= my_msg_to_str('notice', [], 'Товар не найден');
@@ -281,7 +281,7 @@ $tags['pager'] = $pager;
 $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
         left join cat_item_images on (cat_item_images.id=default_img)
         where part_id='" . $current_part_id . "'
-        group by cat_item.num   
+        group by cat_item.id   
         order by cat_item.num,b_code,title asc limit {$pager->getOffset()},{$pager->getLimit()}";
 $result = my_query($query, true);
 if ($result->num_rows) {

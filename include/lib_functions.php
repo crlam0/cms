@@ -7,6 +7,7 @@
   ========================================================================= */
 
 use Classes\MyGlobal;
+use Classes\Image;
 
 /**
  * Check $key in $array
@@ -196,87 +197,28 @@ $validImageTypes = array("image/pjpeg", "image/jpeg", "image/gif", "image/png", 
 /**
  * Move uploaded image with resize if needed
  *
- * @param array $src_file Input file strcture
+ * @param array $src_file Input file structure
  * @param string $dst_file Destination file name
  * @param integer $max_width Maximum width to resize
+ * @param integer $max_height Maximum height to resize
  *
  * @return boolean True if success
  */
-function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height = 0, $fix_width = 0, $fix_height = 0) {
-    global $settings, $validImageTypes;
-    if (!is_file($src_file["tmp_name"])) {
-        print_error("Файл отсутствует !");
+function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height = 0, $fix_width = 0, $fix_height = 0) {    
+    $Image = new Image($src_file['tmp_name'],$src_file['type']);
+    if(!$Image->width) {
+        print_error('Load image error');
         return false;
     }
-    if (!in_array($src_file['type'], $validImageTypes)) {
-        print_error("Неверный тип файла !");
+    if(!$Image->resize($max_width, $max_height, $fix_width, $fix_height)) {
+        return move_uploaded_file($src_file['tmp_name'], $dst_file);
+    }
+    if(!$Image->save($dst_file)) {
+        print_error('Save image error');
         return false;
     }
-//	print_array($src_file);
-    unset($src);
-    if (($src_file["type"] == 'image/jpeg') || ($src_file["type"] == 'image/pjpeg')) {
-        $src = imagecreatefromjpeg($src_file["tmp_name"]);
-        $ftype = 'jpeg';
-    } elseif (($src_file["type"] == 'image/png') || ($src_file["type"] == 'image/x-png')) {
-        $src = imagecreatefrompng($src_file['tmp_name']);
-        $ftype = 'png';
-    }
-
-    if ($src && $fix_width && $fix_height) {
-        list($src_width, $src_height) = getimagesize($src_file['tmp_name']);
-        if (($src_width !== $fix_width) || ($src_height !== $fix_height)) {
-            $dst = imagecreatetruecolor($fix_width, $fix_height);
-            if ($ftype == 'png') {
-                $alpha = imagecolorallocatealpha($src, 255, 255, 255, 127);
-                if ($alpha) {
-                    imagecolortransparent($dst, $alpha);
-                    imagefill($dst, 0, 0, $alpha);
-                }
-            }
-            imagecopyresampled($dst, $src, 0, 0, 0, 0, $fix_width, $fix_height, $src_width, $src_height);
-            if ($ftype == 'jpeg') {
-                imagejpeg($dst, $dst_file, 100);
-            } else {
-                imagepng($dst, $dst_file, 0);
-            }
-            return is_file($dst_file);
-        }
-    } elseif (($src && $max_width) || ($src && $max_height)) {
-        list($src_width, $src_height) = getimagesize($src_file['tmp_name']);
-        $do_resize = false;
-        if (($max_width > 0) && (!$max_height > 0) && (($src_width > $max_width) || ($src_height > $max_width))) {
-            $width = $max_width;
-            $height = $max_width;
-            if ($src_width < $src_height) {
-                $width = ($max_width / $src_height) * $src_width;
-            } else {
-                $height = ($max_width / $src_width) * $src_height;
-            }
-            $do_resize = true;
-        } else if ($max_height && $src_height > $max_height) {
-            $height = $max_height;
-            $width = ($max_height / $src_height) * $src_width;
-            $do_resize = true;
-        }
-        if ($do_resize) {
-            $dst = imagecreatetruecolor($width, $height);
-            if ($ftype == 'png') {
-                $alpha = imagecolorallocatealpha($src, 255, 255, 255, 127);
-                if ($alpha) {
-                    imagecolortransparent($dst, $alpha);
-                    imagefill($dst, 0, 0, $alpha);
-                }
-            }
-            imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $src_width, $src_height);
-            if ($ftype == 'jpeg') {
-                imagejpeg($dst, $dst_file, 100);
-            } else {
-                imagepng($dst, $dst_file, 0);
-            }
-            return is_file($dst_file);
-        }
-    }
-    return move_uploaded_file($src_file['tmp_name'], $dst_file);
+    return is_file($dst_file);
+    // 
 }
 
 /**

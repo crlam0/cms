@@ -1,3 +1,10 @@
+=== 2019-10-07
+
+ALTER TABLE `cat_part`
+	CHANGE COLUMN `img` `image_name` VARCHAR(255) NULL DEFAULT '-' AFTER `descr`,
+	ADD COLUMN `image_type` VARCHAR(32) NULL AFTER `image_name`;
+
+
 === 2019-10-03
 
 DROP TABLE `request`;

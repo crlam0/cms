@@ -98,14 +98,14 @@ function prev_part($prev_id, $deep, $arr) {
 $IMG_PATH = $DIR . $settings['catalog_part_img_path'];
 $IMG_URL = $BASE_HREF . $settings['catalog_part_img_path'];
 
-if ($input["del"]) {
-    $query = "select count(id) as cnt from cat_part where prev_id=" . $input['id'] . " having cnt>0
-	union select count(id) as cnt from cat_item where part_id=" . $input['id'] . " having cnt>0";
+if ($input['del']) {
+    $query = "select count(id) as cnt from cat_part where prev_id='" . $input['id'] . "' having cnt>0
+	union select count(id) as cnt from cat_item where part_id='" . $input['id'] . "' having cnt>0";
     $result = my_query($query);
     if ($result->num_rows) {
         $content.=my_msg_to_str('error','','Этот раздел не пустой !');
     } else {
-	list($img) = my_select_row("select img from cat_part where id=" . $input['id']);
+        list($img) = my_select_row("select image_name from cat_part where id='{$input['id']}'");
 	if (is_file($IMG_PATH . $img)) {
 	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
 	}
@@ -114,14 +114,14 @@ if ($input["del"]) {
     }
 }
 
-if ($input["del_img"]) {
-    list($img) = my_select_row("select img from cat_part where id=" . $input['id']);
+if ($input['del_img']) {
+    list($img) = my_select_row("select image_name from cat_part where id='{$input['id']}'");
     if (is_file($IMG_PATH . $img)) {
 	if (!unlink($IMG_PATH . $img)){
             $content.=my_msg_to_str('error','','Ошибка удаления файла !');
         }    
     }
-    $query = "update cat_part set img='-' where id=" . $input['id'];
+    $query = "update cat_part set image_name='-' where id=" . $input['id'];
     my_query($query);
     $input["edit"] = 1;
     $content.=my_msg_to_str('','','Изображение удалено');
@@ -181,12 +181,11 @@ if ($input["added"]) {
     }
     $content.=my_msg_to_str('','','Раздел успешно добавлен.');
     if ($_FILES['img_file']['size']) {
-	$part_id = $mysqli->insert_id();
+	$part_id = $insert_id;
 	$f_info = pathinfo($_FILES['img_file']['name']);
 	$img = $part_id . '.' . $f_info['extension'];
-//		if(move_uploaded_file($_FILES["img_file"]["tmp_name"],$IMG_PATH.$img)){
-	if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings["catalog_part_img_max_width"])) {
-	    $query = "update cat_part set img='{$img}' where id='{'$part_id'}'";
+	if (move_uploaded_image($_FILES['img_file'], $IMG_PATH . $img, $settings['catalog_part_img_max_width'])) {
+	    $query = "update cat_part set image_name='{$img}',image_type='{$_FILES['img_file']['type']}' where id='{$part_id}'";
 	    my_query($query);
 	} else {
             $content.=my_msg_to_str('error','','Ошибка копирования файла !');
@@ -209,16 +208,16 @@ if ($input['edited']) {
     $query = "update cat_part set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
     $content.=my_msg_to_str('','','Раздел успешно изменен.');
-    if ($_FILES["img_file"]["size"] > 100) {
-	list($img) = my_select_row("select img from cat_part where id='{$input['id']}'");
+    if ($_FILES['img_file']['size'] > 100) {
+	list($img) = my_select_row("select image_name from cat_part where id='{$input['id']}'");
 	if (is_file($IMG_PATH . $img)) {
 	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
 	}
-	$f_info = pathinfo($_FILES["img_file"]["name"]);
-	$img = $input['id'] . "." . $f_info["extension"];
+	$f_info = pathinfo($_FILES['img_file']['name']);
+	$img = $input['id'] . "." . $f_info['extension'];
 //		if(move_uploaded_file($_FILES["img_file"]["tmp_name"],$IMG_PATH.$img)){
-	if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings['catalog_part_img_max_width'])) {
-	    $query = "update cat_part set img='{$img}' where id='{$input['id']}'";
+	if (move_uploaded_image($_FILES['img_file'], $IMG_PATH . $img, $settings['catalog_part_img_max_width'])) {
+	    $query = "update cat_part set image_name='{$img}',image_type='{$_FILES['img_file']['type']}' where id='{$input['id']}'";
 	    my_query($query);
 	} else {
 	   $content.=my_msg_to_str('error','','Ошибка копирования файла !');
@@ -269,8 +268,8 @@ if (($input['edit']) || ($input['adding'])) {
     
     $tags['prev_id_select'] = $prev_id_select;
 
-    $tags['img_tag'] = (isset($tags['img']) && is_file($IMG_PATH . $tags['img']) ? "<img src=../{$settings['catalog_part_img_path']}{$tags['img']} class=margin><br>" : "[ Отсутствует ]<br>");
-    $tags['del_button'] = (isset($tags['img']) && is_file($IMG_PATH . $tags['img']) ? "<a href=" . $_SERVER['PHP_SELF'] . "?del_img=1&id={$tags['id']}>Удалить</a><br>" : '');
+    $tags['img_tag'] = (isset($tags['image_name']) && is_file($IMG_PATH . $tags['image_name']) ? "<img src=../{$settings['catalog_part_img_path']}{$tags['image_name']} class=margin><br>" : "[ Отсутствует ]<br>");
+    $tags['del_button'] = (isset($tags['image_name']) && is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $_SERVER['PHP_SELF'] . "?del_img=1&id={$tags['id']}>Удалить</a><br>" : '');
 
     $content .= get_tpl_by_title('cat_part_form', $tags);
     echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
@@ -288,7 +287,7 @@ function sub_part($prev_id, $deep) {
             <tr class=content align=left>
                 <td>{$spaces}<a href=cat_item_edit.php?part_id={$row['id']}>{$row['num']} {$row['title']}</a></td>
                 <td>{$row['seo_alias']}</a></td>
-                <td align=center>" . (is_file($IMG_PATH . $row['img']) ? "<img src={$IMG_URL}{$row['img']} border=0>" : "&nbsp;") . "</td>
+                <td align=center>" . (is_file($IMG_PATH . $row['image_name']) ? "<img src={$IMG_URL}{$row['image_name']} border=0>" : "&nbsp;") . "</td>
                 <td width=16><a href=" . $_SERVER['PHP_SELF'] . "?edit=1&id={$row['id']}><img src=\"../images/open.gif\" width=16 height=16 alt=\"Редактировать\" border=0></a></td>
                 <td width=16><a href=" . $_SERVER['PHP_SELF'] . "?del=1&id={$row['id']}><img src=\"../images/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
             </tr>

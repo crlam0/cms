@@ -15,6 +15,7 @@
     "autoload": {
         "psr-4": {
             "Classes\\": "include/classes/",
+            "Modules\\": "modules/",
             "Tests\\": "tests/"
         }
     },

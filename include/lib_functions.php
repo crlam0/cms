@@ -353,7 +353,8 @@ function get_block($name) {
 }
 
 function include_php($file_name) {
-    $DIR =  MyGlobal::get('DIR');
+    $DIR = MyGlobal::get('DIR');
+    $SUBDIR = MyGlobal::get('SUBDIR');
     if(is_file($DIR . $file_name)) {
         ob_start();
         include_once($DIR . $file_name);

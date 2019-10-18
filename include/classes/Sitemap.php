@@ -111,7 +111,7 @@ class Sitemap {
     public function write($test_only = false){
         global $server, $DIR, $SUBDIR;
         
-        $ServerUrl = 'http://' . $server["HTTP_HOST"] . $SUBDIR;
+        $ServerUrl = $server['REQUEST_SCHEME'] . '://' . $server['HTTP_HOST'] . $SUBDIR;
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
@@ -129,7 +129,7 @@ class Sitemap {
 
             $url = $ServerUrl . $page['url'];
 
-            $output.= "Add $url <br>";
+            $output.= "Add {$url} <br>";
 
             // create url node for this page
             $urlNode = $dom->createElementNS($SITEMAP_NS, 'url');

@@ -29,7 +29,7 @@ function twig_tpl_save($filename, $content){
     }
     $filename = $DIR . 'templates/' . $filename;
     $content = stripcslashes($content);
-    return file_put_contents($filename, $content);
+    return file_put_contents($filename, $content) && clear_cache_dir('twig');
 }
 
 if($input['revert']){

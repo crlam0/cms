@@ -45,13 +45,10 @@ if($crop) {
 } else {
     $result = $Image->resize($max_width,$max_height);
 }    
-if($result) {
-    if(!$Image->save($cache_file_name)) {
-        print_error('Save error');
-        exit;    
-    }
-} else { 
-    $cache_file_name = $file_name;
+
+if(!$Image->save($cache_file_name)) {
+    print_error('Save error');
+    exit;    
 }
 
 header('Content-type: ' . $file_type);

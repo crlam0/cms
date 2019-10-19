@@ -46,17 +46,14 @@ if(!$Image->width) {
     exit;
 }
 if($crop) {
-    $result = $Image->crop($max_width,$max_width);
+    $Image->crop($max_width,$max_width);
 } else {
-    $result = $Image->resize($max_width,$max_height);
+    $Image->resize($max_width,$max_height);
 }    
-if($result) {
-    if(!$Image->save($cache_file_name)) {
-        print_error('Save error');
-        exit;    
-    }
-} else { 
-    $cache_file_name = $file_name;
+  
+if(!$Image->save($cache_file_name)) {
+    print_error('Save error');
+    exit;    
 }
 
 header('Content-type: ' . $file_type);

@@ -22,7 +22,7 @@ function gallery_get_cache_file_name($file_name, $max_width) {
     return 'var/cache/gallery/' . md5($file_name.$max_width) . '.jpeg';
 }
 
-function show_img($tmp, $row) {
+function show_img($row) {
     global $DIR, $settings, $SUBDIR, $server, $input;
     $file_name = $DIR . $settings['gallery_upload_path'] . $row['file_name'];
     if (is_file($file_name)) {        
@@ -41,7 +41,7 @@ function show_img($tmp, $row) {
     return $content;
 }
 
-function show_list_img($tmp, $row) {
+function show_list_img($row) {
     global $DIR, $settings, $SUBDIR, $input;
     list($image_id) = my_select_row("select default_image_id from gallery_list where id='{$row["id"]}'", false);
     $row_image = my_select_row("select * from gallery_images where id='{$image_id}'", false);
@@ -61,5 +61,17 @@ function show_list_img($tmp, $row) {
     return $content;
 }
 
+function get_icons($gallery_id){
+    global $DIR, $settings, $SUBDIR;
+    $content='';
+    $query="select * from gallery_images where gallery_id='{$gallery_id}' limit 6";
+    $result = my_query($query, true);
+    while($row = $result->fetch_array()){
+        if (is_file($DIR . $settings['gallery_upload_path'] . $row['file_name'])) {
+            $content.='<img src="' . $SUBDIR . 'modules/gallery/image.php?icon=1&id='.$row['id'].'" class="list_icon" border="0" alt="'.$row['title'].'" />';
+        }
+    }
+    return $content;
+}
 
 

@@ -23,7 +23,7 @@ $_SESSION['FLAGS']='';
 if($_SERVER['SERVER_PROTOCOL']) {
     session_cache_limiter('nocache');
     session_name($SESSID);
-    session_start();    
+    session_start();   
 } else {
     $DIR=dirname(dirname(__FILE__)) . '/';
     $INC_DIR=$DIR.'include/';
@@ -108,6 +108,10 @@ add_to_debug('Library loaded');
 if($server['SERVER_PROTOCOL']) {
     require_once $INC_DIR.'lib_stats.php';
     add_to_debug('Stats added');
+    if( !$_SESSION['UID'] && $arr = user_get_rememberme()) {
+        list($_SESSION['UID'],$_SESSION['FLAGS']) = $arr;
+        unset($arr);
+    }
 }
 
 $part = $Routing->getPartArray();

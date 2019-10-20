@@ -317,6 +317,53 @@ function user_encrypt_password($passwd, $salt) {
 }
 
 /**
+ * Generate RememberMe cookie and token.
+ *
+ */
+function user_set_rememberme() {
+    global $COOKIE_NAME, $SUBDIR;
+    if(!$_SESSION['UID'] || !$COOKIE_NAME) {
+        return false;        
+    }    
+    $token=user_encrypt_password(user_generate_salt(), user_generate_salt());
+    $query = "update users set token='" . $token . "' where id='{$_SESSION['UID']}'";
+    MyGlobal::get('DB')->query($query);
+    setcookie($COOKIE_NAME.'_REMEMBERME', $token, time()+31*24*3600, $SUBDIR);
+}
+
+/**
+ * Return users id and flags if he have valid RememberMe cookie. 
+ *
+ * @return mixed Array if complete, false if error.
+ */
+function user_get_rememberme() {
+    global $COOKIE_NAME;
+    if(array_key_exists($COOKIE_NAME.'_REMEMBERME', $_COOKIE)){
+        $token = MyGlobal::get('DB')->test_param($_COOKIE[$COOKIE_NAME.'_REMEMBERME']);
+        $query = "select id,flags from users where token='" . $token . "'";
+        $result = MyGlobal::get('DB')->query($query);
+        if($result->num_rows) {
+            $row=$result->fetch_array();
+            return [$row['id'],$row['flags']];
+        }
+    }
+    return false;
+}
+
+/**
+ * Delete RememberMe cookie and token.
+ *
+ */
+function user_del_rememberme() {
+    global $COOKIE_NAME, $SUBDIR;
+    if(array_key_exists($COOKIE_NAME.'_REMEMBERME', $_COOKIE)){
+        setcookie($COOKIE_NAME.'_REMEMBERME', '', time(), $SUBDIR);
+        $query = "update users set token='' where id='{$_SESSION['UID']}'";
+        MyGlobal::get('DB')->query($query);
+    }
+}
+
+/**
  * Return CSRF token value from session. 
  *
  * @return string Output string

@@ -291,13 +291,13 @@ function add_nav_item($title, $url = null, $skip_duplicates = false) {
 
 
 /**
- * Add item to breadcrumbs
+ * Get item ID by SEO alias
  *
  * @param string $table Table for search
  * @param string $seo_alias SEO alias
  * @param boolean $exit_with_404 Exit with 404 error if SEO alias not found
  *
- * @return integer ID of found item
+ * @return integer ID of found item or null
  */
 function get_id_by_alias ($table, $seo_alias, $exit_with_404 = false) {
     global $tags;

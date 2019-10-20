@@ -48,16 +48,23 @@ return [
             '1' => 'uri',
         ]
     ],    
-    'blog_uri' => [
-        'pattern' => '^blog\/(.*)\/?$',
+    'blog' => [
+        'pattern' => '^blog\/?$',
+        'file' => 'modules/blog/index.php',
+    ],    
+    'blog_uri_with_slash' => [
+        'pattern' => '^blog\/(.*)\/$',
         'file' => 'modules/blog/index.php',
         'params' => [
             '1' => 'uri',
         ]
     ],    
-    'blog' => [
-        'pattern' => '^blog\/?$',
+    'blog_uri' => [
+        'pattern' => '^blog\/(.*)$',
         'file' => 'modules/blog/index.php',
+        'params' => [
+            '1' => 'uri',
+        ]
     ],    
     
     'faq_uri' => [

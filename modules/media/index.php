@@ -13,16 +13,9 @@ $player_show = 0;
 use Classes\Pagination;
 
 if (isset($input['uri'])) {
-    $params = explode("/", $input['uri']);
-
-    /*
-    $query = "select id from media_list where seo_alias like '" . $params[0] . "'";
-    $result = my_query($query);
-    list($view_files) = $result->fetch_array();
-     * 
-     */
-    $view_files = get_id_by_alias('media_list', $params[0], true);
-    if (isset($params[1])) {
+    $params = explode('/', $input['uri']);
+    $view_files = get_id_by_alias('media_list', $params[0], true);    
+    if (is_integer($params[1])) {
         $media_page = (int)$params[1];
     } else {
         $media_page = 1;
@@ -91,7 +84,7 @@ if ($view_files) {
     $pager = new Pagination($total, $media_page, $settings['media_files_per_page']);
     $tags['pager'] = $pager;
     
-    $query = "SELECT * from media_files where list_id=" . $view_files . " order by num asc, id asc limit {$pager->getOffset()},{$pager->getLimit()}";
+    $query = "SELECT * from media_files where list_id='" . $view_files . "' order by num asc, id asc limit {$pager->getOffset()},{$pager->getLimit()}";
     $result = my_query($query, true);
     if (!$result->num_rows) {
         $content = my_msg_to_str('list_empty', $tags, '');

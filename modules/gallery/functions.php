@@ -43,16 +43,16 @@ function show_img($row) {
 
 function show_list_img($row) {
     global $DIR, $settings, $SUBDIR, $input;
-    list($image_id) = my_select_row("select default_image_id from gallery_list where id='{$row["id"]}'", false);
-    $row_image = my_select_row("select * from gallery_images where id='{$image_id}'", false);
-    $file_name = $DIR . $settings['gallery_upload_path'] . $row_image['file_name'];
+    // list($image_id) = my_select_row("select default_image_id from gallery_list where id='{$row["id"]}'", false);
+    // $row_image = my_select_row("select * from gallery_images where id='{$image_id}'", false);
+    $file_name = $DIR . $settings['gallery_upload_path'] . $row['def_file_name'];
     if ($file_name) {
         $input['icon']=true;
         $cache_file_name = gallery_get_cache_file_name($file_name, gallery_get_max_width());
         if(is_file($DIR . $cache_file_name)) {
             $URL=$cache_file_name;
         } else {
-            $URL="modules/gallery/image.php?icon=1&id={$row_image["id"]}";
+            $URL="modules/gallery/image.php?icon=1&id={$row['def_id']}";
         }
         $content='<img src="' . $SUBDIR . $URL . '" border="0" alt="'.$row['title'].'">';
     } else {

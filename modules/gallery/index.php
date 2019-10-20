@@ -126,11 +126,14 @@ if (($view_gallery)||($input['page'])) {
     exit();
 }
 
-$query = "SELECT gallery_list.*,count(gallery_images.id) as images,max(gallery_images.date_add) as last_images_date_add
-    from gallery_list
-    left join gallery_images on (gallery_images.gallery_id=gallery_list.id)
-    where gallery_list.active='Y'
-    group by gallery_list.id order by last_images_date_add desc,gallery_list.date_add desc";
+$query = "SELECT 
+        gallery_list.*,count(images.id) AS images,max(images.date_add) AS last_images_date_add,
+        def_img.id as def_id,def_img.file_name as def_file_name
+    FROM gallery_list
+    LEFT JOIN gallery_images AS images ON (images.gallery_id=gallery_list.id)
+    LEFT JOIN gallery_images AS def_img ON (def_img.id=default_image_id)
+    WHERE gallery_list.active='Y'
+    GROUP BY gallery_list.id ORDER BY last_images_date_add DESC,gallery_list.date_add DESC";
 
 $result = my_query($query, true);
 if (!$result->num_rows) {

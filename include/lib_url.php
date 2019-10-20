@@ -55,6 +55,9 @@ function get_article_list_href($list_id, $row = array()) {
     if (array_key_exists('id',$row)){
         $list_id = $row['id'];
     }
+    if (array_key_exists('seo_alias',$row) && strlen($row['seo_alias'])){
+        return 'article/' . $row['seo_alias'] . '/';
+    }    
     $query = "SELECT seo_alias FROM article_list WHERE id='{$list_id}'";
     $result = MyGlobal::get('DB')->query($query, true);
     list($seo_alias) = $result->fetch_array();
@@ -76,6 +79,9 @@ function get_article_list_href($list_id, $row = array()) {
 function get_article_href($article_id, $row = array()) {
     if (array_key_exists('id',$row)){
         $article_id = $row['id'];
+    }
+    if (array_key_exists('seo_alias',$row) && strlen($row['seo_alias'])){
+        return get_article_list_href($row['list_id']) . $row['seo_alias'] . '/';
     }
     $query = "SELECT seo_alias,list_id FROM article_item WHERE id='{$article_id}'";
     $result = MyGlobal::get('DB')->query($query, true);
@@ -99,6 +105,9 @@ function get_media_list_href($list_id, $row = array()) {
     if (array_key_exists('id',$row)){
         $list_id = $row['id'];
     }
+    if (array_key_exists('seo_alias',$row) && strlen($row['seo_alias'])){
+        return 'media/' . $row['seo_alias'] . '/';
+    }    
     $query = "SELECT seo_alias FROM media_list WHERE id='{$list_id}'";
     $result = MyGlobal::get('DB')->query($query, true);
     list($seo_alias) = $result->fetch_array();
@@ -164,6 +173,9 @@ function get_gallery_list_href($list_id, $row = array()) {
     if (array_key_exists('id',$row)){
         $list_id = $row['id'];
     }
+    if (array_key_exists('seo_alias',$row) && strlen($row['seo_alias'])){
+        return 'gallery/' . $row['seo_alias'] . '/';
+    }    
     $query = "SELECT seo_alias FROM gallery_list WHERE id='{$list_id}'";
     $result = MyGlobal::get('DB')->query($query, true);
     list($seo_alias) = $result->fetch_array();

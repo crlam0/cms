@@ -52,7 +52,7 @@ class Template {
         }
 
         if($sql_result instanceof \mysqli_result) {
-            $tags['rows'] = mysqli_fetch_all($sql_result, MYSQLI_ASSOC);
+            $tags['rows'] = $sql_result->fetch_all(MYSQLI_ASSOC);
         }
         if(strlen($inner_content)) {
             $tags['inner_content'] = $inner_content;        

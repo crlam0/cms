@@ -289,7 +289,8 @@ if ($result->num_rows) {
     $tags['functions'] = [];
     $content .= get_tpl_by_title('cat_item_list_twig', $tags, $result);
 } elseif (($current_part_id) && (!$subparts)) {
-    // $content .= my_msg_to_str('list_empty');
+    list($tags['image_name'],$tags['title']) = my_select_row("select image_name,title from cat_part where id='{$current_part_id}'");
+    $content .= get_tpl_by_title('cat_item_list_empty.html.twig', $tags, $result);
 }
 
 if ($current_part_id) {

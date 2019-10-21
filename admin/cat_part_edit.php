@@ -131,7 +131,7 @@ if ($input["copy"]) {
     $query = "SELECT * from cat_part where prev_id={$input['id']} order by num,title+1 asc";
     $result_part = my_query($query);
     while ($row_part = $result_part->fetch_assoc()) {
-        $row_part['title'];
+        $row_part['title']; // IT'S A BRILLIANT !!!!!!!!!!!!!!
         $input_cat_id = $row_part['id'];
         unset($row_part['id']);
         $row_part['prev_id']=$input['to_part_id'];

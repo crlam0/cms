@@ -136,6 +136,7 @@ if (($input["add_menu_item"]) || ($input["edit_menu_item"])) {
             <option " . (check_key('target_type',$tags) == "article_list" ? "selected" : "") . " value=\"article_list\">Раздел статей</option>
             <option " . (check_key('target_type',$tags) == "article" ? "selected" : "") . " value=\"article\">Статья</option>
             <option " . (check_key('target_type',$tags) == "media_list" ? "selected" : "") . " value=\"media_list\">Раздел файлов</option>
+            <option " . (check_key('target_type',$tags) == "catalog" ? "selected" : "") . " value=\"catalog\">Каталог</option>
             <option " . (check_key('target_type',$tags) == "cat_part" ? "selected" : "") . " value=\"cat_part\">Раздел каталога</option>
             <option " . (check_key('target_type',$tags) == "gallery_list" ? "selected" : "") . " value=\"gallery_list\">Раздел галереи</option>
         </select>

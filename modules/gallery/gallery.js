@@ -18,8 +18,8 @@ $(document).ready(function () {
                 $('#popupContent').html(msg.content);
                 $("#popupContent").waitForImages(function () {
                     loadPopup();
-                    $('.modal').removeClass('modal-fs');
-                    $('.modal').addClass('modal-fs');
+                    $('#myModal').removeClass('modal-fs');
+                    $('#myModal').addClass('modal-fs');
                     centerPopup();
                 });
             },

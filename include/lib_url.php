@@ -211,21 +211,23 @@ function get_post_href($tmp, $row) {
  * @return string Output string
  */
 function get_menu_href($tmp, $row) {
-    switch ($row["target_type"]) {
+    switch ($row['target_type']) {
         case "":
-            return $row["href"];
+            return $row['href'];
         case "link":
-            return $row["href"];
+            return $row['href'];
         case "article_list":
-            return get_article_list_href($row["target_id"]);
+            return get_article_list_href($row['target_id']);
         case "article":
-            return get_article_href($row["target_id"]);
+            return get_article_href($row['target_id']);
         case "media_list":
-            return get_media_list_href($row["target_id"]);
+            return get_media_list_href($row['target_id']);
+        case "catalog":
+            return 'Все разделы каталога';
         case "cat_part":
-            return get_cat_part_href($row["target_id"]);
+            return get_cat_part_href($row['target_id']);
         case "gallery_list":
-            return get_gallery_list_href($row["target_id"]);
+            return get_gallery_list_href($row['target_id']);
     }
 }
 

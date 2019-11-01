@@ -78,7 +78,7 @@ if(file_exists($INC_DIR.'config/settings.local.php')) {
         }
     }    
 }    
-$query='SELECT * FROM settings';
+$query='SELECT title,value FROM settings';
 $result=$DB->query($query,true);
 while ($row = $result->fetch_array()) {
     $settings[$row['title']] = $row['value'];

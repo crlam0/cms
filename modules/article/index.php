@@ -98,6 +98,8 @@ if ($view_article) {
     add_nav_item($row['title']);
     
     $row['content'] = replace_base_href($row['content']);
+    // $row['content'] = preg_replace('/width: \d+px;/', 'max-width: 100%;', $row['content']);
+    $row['content'] = preg_replace('/style="width: /', 'class="img-fluid" style: style="width: ', $row['content']);
     
     $content = get_tpl_by_title('article_view', $row, $result);
     echo get_tpl_default($tags, null, $content);

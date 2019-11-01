@@ -3,11 +3,23 @@ function loadPopup() {
     $('#myModal').modal();
 }
 
+function centerPopup() {
+}
+
 function disablePopup() {
 }
 
-function centerPopup() {
-}
+if (typeof window.loadPopup == "undefined") {
+    window.loadPopup = loadPopup;
+};
+
+if (typeof window.centerPopup == "undefined") {
+    window.centerPopup = centerPopup;
+};
+
+if (typeof window.loadPopup == "undefined") {
+    window.disablePopup = disablePopup;
+};
 
 $("#myModal").on("show.bs.modal", function() {
     var width = $(window).width() - 40;

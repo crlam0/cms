@@ -5,8 +5,8 @@ include "../include/common.php";
 
 function show_img($tmp, $row) {
     global $DIR, $settings;
-    if (is_file($DIR . $settings['banners_img_path'] . $row['file_name'])) {
-        return "<img src=\"../".$settings['banners_img_path'].$row['file_name']."\" border=0 width=200></a>";
+    if (is_file($DIR . $settings['partners']['upload_path'] . $row['file_name'])) {
+        return "<img src=\"../".$settings['partners']['upload_path'].$row['file_name']."\" border=0 width=200></a>";
     } else {
         return "Отсутствует";
     }
@@ -14,8 +14,8 @@ function show_img($tmp, $row) {
 
 if ($input["del_partner"]) {
     list($img_old) = my_select_row("select file_name from partners where id='{$input['id']}'");
-    if (is_file($DIR . $settings['banners_img_path'] . $img_old)) {
-        if (!unlink($DIR . $settings['banners_img_path'] . $img_old)
+    if (is_file($DIR . $settings['partners']['upload_path'] . $img_old)) {
+        if (!unlink($DIR . $settings['partners']['upload_path'] . $img_old)
         )
             $content.=my_msg_to_str("error", "", "Ошибка удаления файла");
     }
@@ -36,7 +36,7 @@ if ($input["added_partner"]) {
             $image_id = $mysqli->insert_id;
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
-            if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['banners_img_path'] . $file_name, 1600)) {
+            if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['partners']['upload_path'] . $file_name, $settings['partners']['image_width'])) {
                 $query = "update partners set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
                 my_query($query);
                 $content.=my_msg_to_str("", "", "Картинка успешно добавлена.");
@@ -53,13 +53,13 @@ if ($input["edited_partner"]) {
             $content.=my_msg_to_str("error", "", "Неверный тип файла !");
         } else {
             list($img_old) = my_select_row("select file_name from partners where id='{$input['id']}'");
-            if (is_file($DIR . $settings['banners_img_path'] . $img_old)) {
-                if (!unlink($DIR . $settings['banners_img_path'] . $img_old))
+            if (is_file($DIR . $settings['partners']['upload_path'] . $img_old)) {
+                if (!unlink($DIR . $settings['partners']['upload_path'] . $img_old))
                     $content.=my_msg_to_str("error", "", "Ошибка удаления файла");
             }
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
-            if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['banners_img_path'] . $file_name, 1600)) {
+            if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['partners']['upload_path'] . $file_name, $settings['partners']['image_width'])) {
                 $input['form']['file_name'] = $file_name;
                 $input['form']['file_type'] = $_FILES["img_file"]["type"];
                 $content.=my_msg_to_str("", "", "Картинка успешно изменена.");

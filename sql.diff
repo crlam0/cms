@@ -1,3 +1,30 @@
+=== 2019-10-25
+
+ALTER TABLE `article_list` ADD KEY (`seo_alias`);
+
+ALTER TABLE `article_item` ADD KEY (`seo_alias`);
+
+ALTER TABLE `blog_posts` ADD KEY (`seo_alias`);
+
+ALTER TABLE `cat_part` ADD KEY (`seo_alias`);
+
+ALTER TABLE `cat_item` ADD KEY (`seo_alias`);
+
+ALTER TABLE `gallery_list` ADD KEY (`seo_alias`);
+
+ALTER TABLE `media_list` ADD KEY (`seo_alias`);
+
+ALTER TABLE `media_files` ADD KEY (`list_id`);
+
+ALTER TABLE `menu_item` ADD KEY (`active`);
+
+ALTER TABLE `menu_item` ADD KEY (`menu_id`);
+
+ALTER TABLE `messages` ADD KEY (`title`);
+
+ALTER TABLE `users` ADD KEY (`login`);
+
+
 === 2019-10-21
 
 ALTER TABLE `users`

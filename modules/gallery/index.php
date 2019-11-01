@@ -8,8 +8,6 @@ use Classes\Comments;
 use Classes\Pagination;
 
 $tags['Header'] = "Галерея";
-$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/gallery.css" type="text/css" rel=stylesheet />'."\n";
-$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/blog_comments.css" type="text/css" rel=stylesheet />'."\n";
 
 $settings['gallery_use_popup']=true;
 
@@ -30,10 +28,7 @@ if ( (isset($input['uri'])) && (!isset($input['load']))) {
 }
 
 if($settings['gallery_use_popup']){
-    $tags['INCLUDE_JS'] .= 
-            '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
-            '<script type="text/javascript" src="'.$BASE_HREF.'include/js/jquery.waitforimages.min.js"></script>'."\n".
-            '<script type="text/javascript" src="'.$BASE_HREF.'modules/gallery/gallery.js"></script>'."\n";
+    $tags['INCLUDE_JS'] .= '<script type="text/javascript" src="'.$BASE_HREF.'modules/gallery/gallery.js"></script>'."\n";
 }
 
 // $tags['nav_str'].="<a href=" . $SUBDIR . "gallery/ class=nav_next>{$tags['Header']}</a>";

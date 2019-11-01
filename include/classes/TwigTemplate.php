@@ -88,6 +88,7 @@ class TwigTemplate {
         $environment->addGlobal('PHP_SELF', $server['PHP_SELF']);
         $environment->addGlobal('PHP_SELF_DIR', $server['PHP_SELF_DIR']);
         $environment->addGlobal('settings', $settings);
+        $environment->addGlobal('server', $server);
 
         $this->twig = $environment;
     }

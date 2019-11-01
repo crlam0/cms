@@ -7,10 +7,7 @@ include 'functions.php';
 use Classes\Pagination;
 
 $tags['Header'] = isset($settings['catalog_header']) ? $settings['catalog_header'] : 'Магазин';
-$tags['INCLUDE_CSS'] .= '<link href="' . $SUBDIR . 'css/catalog.css" type="text/css" rel=stylesheet />' . "\n";
-$tags['INCLUDE_JS'] .= '<script type="text/javascript" src="' . $BASE_HREF . 'include/js/popup.js"></script>' . "\n" .
-        '<script type="text/javascript" src="' . $BASE_HREF . 'include/js/jquery.waitforimages.min.js"></script>' . "\n" .
-        '<script type="text/javascript" src="' . $BASE_HREF . 'modules/catalog/catalog.js"></script>' . "\n";
+$tags['INCLUDE_JS'] .= '<script type="text/javascript" src="' . $BASE_HREF . 'modules/catalog/catalog.js"></script>' . "\n";
 
 if (is_array($input) && !count($input)) {
     $input['part_id'] = 0;

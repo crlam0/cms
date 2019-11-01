@@ -3,13 +3,11 @@ if(!isset($input)) {
     require '../../include/common.php';
 }
 $tags['Header'] = 'Вопрос/ответ';
-$tags['INCLUDE_CSS'].='<link href="'.$SUBDIR.'css/article_news_faq.css" type="text/css" rel=stylesheet />'."\n";;
 
 use Classes\Pagination;
 use Classes\BBCodeEditor;
 $editor = new BBCodeEditor ();
 
-$tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 add_nav_item($tags['Header']);
 
 $code_ok = 0;
@@ -106,10 +104,7 @@ $tags['pager'] = $pager;
 $query = "SELECT $TABLE.* from $TABLE where $TABLE.active='Y' group by $TABLE.id order by $TABLE.id desc limit {$pager->getOffset()},{$pager->getLimit()}";
 $result = my_query($query, true);
 
-if (!$result->num_rows) {
-    $content.=my_msg_to_str('part_empty');
-} else {
-    $content.=get_tpl_by_title('faq_list', $tags, $result);
-}
+$content.=get_tpl_by_title('faq_list', $tags, $result);
+
 echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
 

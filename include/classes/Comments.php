@@ -1,11 +1,10 @@
 <?php
 
-// include $INC_DIR . 'lib_bbcode.php';
 
 namespace Classes;
 
 use Classes\BBCodeEditor;
-use Classes\MyGlobal;
+use Classes\App;
 
 /**
  * Add coments to some content
@@ -60,7 +59,7 @@ class Comments
      */
     public function show_list($tags = array ()) {        
         $query="select * from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id='{$this->__target_id}' order by id asc";
-        $result = MyGlobal::get('DB')->query($query);
+        $result = App::$db->query($query);
         return get_tpl_by_title('comments_list',$tags,$result);        
     }
     
@@ -72,16 +71,16 @@ class Comments
      * @return string Output content
      */
     public function show_form($tags = array ()) {
-        global $_SESSION,$SUBDIR,$input,$server;
+        global $_SESSION;
         if ( $this->__new_form ) {
             $this->__editor->SetValue('');
-        }elseif (is_array($input['form'])) {
-            $data = $input['form'];
+        }elseif (is_array(App::$input['form'])) {
+            $data = App::$input['form'];
             $tags = array_merge($tags, $data);            
         }
-        $tags['editor'] = $this->__editor->GetContol(400, 200, $SUBDIR . 'images/bbcode_editor');
+        $tags['editor'] = $this->__editor->GetContol(400, 200, App::$SUBDIR . 'images/bbcode_editor');
         if(!isset($tags['action'])){
-            $tags['action'] = $server['PHP_SELF'];        
+            $tags['action'] = App::$server['PHP_SELF'];        
         }
         $_SESSION['IMG_CODE'] = rand(111111, 999999);        
         return $this->__get_form_data_result.get_tpl_by_title('comment_add_form', $tags);
@@ -94,7 +93,6 @@ class Comments
      *
      */
     public function get_form_data($input){
-        global $server,$SUBDIR,$settings;
         if ($input['add_comment']) { 
             $err = false;
             $output = '';
@@ -120,23 +118,23 @@ class Comments
             if ( $err ) {
                 $this->__new_form = false;
             } else {
-                $input['form']['ip'] = $server['REMOTE_ADDR'];
+                $input['form']['ip'] = App::$server['REMOTE_ADDR'];
                 $input['form']['date_add'] = 'now()';
-                $input['form']['uid'] = check_key('UID', $_SESSION);
+                $input['form']['uid'] = App::$user->id;
                 $input['form']['target_type']=$this->__target_type;
                 $input['form']['target_id']=$this->__target_id;
                 $input['form']['content']=$this->__editor->GetHTML();
                 $query = "insert into {$this->__table} " . db_insert_fields($input['form']);
-                MyGlobal::get('DB')->query($query);
+                App::$db->query($query);
                 $output.=my_msg_to_str('','','Комментарий успешно добавлен');
 
-                $remote_host=(check_key('REMOTE_HOST',$server) ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
+                $remote_host=(check_key('REMOTE_HOST',App::$server) ? App::$server['REMOTE_HOST'] : gethostbyaddr(App::$server['REMOTE_ADDR']) );
                 $message="Автор: {$input['form']['author']} ( {$input['form']['email']} )\n";
                 $message.="IP: {$input['form']['ip']} ( {$remote_host} )\n";
                 $message.="Сообщение:\n";
                 $message.=str_replace('\r\n',"\n",$input['form']['content']) . "\n";
-                if(!$settings['debug']){
-                    send_mail($settings['email_to_addr'], 'На сайте http://'.$server['HTTP_HOST'].$SUBDIR.' оставлен новый комментарий.', $message);
+                if(!App::$settings['debug']){
+                    send_mail(App::$settings['email_to_addr'], 'На сайте http://'.App::$server['HTTP_HOST'].App::$SUBDIR.' оставлен новый комментарий.', $message);
                 }    
                 
                 $this->__new_form = true;

@@ -9,7 +9,7 @@ class SQLTest extends TestCase
 {
     public function testUsers()
     {
-        $row=my_select_row("select login from users where login='boot'");
+        $row = Classes\App::$db->select_row("select login from users where login='boot'");
         self::assertEquals($row['login'], 'boot');
     }
 
@@ -23,13 +23,13 @@ class SQLTest extends TestCase
 
     public function testInsert()
     {
-        $insert=db_insert_fields(['id'=>'1']);
+        $insert=Classes\App::$db->insert_fields(['id'=>'1']);
         self::assertEquals($insert, "(id) VALUES('1')");
     }
     
     public function testUpdate()
     {
-        $insert=db_update_fields(['id'=>'1']);
+        $insert=Classes\App::$db->update_fields(['id'=>'1']);
         self::assertEquals($insert, "id='1'");
     }
     

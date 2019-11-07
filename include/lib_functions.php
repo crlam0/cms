@@ -6,7 +6,7 @@
 
   ========================================================================= */
 
-use Classes\MyGlobal;
+use Classes\App;
 use Classes\Image;
 
 /**
@@ -18,29 +18,11 @@ use Classes\Image;
  * @return boolean true if key in array
  */
 function check_key($key, $array) {
-    if(isset($array) && array_key_exists($key, $array)) {
+    if(is_array($array) && array_key_exists($key, $array)) {
         return $array[$key];
     } else {
         return false;
     }
-}
-
-/**
- * Check user access
- *
- * @param string $flag Flag title
- *
- * @return boolean true if user have access
- */
-function have_flag($flag) {
-    global $_SESSION;
-    if (!strlen($flag)) {
-        return true;
-    }
-    if(!check_key('FLAGS',$_SESSION)) {
-        return false;
-    }
-    return strstr($_SESSION['FLAGS'], $flag);
 }
 
 /**
@@ -271,97 +253,6 @@ function show_month($month, $show_day_func = null) {
     }
 }
 
-/**
- * Generate salt for user account
- *
- * @return string Generated salt
- */
-function user_generate_salt() {
-    $salt = '';
-    for ($i = 0; $i < 22; $i++) {
-        do {
-            $chr = rand(48, 122);
-        } while (in_array($chr, range(58, 64)) or in_array($chr, range(91, 96)));
-
-        $salt .= chr($chr);
-    }
-    return $salt;
-}
-
-/**
- * Get salt for user account
- *
- * @param integer $uid User ID
- *
- * @return string User's salt
- */
-function user_get_salt($uid) {
-    list($salt) = my_select_row("SELECT salt FROM users WHERE id='{$uid}'");
-    return $salt;
-}
-
-/**
- * Encrypt input password with salt
- *
- * @param string $passwd Input password
- * @param string $salt Input salt
- *
- * @return string Generated hash
- */
-function user_encrypt_password($passwd, $salt) {
-    if (mb_strlen($salt) === 22) {
-        return crypt($passwd, '$2a$13$' . $salt);
-    } else {
-        return md5($passwd);
-    }
-}
-
-/**
- * Generate RememberMe cookie and token.
- *
- */
-function user_set_rememberme() {
-    global $COOKIE_NAME, $SUBDIR;
-    if(!$_SESSION['UID'] || !$COOKIE_NAME) {
-        return false;        
-    }    
-    $token=user_encrypt_password(user_generate_salt(), user_generate_salt());
-    $query = "update users set token='" . $token . "' where id='{$_SESSION['UID']}'";
-    MyGlobal::get('DB')->query($query);
-    setcookie($COOKIE_NAME.'_REMEMBERME', $token, time()+31*24*3600, $SUBDIR);
-}
-
-/**
- * Return users id and flags if he have valid RememberMe cookie. 
- *
- * @return mixed Array if complete, false if error.
- */
-function user_get_rememberme() {
-    global $COOKIE_NAME;
-    if(array_key_exists($COOKIE_NAME.'_REMEMBERME', $_COOKIE)){
-        $token = MyGlobal::get('DB')->test_param($_COOKIE[$COOKIE_NAME.'_REMEMBERME']);
-        $query = "select id,flags from users where token='" . $token . "'";
-        $result = MyGlobal::get('DB')->query($query);
-        if($result->num_rows) {
-            $row=$result->fetch_array();
-            return [$row['id'],$row['flags']];
-        }
-    }
-    return false;
-}
-
-/**
- * Delete RememberMe cookie and token.
- *
- */
-function user_del_rememberme() {
-    global $COOKIE_NAME, $SUBDIR;
-    if(array_key_exists($COOKIE_NAME.'_REMEMBERME', $_COOKIE)){
-        setcookie($COOKIE_NAME.'_REMEMBERME', '', time(), $SUBDIR);
-        $query = "update users set token='' where id='{$_SESSION['UID']}'";
-        MyGlobal::get('DB')->query($query);
-    }
-}
 
 /**
  * Return CSRF token value from session. 
@@ -371,7 +262,7 @@ function user_del_rememberme() {
 function get_csrf_token() {
     global $_SESSION;
     if(!check_key('CSRF_Token',$_SESSION)) {
-        $token = user_encrypt_password(user_generate_salt(), user_generate_salt());
+        $token = App::$user->encryptPassword(App::$user->generateSalt(), App::$user->generateSalt());
         $_SESSION['CSRF_Token'] = $token;
     }
     return $_SESSION['CSRF_Token'];
@@ -383,8 +274,8 @@ function get_csrf_token() {
  * @return string Output string
  */
 function check_csrf_token() {
-    global $input, $_SESSION;
-    return $input['CSRF_Token'] === $_SESSION['CSRF_Token'];
+    global $_SESSION;
+    return App::$input['CSRF_Token'] === $_SESSION['CSRF_Token'];
 }
 
 
@@ -396,12 +287,18 @@ function check_csrf_token() {
  * @return string Output string
  */
 function get_block($name) {
-    return MyGlobal::get('Blocks')->content($name);
+    return App::get('Blocks')->content($name);
 }
 
+/**
+ * Return result of php script
+ *
+ * @param string $file_name File name
+ *
+ * @return string Value
+ */
 function include_php($file_name) {
-    $DIR = MyGlobal::get('DIR');
-    $SUBDIR = MyGlobal::get('SUBDIR');
+    $DIR = App::$DIR;
     if(is_file($DIR . $file_name)) {
         ob_start();
         include_once($DIR . $file_name);
@@ -410,17 +307,6 @@ function include_php($file_name) {
         $content = my_msg('error', [], 'Файл ' . $file_name . ' не найден !');
     }
     return $content;
-}
-
-/**
- * Return value from MyGlobal object (for Twig templates)
- *
- * @param string $key Value key
- *
- * @return string Value
- */
-function myglobal($key) {
-    return MyGlobal::get($key);
 }
 
 
@@ -450,11 +336,10 @@ function del_tree($dir) {
  * @return bool True if complete
  */
 function clear_cache_dir($subdir = '') {
-    global $DIR;
     if (strlen($subdir)) {
-        return del_tree($DIR . 'var/cache/' . $subdir );
+        return del_tree(App::$DIR . 'var/cache/' . $subdir );
     } else {
-        return del_tree($DIR . 'var/cache');
+        return del_tree(App::$DIR . 'var/cache');
     }
 }
 
@@ -469,7 +354,7 @@ function my_json_decode($json) {
     if(strlen($json)) {
         $result = json_decode($json, true);
         if(json_last_error() != JSON_ERROR_NONE) {
-            add_to_debug( 'JSON decode error: ' . json_last_error_msg() . ' JSON: ' . $json);
+            App::debug( 'JSON decode error: ' . json_last_error_msg() . ' JSON: ' . $json);
             return false;
         }
     } else {

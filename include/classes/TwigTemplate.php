@@ -8,6 +8,8 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Extension\DebugExtension;
 use Stormiix\Twig\Extension\MixExtension;
 
+use Classes\App;
+
 class TwigTemplate {
     private $twig;
     private $environment;
@@ -38,7 +40,6 @@ class TwigTemplate {
      */
     public function __construct($template_type, $config_override = [], $content = null)
     {
-        global $DIR, $SUBDIR, $settings, $server;
         $this->template_type = $template_type;
         
         if(is_array($config_override)) {
@@ -50,7 +51,7 @@ class TwigTemplate {
         switch ($this->template_type) {
             case $this::TYPE_FILE:
                     $loader = new FilesystemLoader();
-                    $loader->addPath($DIR . $this->config['template_dir']);
+                    $loader->addPath(App::$DIR . $this->config['template_dir']);
                 break;
             case $this::TYPE_ARRAY:
                     $loader = new ArrayLoader($content);
@@ -66,7 +67,7 @@ class TwigTemplate {
         }
         
         $environment = new Environment($loader, [
-            'cache' => $this->config['debug'] ? false : $DIR . $this->config['cache_dir'],
+            'cache' => $this->config['debug'] ? false : App::$DIR . $this->config['cache_dir'],
             'debug' => $this->config['debug'],
             'strict_variables' => $this->config['debug'],
             'auto_reload' => $this->config['debug'],
@@ -78,17 +79,16 @@ class TwigTemplate {
         }
       
         $mix = new MixExtension(
-            $DIR . 'theme/',     // the absolute public directory
+            App::$DIR . 'theme/',     // the absolute public directory
             'mix-manifest.json'   // the manifest filename (default value is 'mix-manifest.json')
         );
         $environment->addExtension($mix);
         
-        $environment->addGlobal('DIR', $SUBDIR);
-        $environment->addGlobal('SUBDIR', $SUBDIR);
-        $environment->addGlobal('PHP_SELF', $server['PHP_SELF']);
-        $environment->addGlobal('PHP_SELF_DIR', $server['PHP_SELF_DIR']);
-        $environment->addGlobal('settings', $settings);
-        $environment->addGlobal('server', $server);
+        $environment->addGlobal('SUBDIR', App::$SUBDIR);
+        $environment->addGlobal('PHP_SELF', App::$server['PHP_SELF']);
+        $environment->addGlobal('PHP_SELF_DIR', App::$server['PHP_SELF_DIR']);
+        $environment->addGlobal('settings', App::$settings);
+        $environment->addGlobal('server', App::$server);
 
         $this->twig = $environment;
     }

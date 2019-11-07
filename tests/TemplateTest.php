@@ -17,13 +17,13 @@ class TemplateTest extends TestCase
 
     public function testFileParse()
     {
-        $content=$this->Template->get_tpl_by_title('tests/test.tpl');
+        $content=$this->Template->get_by_title('tests/test.tpl');
         self::assertStringStartsWith('<!DOCTYPE html>', $content);
     }
     
     public function testSQLParse()            
     {
-        $content=$this->Template->get_tpl_by_title('user_login_promt');
+        $content=$this->Template->get_by_title('user_login_promt');
         self::assertStringStartsWith('<div class="center-block" align="center">', $content);
     }
     

@@ -1,7 +1,6 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\Blocks;
 use Classes\MyTemplate;
 
 require_once 'tests/bootstrap.php';
@@ -14,8 +13,7 @@ class MyTemplateTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Blocks = new Blocks();
-        $this->MyTemplate = new Classes\MyTemplate($this->Blocks);
+        $this->MyTemplate = new MyTemplate;
     }
 
     public function testSimpleParse()
@@ -26,7 +24,7 @@ class MyTemplateTest extends TestCase
     
     public function testSQLParse()            
     {
-        $result=my_query("select login from users where login='boot'");
+        $result=Classes\App::$db->query("select login from users where login='boot'");
         $content=$this->MyTemplate->parse("[%loop_begin%]\n[%row(login)%]\n[%loop_end%]",[],$result);
         self::assertEquals('boot' . "\n", $content);
     }

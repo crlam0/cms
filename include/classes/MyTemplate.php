@@ -25,7 +25,7 @@
 
 namespace Classes;
 
-use Classes\MyGlobal;
+use Classes\App;
 
 class MyTemplate {    
 
@@ -41,7 +41,6 @@ class MyTemplate {
      * @return string Output string
      */
     private function parse_string($content, $tags = array(), $sql_row = array(), $sql_row_summ = array(), $inner_content = '') {
-        global $input, $settings, $server, $DIR, $SUBDIR;
         preg_match_all("@\[\%(.*?)\%\]@", $content, $temp, PREG_SET_ORDER);
         $total = count($temp);
         $a = 0;
@@ -75,7 +74,7 @@ class MyTemplate {
                 } elseif ($tagclass == "var") {
                     eval("\$replace_str=\"\$" . $tagparam . "\";");
                 } elseif ($tagclass == 'settings') {
-                    isset($settings[$tagparam]) ? $replace_str = $settings[$tagparam] : $replace_str = '';
+                    isset(App::$settings[$tagparam]) ? $replace_str = App::$settings[$tagparam] : $replace_str = '';
                 } elseif ($tagclass == 'row') {
                     if (strstr($tagparam, ',')) {
                         $param = explode(',', $tagparam);
@@ -109,8 +108,8 @@ class MyTemplate {
                     if (file_exists($tagparam)) {
                         $fname = $tagparam;
                     }    
-                    if (file_exists($DIR . $tagparam)) {
-                        $fname = $DIR . $tagparam;
+                    if (file_exists(App::$DIR . $tagparam)) {
+                        $fname = App::$DIR . $tagparam;
                     }
                     if (isset($fname) && strlen($fname)) {
                         ob_start();
@@ -137,7 +136,7 @@ class MyTemplate {
                         return "";
                     }
                 } elseif ($tagclass == 'block') {
-                    $replace_str = MyGlobal::get('Blocks')->content($tagparam);
+                    $replace_str = App::get('Blocks')->content($tagparam);
                 } elseif (($tagclass == 'inner_content') && (strlen($inner_content))) {
                     $replace_str = $inner_content;
                 } elseif (isset($tags[$tagclass])) {
@@ -166,11 +165,10 @@ class MyTemplate {
      * @return string Output content
      */
     public function parse($content, $tags = array(), $sql_result = array(), $inner_content = '') {
-        global $server, $BASE_HREF, $SUBDIR;
-        $tags['PHP_SELF'] = $server['PHP_SELF'];
-        $tags['PHP_SELF_DIR'] = $server['PHP_SELF_DIR'];
-        $tags['BASE_HREF'] = $BASE_HREF;
-        $tags['SUBDIR'] = $SUBDIR;
+        $tags['PHP_SELF'] = App::$server['PHP_SELF'];
+        $tags['PHP_SELF_DIR'] = App::$server['PHP_SELF_DIR'];
+        $tags['BASE_HREF'] = App::$SUBDIR;
+        $tags['SUBDIR'] = App::$SUBDIR;
         //foreach ($tags as $key => $value) { $result=str_replace("[%".$key."%]",$value,$result); }
         $strings = explode("\n", $content);
         $loop_start = 0;

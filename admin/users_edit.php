@@ -15,8 +15,8 @@ if ($input['add']) {
             $content.=my_msg_to_str('error','','Такой пользователь уже существует ! ('.$input['form']['login'].')');
     }else{
         $input['form']['flags'] = implode(";", $input['flags']);
-        $input['form']['salt'] = user_generate_salt();
-        $input['form']['passwd'] = user_encrypt_password($input['form']['passwd'], $input['form']['salt']);
+        $input['form']['salt'] = App::$user->generateSalt();
+        $input['form']['passwd'] = App::$user->encryptPassword($input['form']['passwd'], $input['form']['salt']);
         $input['form']['regdate'] = 'now()';
         $query = "insert into users " . db_insert_fields($input['form']);
         my_query($query);
@@ -27,7 +27,7 @@ if ($input['add']) {
 if ($input['edit']) {
     $input['form']['flags']=implode(";", $input['flags']);
     if(strlen($input['form']['passwd'])){
-        $input['form']['passwd']= user_encrypt_password ($input['form']['passwd'] , user_get_salt($input['id']) );
+        $input['form']['passwd']= App::$user->encryptPassword($input['form']['passwd'] , App::$user->getSalt($input['id']) );
     }else{
         unset($input['form']['passwd']);
     }

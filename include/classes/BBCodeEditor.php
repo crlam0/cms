@@ -1,6 +1,7 @@
 <?php
 
 namespace Classes;
+use Classes\App;
 
 /**
  * Class BBCODE_EDITOR
@@ -399,8 +400,7 @@ class BBCodeEditor {
      * @return string Output string
      */
     public function GetValue() {
-        global $input;
-        return $input['bbcode_textarea'];
+        return App::$input['bbcode_textarea'];
     }
 
     /**
@@ -409,8 +409,7 @@ class BBCodeEditor {
      * @return string Output string
      */
     public function GetHTML() {
-        global $input;
-        return $this->bb_parse($input['bbcode_textarea']);
+        return $this->bb_parse(App::$input['bbcode_textarea']);
     }
 
 }

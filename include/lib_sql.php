@@ -6,35 +6,8 @@
 
   ========================================================================= */
 
-use Classes\SQLHelper;
-use Classes\MyGlobal;
+use Classes\App;
 
-/**
- * @var Classes\SQLHelper
- */
-// $DB;
-
-$DB = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
-
-$mysqli=$DB->mysqli;
-
-MyGlobal::set('DB', $DB );
-
-/**
- * @var Array Debug array of all SQL query
- */
-empty($DEBUG['sql_query_array']);
-
-/**
- * Test field marameter for deny sql injections
- *
- * @param string $sql Input string
- *
- * @return string Output string
- */
-function db_test_param($str,$param='') {
-    return MyGlobal::get('DB')->test_param($str,$param);
-}
 
 /**
  * Replace for mysql_query
@@ -45,7 +18,7 @@ function db_test_param($str,$param='') {
  * @return array mysqli result
  */
 function my_query($sql, $dont_debug=false) {
-    return MyGlobal::get('DB')->query($sql, $dont_debug);
+    return App::$db->query($sql, $dont_debug);
 }
 
 /**
@@ -57,7 +30,7 @@ function my_query($sql, $dont_debug=false) {
  * @return array One row
  */
 function my_select_row($sql, $dont_debug=false) {
-    return MyGlobal::get('DB')->select_row($sql, $dont_debug);    
+    return App::$db->select_row($sql, $dont_debug);    
 }
 
 /**
@@ -69,7 +42,7 @@ function my_select_row($sql, $dont_debug=false) {
  */
 
 function db_insert_fields($fields) {
-    return MyGlobal::get('DB')->insert_fields($fields);
+    return App::$db->insert_fields($fields);
 }
 
 /**
@@ -81,10 +54,10 @@ function db_insert_fields($fields) {
  */
 
 function db_update_fields($fields) {
-    return MyGlobal::get('DB')->update_fields($fields);
+    return App::$db->update_fields($fields);
 }
 
-$DB->query('SET character_set_client = utf8', true);
-$DB->query('SET character_set_results = utf8', true);
-$DB->query('SET character_set_connection = utf8', true);
+App::$db->query('SET character_set_client = utf8', true);
+App::$db->query('SET character_set_results = utf8', true);
+App::$db->query('SET character_set_connection = utf8', true);
 

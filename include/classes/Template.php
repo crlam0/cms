@@ -5,16 +5,15 @@ namespace Classes;
 
 use Classes\MyTemplate;
 use Classes\TwigTemplate;
-use Classes\MyGlobal;
+use Classes\App;
 
 class Template {
     private $MyTemplate;
     private $TwigTemplate;
     
     public function __construct () {
-        global $settings;
         $this->MyTemplate = new MyTemplate();
-        $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => $settings['debug']]);
+        $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => App::$settings['debug']]);
     }
 
     /**
@@ -27,16 +26,15 @@ class Template {
      *
      * @return string Output content
      */
-    private function get_twig_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){
-        global $DIR, $settings;
-        add_to_debug("Parse template '{$template['title']}'");    
+    private function get_twig_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){        
+        App::debug("Parse template '{$template['title']}'");    
         if ($template['file_name']) {        
             if(!strstr($template['file_name'],'.html.twig')) {
                 $template['file_name'].='.html.twig';
             }
             $fname = '';
-            if (file_exists($DIR . 'templates/' . $template['file_name'])) {
-                $fname = $DIR . 'templates/' . $template['file_name'];
+            if (file_exists(App::$DIR . 'templates/' . $template['file_name'])) {
+                $fname = App::$DIR . 'templates/' . $template['file_name'];
                 $fname = $template['file_name'];
             }    
             if ($fname) {
@@ -48,7 +46,7 @@ class Template {
                 return '';
             }
         } else {
-            $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, ['debug' => $settings['debug']], $template['content']);
+            $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, ['debug' => App::$settings['debug']], $template['content']);
         }
 
         if($sql_result instanceof \mysqli_result) {
@@ -63,7 +61,6 @@ class Template {
         $twig->add_function('add_block');
         $twig->add_function('include_php');
         $twig->add_function('path');
-        $twig->add_function('myglobal');
         if(array_key_exists('functions',$tags) && is_array($tags['functions'])) {
             foreach($tags['functions'] as $function) {
                 $twig->add_function($function);
@@ -84,14 +81,13 @@ class Template {
      * @return string Output content
      */
     private function get_my_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){
-        global $DIR;
         if (array_key_exists('file_name', $template) && $template['file_name']) {
             $fname = '';
             if (file_exists($template['file_name'])) {
                 $fname = $template['file_name'];
             }    
-            if (file_exists($DIR . $template['file_name'])) {
-                $fname = $DIR . $template['file_name'];
+            if (file_exists(App::$DIR . $template['file_name'])) {
+                $fname = App::$DIR . $template['file_name'];
             }    
             if ($fname) {
                 $template['content'] = implode('', file($fname));
@@ -104,20 +100,10 @@ class Template {
         if (!strstr($template['content'], '[%')) {
             return($template['content']);
         }
-        add_to_debug("Parse template '{$template['title']}'");
+        App::debug("Parse template '{$template['title']}'");
         return $this->MyTemplate->parse($template['content'], $tags, $sql_result, $inner_content);
     }
 
-    private function is_root () {
-        return MyGlobal::get('Routing')->isIndexPage();
-    }
-    
-    private function is_admin () {
-        global $server;        
-        $URI = $server['REQUEST_URI'];
-        return strstr($URI,'admin/');
-    }
-    
     /**
      * Parse template by title
      *
@@ -128,18 +114,12 @@ class Template {
      *
      * @return string Output content
      */
-    function get_tpl_by_title($title, $tags = [], $sql_result = [], $inner_content = '') {
-        global $server, $DIR;
-        
+    function get_by_title($title, $tags = [], $sql_result = [], $inner_content = '') {
+                
         $template = null;
-        
-        if(!$this->is_root() && !$this->is_admin() && is_file($DIR.'theme/content.tpl') && !isset($tags['conent_included'])) {
-            $tags['conent_included'] = true;
-            $inner_content = get_tpl_by_title($DIR.'theme/content.tpl', $tags, $sql_result, $inner_content);
-        }
-        
-        if (file_exists(dirname($server['SCRIPT_FILENAME']) . '/templates.tpl')) {
-            $temp = $this->MyTemplate->load_from_file(dirname($server['SCRIPT_FILENAME']) . '/templates.tpl', $title);
+
+        if (file_exists(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl')) {
+            $temp = $this->MyTemplate->load_from_file(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl', $title);
             if ($temp) {
                 $template['title'] = $title;            
                 $template['content'] = $temp;
@@ -157,10 +137,10 @@ class Template {
             $template['template_type'] = 'twig';
         }
         if (!$template) {
-            $template = my_select_row("SELECT * FROM templates WHERE title='$title' AND '" . $server["REQUEST_URI"] . "' LIKE concat('%',uri,'%')", true);
+            $template = App::$db->select_row("SELECT * FROM templates WHERE title='{$title}' AND '" . App::$server['REQUEST_URI'] . "' LIKE concat('%',uri,'%')", true);
         }
         if (!$template) {
-            $template = my_select_row("SELECT * FROM templates WHERE title='$title'", true);
+            $template = App::$db->select_row("SELECT * FROM templates WHERE title='{$title}'", true);
         }
         if (!$template) {
             $tags['title'] = $title;

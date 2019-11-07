@@ -1,19 +1,19 @@
 <?php
 
 use Classes\Template;
-use Classes\MyGlobal;
+use Classes\App;
 use Classes\Blocks;
 use Classes\BlocksLocal;
 
-if(file_exists($INC_DIR.'classes/BlocksLocal.php')) {
+if(file_exists(__DIR__.'/Classes/BlocksLocal.php')) {
     $BlocksObject = new BlocksLocal();    
 } else {
     $BlocksObject = new Blocks();
 }
-MyGlobal::set('Blocks', $BlocksObject);
+App::set('Blocks', $BlocksObject);
 
 $Template = new Template();
-MyGlobal::set('Template', $Template);
+App::set('Template', $Template);
 
 
 /**
@@ -27,8 +27,7 @@ MyGlobal::set('Template', $Template);
  * @return string Output content
  */
 function get_tpl_by_title($title, $tags = [], $sql_result = [], $inner_content = '') {
-    global $Template;
-    return $Template->get_tpl_by_title($title, $tags, $sql_result, $inner_content);
+    return App::get('Template')->get_by_title($title, $tags, $sql_result, $inner_content);
 }
 
 /**
@@ -41,6 +40,5 @@ function get_tpl_by_title($title, $tags = [], $sql_result = [], $inner_content =
  * @return string Output content
  */
 function get_tpl_default($tags = [], $sql_result = [], $inner_content = '') {
-    global $Template;
-    return $Template->get_tpl_by_title(MyGlobal::get('tpl_default'), $tags, $sql_result, $inner_content);
+    return App::get('Template')->get_by_title(App::get('tpl_default'), $tags, $sql_result, $inner_content);
 }

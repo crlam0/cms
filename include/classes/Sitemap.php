@@ -26,9 +26,8 @@ class Sitemap {
     public $pages;
     
     public function __construct(){
-        $settings = MyGlobal::get('settings');
-        if(isset($settings['sitemap_static_pages']) && is_array($settings['sitemap_static_pages'])){
-            $this->static_pages = array_merge($this->static_pages, $settings['sitemap_static_pages']);
+        if(isset(App::$settings['sitemap_static_pages']) && is_array(App::$settings['sitemap_static_pages'])){
+            $this->static_pages = array_merge($this->static_pages, App::$settings['sitemap_static_pages']);
         }
         $this->pages=$this->static_pages;
     }
@@ -61,12 +60,12 @@ class Sitemap {
         if(in_array('article', $types)){
             $this->add_page('article/', 'monthly', '0.50');
             $query = 'SELECT * from article_list order by date_add asc';
-            $result = MyGlobal::get('DB')->query($query, true);
+            $result = App::$db->query($query, true);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_article_list_href($row['id']), 'monthly', '0.80');
             }
             $query = 'SELECT * from article_item order by date_add asc';
-            $result = MyGlobal::get('DB')->query($query, true);
+            $result = App::$db->query($query, true);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_article_href($row['id']), 'monthly', '0.80');
             }
@@ -74,7 +73,7 @@ class Sitemap {
         if(in_array('blog', $types)){
             $this->add_page('blog/', 'monthly', '0.50');
             $query = "SELECT * from blog_posts where active='Y' order by date_add asc";
-            $result = MyGlobal::get('DB')->query($query, true);
+            $result = App::$db->query($query, true);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_post_href(NULL,$row), 'monthly', '0.80');
             }    
@@ -82,7 +81,7 @@ class Sitemap {
         if(in_array('gallery', $types)){
             $this->add_page('gallery/', 'monthly', '0.50');
             $query = 'SELECT * from gallery_list order by title asc';
-            $result = MyGlobal::get('DB')->query($query, true);
+            $result = App::$db->query($query, true);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_gallery_list_href($row['id']), 'monthly', '0.80');
             }
@@ -90,12 +89,12 @@ class Sitemap {
         if(in_array('catalog', $types)){
             $this->add_page('catalog/', 'monthly', '0.80');
             $query = 'SELECT id from cat_part order by num,title asc';
-            $result = MyGlobal::get('DB')->query($query, true);
+            $result = App::$db->query($query, true);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_cat_part_href($row['id']), 'monthly', '0.40');
             }
             $query = 'SELECT part_id,seo_alias from cat_item order by num,title asc';
-            $result = MyGlobal::get('DB')->query($query, true);
+            $result = App::$db->query($query, true);
             while ($row = $result->fetch_array()) {
                 $url = get_cat_part_href($row['part_id']) . $row['seo_alias'];
                 $this->add_page($url, 'monthly', '0.30');
@@ -108,10 +107,8 @@ class Sitemap {
      *
      * @return array ['output','count']
      */
-    public function write($test_only = false){
-        global $server, $DIR, $SUBDIR;
-        
-        $ServerUrl = $server['REQUEST_SCHEME'] . '://' . $server['HTTP_HOST'] . $SUBDIR;
+    public function write($test_only = false){        
+        $ServerUrl = App::$server['REQUEST_SCHEME'] . '://' . App::$server['HTTP_HOST'] . App::$SUBDIR;
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
 
@@ -151,7 +148,7 @@ class Sitemap {
 
         $xml = $dom->saveXML();
         if(!$test_only) {
-            file_put_contents($DIR . 'sitemap.xml', $xml);
+            file_put_contents(App::$DIR . 'sitemap.xml', $xml);
         }    
         return array('output'=>$output,'count'=>count($this->pages));
     }

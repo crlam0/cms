@@ -2,12 +2,21 @@
 
 use PHPUnit\Framework\TestCase;
 use Classes\Comments;
+use Classes\App;
+use Classes\User;
 
 require_once 'tests/bootstrap.php';
+require_once 'include/lib_templates.php';
+require_once 'include/lib_functions.php';
+require_once 'include/lib_messages.php';
 
 class CommentsTest extends TestCase
 {
 
+    public function setUp()
+    {
+        App::$user = new User;
+    }
     public function testCommentsForm()
     {
         $Comments = new Comments('test');

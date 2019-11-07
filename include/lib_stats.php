@@ -1,28 +1,6 @@
 <?php
 
-/*
-CREATE TABLE `visitor_log` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `date` DATETIME NULL DEFAULT NULL,
-    `day` VARCHAR(16) NULL DEFAULT NULL,
-    `remote_addr` VARCHAR(16) NULL DEFAULT NULL,
-    `remote_host` VARCHAR(255) NULL DEFAULT NULL,
-    `user_agent` VARCHAR(64) NULL DEFAULT NULL,
-    `script_name` VARCHAR(64) NULL DEFAULT NULL,
-    `request_uri` VARCHAR(255) NULL DEFAULT NULL,
-    `uid` INT(11) NULL DEFAULT NULL,
-    `unique_visitor` INT(1) NOT NULL DEFAULT '1',
-    PRIMARY KEY (`id`),
-    INDEX `day` (`day`),
-    INDEX `remote_addr` (`remote_addr`),
-    INDEX `remote_host` (`remote_host`),
-    INDEX `user_agent` (`user_agent`),
-    INDEX `script_name` (`script_name`),
-    INDEX `uid` (`uid`),
-    INDEX `unique_visitor` (`unique_visitor`)
-)
-
- */
+use Classes\App;
 
 $deny_urls=array('img','image','admin/','favicon');
 $deny_remote_hosts=array('bot','spider','yandex','google','mail.ru','crawl');
@@ -55,15 +33,13 @@ if (!$deny) {
      */
     $unique=0;
     $query="SELECT id FROM visitor_log WHERE remote_addr='" . $server['REMOTE_ADDR'] . "'";
-    $result=$DB->query($query, true);
+    $result=App::$db->query($query, true);
     if(!$result->num_rows)$unique=1;    
     $data['date']='now()';
     $data['day']="date_format(now(),'%Y-%m-%d')";
     $data['unique_visitor']=$unique;
     $uid = 0;
-    if (array_key_exists('UID', $_SESSION) && $_SESSION['UID']){
-        $data['uid'] = $_SESSION['UID'];
-    }
+    $data['uid'] = App::$user->id;
     $data['remote_addr']=$server['REMOTE_ADDR'];
     $data['remote_host']=(array_key_exists('REMOTE_HOST', $server) && $server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
     $data['script_name']=$server['SCRIPT_NAME'];
@@ -77,6 +53,6 @@ if (!$deny) {
     $data['user_agent']=$server['HTTP_USER_AGENT'];
 
     $query = "insert into visitor_log" . db_insert_fields($data);
-    $DB->query($query, true);
+    App::$db->query($query, true);
     unset($data);
 }

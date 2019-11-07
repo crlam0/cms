@@ -7,9 +7,15 @@
   ========================================================================= */
 
 namespace Classes;
+use Classes\App;
 
 class SQLHelper {
     public $mysqli;
+    
+    /**
+     * @var Array Debug array of all SQL query
+     */
+    public $query_log_array;
     
     private $host;
     private $user;
@@ -39,7 +45,9 @@ class SQLHelper {
         $this->mysqli = new \mysqli($this->host, $this->user, $this->passwd, $this->dbname);
         if (mysqli_connect_error()) {
             die('DB connect error ' . mysqli_connect_errno() . ': ' . mysqli_connect_error());
-        }        
+        }
+        empty($this->query_log_array);
+        $this->query_log_array[] = 'Connected to ' . $host;
     }
     
     
@@ -52,26 +60,22 @@ class SQLHelper {
      * @return array mysqli result
      */
     public function query($sql, $dont_debug=false) {
-        global $settings,$DEBUG;
-        // if (!$dont_debug) {
-        //     print_debug($sql);
-        // }    
-        if($settings['debug']){
+        if(App::$settings['debug']){
             $start_time = microtime(true);
         }
         if($this->mysqli) {
             $result = $this->mysqli->query($sql);
         }
-        if($settings['debug']){
+        if(App::$settings['debug']){
             $time = sprintf('%.4F', microtime(true) - $start_time);
-            $DEBUG['sql_query_array'][] = $time . "\t" . $sql;
+            $this->query_log_array[] = $time . "\t" . $sql;
             if(strlen($this->mysqli->info)) {
-                $DEBUG['sql_query_array'][] = $this->mysqli->info;
+                $this->query_log_array[] = $this->mysqli->info;
             }
         }
         if (!$result) {
             echo 'SQL Error: '.$this->mysqli->error;
-            if($settings['debug']){
+            if(App::$settings['debug']){
                 echo '<br />Query is: '.$sql;
                 throw new \InvalidArgumentException('SQL Error: ' . $sql . ' Query is: ' . $sql);
             }
@@ -106,14 +110,13 @@ class SQLHelper {
      * @return string Output string
      */
     public function test_param($str,$param='') {
-        global $_SERVER;
         if (is_array($str)) {
             foreach ($str as $key => $value) {
                 $str[$key]=$this->test_param($value);
             }
             return $str;
         }    
-        if(!strstr($_SERVER['PHP_SELF'], 'admin/')) {
+        if(!strstr(App::$server['PHP_SELF'], 'admin/')) {
             $str=htmlspecialchars($str);            
         }
         $str=$this->escape_string($str);        

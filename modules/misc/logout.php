@@ -2,8 +2,11 @@
 if(!isset($input)) {
     require '../../include/common.php';
 }
-user_del_rememberme();
+
+use Classes\App;
+App::$user->delRememberme(App::$user->id,$COOKIE_NAME);
 $_SESSION['UID']=null;
 $_SESSION['FLAGS']='';
-redirect($BASE_HREF);
+App::$user->logout();
+redirect(App::$SUBDIR);
 exit();

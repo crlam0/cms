@@ -7,7 +7,7 @@
 
   ========================================================================= */
 
-use Classes\MyGlobal;
+use Classes\App;
 
 
 /**
@@ -59,7 +59,7 @@ function get_article_list_href($list_id, $row = array()) {
         return 'article/' . $row['seo_alias'] . '/';
     }    
     $query = "SELECT seo_alias FROM article_list WHERE id='{$list_id}'";
-    $result = MyGlobal::get('DB')->query($query, true);
+    $result = App::$db->query($query, true);
     list($seo_alias) = $result->fetch_array();
     if (strlen($seo_alias)) {
         return 'article/' . $seo_alias . '/';
@@ -84,7 +84,7 @@ function get_article_href($article_id, $row = array()) {
         return get_article_list_href($row['list_id']) . $row['seo_alias'] . '/';
     }
     $query = "SELECT seo_alias,list_id FROM article_item WHERE id='{$article_id}'";
-    $result = MyGlobal::get('DB')->query($query, true);
+    $result = App::$db->query($query, true);
     list($seo_alias, $list_id) = $result->fetch_array();
     if (strlen($seo_alias)) {
         return get_article_list_href($list_id) . $seo_alias . '/';
@@ -109,7 +109,7 @@ function get_media_list_href($list_id, $row = array()) {
         return 'media/' . $row['seo_alias'] . '/';
     }    
     $query = "SELECT seo_alias FROM media_list WHERE id='{$list_id}'";
-    $result = MyGlobal::get('DB')->query($query, true);
+    $result = App::$db->query($query, true);
     list($seo_alias) = $result->fetch_array();
     if (strlen($seo_alias)) {
         return 'media/' . $seo_alias . "/";
@@ -129,7 +129,7 @@ function get_media_list_href($list_id, $row = array()) {
  */
 function cat_prev_part($prev_id, $deep, $array) {
     $query = "SELECT id,title,prev_id,seo_alias FROM cat_part WHERE id='{$prev_id}' order by title asc";
-    $result = MyGlobal::get('DB')->query($query);
+    $result = App::$db->query($query);
     $array[$deep] = $result->fetch_array();
     if ($array[$deep]['prev_id']){
         $array = cat_prev_part($array[$deep]['prev_id'], $deep + 1, $array);
@@ -177,7 +177,7 @@ function get_gallery_list_href($list_id, $row = array()) {
         return 'gallery/' . $row['seo_alias'] . '/';
     }    
     $query = "SELECT seo_alias FROM gallery_list WHERE id='{$list_id}'";
-    $result = MyGlobal::get('DB')->query($query, true);
+    $result = App::$db->query($query, true);
     list($seo_alias) = $result->fetch_array();
     if (strlen($seo_alias)) {
         return 'gallery/' . $seo_alias . '/';
@@ -316,12 +316,12 @@ function add_nav_item($title, $url = null, $skip_duplicates = false) {
 function get_id_by_alias ($table, $seo_alias, $exit_with_404 = false) {
     global $tags;
     $query="select id from {$table} where seo_alias = '{$seo_alias}'";
-    $result=MyGlobal::get('DB')->query($query);
+    $result=App::$db->query($query);
     list($id)=$result->fetch_array();
     if ((int)$id > 0) {
         return $id;
     } elseif ($exit_with_404) {
-        header(MyGlobal::get('server')['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
+        header(App::$server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
         $tags['Header'] = 'Страница "' . $seo_alias . '" не найдена.';
         $content = my_msg_to_str('error', [], $tags['Header']);
         echo get_tpl_default($tags, null, $content);

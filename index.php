@@ -7,23 +7,19 @@ if( isset($REDIRECT_TO_HTTPS) && $server['REQUEST_SCHEME'] === 'http' ){
     redirect($url);
 }
 
-use Classes\MyGlobal;
+use Classes\App;
 
-$Routing = MyGlobal::get('Routing');
-
-if( $Routing->isIndexPage() and file_exists('index.local.php')) {
+if( App::$routing->isIndexPage() and file_exists('index.local.php')) {
     $tags['isIndexPage'] = true;
     require 'index.local.php';
     exit;
 }
 
-$file = $Routing->getFileName();
+$file = App::$routing->getFileName();
 
 if($file && is_file($DIR . $file)) {
-    // error_reporting(0);    
     $server['PHP_SELF'] = $SUBDIR.$file;
     $server['PHP_SELF_DIR'] = $SUBDIR.dirname($file) . '/';
-
     require $DIR . $file;
     exit;
 } 

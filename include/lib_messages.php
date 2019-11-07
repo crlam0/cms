@@ -4,7 +4,7 @@
   Messages library.
  */
 
-use Classes\MyGlobal;
+use Classes\App;
 
 /**
  * Return message by title
@@ -19,7 +19,7 @@ function my_msg_to_str($title, $tags = array(), $str = '') {
     global $settings;
     if (strlen($title)) {
         $sql = "select * from messages where title='{$title}'";
-        $message = my_select_row($sql, 1);
+        $message = App::$db->select_row($sql, 1);
     }
     if (strlen($str)){
         $message['content'] = $str;
@@ -121,8 +121,8 @@ function print_array($array) {
  *
  */
 function admin_log($message) {
-    $query = "insert into admin_log(user_id,date,msg) values('" . $_SESSION['UID'] . "',now(),'{$message}')";
-    MyGlobal::get('DB')->query($query);
+    $query = "insert into admin_log(user_id,date,msg) values('" . App::$user->id . "',now(),'{$message}')";
+    App::$db->query($query);
 }
 
 /**

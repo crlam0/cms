@@ -82,12 +82,12 @@ if (($input['view']) || ($input['adding'])) {
     $tags['template_type_select'] = 
             '<option value="my"'.($tags['template_type']==='my' ? ' selected' : '').'>My</option>' . 
             '<option value="twig"'.($tags['template_type']==='twig' ? ' selected' : '').'>Twig</option>';
-    $content.=get_tpl_by_title('templates_edit_form', $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name('templates_edit_form', $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 } else {
-    $query = "SELECT * from templates order by title asc";
+    $query = "SELECT * from templates order by name asc";
     $result = my_query($query);
-    $content.=get_tpl_by_title('templates_edit_table', $tags, $result);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name('templates_edit_table', $tags, $result);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 }
 

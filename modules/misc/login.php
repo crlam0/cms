@@ -20,7 +20,7 @@ if (isset($input) && $input['logon']) {
         }            
         if (mb_strlen($row['salt']) !== 22) {
             $content .= my_msg_to_str('notice','','Ваш пароль устарел. Пожалуйста, поменяйте его на другой <a href="'.App::$SUBDIR.'passwd_change/" />по этой ссылке</a> ');
-            echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+            echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
             exit;
         }
         if (strlen($_SESSION['GO_TO_URI'])) {
@@ -39,7 +39,7 @@ if (!App::$user->id) {
     if(isset($input['login'])) {
         $tags['login'] = $input['login'];
     }
-    $content.=get_tpl_by_title('user_login_promt', $tags);
+    $content.=get_tpl_by_name('user_login_promt', $tags);
 } else {
     $content = my_msg_to_str('user_already_logged_on');
 }

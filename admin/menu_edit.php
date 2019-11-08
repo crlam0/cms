@@ -141,16 +141,16 @@ if (($input["add_menu_item"]) || ($input["edit_menu_item"])) {
             <option " . (check_key('target_type',$tags) == "gallery_list" ? "selected" : "") . " value=\"gallery_list\">Раздел галереи</option>
         </select>
     ";
-    $content.=get_tpl_by_title("menu_item_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("menu_item_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
 if (isset($_SESSION["view_menu"])) {
     $query = "SELECT * from menu_item where menu_id='" . $_SESSION["view_menu"] . "' order by position asc";
     $result = my_query($query);
-    $content.=get_tpl_by_title("menu_item_edit_table", $tags, $result);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("menu_item_edit_table", $tags, $result);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 }
 
 if ($input["del_menu"]) {
@@ -196,13 +196,13 @@ if (($input["add_menu"]) || ($input["edit_menu"])) {
     if ($tags['root'])$tags['root'] = " checked";
     if ($tags['top_menu'])$tags['top_menu'] = " checked";
     if ($tags['bottom_menu'])$tags['bottom_menu'] = " checked";
-    $content.=get_tpl_by_title('menu_edit_form', $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name('menu_edit_form', $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
 $query = "select * from menu_list order by root desc,title asc";
 $result = my_query($query, true);
-$content.=get_tpl_by_title('menu_edit_table', $tags, $result);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content.=get_tpl_by_name('menu_edit_table', $tags, $result);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 ?>

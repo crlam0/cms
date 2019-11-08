@@ -129,7 +129,7 @@ class MyTemplate {
                         return '';
                     }
                 } elseif ($tagclass == 'template') {
-                    $replace_str = get_tpl_by_title($tagparam,$tags, null, $inner_content);
+                    $replace_str = get_tpl_by_name($tagparam,$tags, null, $inner_content);
                     if (!$replace_str) {
                         $tags['title'] = $tagparam;
                         my_msg('tpl_not_found', $tags);

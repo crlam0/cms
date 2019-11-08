@@ -181,8 +181,8 @@ if (($input["edit_post"]) || ($input["add_post"])) {
     $tags['img_tag'] = (is_file($IMG_PATH . $tags['image_name']) ? "<img src=../{$settings['blog_img_path']}{$tags['image_name']} class=margin><br>" : "[ Отсутствует ]<br>");
     $tags['del_button'] = (is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $server["PHP_SELF"] . "?del_img=1&id={$tags['id']}>Удалить</a><br>" : "");
 
-    $content.=get_tpl_by_title("blog_post_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("blog_post_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -191,5 +191,5 @@ $result = my_query($query, true);
 
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 
-$content.=get_tpl_by_title('blog_edit_table', $tags, $result);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content.=get_tpl_by_name('blog_edit_table', $tags, $result);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

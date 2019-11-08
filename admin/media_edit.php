@@ -93,16 +93,16 @@ if (($input["edit_file"]) || ($input["add_file"])) {
     }
     $tags['descr'] = "<textarea class=\"form-control\" name=form[descr] rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
     // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
-    $content.=get_tpl_by_title("media_files_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("media_files_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
 if (isset($_SESSION["view_files"])) {
     $query = "SELECT * from media_files where list_id='" . $_SESSION["view_files"] . "' order by num asc, date_add desc";
     $result = my_query($query, true);
-    $content.=get_tpl_by_title("media_files_edit_table", $tags, $result);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("media_files_edit_table", $tags, $result);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -151,8 +151,8 @@ if (($input["edit_list"]) || ($input["add_list"])) {
     }
     $tags['descr'] = "<textarea class=\"form-control\" name=form[descr] rows=15 cols=80 maxlength=64000>{$tags['descr']}</textarea>";
     // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
-    $content.=get_tpl_by_title("media_list_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("media_list_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -161,6 +161,6 @@ from media_list
 left join media_files on (media_files.list_id=media_list.id) 
 group by media_list.id order by media_list.date_add desc";
 $result = my_query($query, true);
-$content.=get_tpl_by_title("media_list_edit_table", $tags, $result);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content.=get_tpl_by_name("media_list_edit_table", $tags, $result);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

@@ -34,7 +34,7 @@ function part_items($part_id) {
     order by num,title asc";
     $result = my_query($query, true);
     if ($result->num_rows) {
-        $content .= get_tpl_by_title('price_items', [], $result);
+        $content .= get_tpl_by_name('price_items', [], $result);
     }
     return $content;
 }
@@ -98,4 +98,4 @@ if (strlen($row_part['descr_bottom'])) {
  */
 
 
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $final_content);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $final_content);

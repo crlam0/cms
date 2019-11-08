@@ -29,11 +29,11 @@ if (($input['view']) || ($input['adding'])) {
 	$tags['type'] = 'add';
 	$tags['form_title'] = 'Добавление';
     }
-    $content.=get_tpl_by_title('users_flags_edit_form', $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name('users_flags_edit_form', $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 } else {
     $query = "SELECT * from users_flags order by title asc";
     $result = my_query($query);
-    $content.=get_tpl_by_title('users_flags_edit_table', $tags, $result);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name('users_flags_edit_table', $tags, $result);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 }

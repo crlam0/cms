@@ -264,11 +264,11 @@ if (($input['edit']) || ($input['add'])) {
 //	$tags[images]=get_image_list($input["id"]);
 
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $JQUERY_FORM_INC . $EDITOR_MINI_INC;
-    $content .= get_tpl_by_title('cat_item_form', $tags);
+    $content .= get_tpl_by_name('cat_item_form', $tags);
     if($input['edit']){
-        $content .= get_tpl_by_title('cat_item_images_form', $tags);
+        $content .= get_tpl_by_name('cat_item_images_form', $tags);
     }
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit;
 }
 
@@ -286,5 +286,5 @@ function price_content($tmp,$row){
     return $content;
 }
 
-$content = get_tpl_by_title('cat_item_table', $tags, $result);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content = get_tpl_by_name('cat_item_table', $tags, $result);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

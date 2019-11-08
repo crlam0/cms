@@ -1483,7 +1483,7 @@ $(document).ready(function(){
 </tr>
 [%loop_begin%]
 	<tr class="content" align="left">
-	<td><b>[%row(title)%]</b></td>
+	<td><b>[%row(name)%]</b></td>
 	<td>[%row(value)%]</td>
 	<td>[%row(comment)%]</td>
 	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
@@ -1508,9 +1508,9 @@ $(document).ready(function(){
 <input type="hidden" name=[%type%] value=1>
 <table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
 	<tr class=header><td class=header colspan="2">[%form_title%]</td></tr>
-	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[title] value="[%title%]"></td></tr>
-	<tr class="content" align="left"><td>Значение</td><td><input class="form-control" type="edit" maxlength=1024 size="64" name=form[value] value="[%value%]"></td></tr>
-	<tr class="content" align="left"><td>Описание:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[comment] value="[%comment%]"></td></tr>
+	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[name]" value="[%name%]"></td></tr>
+	<tr class="content" align="left"><td>Значение</td><td><input class="form-control" type="edit" maxlength=1024 size="64" name="form[value]" value="[%value%]"></td></tr>
+	<tr class="content" align="left"><td>Описание:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[comment]" value="[%comment%]"></td></tr>
 	<tr class=header align="left"><td align="center" colspan="2"><input class="btn btn-primary" type="submit" value="  Сохранить  "></td></tr>
 </table>
 </form>
@@ -1718,7 +1718,7 @@ $(document).ready(function(){
 </tr>
 [%loop_begin%]
 	<tr class="content" align="left">
-	<td><b>[%row(title)%]</b></td>
+	<td><b>[%row(name)%]</b></td>
 	<td>[%row(comment)%]</td>
 	<td>[%row(template_type)%]</td>
 	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
@@ -1743,10 +1743,10 @@ $(document).ready(function(){
 <input type="hidden" name=[%type%] value=1>
 <table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
 	<tr class=header><td class=header colspan="2">[%form_title%]</td></tr>
-	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[title] value="[%title%]"></td></tr>
-	<tr class="content" align="left"><td>Описание:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[comment] value="[%comment%]"></td></tr>
-	<tr class="content" align="left"><td>URI:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[uri] value="[%uri%]"></td></tr>
-	<tr class="content" align="left"><td>Название файла:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[file_name] value="[%file_name%]"></td></tr>
+	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[name]" value="[%name%]"></td></tr>
+	<tr class="content" align="left"><td>Описание:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[comment]" value="[%comment%]"></td></tr>
+	<tr class="content" align="left"><td>URI:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[uri]" value="[%uri%]"></td></tr>
+	<tr class="content" align="left"><td>Название файла:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[file_name]" value="[%file_name%]"></td></tr>
 	<tr class="content" align="left"><td>Тип:</td><td>
                 <select class="form-control" name="form[template_type]">[%template_type_select%]</select>
         </td></tr>

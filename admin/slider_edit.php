@@ -89,14 +89,14 @@ if (($input["edit_image"]) || ($input["add_image"])) {
         $tags['descr'] = '';
     }
     $tags['descr'] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
-    $content.=get_tpl_by_title("slider_images_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("slider_images_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
 $query = "SELECT * from slider_images order by pos,title asc";
 $result = my_query($query, true);
-$content.=get_tpl_by_title("slider_images_edit_table", $tags, $result);
+$content.=get_tpl_by_name("slider_images_edit_table", $tags, $result);
 
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

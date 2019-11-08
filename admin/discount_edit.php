@@ -36,13 +36,13 @@ if (($input["view"]) || ($input["adding"])) {
         $tags['Header'] = "Добавление скидки";
     }
 echo $tags['summ'];
-    $content .= get_tpl_by_title("discount_edit_form", $tags);
+    $content .= get_tpl_by_name("discount_edit_form", $tags);
 
 } else {
 
     $query = "SELECT * from discount order by summ asc";
     $result = my_query($query);
 
-    $content.=get_tpl_by_title("discount_edit_table", $tags, $result);
+    $content.=get_tpl_by_name("discount_edit_table", $tags, $result);
 }
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

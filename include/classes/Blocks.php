@@ -94,7 +94,7 @@ class Blocks {
                     </div>\n";
                 $i++;
             }
-            return get_tpl_by_title('block_vote', $tags);
+            return get_tpl_by_name('block_vote', $tags);
         }
         return null;
     
@@ -111,7 +111,7 @@ class Blocks {
         if ($URI == '/') {
             $query = "SELECT * FROM slider_images WHERE length(file_name)>0 ORDER BY pos,title ASC";
             $result = App::$db->query($query, true);
-            return get_tpl_by_title('slider_items', [], $result);
+            return get_tpl_by_name('slider_items', [], $result);
         } else {
             return '';
         }
@@ -127,7 +127,7 @@ class Blocks {
                 return cut_string($row['content'], 100);
             }
 
-            return get_tpl_by_title('block_news', [], $result);
+            return get_tpl_by_name('block_news', [], $result);
         }
         return null;
     }
@@ -140,7 +140,7 @@ class Blocks {
             function get_news_short_content($tmp, $row) {
                 return cut_string($row['content'], 100);
             }
-            return get_tpl_by_title('block_last_posts', [], $result);
+            return get_tpl_by_name('block_last_posts', [], $result);
         }
         return null;
     }
@@ -162,7 +162,7 @@ class Blocks {
             case 'partners':
                 $query = "SELECT * FROM partners order by pos asc";
                 $result = App::$db->query($query, null);
-                return get_tpl_by_title('block_partners', [], $result);
+                return get_tpl_by_name('block_partners', [], $result);
 
             case 'banners':
                 if(file_exists(App::$DIR . 'banners.local.php')) {

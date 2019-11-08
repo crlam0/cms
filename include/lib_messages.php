@@ -153,7 +153,7 @@ function send_mail($message_to, $subject, $message) {
  *
  */
 function my_send_mail($tpl_title, $message_to, $subject, $tags) {
-    $message = get_tpl_by_title($tpl_title, $tags);
+    $message = get_tpl_by_name($tpl_title, $tags);
     send_mail($message_to, $subject, $message);
 }
 

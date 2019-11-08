@@ -57,5 +57,5 @@ while ($row = $result->fetch_array()) {
 	</tr>";
 }
 
-$content .= get_tpl_by_title('vote_results', $tags, $result);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content .= get_tpl_by_name('vote_results', $tags, $result);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

@@ -42,8 +42,8 @@ if (($input["edit_variant"]) || ($input["add_variant"])) {
 	$tags['type'] = "added_variant";
 	$tags['form_title'] = "Добавление";
     }
-    $content.=get_tpl_by_title("vote_variants_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("vote_variants_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -52,8 +52,8 @@ if ($_SESSION["view_vote"]) {
 	left join vote_log on (vote_log.variant_id=vote_variants.id)
 	where vote_id=" . $_SESSION["view_vote"] . " group by vote_variants.id order by num asc";
     $result = my_query($query, true);
-    $content.=get_tpl_by_title("vote_variants_edit_table", $tags, $result);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("vote_variants_edit_table", $tags, $result);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -102,8 +102,8 @@ if (($input["edit_vote"]) || ($input["add_vote"])) {
 	";
     if ($tags['active']
 	)$tags['active'] = " checked";
-    $content.=get_tpl_by_title("vote_list_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("vote_list_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -113,5 +113,5 @@ left join vote_variants on (vote_variants.vote_id=vote_list.id)
 group by vote_list.id order by vote_list.title desc";
 $result = my_query($query, true);
 
-$content.=get_tpl_by_title("vote_list_edit_table", $tags, $result);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content.=get_tpl_by_name("vote_list_edit_table", $tags, $result);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

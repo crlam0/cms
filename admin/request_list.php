@@ -26,6 +26,6 @@ function file_info($tmp, $row) {
 $query="SELECT * from request order by id desc";
 $result=my_query($query);
 
-$content.=get_tpl_by_title("request_list",$tags,$result);
-echo get_tpl_by_title($part[tpl_name],$tags,"",$content);
+$content.=get_tpl_by_name("request_list",$tags,$result);
+echo get_tpl_by_name($part[tpl_name],$tags,"",$content);
 ?>

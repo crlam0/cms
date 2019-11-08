@@ -89,8 +89,8 @@ if ($input['add']) {
         $editor->SetValue(stripcslashes($input['form']['txt']));
     }
     $tags['editor'] = $editor->GetContol(400, 200, '../images/bbcode_editor');
-    $content.=get_tpl_by_title('faq_edit_form', $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name('faq_edit_form', $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit;
 }
 
@@ -104,7 +104,7 @@ $tags['pager'] = $pager;
 $query = "SELECT $TABLE.* from $TABLE where $TABLE.active='Y' group by $TABLE.id order by $TABLE.id desc limit {$pager->getOffset()},{$pager->getLimit()}";
 $result = my_query($query, true);
 
-$content.=get_tpl_by_title('faq_list', $tags, $result);
+$content.=get_tpl_by_name('faq_list', $tags, $result);
 
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

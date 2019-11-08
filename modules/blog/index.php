@@ -70,7 +70,7 @@ if($input->count() && $input['view_post']) {
     $tags['Header'] .= " - ".$row['title'];
        
     $tags['functions'] = ['get_post_href', 'get_post_content', 'get_post_comments_count'];
-    $content.=get_tpl_by_title('blog_posts', $tags, $result);
+    $content.=get_tpl_by_name('blog_posts', $tags, $result);
 
     $comments->get_form_data($input);
     $content.=$comments->show_list();
@@ -98,7 +98,7 @@ if($input->count() && $input['view_post']) {
         $content.=my_msg_to_str("part_empty");
     } else {    
         $tags['functions'] = ['get_post_href', 'get_post_content', 'get_post_comments_count'];
-        $content.=get_tpl_by_title('blog_posts', $tags, $result);
+        $content.=get_tpl_by_name('blog_posts', $tags, $result);
     }
 }
 

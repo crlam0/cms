@@ -51,8 +51,8 @@ function get_offers_full_content($tmp, $row) {
 if (!$result->num_rows) {
     $content = my_msg_to_str('part_empty');
 } else {
-    $content = get_tpl_by_title('offers_table', $tags, $result);
+    $content = get_tpl_by_name('offers_table', $tags, $result);
 }
 
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

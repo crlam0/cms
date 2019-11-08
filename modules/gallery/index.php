@@ -65,7 +65,7 @@ if ($input['view_image'] || (isset($input['load']))) {
     list($tags['prev_id']) = my_select_row("select id from gallery_images where gallery_id='{$gallery_id}' and id<'{$tags['id']}' order by id desc limit 1", true);
     list($tags['next_id']) = my_select_row("select id from gallery_images where gallery_id='{$gallery_id}' and id>'{$tags['id']}' order by id asc limit 1", true);
     if ($input['view_image']){
-        $content = get_tpl_by_title('gallery_image_view', $tags);
+        $content = get_tpl_by_name('gallery_image_view', $tags);
         echo get_tpl_default($tags, '', $content);
         exit();
     }
@@ -80,7 +80,7 @@ if ($input['view_image'] || (isset($input['load']))) {
         }
     }
     $json=$tags;
-    $json['content'] = get_tpl_by_title('gallery_image_view', $tags);
+    $json['content'] = get_tpl_by_name('gallery_image_view', $tags);
     echo json_encode($json);
     exit();
 }
@@ -105,7 +105,7 @@ if (($view_gallery)||($input['page'])) {
     if (!$result->num_rows) {
         $content = my_msg_to_str('list_empty', $tags, '');
     } else {
-        $content = get_tpl_by_title('gallery_images_list', $tags, $result);
+        $content = get_tpl_by_name('gallery_images_list', $tags, $result);
     }
     
     if($settings['gallery_use_comments']) {
@@ -133,7 +133,7 @@ $result = my_query($query, true);
 if (!$result->num_rows) {
     $content = my_msg_to_str('part_empty');
 } else {
-    $content = get_tpl_by_title('gallery_part_list', $tags, $result);
+    $content = get_tpl_by_name('gallery_part_list', $tags, $result);
 }
 
 add_nav_item('Галерея');

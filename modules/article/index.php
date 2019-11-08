@@ -34,7 +34,7 @@ if (isset($input['pdf']) && $dompdf_enabled) {
         "<body>"; 
         
         $content .= '<h1>' . $row['title'] . '</h1><br />';
-        $content .= get_tpl_by_title('article_view', $row, $result);  
+        $content .= get_tpl_by_name('article_view', $row, $result);  
         
         $content .="</body>".
         "</head></html>";
@@ -101,7 +101,7 @@ if ($view_article) {
     // $row['content'] = preg_replace('/width: \d+px;/', 'max-width: 100%;', $row['content']);
     $row['content'] = preg_replace('/style="width: /', 'class="img-fluid" style: style="width: ', $row['content']);
     
-    $content = get_tpl_by_title('article_view', $row, $result);
+    $content = get_tpl_by_name('article_view', $row, $result);
     echo get_tpl_default($tags, null, $content);
     exit;
 }
@@ -116,7 +116,7 @@ if ($view_items) {
 
     add_nav_item($title);
 
-    $content = get_tpl_by_title('article_items', $row, $result);
+    $content = get_tpl_by_name('article_items', $row, $result);
     echo get_tpl_default($tags, null, $content);
     exit;
 }
@@ -126,5 +126,5 @@ $tags['Header'] = 'Статьи';
 $query = "select * from article_list";
 $result = my_query($query, true);
 
-$content .= get_tpl_by_title('article_list', $row, $result);
+$content .= get_tpl_by_name('article_list', $row, $result);
 echo get_tpl_default($tags, null, $content);

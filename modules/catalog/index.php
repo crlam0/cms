@@ -138,7 +138,7 @@ if ($input['get_popup_content']) {
         $tags['default_image'] = "Изображение отсутствует.";
     }
 
-    $content = get_tpl_by_title("cat_item_view", $tags, $result);
+    $content = get_tpl_by_name("cat_item_view", $tags, $result);
     $content .= "
             <br>
             <input class=\"cnt_{$input["item_id"]}\" size=1 maxlength=2 value=1>
@@ -222,13 +222,13 @@ if ($input['view_item']) {
                 order by cat_item.num,b_code,title asc";
             $result = my_query($query);
             if ($result->num_rows) {
-                $tags['related_products'] .= get_tpl_by_title('cat_item_list_twig', $tags, $result);
+                $tags['related_products'] .= get_tpl_by_name('cat_item_list_twig', $tags, $result);
             }
         }
         if($_SESSION['catalog_page']>1) {
             $tags['page'] = 'page' . $_SESSION['catalog_page'] . '/';
         }
-        $content .= get_tpl_by_title('cat_item_view_twig', $tags, $result);        
+        $content .= get_tpl_by_name('cat_item_view_twig', $tags, $result);        
     } else {
         $content .= my_msg_to_str('notice', [], 'Товар не найден');
     }
@@ -250,7 +250,7 @@ $result = my_query($query);
 
 if ($result->num_rows) {
     $tags['functions'] = [];
-    $content .= get_tpl_by_title('cat_part_list_twig', $tags, $result);
+    $content .= get_tpl_by_name('cat_part_list_twig', $tags, $result);
 } 
 
 /*
@@ -284,10 +284,10 @@ $result = my_query($query, true);
 if ($result->num_rows) {
     $tags['cat_part_href'] = get_cat_part_href($current_part_id);
     $tags['functions'] = [];
-    $content .= get_tpl_by_title('cat_item_list_twig', $tags, $result);
+    $content .= get_tpl_by_name('cat_item_list_twig', $tags, $result);
 } elseif (($current_part_id) && (!$subparts)) {
     list($tags['image_name'],$tags['title']) = my_select_row("select image_name,title from cat_part where id='{$current_part_id}'");
-    $content .= get_tpl_by_title('cat_item_list_empty.html.twig', $tags, $result);
+    $content .= get_tpl_by_name('cat_item_list_empty.html.twig', $tags, $result);
 }
 
 if ($current_part_id) {

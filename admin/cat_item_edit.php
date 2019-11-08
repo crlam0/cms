@@ -142,7 +142,6 @@ if ($input['added']) {
     }
     $input['form']['part_id'] = $_SESSION['ADMIN_PART_ID'];
     
-    
     if($input['props']) {
         $props_array=[];
         foreach($input['props'] as $name => $value) {
@@ -195,12 +194,6 @@ if ($input['edited']) {
     if($num_rows>1){
         $input['form']['seo_alias'].='_'.$input['id'];
     }
-    if (!isset($input['form']['special_offer'])){
-        $input['form']['special_offer'] = 0;
-    }
-    if (!isset($input['form']['novelty'])){
-        $input['form']['novelty'] = 0;
-    }
     $input['form']['date_change']='now()';
     $query = "update cat_item set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
@@ -227,13 +220,11 @@ if (($input['edit']) || ($input['add'])) {
     
     $tags['props_inputs']='';
     if(strlen($row_part['items_props'])) {
-        $props_array = json_decode($row_part['items_props'], true);
-        // print_array($props_array);
+        $props_array = my_json_decode($row_part['items_props']);
         if(!is_array($props_array)) {
             $content.=my_msg_to_str('','','Массив свойств неверен');
         } else {
-            $props_values=json_decode($tags['props'], true);
-            // print_array($props_values);
+            $props_values=my_json_decode($tags['props']);
             if(is_array($props_values)){
                 foreach ($props_values as $input_name => $value) {
                     $param_value[$input_name]=$value;
@@ -243,21 +234,23 @@ if (($input['edit']) || ($input['add'])) {
                 $tags['props_inputs'] .= ''
                         . '<tr class=content align=left>'
                         . '<td>'.$params['name'].'</td><td>' . PHP_EOL;
-                if($params['type'] == 'boolean') {
-                    $tags['props_inputs'] .= '<input type="checkbox" maxlength="45" size="64" name="props['.$input_name.']" '.($param_value[$input_name]? ' checked' : '').'>';
+                if(check_key('type',$params) == 'boolean') {
+                    $tags['props_inputs'] .= '<input type="checkbox" maxlength="45" size="64" name="props['.$input_name.']" '.(check_key($input_name,$param_value) ? ' checked' : '').'>';
                 } else {
-                    $tags['props_inputs'] .= '<input type="edit" class="form-control" maxlength="45" size="64" name="props['.$input_name.']" value="'.$param_value[$input_name].'">';
+                    $tags['props_inputs'] .= '<input type="edit" class="form-control" maxlength="45" size="64" name="props['.$input_name.']" value="'.check_key($input_name,$param_value).'">';
                 }
                 $tags['props_inputs'] .= '</td></tr>' . PHP_EOL;
             }
         }
     }
     
+    /*
     if (isset($tags['special_offer']) && $tags['special_offer'] ){
         $tags['special_offer'] = ' checked';
     }if (isset($tags['novelty']) && $tags['novelty'] ){
         $tags['novelty'] = ' checked';
     }
+    */
 
     $tags['price_inputs'] = "<tr class=content align=left><td>{$row_part['price_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price] value=\"{$tags['price']}\"></td></tr>";
 

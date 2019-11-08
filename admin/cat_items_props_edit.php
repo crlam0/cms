@@ -93,10 +93,10 @@ function part_items($part_id) {
                     }
                     foreach ($props_array as $input_name => $params) {
                         $content .= '<td align="center">' . PHP_EOL;
-                        if($params['type'] == 'boolean') {
-                            $content .= '<input type="checkbox" class="attr_change" size="8" id="'.$tags['id'].'"  attr_type="boolean" attr_name="'.$input_name.'" '.($param_value[$input_name]? ' checked' : '').'>';
+                        if(check_key('type', $params) == 'boolean') {
+                            $content .= '<input type="checkbox" class="attr_change" size="8" id="'.$tags['id'].'"  attr_type="boolean" attr_name="'.$input_name.'" '.(check_key($input_name,$param_value) ? ' checked' : '').'>';
                         } else {
-                            $content .= '<input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="json" attr_name="'.$input_name.'" value="'.$param_value[$input_name].'">';
+                            $content .= '<input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="json" attr_name="'.$input_name.'" value="'.check_key($input_name,$param_value).'">';
                         }
                         $content .= '</td>' . PHP_EOL;
                     }

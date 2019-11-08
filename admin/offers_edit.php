@@ -101,14 +101,14 @@ if (($input["edit_offers"]) || ($input["add_offers"])) {
     $tags['content'] = "<textarea name=form[content] id=\"editor\" rows=15 cols=100 maxlength=64000>{$tags['content']}</textarea>";
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
     $tags['content'] = replace_base_href($tags['content'], false);    
-    $content.=get_tpl_by_title("offers_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("offers_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
 $query = "SELECT * from offers order by date,title asc";
 $result = my_query($query, true);
-$content.=get_tpl_by_title("offers_edit_table", $tags, $result);
+$content.=get_tpl_by_name("offers_edit_table", $tags, $result);
 
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

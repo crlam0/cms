@@ -31,12 +31,12 @@ if ( ($input['view']) || ($input['adding']) ) {
         $tags['type'] = 'add';
         $tags['form_title'] = 'Добавление';
     }
-    $content.=get_tpl_by_title('settings_edit_form', $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name('settings_edit_form', $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 } else {
-    $query = "SELECT * from settings order by title asc";
+    $query = "SELECT * from settings order by name asc";
     $result = my_query($query);
-    $content.=get_tpl_by_title('settings_edit_table', $tags, $result);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name('settings_edit_table', $tags, $result);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 }
 

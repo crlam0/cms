@@ -36,5 +36,5 @@ if ($input['passwd_change']) {
     }
 }
 
-$content.=get_tpl_by_title('user_passwd_change', $tags);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content.=get_tpl_by_name('user_passwd_change', $tags);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

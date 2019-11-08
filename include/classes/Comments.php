@@ -60,7 +60,7 @@ class Comments
     public function show_list($tags = array ()) {        
         $query="select * from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id='{$this->__target_id}' order by id asc";
         $result = App::$db->query($query);
-        return get_tpl_by_title('comments_list',$tags,$result);        
+        return get_tpl_by_name('comments_list',$tags,$result);        
     }
     
     /**
@@ -83,7 +83,7 @@ class Comments
             $tags['action'] = App::$server['PHP_SELF'];        
         }
         $_SESSION['IMG_CODE'] = rand(111111, 999999);        
-        return $this->__get_form_data_result.get_tpl_by_title('comment_add_form', $tags);
+        return $this->__get_form_data_result.get_tpl_by_name('comment_add_form', $tags);
     }
 
     /**

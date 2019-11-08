@@ -85,13 +85,13 @@ if (($input["edit_partner"]) || ($input["add_partner"])) {
     }
     $tags['descr'] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>$tags[descr]</textarea>";
     $tags['head_inc'] = $EDITOR_SIMPLE_INC;
-    $content.=get_tpl_by_title("partners_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("partners_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
 $query = "SELECT * from partners order by pos,title asc";
 $result = my_query($query, true);
-$content.=get_tpl_by_title("partners_edit_table", $tags, $result);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content.=get_tpl_by_name("partners_edit_table", $tags, $result);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

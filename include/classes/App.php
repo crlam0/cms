@@ -132,10 +132,10 @@ final class App {
         if(file_exists($filename)) {
             $this->loadSettingsFromFile($filename);
         }
-        $query='SELECT title,value FROM settings';
+        $query='SELECT name,value FROM settings';
         $result=static::$db->query($query,true);
         while ($row = $result->fetch_array()) {
-            static::$settings[$row['title']] = $row['value'];
+            static::$settings[$row['name']] = $row['value'];
         }        
     }    
     

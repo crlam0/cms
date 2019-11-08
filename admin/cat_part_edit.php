@@ -271,8 +271,8 @@ if (($input['edit']) || ($input['adding'])) {
     $tags['img_tag'] = (isset($tags['image_name']) && is_file($IMG_PATH . $tags['image_name']) ? "<img src=../{$settings['catalog_part_img_path']}{$tags['image_name']} class=margin><br>" : "[ Отсутствует ]<br>");
     $tags['del_button'] = (isset($tags['image_name']) && is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $_SERVER['PHP_SELF'] . "?del_img=1&id={$tags['id']}>Удалить</a><br>" : '');
 
-    $content .= get_tpl_by_title('cat_part_form', $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content .= get_tpl_by_name('cat_part_form', $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit;
 };
 
@@ -298,6 +298,6 @@ function sub_part($prev_id, $deep) {
 
 $tags['table_content'] = '';
 sub_part(0, 0);
-$content .= get_tpl_by_title('cat_part_table', $tags);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content .= get_tpl_by_name('cat_part_table', $tags);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

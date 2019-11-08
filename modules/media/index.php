@@ -89,7 +89,7 @@ if ($view_files) {
     if (!$result->num_rows) {
         $content = my_msg_to_str('list_empty', $tags, '');
     } else {
-        $content = get_tpl_by_title("media_files_list", $tags, $result);
+        $content = get_tpl_by_name("media_files_list", $tags, $result);
     }
     if($player_num>0){
         $tags['INCLUDE_HEAD'].='<script src="'.$SUBDIR.'modules/media/player/mediaelement-and-player.min.js"></script>
@@ -110,7 +110,7 @@ $result = my_query($query, true);
 if (!$result->num_rows) {
     $content = my_msg_to_str('part_empty');
 } else {
-    $content = get_tpl_by_title('media_part_list', $tags, $result);
+    $content = get_tpl_by_name('media_part_list', $tags, $result);
 }
 
 echo get_tpl_default($tags, '', $content);

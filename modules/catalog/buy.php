@@ -174,7 +174,7 @@ if (isset($input["request_done"])) {
         
         $content.=my_msg_to_str('',[],"Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.");
        
-        echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+        echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
         exit();
     }
 }
@@ -246,6 +246,6 @@ if (isset($_SESSION["BUY"]) && is_array($_SESSION["BUY"]) && count($_SESSION["BU
 }
 
 
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 
 

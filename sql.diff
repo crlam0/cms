@@ -1,3 +1,17 @@
+=== 2019-11-08
+
+ALTER TABLE `users`
+	DROP INDEX `login`,
+	ADD UNIQUE INDEX `login` (`login`);
+
+ALTER TABLE `settings`
+	CHANGE COLUMN `title` `name` VARCHAR(255) NOT NULL AFTER `id`,
+	ADD UNIQUE INDEX `name` (`name`);
+
+ALTER TABLE `templates`
+	CHANGE COLUMN `title` `name` VARCHAR(255) NOT NULL AFTER `id`,
+	ADD UNIQUE INDEX `name` (`name`);
+
 === 2019-10-25
 
 ALTER TABLE `article_list` ADD KEY (`seo_alias`);

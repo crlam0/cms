@@ -71,16 +71,16 @@ if (($input["edit_article"]) || ($input["add_article"])) {
     }
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
     $tags['content']=replace_base_href($tags['content'],false);
-    $content.=get_tpl_by_title("article_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("article_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
 if (isset($_SESSION["view_article"]) && $_SESSION["view_article"]) {
     $query = "SELECT * from article_item where list_id=" . $_SESSION["view_article"] . " order by date_add asc";
     $result = my_query($query, true);
-    $content.=get_tpl_by_title("article_edit_table", $tags, $result);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("article_edit_table", $tags, $result);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -125,8 +125,8 @@ if (($input["edit_list"]) || ($input["add_list"])) {
         $tags['Header'] = "Добавление раздела";
     }
     // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
-    $content.=get_tpl_by_title('article_list_edit_form', $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name('article_list_edit_form', $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }
 
@@ -136,6 +136,6 @@ left join article_item on (article_item.list_id=article_list.id)
 group by article_list.id order by article_list.date_add desc";
 $result = my_query($query, true);
 
-$content.=get_tpl_by_title('article_list_edit_table', $tags, $result);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content.=get_tpl_by_name('article_list_edit_table', $tags, $result);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

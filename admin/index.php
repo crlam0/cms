@@ -35,7 +35,7 @@ if($tables->num_rows){
     $query="select * from comments order by date_add desc limit 5";
     $result=my_query($query,null,true);
     if($result->num_rows){
-        $content.=get_tpl_by_title('admin_last_comments',$tags,$result);
+        $content.=get_tpl_by_name('admin_last_comments',$tags,$result);
     }    
 }
 
@@ -44,16 +44,16 @@ if($tables->num_rows){
     $query="select * from request order by date desc limit 5";
     $result=my_query($query,null,true);
     if($result->num_rows){
-        $content.=get_tpl_by_title('admin_last_requests',$tags,$result);
+        $content.=get_tpl_by_name('admin_last_requests',$tags,$result);
     }    
 }
 
 $query="SELECT day,count(id) as hits,sum(unique_visitor) as unique_hits from visitor_log group by day order by day desc limit 12";
 $result=my_query($query);
-$content.=get_tpl_by_title("stats_day_table",$tags,$result);
+$content.=get_tpl_by_name("stats_day_table",$tags,$result);
 
 $query="SELECT * from visitor_log where unique_visitor=1 order by id desc limit 20";
 $result=my_query($query);
-$content.=get_tpl_by_title('stats_last_visitors_table',$tags,$result);
+$content.=get_tpl_by_name('stats_last_visitors_table',$tags,$result);
 
-echo get_tpl_by_title($part['tpl_name'],$tags,'',$content);
+echo get_tpl_by_name($part['tpl_name'],$tags,'',$content);

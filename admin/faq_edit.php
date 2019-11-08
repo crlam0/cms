@@ -36,8 +36,8 @@ if ($input["edit"]) {
 
 //	$tags['INCLUDE_HEAD']=$EDITOR_SIMPLE_INC;
 
-    $content.=get_tpl_by_title("faq_edit_form", $tags);
-    echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name("faq_edit_form", $tags);
+    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit;
 }
 
@@ -46,5 +46,5 @@ $result = my_query($query, true);
 
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 
-$content.=get_tpl_by_title("faq_edit_table", $tags, $result);
-echo get_tpl_by_title($part['tpl_name'], $tags, '', $content);
+$content.=get_tpl_by_name("faq_edit_table", $tags, $result);
+echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

@@ -27,7 +27,7 @@ class Template {
      * @return string Output content
      */
     private function get_twig_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){        
-        App::debug("Parse template '{$template['title']}'");    
+        App::debug("Parse template '{$template['name']}'");    
         if ($template['file_name']) {        
             if(!strstr($template['file_name'],'.html.twig')) {
                 $template['file_name'].='.html.twig';
@@ -39,7 +39,7 @@ class Template {
             }    
             if ($fname) {
                 $twig = $this->TwigTemplate;
-                $template['title'] = $fname;
+                $template['name'] = $fname;
             } else {
                 $tags['file_name'] = $template['file_name'];
                 my_msg('file_not_found', $tags);
@@ -67,7 +67,7 @@ class Template {
             }
             unset($tags['functions']);
         }        
-        return $twig->render($template['title'], $tags);
+        return $twig->render($template['name'], $tags);
     }
 
     /**
@@ -100,50 +100,50 @@ class Template {
         if (!strstr($template['content'], '[%')) {
             return($template['content']);
         }
-        App::debug("Parse template '{$template['title']}'");
+        App::debug("Parse template '{$template['name']}'");
         return $this->MyTemplate->parse($template['content'], $tags, $sql_result, $inner_content);
     }
 
     /**
-     * Parse template by title
+     * Parse template by name
      *
-     * @param string $title Template's title
+     * @param string $name Template's name
      * @param array $tags Tags array
      * @param array $sql_result Result from SQL query
      * @param string $inner_content Inner content
      *
      * @return string Output content
      */
-    function get_by_title($title, $tags = [], $sql_result = [], $inner_content = '') {
+    function get_by_name($name, $tags = [], $sql_result = [], $inner_content = '') {
                 
         $template = null;
 
         if (file_exists(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl')) {
-            $temp = $this->MyTemplate->load_from_file(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl', $title);
+            $temp = $this->MyTemplate->load_from_file(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl', $name);
             if ($temp) {
-                $template['title'] = $title;            
+                $template['name'] = $name;            
                 $template['content'] = $temp;
                 $template['template_type'] = 'my';
             }
         }
-        if(strstr($title,'.tpl')) {
-            $template['title'] = $title;
-            $template['file_name']=$title;
+        if(strstr($name,'.tpl')) {
+            $template['name'] = $name;
+            $template['file_name']=$name;
             $template['template_type'] = 'my';
         }
-        if(strstr($title,'.html.twig')) {
-            $template['title'] = $title;
-            $template['file_name']=$title;
+        if(strstr($name,'.html.twig')) {
+            $template['name'] = $name;
+            $template['file_name']=$name;
             $template['template_type'] = 'twig';
         }
         if (!$template) {
-            $template = App::$db->select_row("SELECT * FROM templates WHERE title='{$title}' AND '" . App::$server['REQUEST_URI'] . "' LIKE concat('%',uri,'%')", true);
+            $template = App::$db->select_row("SELECT * FROM templates WHERE name='{$name}' AND '" . App::$server['REQUEST_URI'] . "' LIKE concat('%',uri,'%')", true);
         }
         if (!$template) {
-            $template = App::$db->select_row("SELECT * FROM templates WHERE title='{$title}'", true);
+            $template = App::$db->select_row("SELECT * FROM templates WHERE name='{$name}'", true);
         }
         if (!$template) {
-            $tags['title'] = $title;
+            $tags['name'] = $name;
             my_msg('tpl_not_found', $tags);
             return '';
         }

@@ -43,7 +43,7 @@ function get_prop_name($part_id,$name) {
     $query = "select items_props from cat_part where id='{$part_id}'";
     list($items_props) = my_select_row($query, true);
     if($props_values = my_json_decode($items_props)) {
-        return $props_values[$name]['name'];
+//        return $props_values[$name]['name'];
     }
     return false;
 }

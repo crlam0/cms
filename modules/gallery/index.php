@@ -57,7 +57,6 @@ if ( (isset($input) && $input['view-image']) && (!$view_gallery) ) {
 }
 
 if ($input['view_image'] || (isset($input['load']))) {
-    add_to_debug($input['id']);
     $query = "SELECT * from gallery_images where id='{$input['id']}'";
     $row = my_select_row($query, true);
     $tags = array_merge($row, $tags);

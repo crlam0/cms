@@ -250,7 +250,7 @@ $result = my_query($query);
 
 if ($result->num_rows) {
     $tags['functions'] = [];
-    $content .= get_tpl_by_title('cat_part_list_twig', $row, $result);
+    $content .= get_tpl_by_title('cat_part_list_twig', $tags, $result);
 } 
 
 /*

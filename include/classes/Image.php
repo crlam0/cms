@@ -14,9 +14,17 @@ class Image {
     private $validImageTypes = array('image/pjpeg', 'image/jpeg', 'image/gif', 'image/png', 'image/x-png');
     
     private function getFileType($file_name, $file_type) {
-        if (($file_type == 'image/jpeg') || ($file_type == 'image/pjpeg') || (stristr($file_name, '.jpg')) || (stristr($file_name, '.jpeg')) ) {
+        if(!$file_type) {
+            if((preg_match("/^.*\.jpg$/i", $file_name)) || (preg_match("/^.*\.jpeg$/i", $file_name))) {
+                return 'image/jpeg';
+            }
+            if(preg_match("/^.*\.png$/i", $file_name)) {
+                return 'image/png';
+            }
+        }
+        if (($file_type == 'image/jpeg') || ($file_type == 'image/pjpeg')) {
             return 'image/jpeg';
-        } elseif (($file_type == 'image/png') || ($file_type == 'image/x-png') || (stristr($file_name, '.png')) ) {
+        } elseif (($file_type == 'image/png') || ($file_type == 'image/x-png') ) {
             return 'image/png';
         } else {
             return false;

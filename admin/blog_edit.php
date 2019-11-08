@@ -1,12 +1,14 @@
 <?php
 
-$tags['Header'] = "Блог";
-include "../include/common.php";
+$tags['Header'] = 'Блог';
+include '../include/common.php';
 
 $IMG_PATH = $DIR.$settings['blog_img_path'];
 
-if ($input["get_target_select"]) {
-    $query = "select target_id,href from blog_posts where id='{$input["item_id"]}'";
+use Classes\App;
+
+if ($input['get_target_select']) {
+    $query = "select target_id,href from blog_posts where id='{$input['item_id']}'";
     $result = my_query($query, true);
     list($target_id, $href) = $result->fetch_array();
     switch ($input["target_type"]) {
@@ -63,8 +65,8 @@ if ($input["get_target_select"]) {
     exit;
 }
 
-if ($input["active"]) {
-    $query = "update blog_posts set active='" . $input["active"] . "' where id=" . $input["id"];
+if ($input['active']) {
+    $query = "update blog_posts set active='" . $input['active'] . "' where id=" . $input['id'];
     if (my_query($query, true)) {
         echo $input["active"];
     } else {
@@ -73,49 +75,53 @@ if ($input["active"]) {
     exit;
 }
 
-if ($input["del_post"]) {
-    list($img) = my_select_row("select image_name from blog_posts where id=" . $input["id"]);
+if ($input['del_post']) {
+    list($img) = my_select_row("select image_name from blog_posts where id='{$input['id']}'");
     if (is_file($IMG_PATH . $img)) {
-        if (!unlink($IMG_PATH . $img))my_msg_to_str("error", "", "Ошибка удаления файла");
+        if (!unlink($IMG_PATH . $img)){
+            $content.=my_msg_to_str('error', '', 'Ошибка удаления файла');
+        }
     }
     $query = "delete from blog_posts where id=" . $input["id"];
     $result = my_query($query);
-    $query = "delete from comments where target_type='blog' and target_id=" . $input["id"];
+    $query = "delete from comments where target_type='blog' and target_id='{$input['id']}'";
     $result = my_query($query);
     $list = 1;
-    $content.=my_msg_to_str("", "", "Пост успешно удален.");
+    $content.=my_msg_to_str('', '', 'Пост успешно удален.');
 }
 
-if ($input["del_img"]) {
-    list($img) = my_select_row("select image_name from blog_posts where id=" . $input["id"]);
+if ($input['del_img']) {
+    list($img) = my_select_row("select image_name from blog_posts where id='{$input['id']}'");
     if (is_file($IMG_PATH . $img)) {
-        if (!unlink($IMG_PATH . $img))my_msg_to_str("", "", "Ошибка удаления файла");
-    }
-    $query = "update blog_posts set image_name='-' where id=" . $input["id"];
-    my_query($query);
-    $input["edit"] = 1;
-}
-
-if ($input["added_post"]) {
-    $input['form']['date_add'] = "now()";
-    $input['form']['uid'] = $_SESSION["UID"];
-    // $input['form']['content'] = $input["form"]["content"];
-    $input['form']['content'] = replace_base_href($input['form']['content'], true);
-    if (!strlen($input['form']['seo_alias']))
-        $input['form'][seo_alias] = encodestring($input['form']['title']);
-    $query = "insert into blog_posts " . db_insert_fields($input['form']);
-    my_query($query, true);
-    if (isset($_FILES["img_file"]) && $_FILES["img_file"]["size"]) {
-        $f_info = pathinfo($_FILES["img_file"]["name"]);
-        $img = encodestring($input["form"]["title"]) . "." . $f_info["extension"];
-        if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings['blog_img_max_width'])) {
-            $query = "update blog_posts set image_name='$img' where id={$part_id}";
-            my_query($query);
-        } else {
-            my_msg_to_str("error", "", "Ошибка копирования файла !");
+        if (!unlink($IMG_PATH . $img)){
+            $content.=my_msg_to_str('', '', 'Ошибка удаления файла');
         }
     }
-    $content.=my_msg_to_str("", "", "Пост успешно добавлен.");
+    $query = "update blog_posts set image_name='' where id='{$input['id']}'";
+    my_query($query);
+    $input['edit_post'] = 1;
+}
+
+if ($input['added_post']) {
+    $input['form']['date_add'] = 'now()';
+    $input['form']['uid'] = App::$user->id;
+    $input['form']['content'] = replace_base_href($input['form']['content'], true);
+    if (!strlen($input['form']['seo_alias'])){
+        $input['form']['seo_alias'] = encodestring($input['form']['title']);
+    }
+    $query = "insert into blog_posts " . db_insert_fields($input['form']);
+    my_query($query, true);
+    if (isset($_FILES['image_file']) && $_FILES['image_file']['size']) {
+        $f_info = pathinfo($_FILES['image_file']['name']);
+        $image_name = encodestring($input['form']['title']) . '.' . $f_info['extension'];
+        if (move_uploaded_image($_FILES['image_file'], $IMG_PATH . $image_name, $settings['blog_img_max_width'])) {
+            $query = "update blog_posts set image_name='{$image_name}' where id='{$input['id']}'";
+            my_query($query);
+        } else {
+            $content.=my_msg_to_str('error', '', 'Ошибка копирования файла !');
+        }
+    }
+    $content.=my_msg_to_str('', '', 'Пост успешно добавлен.');
 }
 
 if ($input["revert"]) {
@@ -123,66 +129,68 @@ if ($input["revert"]) {
     $input["edit_post"] = 1;
 }
 
-if ($input["edited_post"]) {
-    $input['form']['date_add'] = "now()";
-    $input['form']['content'] = $input["form"]["content"];
+if ($input['edited_post']) {
+    $input['form']['date_add'] = 'now()';
+    $input['form']['content'] = $input['form']['content'];
     $input['form']['content'] = replace_base_href($input['form']['content'], true);
-    if (!strlen($input['form']['seo_alias']))
-        $input['form'][seo_alias] = encodestring($input['form'][title]);
+    if (!strlen($input['form']['seo_alias'])){
+        $input['form']['seo_alias'] = encodestring($input['form'][title]);
+    }
     $query = "update blog_posts set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
-    if (isset($_FILES["img_file"]) && $_FILES["img_file"]["size"] > 100) {
-        list($img) = my_select_row("select image_name from blog_posts where id=" . $input["id"]);
-        if (is_file($IMG_PATH . $img)) {
-            if (!unlink($IMG_PATH . $img))print_error("Ошибка удаления файла");
+    if (isset($_FILES['image_file']) && $_FILES['image_file']['size'] > 100) {
+        list($image_name) = my_select_row("select image_name from blog_posts where id='{$input['id']}'");
+        if (is_file($IMG_PATH . $image_name)) {
+            if (!unlink($IMG_PATH . $image_name)){
+                print_error('Ошибка удаления файла');
+            }
         }
-        $f_info = pathinfo($_FILES["img_file"]["name"]);
-        $img = encodestring($input["form"]["title"]) . "." . $f_info["extension"];
-        echo $IMG_PATH . $img;
-        if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings['blog_img_max_width'])) {
-            $query = "update blog_posts set image_name='$img' where id=" . $input["id"];
+        $f_info = pathinfo($_FILES['image_file']['name']);
+        $image_name = encodestring($input['form']['title']) . '.' . $f_info['extension'];
+        if (move_uploaded_image($_FILES['image_file'], $IMG_PATH . $image_name, $settings['blog_img_max_width'])) {
+            $query = "update blog_posts set image_name='$image_name' where id='{$input['id']}'";
             my_query($query);
         } else {
-            my_msg_to_str("error", "", "Ошибка копирования файла !");
+            my_msg_to_str('error', '', 'Ошибка копирования файла !');
         }
     }
-    $content.=my_msg_to_str("", "", "Пост успешно изменен.");
-    if ($input["update"]) {
-        $input["edit_post"] = 1;
+    $content.=my_msg_to_str('', '', 'Пост успешно изменен.');
+    if ($input['update']) {
+        $input['edit_post'] = 1;
     }
 }
 
-if (($input["edit_post"]) || ($input["add_post"])) {
-    if ($input["edit_post"]) {
+if (($input['edit_post']) || ($input['add_post'])) {
+    if ($input['edit_post']) {
         $query = "select * from blog_posts where id='{$input['id']}'";
         $result = my_query($query);
         $tags = array_merge($tags, $result->fetch_array());
-        $tags['type'] = "edited_post";
-        $tags['form_title'] = "Редактирование";
-        $tags['Header'] = "Редактирование поста";
+        $tags['type'] = 'edited_post';
+        $tags['form_title'] = 'Редактирование';
+        $tags['Header'] = 'Редактирование поста';
     } else {
-        $tags['type'] = "added_post";
-        $tags['form_title'] = "Добавление";
-        $tags['Header'] = "Добавление поста";
+        $tags['type'] = 'added_post';
+        $tags['form_title'] = 'Добавление';
+        $tags['Header'] = 'Добавление поста';
     }
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
-    $tags["content"] = replace_base_href($tags["content"], false);
-    $tags["target_type_select"] = "
+    $tags['content'] = replace_base_href($tags['content'], false);
+    $tags['target_type_select'] = "
         <select name=\"form[target_type]\" id=\"target_type\" class=\"form-control\">
-            <option " . ($tags["target_type"] == "" ? "selected" : "") . " value=\"\">-</option>
-            <option " . ($tags["target_type"] == "link" ? "selected" : "") . " value=\"link\">Ссылка</option>
-            <option " . ($tags["target_type"] == "article_list" ? "selected" : "") . " value=\"article_list\">Раздел статей</option>
-            <option " . ($tags["target_type"] == "article" ? "selected" : "") . " value=\"article\">Статья</option>
-            <option " . ($tags["target_type"] == "media_list" ? "selected" : "") . " value=\"media_list\">Раздел файлов</option>
-            <option " . ($tags["target_type"] == "cat_part" ? "selected" : "") . " value=\"cat_part\">Раздел каталога</option>
-            <option " . ($tags["target_type"] == "gallery_list" ? "selected" : "") . " value=\"gallery_list\">Раздел галереи</option>
+            <option " . ($tags['target_type'] == "" ? "selected" : "") . " value=\"\">-</option>
+            <option " . ($tags['target_type'] == "link" ? "selected" : "") . " value=\"link\">Ссылка</option>
+            <option " . ($tags['target_type'] == "article_list" ? "selected" : "") . " value=\"article_list\">Раздел статей</option>
+            <option " . ($tags['target_type'] == "article" ? "selected" : "") . " value=\"article\">Статья</option>
+            <option " . ($tags['target_type'] == "media_list" ? "selected" : "") . " value=\"media_list\">Раздел файлов</option>
+            <option " . ($tags['target_type'] == "cat_part" ? "selected" : "") . " value=\"cat_part\">Раздел каталога</option>
+            <option " . ($tags['target_type'] == "gallery_list" ? "selected" : "") . " value=\"gallery_list\">Раздел галереи</option>
         </select>
     ";
-    $tags['img_tag'] = (is_file($IMG_PATH . $tags['image_name']) ? "<img src=../{$settings['blog_img_path']}{$tags['image_name']} class=margin><br>" : "[ Отсутствует ]<br>");
-    $tags['del_button'] = (is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $server["PHP_SELF"] . "?del_img=1&id={$tags['id']}>Удалить</a><br>" : "");
+    $tags['image_tag'] = (is_file($IMG_PATH . $tags['image_name']) ? "<img src=../{$settings['blog_img_path']}{$tags['image_name']} class=margin><br>" : "[ Отсутствует ]<br>");
+    $tags['del_button'] = (is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $server['PHP_SELF'] . "?del_img=1&id={$tags['id']}>Удалить</a><br>" : "");
 
-    $content.=get_tpl_by_name("blog_post_edit_form", $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    $content.=get_tpl_by_name('blog_post_edit_form', $tags);
+    echo get_tpl_default($tags, '', $content);
     exit();
 }
 
@@ -192,4 +200,4 @@ $result = my_query($query, true);
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 
 $content.=get_tpl_by_name('blog_edit_table', $tags, $result);
-echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+echo get_tpl_default($tags, '', $content);

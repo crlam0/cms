@@ -70,7 +70,7 @@ if (!$part['id']) {
     my_msg('default_tpl_not_found');
     exit();
 }
-$App->set('tpl_default', $part['title']);
+$App->set('tpl_default', $part['tpl_name']);
 
 if(!App::$user->checkAccess($part['user_flag'])) {
     if (App::$user->id) {

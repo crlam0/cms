@@ -182,7 +182,7 @@ final class App {
         if(!strstr(static::$server['PHP_SELF'], 'admin/')) {
             $str=htmlspecialchars($str);            
         }
-        static::$db->escape_string($str);        
+        $str = static::$db->escape_string($str);        
         foreach($this->DENIED_WORDS as $word) {
             if(stristr($str, $word)){
                 header(static::$server['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);

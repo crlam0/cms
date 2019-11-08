@@ -211,22 +211,27 @@ $(document).ready(function(){
 <!--[title]blog_post_edit_form[/title]-->
 <!--DESCRIPTION: Форма редактирования поста в блоге -->
 <!--[content]-->
-<form action="[%PHP_SELF%]" method="POST">
+<form action="[%PHP_SELF%]" method="POST" enctype="multipart/form-data">
+<input type="hidden" name="MAX_FILE_SIZE" value="3000000">
 <input type="hidden" name="id" value=[%id%]>
-<input type="hidden" name=[%type%] value=1>
+<input type="hidden" name="[%type%]" value="1">
 <table align="center" width=500  class="table table-striped table-responsive table-bordered normal-form">
 	<tr class=header><td colspan="2">[%form_title%]</td></tr>
-	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[title] value="[%title%]"></td></tr>
-	<tr class="content" align="left"><td>Алиас:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[seo_alias] value="[%seo_alias%]"></td></tr>
+	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[title]" value="[%title%]"></td></tr>
+	<tr class="content" align="left"><td>Алиас:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[seo_alias]" value="[%seo_alias%]"></td></tr>
  	<tr class="content" align="left"><td>Ссылается на:</td><td>[%target_type_select%]</td></tr>
+        <tr class="content" align="left">
+            <td>Изображение:</td>
+            <td>[%image_tag%][%del_button%]<br><input class="form-control" name="image_file" type="file" size="40"></td>
+        </tr>
         <tr class="content" align="left" id="target_select"></tr>
 	<tr class="content"><td align="left" colspan="2">
-		<textarea class="form-control" id=editor name=form[content] rows=35 cols=80 maxlength=64000>[%content%]</textarea>
+		<textarea class="form-control" id="editor" name="form[content]" rows="35" cols="80" maxlength="64000">[%content%]</textarea>
 	</td></tr>
 	<tr class=header align="left"><td align="center" colspan="2">
-                <input class="btn btn-primary" type="submit" name=update value="  Сохранить  "> 
+                <input class="btn btn-primary" type="submit" name="update" value="  Сохранить  "> 
                 <input class="btn btn-primary" type="submit" value="  Сохранить и выйти ">
-                <input class="btn btn-primary" type="submit" name=revert value="  Вернуть исходный  "> 
+                <input class="btn btn-primary" type="submit" name="revert" value="  Вернуть исходный  "> 
         </td></tr>
 </table>
 </form>
@@ -277,9 +282,9 @@ $(document).ready(function(){
 <!--[title]cat_part_form[/title]-->
 <!--DESCRIPTION: Форма редактирования раздела каталога -->
 <!--[content]-->
-<form action="[%PHP_SELF%]" method="POST" name=main_form enctype="multipart/form-data">
+<form action="[%PHP_SELF%]" method="POST" name="main_form" enctype="multipart/form-data">
 <input type="hidden" name="id" value=[%id%]>
-<input type="hidden" name=MAX_FILE_SIZE value=3000000>
+<input type="hidden" name="MAX_FILE_SIZE" value="3000000">
 <input type="hidden" name=[%type%] value=1>
 <table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
 	<tr class=header><td colspan="2">[%form_title%]</td></tr>

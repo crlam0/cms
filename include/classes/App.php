@@ -73,6 +73,7 @@ final class App {
         static::$SUBDIR = $subdir;
         static::set('DIR', $dir);
         static::set('SUBDIR', $subdir);
+        static::$DEBUG[0] = microtime(true);
     }
 
     /**
@@ -112,7 +113,7 @@ final class App {
      *
     */    
     private function loadSettingsFromFile($filename){        
-        $settings_local=($filename);
+        $settings_local=(require $filename);
         if(is_array($settings_local)) {
             foreach ($settings_local as $key => $value){
                 static::$settings[$key]=$value;
@@ -141,12 +142,15 @@ final class App {
     /**
      * Test field parameter for deny SQL injections
      *
-     * @param string $sql Input string
+     * @param string $host Host
+     * @param string $user Username
+     * @param string $passwd Password
+     * @param string $dbname DB
      *
      * @return string Output string
      */
-    public function connectDB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME) {
-        static::$db = new SQLHelper($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
+    public function connectDB($host, $user, $passwd, $dbname) {
+        static::$db = new SQLHelper($host, $user, $passwd, $dbname);
     }
 
     /**
@@ -228,7 +232,7 @@ final class App {
      *
      */
     public static function debug ($message) {
-        $time = microtime(true) - static::$DEBUG['start_time'];
+        $time = microtime(true) - static::$DEBUG[0];
         $time = sprintf('%.4F', $time);
         static::$DEBUG[] = $time . "\t " . $message;
     }

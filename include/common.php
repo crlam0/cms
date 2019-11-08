@@ -52,25 +52,18 @@ if(App::$server['SERVER_PROTOCOL']) {
     session_name($SESSID);
     session_start();
     App::$user->authBySession($_SESSION);
-} else {
-    $DIR=dirname(dirname(__FILE__)) . '/';
-}
-
-if(App::$server['SERVER_PROTOCOL']) {
-    require_once __DIR__.'/lib_stats.php';
-    $App->debug('Stats added');
     if( !App::$user->id && $arr = App::$user->getRememberme($COOKIE_NAME)) {
         App::$user->authByArray($arr);
         list($_SESSION['UID'],$_SESSION['FLAGS']) = $arr;
         unset($arr);
     }
+    require_once __DIR__.'/lib_stats.php';
 }
 
 App::$routing = new Routing (App::$server['REQUEST_URI']);
 if (App::$routing->hasGETParams()) {
     App::$routing->proceedGETParams();
 }
-$App->debug('Routing added');
 
 $part = App::$routing->getPartArray();
 if (!$part['id']) {
@@ -79,11 +72,9 @@ if (!$part['id']) {
 }
 $App->set('tpl_default', $part['title']);
 
-$App->debug('Part data loaded');
-
 if(!App::$user->checkAccess($part['user_flag'])) {
     if (App::$user->id) {
-        $content ='<h1 align=center>У вас нет соответствующих прав !</h1>';
+        $content = my_msg_to_str('error', [] ,'У вас нет соответствующих прав !');
         echo get_tpl_default([], null, $content);
     } else {
         $_SESSION['GO_TO_URI'] = $server['REQUEST_URI'];
@@ -91,7 +82,6 @@ if(!App::$user->checkAccess($part['user_flag'])) {
     }
     exit;
 }
-$App->debug('User flag checked');
 
 $server['PHP_SELF_DIR']=dirname($server['PHP_SELF']).'/';
 

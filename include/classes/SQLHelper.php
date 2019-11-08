@@ -33,7 +33,7 @@ class SQLHelper {
      * @param string $host Host
      * @param string $user Username
      * @param string $passwd Password
-     * @param string $db DB
+     * @param string $dbname DB
      *
      * @return null
      */    

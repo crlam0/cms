@@ -10,8 +10,12 @@ return [
         'file' => 'modules/misc/logout.php'
     ],    
     'passwd_change' => [
-        'pattern' => '^passwd_change\/$',
+        'pattern' => '^passwd_change\/?$',
         'file' => 'modules/misc/passwd_change.php'
+    ],    
+    'passwd_recovery' => [
+        'pattern' => '^passwd_recovery\/?$',
+        'file' => 'modules/misc/passwd_recovery.php'
     ],    
     'search' => [
         'pattern' => '^search\/?$',

@@ -5,8 +5,8 @@ if(!isset($input)) {
 
 use Classes\App;
 App::$user->delRememberme(App::$user->id,$COOKIE_NAME);
-$_SESSION['UID']=null;
-$_SESSION['FLAGS']='';
 App::$user->logout();
+$_SESSION['UID']=0;
+$_SESSION['FLAGS']='';
 redirect(App::$SUBDIR);
 exit();

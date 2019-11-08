@@ -55,8 +55,10 @@ final class Routing {
             if(strpos($param,'=')) {
                 $param_array = explode('=',$param);
                 $input[$param_array[0]] = App::$db->test_param($param_array[1]);
+                App::$input[$param_array[0]] = $input[$param_array[0]];
             } else {
                 $input[$param] = true;
+                App::$input[$param] = true;
             }
         }
     }

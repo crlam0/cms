@@ -1,7 +1,7 @@
 <?php
 
-require 'config/config.local.php';
-require 'config/misc.php';
+require __DIR__.'/config/config.local.php';
+require __DIR__.'/config/misc.php';
 
 if(file_exists(__DIR__.'/config/misc.local.php')) {
     require_once __DIR__.'/config/misc.local.php';
@@ -16,13 +16,13 @@ if(file_exists($DIR.'vendor/autoload.php')) {
 use Classes\App;
 use Classes\Routing;
 use Classes\User;
-use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
+use Whoops\Handler\PrettyPageHandler;
 
 $App = new App($DIR, $SUBDIR);
 $App->connectDB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 $App->loadSettings(__DIR__.'/config/settings.local.php');
-$App->loadGlobals($_GET, $_POST, $_SERVER);
+$App->loadInputData($_GET, $_POST, $_SERVER);
 $App->addGlobals();
 $App->debug('App created, arrays loaded');
 unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
@@ -51,11 +51,8 @@ if(App::$server['SERVER_PROTOCOL']) {
     session_cache_limiter('nocache');
     session_name($SESSID);
     session_start();
-    App::$user->authBySession($_SESSION);
-    if( !App::$user->id && $arr = App::$user->getRememberme($COOKIE_NAME)) {
-        App::$user->authByArray($arr);
-        list($_SESSION['UID'],$_SESSION['FLAGS']) = $arr;
-        unset($arr);
+    if( ! App::$user->authBySession($_SESSION) ) {
+        App::$user->authByRememberme($COOKIE_NAME);
     }
     require_once __DIR__.'/lib_stats.php';
 }
@@ -77,13 +74,13 @@ if(!App::$user->checkAccess($part['user_flag'])) {
         $content = my_msg_to_str('error', [] ,'У вас нет соответствующих прав !');
         echo get_tpl_default([], null, $content);
     } else {
-        $_SESSION['GO_TO_URI'] = $server['REQUEST_URI'];
+        $_SESSION['GO_TO_URI'] = App::$server['REQUEST_URI'];
         redirect(App::$SUBDIR . 'login/');
     }
     exit;
 }
 
-$server['PHP_SELF_DIR']=dirname($server['PHP_SELF']).'/';
+$server['PHP_SELF_DIR']=dirname(App::$server['PHP_SELF']).'/';
 
 $content='';
 $tags['INCLUDE_HEAD']='';

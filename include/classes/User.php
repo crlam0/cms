@@ -5,6 +5,7 @@ namespace Classes;
 class User {
     private $id;
     private $flags;
+    private $data;
     
     public function __construct() {
         $this->id = 0;
@@ -18,11 +19,31 @@ class User {
             case 'flags':
                 return $this->flags;
             default:
+                if(array_key_exists($name, $this->data)) {
+                    return $this->data[$name];
+                }
                 throw new \InvalidArgumentException('Unknown property: ' . $name);
         }
     }
 
 
+    /**
+     * Get user's data
+     *
+     * @param integer $id User ID
+     *
+     * @return boolean False if ID not found
+     */
+    private function getData(int $id){
+        $query = "select * from users where id='" . $id . "'";
+        $result = App::$db->query($query, true);
+        if ($result->num_rows) {
+            $this->data = $row = $result->fetch_array();
+            return true;
+        }
+        return false;
+    }
+    
     /**
      * Load data from variables.
      *
@@ -31,8 +52,12 @@ class User {
      *
      */
     public function authByIdFlags(int $id, string $flags) {
-        $this->id = $id;
-        $this->flags = $flags;
+        if($this->getData($id)) {
+            $this->id = $id;
+            $this->flags = $flags;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -42,8 +67,7 @@ class User {
      *
      */
     public function authByArray(array $arr) {
-        $this->id = $arr['id'];
-        $this->flags = $arr['flags'];
+        return $this->authByIdFlags($arr['id'], $arr['flags']);
     }    
 
     /**
@@ -54,11 +78,16 @@ class User {
      */
     public function authBySession(array $session) {
         if(array_key_exists('UID', $session)) {
-            $this->id = $session['UID'];
+            if(!(int)$session['UID']>0) {
+                return false;
+            }
+            $id = $session['UID'];
         }
         if(array_key_exists('FLAGS', $session)) {
-            $this->flags = $session['FLAGS'];
+            $flags = $session['FLAGS'];
         }
+        App::debug('Auth by session');
+        return $this->authByIdFlags($id, $flags);
     }    
     
     /**
@@ -98,7 +127,7 @@ class User {
      *
      * @return boolean true if user have flag
      */
-    function haveFlag($flag) {
+    public function haveFlag($flag) {
         if (!strlen($flag)) {
             return true;
         }
@@ -112,7 +141,7 @@ class User {
      *
      * @return boolean true if user have access
      */
-    function checkAccess($flag) {
+    public function checkAccess($flag) {
         return (!strlen($flag)) || ($this->haveFlag($flag)) || ($this->haveFlag('global'));
     }
     
@@ -121,7 +150,7 @@ class User {
      *
      * @return string Generated salt
      */
-    function generateSalt() {
+    public function generateSalt() {
         $salt = '';
         for ($i = 0; $i < 22; $i++) {
             do {
@@ -140,7 +169,7 @@ class User {
      *
      * @return string User's salt
      */
-    function getSalt($uid) {
+    public function getSalt($uid) {
         list($salt) = my_select_row("SELECT salt FROM users WHERE id='{$uid}'");
         return $salt;
     }
@@ -153,7 +182,7 @@ class User {
      *
      * @return string Generated hash
      */
-    function encryptPassword($passwd, $salt) {
+    public function encryptPassword($passwd, $salt) {
         if (mb_strlen($salt) === 22) {
             return crypt($passwd, '$2a$13$' . $salt);
         } else {
@@ -161,18 +190,67 @@ class User {
         }
     }
     
+    
+    /**
+     * Generate token and put it to DB
+     *
+     * @param integer $user_id
+     * @param integer $expire_days
+     * @param string $type password_hash, salt or null
+     *
+     * @return string Generated token
+     */
+    public function makeToken($user_id, $expire_days, $type = 'password_hash') {
+        $expire=time() + $expire_days*24*3600;
+        switch ($type) {
+            case 'salt':
+                $token=$this->generateSalt();
+                break;
+            case 'null':
+                $token='';
+                $expire=0;
+                break;
+            default:
+                $token=$this->encryptPassword($this->generateSalt(), $this->generateSalt());
+        }
+        
+        $query = "update users set token='" . $token . "', token_expire='.$expire.' where id='".$user_id."'";
+        App::$db->query($query);
+        return $token;
+    }
+    
+    /**
+     * Check token
+     *
+     * @param string $token
+     *
+     * @return false|array User data or false
+     */
+    public function checkToken($token) {
+        $query = "select id,flags,token_expire from users where token='" . $token . "'";
+        $result = App::$db->query($query);
+        if(!$result->num_rows) {
+            return false;
+        }
+        $data=$result->fetch_array();
+        if($data['token_expire'] > time()) {
+            return $data;
+        } else {
+            $this->makeToken($data['id'], 0, 'null');
+        }
+    }
+    
     /**
      * Generate RememberMe cookie and token.
      *
      */
-    function setRememberme($user_id, $COOKIE_NAME) {
+    public function setRememberme($user_id, $COOKIE_NAME) {
         if(!$user_id || !$COOKIE_NAME) {
             return false;        
-        }    
-        $token=$this->encryptPassword($this->generateSalt(), $this->generateSalt());
-        $query = "update users set token='" . $token . "' where id='".$user_id."'";
-        App::$db->query($query);
-        setcookie($COOKIE_NAME.'_REMEMBERME', $token, time()+31*24*3600, App::$SUBDIR);
+        }
+        $expire=time()+31*24*3600;
+        $token= $this->makeToken($user_id, 31);
+        setcookie($COOKIE_NAME.'_REMEMBERME', $token, $expire, App::$SUBDIR);
     }
 
     /**
@@ -180,16 +258,15 @@ class User {
      *
      * @return mixed Array if complete, false if error.
      */
-    function getRememberme($COOKIE_NAME) {
-        $value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME');
-        if(strlen($value)){
-            $token = App::$db->test_param($value);
-            $query = "select id,flags from users where token='" . $token . "'";
-            $result = App::$db->query($query);
-            if($result->num_rows) {
-                $row=$result->fetch_array();
-                return [$row['id'],$row['flags']];
-            }
+    public function authByRememberme($COOKIE_NAME) {
+        if(!$value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME')) {
+            return false;
+        }
+        $token = App::$db->test_param($value);
+        if($data = $this->checkToken($token)){
+            App::debug('Auth by Rememberme cookie');
+            list($_SESSION['UID'],$_SESSION['FLAGS']) = $data;
+            return $this->authByIdFlags($data['id'],$data['flags']);
         }
         return false;
     }
@@ -198,7 +275,7 @@ class User {
      * Delete RememberMe cookie and token.
      *
      */
-    function delRememberme($user_id, $COOKIE_NAME) {
+    public function delRememberme($user_id, $COOKIE_NAME) {
         $value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME');
         if(strlen($value)){
             setcookie($COOKIE_NAME.'_REMEMBERME', '', time(), App::$SUBDIR);

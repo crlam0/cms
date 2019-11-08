@@ -29,7 +29,7 @@ if ($input['passwd_change']) {
                 $data['salt']=App::$user->generateSalt();
             }
             $data['passwd']=App::$user->encryptPassword($input['new_passwd1'], $data['salt']);
-            $query="update users set ". db_update_fields($data) ." where id='{App::$user->id}'";
+            $query="update users set ". db_update_fields($data) ." where id='".App::$user->id."'";
             $result = my_query($query, true);
             $content .= my_msg_to_str('info','','Пароль успешно изменен !');            
         }

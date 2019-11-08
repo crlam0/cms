@@ -2,8 +2,8 @@
 
 include 'include/common.php';
 
-if( isset($REDIRECT_TO_HTTPS) && $server['REQUEST_SCHEME'] === 'http' ){
-    $url = 'https://' . $server['HTTP_HOST'] . '' . $server['REQUEST_URI'];
+if( isset($REDIRECT_TO_HTTPS) && App::$server['REQUEST_SCHEME'] === 'http' ){
+    $url = 'https://' . App::$server['HTTP_HOST'] . '' . App::$server['REQUEST_URI'];
     redirect($url);
 }
 

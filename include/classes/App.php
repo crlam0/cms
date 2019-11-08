@@ -84,9 +84,14 @@ final class App {
      * @param array $server _SERVER array
      *
     */    
-    public function loadGlobals(array $get, array $post, array $server) {
-        static::$input = new MyArray;
+    public function loadInputData(array $get, array $post, array $server) {
         static::$server = new MyArray;
+        if(is_array($server)){
+            foreach ($server as $key => $value){
+                static::$server[$key]=$value;
+            }
+        }
+        static::$input = new MyArray;
         if(is_array($get)){
             static::$get = $get;
             foreach ($get as $key => $value){
@@ -97,11 +102,6 @@ final class App {
             static::$post = $post;
             foreach ($post as $key => $value){
                 static::$input[$key]=$this->test_param($value,$key);
-            }
-        }
-        if(is_array($server)){
-            foreach ($server as $key => $value){
-                static::$server[$key]=$value;
             }
         }
     }
@@ -180,7 +180,7 @@ final class App {
             return $str;
         }    
         if(!strstr(static::$server['PHP_SELF'], 'admin/')) {
-            $str=htmlspecialchars($str);            
+            $str=htmlspecialchars($str);     
         }
         $str = static::$db->escape_string($str);        
         foreach($this->DENIED_WORDS as $word) {

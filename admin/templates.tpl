@@ -1155,7 +1155,7 @@ $(document).ready(function(){
 </tr>
 [%loop_begin%]
 	<tr class="content" align="left">
-	<td><b>[%row(title)%]</b></td>
+	<td><b>[%row(name)%]</b></td>
 	<td>[%row(type)%]</td>
 	<td>[%row(content)%]</td>
 	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
@@ -1180,7 +1180,7 @@ $(document).ready(function(){
 <input type="hidden" name=[%form_type%] value=1>
 <table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
 	<tr class=header><td class=header colspan="2">[%form_title%]</td></tr>
-	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[title] value="[%title%]"></td></tr>
+	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[name] value="[%name%]"></td></tr>
 	<tr class="content" align="left"><td>Тип</td><td>[%types%]</td></tr>
 	<tr class="content" align="left"><td colspan="2"><textarea class="form-control" name=form[content] rows=8 cols=90 maxlength=64000>[%content%]</textarea></td></tr>
 	<tr class=header align="left"><td align="center" colspan="2"><input class="btn btn-primary" type="submit" value="  Сохранить  "></td></tr>

@@ -1,6 +1,7 @@
 <?PHP
 
 use Classes\App;
+use Classes\Message;
 
 require_once dirname(__FILE__) . '/../include/config/config.local.php';
 

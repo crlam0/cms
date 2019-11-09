@@ -83,7 +83,7 @@ class Comments
             $tags['action'] = App::$server['PHP_SELF'];        
         }
         $_SESSION['IMG_CODE'] = rand(111111, 999999);        
-        return $this->__get_form_data_result.get_tpl_by_name('comment_add_form', $tags);
+        return $this->__get_form_data_result.App::$template->parse('comment_add_form', $tags);
     }
 
     /**
@@ -97,22 +97,22 @@ class Comments
             $err = false;
             $output = '';
             if (!check_csrf_token()) {
-                $output.=my_msg_to_str('error', [] ,'CSRF Error');
+                $output.=App::$message->get('error', [] ,'CSRF Error');
                 $err = true;
             } elseif (!isset($input['form']['author']) || strlen($input['form']['author']) < 3) {
-                $output.=my_msg_to_str('form_error_name');
+                $output.=App::$message->get('form_error_name');
                 $err = true;
             } elseif (!isset($input['form']['email']) || !preg_match('/^[A-Za-z0-9-_]+@[A-Za-z0-9-\.]+\.[A-Za-z0-9-\.]{2,3}$/', $input['form']['email'])) {
-                $output.=my_msg_to_str('form_error_email');
+                $output.=App::$message->get('form_error_email');
                 $err = true;
             } elseif (strlen($this->__editor->GetValue()) < 10) {
-                $output.=my_msg_to_str('form_error_msg_too_short');
+                $output.=App::$message->get('form_error_msg_too_short');
                 $err = true;
             } elseif (strlen($this->__editor->GetValue()) > 512) {
-                $output.=my_msg_to_str('form_error_msg_too_long');
+                $output.=App::$message->get('form_error_msg_too_long');
                 $err = true;
             } elseif ( ($input['img_code'] != $_SESSION['IMG_CODE']) && (!$settings['debug']) ) {
-                $output.=my_msg_to_str('form_error_code');
+                $output.=App::$message->get('form_error_code');
                 $err = true;
             }
             if ( $err ) {
@@ -126,7 +126,7 @@ class Comments
                 $input['form']['content']=$this->__editor->GetHTML();
                 $query = "insert into {$this->__table} " . db_insert_fields($input['form']);
                 App::$db->query($query);
-                $output.=my_msg_to_str('','','Комментарий успешно добавлен');
+                $output.=App::$message->get('','','Комментарий успешно добавлен');
 
                 $remote_host=(check_key('REMOTE_HOST',App::$server) ? App::$server['REMOTE_HOST'] : gethostbyaddr(App::$server['REMOTE_ADDR']) );
                 $message="Автор: {$input['form']['author']} ( {$input['form']['email']} )\n";

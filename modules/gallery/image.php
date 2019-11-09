@@ -42,8 +42,7 @@ if(file_exists($cache_file_name)) {
 }
 $Image = new Image($file_name,$file_type);
 if(!$Image->width) {
-    print_error('Load error');
-    exit;
+    die('Load error');
 }
 if($crop) {
     $Image->crop($max_width,$max_width);
@@ -52,8 +51,7 @@ if($crop) {
 }    
   
 if(!$Image->save($cache_file_name)) {
-    print_error('Save error');
-    exit;    
+    die('Save error');
 }
 
 header('Content-type: ' . $file_type);

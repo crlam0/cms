@@ -189,14 +189,14 @@ $validImageTypes = array("image/pjpeg", "image/jpeg", "image/gif", "image/png", 
 function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height = 0, $fix_width = 0, $fix_height = 0) {    
     $Image = new Image($src_file['tmp_name'],$src_file['type']);
     if(!$Image->width) {
-        print_error('Load image error');
+        App::$message->error('Load image error');
         return false;
     }
     if(!$Image->resize($max_width, $max_height, $fix_width, $fix_height)) {
         return move_uploaded_file($src_file['tmp_name'], $dst_file);
     }
     if(!$Image->save($dst_file)) {
-        print_error('Save image error');
+        App::$message->error('Save image error');
         return false;
     }
     return is_file($dst_file);
@@ -261,7 +261,7 @@ function show_month($month, $show_day_func = null) {
  */
 function get_csrf_token() {
     global $_SESSION;
-    if(!check_key('CSRF_Token',$_SESSION)) {
+    if(!array_key_exists('CSRF_Token',$_SESSION)) {
         $token = App::$user->encryptPassword(App::$user->generateSalt(), App::$user->generateSalt());
         $_SESSION['CSRF_Token'] = $token;
     }
@@ -304,7 +304,7 @@ function include_php($file_name) {
         include_once($DIR . $file_name);
         $content = ob_get_clean();
     } else {
-        $content = my_msg('error', [], 'Файл ' . $file_name . ' не найден !');
+        $content = App::$message->get('file_not_found', ['file_name'=>$file_name]);
     }
     return $content;
 }

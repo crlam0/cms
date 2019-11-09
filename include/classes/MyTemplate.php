@@ -117,23 +117,20 @@ class MyTemplate {
                         $replace_str = ob_get_contents();
                         ob_end_clean();
                     } else {
-                        $tags['file_name'] = $tagparam;
-                        my_msg('file_not_found', $tags);
+                        App::$message->get('file_not_found', ['file_name' => $tagparam]);
                     }
                 } elseif ($tagclass == 'file') {
                     if (file_exists($tagparam)) {
                         $replace_str = implode("", file($tagparam));
                     } else {
-                        $tags['file_name'] = $tagparam;
-                        my_msg('file_not_found', $tags);
+                        App::$message->get('file_not_found', ['file_name' => $tagparam]);
                         return '';
                     }
                 } elseif ($tagclass == 'template') {
                     $replace_str = get_tpl_by_name($tagparam,$tags, null, $inner_content);
                     if (!$replace_str) {
-                        $tags['title'] = $tagparam;
-                        my_msg('tpl_not_found', $tags);
-                        return "";
+                        App::$message->get('tpl_not_found', ['name' => $tagparam]);
+                        return '';
                     }
                 } elseif ($tagclass == 'block') {
                     $replace_str = App::get('Blocks')->content($tagparam);

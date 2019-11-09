@@ -3,7 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use Classes\Sitemap;
 
-require_once 'tests/bootstrap.php';
 require_once 'include/lib_url.php';
 
 class SitemapTest extends TestCase

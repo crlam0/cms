@@ -62,7 +62,7 @@ class TwigTemplate {
                     ]);
                 break;
             default:
-                print_error('Unknown template type');
+                App::$message->error('Unknown template type');
                 return null;
         }
         

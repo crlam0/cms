@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use Classes\Blocks;
 
-require_once 'tests/bootstrap.php';
+require_once 'bootstrap.php';
 
 class BlocksTest extends TestCase
 {

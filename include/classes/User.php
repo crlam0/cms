@@ -10,6 +10,7 @@ class User {
     public function __construct() {
         $this->id = 0;
         $this->flags = '';
+        $this->data=null;
     }
     
     public function __get($name){
@@ -19,6 +20,9 @@ class User {
             case 'flags':
                 return $this->flags;
             default:
+                if(!$this->data) {
+                    $this->getData($this->id);
+                }
                 if(array_key_exists($name, $this->data)) {
                     return $this->data[$name];
                 }
@@ -52,12 +56,9 @@ class User {
      *
      */
     public function authByIdFlags(int $id, string $flags) {
-        if($this->getData($id)) {
-            $this->id = $id;
-            $this->flags = $flags;
-            return true;
-        }
-        return false;
+        $this->id = $id;
+        $this->flags = $flags;
+        return true;
     }
 
     /**
@@ -279,8 +280,7 @@ class User {
         $value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME');
         if(strlen($value)){
             setcookie($COOKIE_NAME.'_REMEMBERME', '', time(), App::$SUBDIR);
-            $query = "update users set token='' where id='".$user_id."'";
-            App::$db->query($query);
+            $this->makeToken($data['id'], 0, 'null');
         }
     }
     

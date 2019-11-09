@@ -26,7 +26,7 @@ class Template {
      *
      * @return string Output content
      */
-    private function get_twig_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){        
+    private function parse_twig_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){        
         App::debug("Parse template '{$template['name']}'");    
         if ($template['file_name']) {        
             if(!strstr($template['file_name'],'.html.twig')) {
@@ -42,7 +42,7 @@ class Template {
                 $template['name'] = $fname;
             } else {
                 $tags['file_name'] = $template['file_name'];
-                my_msg('file_not_found', $tags);
+                App::$message->get('file_not_found', $tags);
                 return '';
             }
         } else {
@@ -80,7 +80,7 @@ class Template {
      *
      * @return string Output content
      */
-    private function get_my_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){
+    private function parse_my_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){
         if (array_key_exists('file_name', $template) && $template['file_name']) {
             $fname = '';
             if (file_exists($template['file_name'])) {
@@ -93,7 +93,7 @@ class Template {
                 $template['content'] = implode('', file($fname));
             } else {
                 $tags['file_name'] = $template['file_name'];
-                my_msg('file_not_found', $tags);
+                App::$message->get('file_not_found', $tags);
                 return '';
             }
         }
@@ -114,7 +114,7 @@ class Template {
      *
      * @return string Output content
      */
-    function get_by_name($name, $tags = [], $sql_result = [], $inner_content = '') {
+    function parse($name, $tags = [], $sql_result = [], $inner_content = '') {
                 
         $template = null;
 
@@ -143,17 +143,16 @@ class Template {
             $template = App::$db->select_row("SELECT * FROM templates WHERE name='{$name}'", true);
         }
         if (!$template) {
-            $tags['name'] = $name;
-            my_msg('tpl_not_found', $tags);
+            App::$message->get('tpl_not_found', ['name'=>$name]);
             return '';
         }
         if ($template['template_type'] === 'my') {
-            return $this->get_my_tpl($template, $tags, $sql_result, $inner_content);        
+            return $this->parse_my_tpl($template, $tags, $sql_result, $inner_content);        
         } elseif($template['template_type'] === 'twig') {
-            return $this->get_twig_tpl($template, $tags, $sql_result, $inner_content);
+            return $this->parse_twig_tpl($template, $tags, $sql_result, $inner_content);
         } else {
             $tags['type'] = $template['template_type'];
-            my_msg('', $tags, 'Unknown template type "[%type%]"');
+            App::$message->get('', $tags, 'Unknown template type "[%type%]"');
             return '';
         }
     }

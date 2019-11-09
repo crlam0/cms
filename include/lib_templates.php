@@ -12,10 +12,6 @@ if(file_exists(__DIR__.'/Classes/BlocksLocal.php')) {
 }
 App::set('Blocks', $BlocksObject);
 
-$Template = new Template();
-App::set('Template', $Template);
-
-
 /**
  * Parse template by name
  *
@@ -27,7 +23,7 @@ App::set('Template', $Template);
  * @return string Output content
  */
 function get_tpl_by_name($name, $tags = [], $sql_result = [], $inner_content = '') {
-    return App::get('Template')->get_by_name($name, $tags, $sql_result, $inner_content);
+    return App::$template->parse($name, $tags, $sql_result, $inner_content);
 }
 
 /**
@@ -40,5 +36,5 @@ function get_tpl_by_name($name, $tags = [], $sql_result = [], $inner_content = '
  * @return string Output content
  */
 function get_tpl_default($tags = [], $sql_result = [], $inner_content = '') {
-    return App::get('Template')->get_by_name(App::get('tpl_default'), $tags, $sql_result, $inner_content);
+    return App::$template->parse(App::get('tpl_default'), $tags, $sql_result, $inner_content);
 }

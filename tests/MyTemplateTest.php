@@ -3,8 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use Classes\MyTemplate;
 
-require_once 'tests/bootstrap.php';
-
 class MyTemplateTest extends TestCase
 {
     private $Blocks;

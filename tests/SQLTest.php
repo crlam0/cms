@@ -3,8 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use Classes\SQLHelper;
 
-require_once 'tests/bootstrap.php';
-
 class SQLTest extends TestCase
 {
     public function testUsers()

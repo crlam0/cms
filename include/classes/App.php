@@ -17,6 +17,14 @@ final class App {
     * @var User User object
     */
     public static $user;
+    /**
+    * @var Template Template object
+    */
+    public static $template;
+    /**
+    * @var Message Message object
+    */
+    public static $message;
     
     /**
     * @var Array Raw data from _GET

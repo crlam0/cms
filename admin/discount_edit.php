@@ -5,20 +5,17 @@ include "../include/common.php";
 
 if ($input["del"]) {
     $query = "delete from discount where id=" . $input["id"];
-    print_debug($query);
     my_query($query);
 }
 
 if ($input["add"]) {
     $query = "insert into discount " . db_insert_fields($input['form']);
-    print_debug($query);
     my_query($query);
 }
 
 
 if ($input["edit"]) {
     $query = "update discount set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    print_debug($query);
     my_query($query);
 }
 

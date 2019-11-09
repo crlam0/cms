@@ -3,8 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use Classes\Routing;
 
-require_once 'tests/bootstrap.php';
-
 class RoutingTest extends TestCase
 {
     private $Routing;

@@ -3,8 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use Classes\App;
 
-//require_once 'tests/bootstrap.php';
-
 class AppTest extends TestCase
 {
     
@@ -36,9 +34,9 @@ class AppTest extends TestCase
         self::assertEquals('test2', App::$SUBDIR);
     }
     
-    public function testLoadGlobals()
+    public function testLoadInputData()
     {
-        $this->App->loadGlobals(['test' => 'result'], [], []);
+        $this->App->loadInputData(['test' => 'result'], [], []);
         self::assertEquals('result', App::$get['test']);
     }
 }

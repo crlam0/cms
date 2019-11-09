@@ -1,6 +1,7 @@
 <?php
 
 namespace Classes;
+use Classes\App;
 
 class Image {
     public $width = 0;
@@ -33,13 +34,13 @@ class Image {
 
     public function __construct($file_name, $file_type = null){
         if (!is_file($file_name)) {
-            print_error('Файл отсутствует !');
+            App::$message->error('Файл отсутствует !');
             return false;
         }
         $this->file_name = $file_name;
         $this->file_type = $this->getFileType($file_name, $file_type);
         if (!in_array($this->file_type, $this->validImageTypes)) {
-            print_error('Неверный тип файла !');
+            App::$message->error('Неверный тип файла !');
             return false;
         }
         if ($this->file_type == 'image/jpeg' ) {

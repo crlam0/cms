@@ -3,7 +3,9 @@ include "common.php";
 
 $query="select count(id),count(distinct remote_addr) from visitor_log";
 list($hits,$unique)=my_select_row($query,true);
-while(strlen($hits)<=6)$hits="0".$hits;
+while(strlen($hits)<=6){
+    $hits="0".$hits;
+}
 
 $im_w=80;
 $im_h=25;

@@ -26,6 +26,18 @@ function check_key($key, $array) {
 }
 
 /**
+ * Print array content
+ *
+ * @param array $array Input array
+ *
+ */
+function print_array($array) {
+    echo "<pre>";
+    print_r($array);
+    echo "</pre>";
+}
+
+/**
  * Add .?? to summ
  *
  * @param float $summ Input summ

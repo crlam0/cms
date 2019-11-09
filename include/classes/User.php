@@ -83,9 +83,13 @@ class User {
                 return false;
             }
             $id = $session['UID'];
+        } else {
+            return false;
         }
         if(array_key_exists('FLAGS', $session)) {
             $flags = $session['FLAGS'];
+        } else {
+            return false;
         }
         App::debug('Auth by session');
         return $this->authByIdFlags($id, $flags);

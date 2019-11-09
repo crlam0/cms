@@ -20,18 +20,6 @@ function my_msg_to_str($title, $tags = array(), $str = '') {
 }
 
 /**
- * Print array content
- *
- * @param array $array Input array
- *
- */
-function print_array($array) {
-    echo "<pre>";
-    print_r($array);
-    echo "</pre>";
-}
-
-/**
  * Send mail with header
  *
  * @param string $message_to Destination address

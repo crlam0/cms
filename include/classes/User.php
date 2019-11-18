@@ -7,6 +7,15 @@ class User {
     private $flags;
     private $data;
     
+    /**
+    * @const Use salt to create token.
+    */
+    const TOKEN_SALT = 1;
+    /**
+    * @const Remove token.
+    */
+    const TOKEN_NULL = 2;
+    
     public function __construct() {
         $this->id = 0;
         $this->flags = '';
@@ -108,7 +117,7 @@ class User {
         $result = App::$db->query($query, true);
         if ($result->num_rows) {
             $row = $result->fetch_array();        
-            if(strcmp($this->encryptPassword($password, $row['salt']),$row['passwd'])==0){
+            if(password_verify($password, $row['passwd'])) {
                 $this->authByArray($row);
                 return $row;
             }
@@ -208,10 +217,10 @@ class User {
     public function makeToken($user_id, $expire_days, $type = 'password_hash') {
         $expire=time() + $expire_days*24*3600;
         switch ($type) {
-            case 'salt':
+            case static::TOKEN_SALT:
                 $token=$this->generateSalt();
                 break;
-            case 'null':
+            case static::TOKEN_NULL:
                 $token='';
                 $expire=0;
                 break;
@@ -241,7 +250,7 @@ class User {
         if($data['token_expire'] > time()) {
             return $data;
         } else {
-            $this->makeToken($data['id'], 0, 'null');
+            $this->makeToken($data['id'], 0, static::TOKEN_NULL);
         }
     }
     
@@ -284,7 +293,7 @@ class User {
         $value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME');
         if(strlen($value)){
             setcookie($COOKIE_NAME.'_REMEMBERME', '', time(), App::$SUBDIR);
-            $this->makeToken($data['id'], 0, 'null');
+            $this->makeToken($user_id, 0, static::TOKEN_NULL);
         }
     }
     

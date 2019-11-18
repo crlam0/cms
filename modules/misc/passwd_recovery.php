@@ -4,10 +4,10 @@ if(!isset($input)) {
 }
 
 use Classes\App;
+use Classes\User;
 
 $tags['Header'] = 'Восстановление пароля';
 add_nav_item($tags['Header']);
-
 
 if ($input['token']) {
     if($user = App::$user->checkToken($input['token'])) {    
@@ -27,7 +27,7 @@ if ($input['token']) {
                 $data['passwd']=App::$user->encryptPassword($input['new_passwd1'], $data['salt']);
                 $query="update users set ". db_update_fields($data) ." where id='".$user['id']."'";
                 $result = App::$db->query($query, true);
-                App::$user->makeToken($user['id'], 0, 'null');
+                App::$user->makeToken($user['id'], 0, User::TOKEN_NULL);
                 $content .= my_msg_to_str('info','','Пароль успешно изменен !');   
                 echo get_tpl_default($tags, '', $content);
                 exit;
@@ -47,7 +47,7 @@ if ($input['passwd_recovery']) {
     $result = App::$db->query($query);
     if ($result->num_rows) {
         list($user_id) = $result->fetch_array();
-        $token = App::$user->makeToken($user_id, 1, 'salt');
+        $token = App::$user->makeToken($user_id, 1, User::TOKEN_SALT);
         $URL = App::$server['REQUEST_SCHEME'] . '://' . App::$server['HTTP_HOST'] . App::$server['REQUEST_URI'] . '?token=' . $token;
         $message = 'Перейдите по ссылке ' . $URL . ' чтобы задать новый пароль';
         send_mail($input['email'], 'Восстановление пароля на сайте ' . App::$server['HTTP_HOST'], $message);

@@ -5,7 +5,7 @@ namespace Classes;
 use Classes\App;
 
 final class Routing {
-    private $routes = array();
+    private $routes = [];
     public $request_uri;
     
     public function __construct($request_uri) {
@@ -20,12 +20,13 @@ final class Routing {
         }
         if(substr($this->request_uri,0,1) === '/') {
             $this->request_uri = substr($this->request_uri, 1);
-        } 
-        
+        }
+        if(strpos($this->request_uri,'?')!==false) {
+            $this->request_uri = substr($this->request_uri,0,strpos($this->request_uri,'?'));
+        }        
         if(strstr($this->request_uri,'modules/')) {
             $this->request_uri = str_replace('modules/', '', $this->request_uri);
         }
-
     }
 
     public function addRoutesFromConfig($file) {
@@ -36,31 +37,6 @@ final class Routing {
     
     public function isIndexPage () {
         return !$this->request_uri or $this->request_uri==='' or $this->request_uri==='index.php';
-    }
-    
-    public function hasGETParams () {
-        return strpos($this->request_uri,'?')!==false;
-    }
-
-    public function proceedGETParams () {
-        global $input;
-        $get_param=substr($this->request_uri,strpos($this->request_uri,'?')+1);
-        $this->request_uri = substr($this->request_uri,0,strpos($this->request_uri,'?'));
-        if(strpos($get_param,'&')){
-            $get_array = explode('&',$get_param);
-        } else {
-            $get_array[] = $get_param;
-        }
-        foreach ($get_array as $param) {
-            if(strpos($param,'=')) {
-                $param_array = explode('=',$param);
-                $input[$param_array[0]] = App::$db->test_param($param_array[1]);
-                App::$input[$param_array[0]] = $input[$param_array[0]];
-            } else {
-                $input[$param] = true;
-                App::$input[$param] = true;
-            }
-        }
     }
     
     public function getFileName () {

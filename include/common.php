@@ -32,6 +32,7 @@ unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 App::$user = new User();
 App::$template = new Template();
 App::$message = new Message();
+App::$routing = new Routing (App::$server['REQUEST_URI']);
 
 if(App::$settings['debug']) {
     $whoops = new Run();
@@ -61,10 +62,6 @@ if(App::$server['SERVER_PROTOCOL']) {
     require_once __DIR__.'/lib_stats.php';
 }
 
-App::$routing = new Routing (App::$server['REQUEST_URI']);
-if (App::$routing->hasGETParams()) {
-    App::$routing->proceedGETParams();
-}
 
 $part = App::$routing->getPartArray();
 if (!$part['id']) {
@@ -75,7 +72,7 @@ $App->set('tpl_default', $part['tpl_name']);
 
 if(!App::$user->checkAccess($part['user_flag'])) {
     if (App::$user->id) {
-        $content = my_msg_to_str('error', [] ,'У вас нет соответствующих прав !');
+        $content = App::$message->get('error', [] ,'У вас нет соответствующих прав !');
         echo get_tpl_default([], null, $content);
     } else {
         $_SESSION['GO_TO_URI'] = App::$server['REQUEST_URI'];

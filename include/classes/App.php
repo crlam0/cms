@@ -76,7 +76,7 @@ final class App {
      * @param array $subdir Subdir of App
      *
     */   
-    public function __construct(string $dir, string $subdir) {
+    public function __construct(string $dir, string $subdir = '/') {
         static::$DIR = $dir;
         static::$SUBDIR = $subdir;
         static::set('DIR', $dir);

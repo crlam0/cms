@@ -143,8 +143,7 @@ class Template {
             $template = App::$db->select_row("SELECT * FROM templates WHERE name='{$name}'", true);
         }
         if (!$template) {
-            App::$message->get('tpl_not_found', ['name'=>$name]);
-            return '';
+            return App::$message->get('tpl_not_found', ['name'=>$name]);
         }
         if ($template['template_type'] === 'my') {
             return $this->parse_my_tpl($template, $tags, $sql_result, $inner_content);        

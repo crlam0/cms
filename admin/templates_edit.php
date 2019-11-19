@@ -28,8 +28,13 @@ function twig_tpl_save($filename, $content){
         $filename.='.html.twig';
     }
     $filename = $DIR . 'templates/' . $filename;
-    $content = stripcslashes($content);
-    return file_put_contents($filename, $content) && clear_cache_dir('twig');
+    if(!strlen($content)) {
+        if(file_exists($filename)) {
+            return true;
+        }
+        $content = PHP_EOL;
+    }
+    return file_put_contents($filename, stripcslashes($content)) && clear_cache_dir('twig');
 }
 
 if($input['revert']){

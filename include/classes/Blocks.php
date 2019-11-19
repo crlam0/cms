@@ -71,7 +71,7 @@ class Blocks {
     }
     protected function menu_bottom () {
         list($menu_id) = App::$db->select_row("SELECT id FROM menu_list WHERE bottom_menu=1", true);
-        return $this->get_menu_items($menu_id, 'id="menu-footer" class="navbar-nav navbar-right"', 'class="nav-item"');
+        return $this->get_menu_items($menu_id, 'id="menu-footer" class="navbar-nav navbar-expand navbar-right"', 'class="nav-item"');
     }
     
     protected function vote () {

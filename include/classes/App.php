@@ -159,6 +159,9 @@ final class App {
      */
     public function connectDB($host, $user, $passwd, $dbname) {
         static::$db = new SQLHelper($host, $user, $passwd, $dbname);
+        static::$db->query('SET character_set_client = utf8', true);
+        static::$db->query('SET character_set_results = utf8', true);
+        static::$db->query('SET character_set_connection = utf8', true);
     }
 
     /**

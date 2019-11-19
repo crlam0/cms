@@ -57,7 +57,5 @@ function db_update_fields($fields) {
     return App::$db->update_fields($fields);
 }
 
-App::$db->query('SET character_set_client = utf8', true);
-App::$db->query('SET character_set_results = utf8', true);
-App::$db->query('SET character_set_connection = utf8', true);
+
 

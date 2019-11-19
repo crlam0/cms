@@ -2,12 +2,12 @@
 
 include 'include/common.php';
 
+use Classes\App;
+
 if( isset($REDIRECT_TO_HTTPS) && App::$server['REQUEST_SCHEME'] === 'http' ){
     $url = 'https://' . App::$server['HTTP_HOST'] . '' . App::$server['REQUEST_URI'];
     redirect($url);
 }
-
-use Classes\App;
 
 if( App::$routing->isIndexPage() and file_exists('index.local.php')) {
     $tags['isIndexPage'] = true;

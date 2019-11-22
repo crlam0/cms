@@ -49,8 +49,8 @@ final class Routing {
         foreach($matches as $key => $value){
             if (array_key_exists('params', $route)) {
                 $value = App::$db->test_param($value);
-                $input[$route['params'][$key+1]] = $value;
-                App::$input[$route['params'][$key+1]] = $value;
+                $input[$route['params'][$key]] = $value;
+                App::$input[$route['params'][$key]] = $value;
             }
         }
     }

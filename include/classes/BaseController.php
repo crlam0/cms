@@ -2,7 +2,7 @@
 
 namespace Classes;
 
-class Controller {
+class BaseController {
     
     public $title = '';
     public $breadcrumbs = [];
@@ -11,8 +11,11 @@ class Controller {
         if (method_exists($this, $methodName)) {
             $method = new \ReflectionMethod($this, $methodName);
             if ($method->isPublic() && $method->getName() === $methodName) {
-                $params = array_values($params);
-                return $this->$methodName(... $params);
+                if(is_array($params)){
+                    $params = array_values($params);
+                    return $this->$methodName(... $params);
+                }
+                return $this->$methodName();
             }
         }
         throw new \InvalidArgumentException('Method ' . $methodName . ' not found.');

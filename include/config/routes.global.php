@@ -28,30 +28,59 @@ return [
     'request_php' => [
         'pattern' => '^.*misc\/request\.php$',
         'file' => 'modules/misc/request.php'
-    ],    
+    ],
     
+    
+    /*
     'article_pdf' => [
         'pattern' => '^article\/(.*)\/(.*)\.pdf$',
         'file' => 'modules/article/index.php',
         'params' => [
-            '1' => 'uri',
-            '2' => 'pdf',
+            '0' => 'uri',
+            '1' => 'pdf',
         ]
     ],    
     'article' => [
         'pattern' => '^article\/?$',
         'file' => 'modules/article/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],    
     'article_uri' => [
         'pattern' => '^article\/(.*)\/?$',
         'file' => 'modules/article/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
+        ]
+    ],
+     * 
+     */
+    'article-part-list' => [
+        'pattern' => '^article\/?$',
+        'controller' => 'modules\article\Controller',
+        'action' => 'article-part-list',
+    ],    
+    'article-list' => [
+        'pattern' => '^article\/(\w+)\/$',
+        'controller' => 'modules\article\Controller',
+        'action' => 'article-list',
+        'params' => [
+            '0' => 'alias',
         ]
     ],    
+    'article' => [
+        'pattern' => '^article\/(\w+)\/(\w+)\/?$',
+        'controller' => 'modules\article\Controller',
+        'action' => 'article',
+        'params' => [
+            '0' => 'part_alias',
+            '1' => 'alias'
+        ]
+    ],    
+    
+    
+    
     'blog' => [
         'pattern' => '^blog\/?$',
         'file' => 'modules/blog/index.php',
@@ -60,14 +89,14 @@ return [
         'pattern' => '^blog\/(.*)\/$',
         'file' => 'modules/blog/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],    
     'blog_uri' => [
         'pattern' => '^blog\/(.*)$',
         'file' => 'modules/blog/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],    
     
@@ -75,7 +104,7 @@ return [
         'pattern' => '^faq\/(.*)\/$',
         'file' => 'modules/faq/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],    
     'faq' => [
@@ -91,14 +120,14 @@ return [
         'pattern' => '^gallery\/(.*)\/?$',
         'file' => 'modules/gallery/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],    
     'gallery_index' => [
         'pattern' => '^gallery\/(.*)\/index\.php',
         'file' => 'modules/gallery/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],    
     
@@ -106,14 +135,14 @@ return [
         'pattern' => '^media\/?$',
         'file' => 'modules/media/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],    
     'media_uri' => [
         'pattern' => '^media\/(.*)\/?$',
         'file' => 'modules/media/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],    
     
@@ -125,7 +154,7 @@ return [
         'pattern' => '^news\/(.*)\/?$',
         'file' => 'modules/news/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],    
     'offers' => [
@@ -136,7 +165,7 @@ return [
         'pattern' => '^offers\/(.*)\/?$',
         'file' => 'modules/offers/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],    
 
@@ -161,15 +190,15 @@ return [
         'pattern' => '^catalog\/(.*)\/$',
         'file' => 'modules/catalog/index.php',
         'params' => [
-            '1' => 'uri',
+            '0' => 'uri',
         ]
     ],
     'catalog_item' => [
         'pattern' => '^catalog\/(.*)\/(.*)$',
         'file' => 'modules/catalog/index.php',
         'params' => [
-            '1' => 'uri',
-            '2' => 'item_title',
+            '0' => 'uri',
+            '1' => 'item_title',
         ]
     ],    
     'price' => [

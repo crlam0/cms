@@ -2,10 +2,9 @@
 
 namespace Tests;
 
-use Classes\Controller;
-use Classes\App;
+use Classes\BaseController;
 
-class MyTestController extends Controller
+class MyTestController extends BaseController
 {
     
     public function actionIndex($arg1, $arg2)

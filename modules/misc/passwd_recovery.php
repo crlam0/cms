@@ -9,7 +9,7 @@ use Classes\User;
 $tags['Header'] = 'Восстановление пароля';
 add_nav_item($tags['Header']);
 
-if ($input['token']) {
+if ($input['token'] && check_csrf_token()) {
     if($user = App::$user->checkToken($input['token'])) {    
         if ($input['passwd_change']) {    
             if( strlen($input['new_passwd1'])<8 ){
@@ -42,7 +42,7 @@ if ($input['token']) {
     }
 }
 
-if ($input['passwd_recovery']) {    
+if ($input['passwd_recovery'] && check_csrf_token()) {    
     $query = "select id from users where email='".$input['email']."'";
     $result = App::$db->query($query);
     if ($result->num_rows) {

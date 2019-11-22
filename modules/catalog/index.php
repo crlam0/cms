@@ -208,7 +208,7 @@ if ($input['view_item']) {
         $query = "select * from cat_item_images where item_id='{$row['id']}' and id<>'{$row['default_img']}' order by id asc";
         $result = my_query($query);
         if ($result->num_rows) {
-            $tags['images'] = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            $tags['images'] = $result->fetch_all(MYSQLI_ASSOC);
         }
         if(!$related_products = my_json_decode($row_part['related_products'])) {
             $related_products=[];

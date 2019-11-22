@@ -9,14 +9,28 @@ if( isset($REDIRECT_TO_HTTPS) && App::$server['REQUEST_SCHEME'] === 'http' ){
     redirect($url);
 }
 
-if( App::$routing->isIndexPage() and file_exists('index.local.php')) {
+if( App::$routing->isIndexPage() && file_exists('index.local.php')) {
     $tags['isIndexPage'] = true;
     require 'index.local.php';
     exit;
 }
 
-$file = App::$routing->getFileName();
+if($controller_name = App::$routing->controller) {
+    try {
+        $action = App::$routing->action;
+        App::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
+        $controller = new $controller_name;
+        $content = $controller->execute($action, App::$routing->params);
+        $tags['Header'] = $controller->title;
+        $tags['nav_array'] = array_merge($tags['nav_array'],$controller->breadcrumbs);
+        echo get_tpl_default($tags, null, $content);
+        exit;
+    } catch (Exception $e) {
+        App::debug('Exception: ' . $e->getMessage());
+    }
+}
 
+$file=App::$routing->file;
 if($file && is_file($DIR . $file)) {
     $server['PHP_SELF'] = $SUBDIR.$file;
     $server['PHP_SELF_DIR'] = $SUBDIR.dirname($file) . '/';
@@ -25,7 +39,7 @@ if($file && is_file($DIR . $file)) {
 } 
 
 $tags['Header'] = 'Ошибка 404';
-$tags['file_name'] = $server['REQUEST_URI'];
+$tags['file_name'] = App::$server['REQUEST_URI'];
 $content = my_msg_to_str('file_not_found',$tags);
 header($server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
 echo get_tpl_default($tags, null, $content);

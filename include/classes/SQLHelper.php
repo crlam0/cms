@@ -46,6 +46,9 @@ class SQLHelper {
         if (mysqli_connect_error()) {
             die('DB connect error ' . mysqli_connect_errno() . ': ' . mysqli_connect_error());
         }
+        $this->query('SET character_set_client = utf8', true);
+        $this->query('SET character_set_results = utf8', true);
+        $this->query('SET character_set_connection = utf8', true);
         empty($this->query_log_array);
         $this->query_log_array[] = 'Connected to ' . $host;
     }
@@ -73,13 +76,11 @@ class SQLHelper {
                 $this->query_log_array[] = $this->mysqli->info;
             }
         }
-        if (!$result) {
-            echo 'SQL Error: '.$this->mysqli->error;
+        if (!$result) {            
             if(App::$settings['debug']){
-                echo '<br />Query is: '.$sql;
-                throw new \InvalidArgumentException('SQL Error: ' . $sql . ' Query is: ' . $sql);
+                throw new \InvalidArgumentException('SQL Error: ' . $this->mysqli->error . ' Query is: ' . $sql);
             }
-            exit();
+            die('SQL Error: '.$this->mysqli->error);
         }
         return $result;
     }
@@ -102,6 +103,15 @@ class SQLHelper {
         }
     }
 
+    /**
+     * Return last insert ID.
+     *
+     * @return integer 
+     */
+    public function insert_id(): int {
+        return $this->mysqli->insert_id;
+    }
+    
     /**
      * Test field parameter for deny SQL injections
      *
@@ -128,7 +138,7 @@ class SQLHelper {
         }
         return $str;
     }
-    
+
     /**
      * Escape string
      *

@@ -9,7 +9,7 @@ $tags['Header'] = 'Смена пароля';
 $tags['nav_str'].="<span class=nav_next>{$tags['Header']}</span>";
 add_nav_item($tags['Header']);
 
-if ($input['passwd_change']) {    
+if ($input['passwd_change'] && check_csrf_token()) {    
     $query = "select passwd,salt from users where id='".App::$user->id."'";
     $result = my_query($query, true);
     if ($result->num_rows) {

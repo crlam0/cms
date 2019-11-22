@@ -11,7 +11,7 @@ add_nav_item($tags['Header']);
 
 $content = '';
 
-if (isset($input) && $input['logon']) {
+if (isset($input) && $input['logon'] && check_csrf_token()) {
     if($row = App::$user->authByLoginPassword($input['login'],$input['passwd'])) {
         $_SESSION['UID']=App::$user->id;
         $_SESSION['FLAGS']=App::$user->flags;

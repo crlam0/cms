@@ -103,13 +103,13 @@ final class App {
         if(is_array($get)){
             static::$get = $get;
             foreach ($get as $key => $value){
-                static::$input[$key]=$this->test_param($value,$key);
+                static::$input[$key]=static::$db->test_param($value,$key);
             }
         }
         if(is_array($post)){
             static::$post = $post;
             foreach ($post as $key => $value){
-                static::$input[$key]=$this->test_param($value,$key);
+                static::$input[$key]=static::$db->test_param($value,$key);
             }
         }
     }
@@ -159,9 +159,6 @@ final class App {
      */
     public function connectDB($host, $user, $passwd, $dbname) {
         static::$db = new SQLHelper($host, $user, $passwd, $dbname);
-        static::$db->query('SET character_set_client = utf8', true);
-        static::$db->query('SET character_set_results = utf8', true);
-        static::$db->query('SET character_set_connection = utf8', true);
     }
 
     /**
@@ -175,33 +172,6 @@ final class App {
         $settings = static::$settings;
         $mysqli = static::$db->mysqli;
     }    
-    
-    /**
-     * Test field parameter for deny SQL injections
-     *
-     * @param string $sql Input string
-     *
-     * @return string Output string
-     */
-    public function test_param($str,$param='') {
-        if (is_array($str)) {
-            foreach ($str as $key => $value) {
-                $str[$key]=$this->test_param($value);
-            }
-            return $str;
-        }    
-        if(!strstr(static::$server['PHP_SELF'], 'admin/')) {
-            $str=htmlspecialchars($str);     
-        }
-        $str = static::$db->escape_string($str);        
-        foreach($this->DENIED_WORDS as $word) {
-            if(stristr($str, $word)){
-                header(static::$server['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
-                exit();
-            }
-        }
-        return $str;
-    }
     
     /**
      * Get value from container.

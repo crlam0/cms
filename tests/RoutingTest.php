@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Classes\Routing;
+use Classes\App;
 
 class RoutingTest extends TestCase
 {
@@ -13,22 +14,23 @@ class RoutingTest extends TestCase
         $this->Routing = new Routing('/article/item/?test=1');
     }
 
+    /*
     public function testIsIndexPage() {
         $result = $this->Routing->isIndexPage();
         self::assertFalse($result);
     }
-    
-    public function testGetFileName() {        
-        global $input;
-        $result=$this->Routing->getFileName();
+    */
+    public function testFilename() {        
+        $result=$this->Routing->file;
         self::assertEquals('modules/article/index.php', $result);
-        self::assertEquals('item/', $input['uri']);
+        self::assertEquals('item/', App::$input['uri']);
     }
-    
+    /*
     public function testGetPartArray() {        
-        global $input;
         $result=$this->Routing->getPartArray();
         self::assertEquals('default', $result['title']);
-    }    
+    } 
+     * 
+     */   
 }
 

@@ -47,7 +47,7 @@ class LoginController extends BaseController
             $content .= App::$template->parse('user_login_promt', $tags);
             return $content;
         } else {
-            return  App::$message->get('user_already_logged_on');
+            return App::$message->get('user_already_logged_on');
         }        
     }
 }

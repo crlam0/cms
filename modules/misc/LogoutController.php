@@ -5,7 +5,7 @@ namespace modules\misc;
 use Classes\BaseController;
 use Classes\App;
 
-class LoginController extends BaseController
+class LogoutController extends BaseController
 {    
     public function actionIndex()
     {

@@ -23,7 +23,7 @@ if($controller_name = App::$routing->controller) {
         $content = $controller->execute($action, App::$routing->params);
         $tags['Header'] = $controller->title;
         $tags['nav_array'] = array_merge($tags['nav_array'],$controller->breadcrumbs);
-        echo get_tpl_default($tags, null, $content);
+        echo App::$template->parse(App::get('tpl_default'), $tags, null, $content);
         exit;
     } catch (Exception $e) {
         App::debug('Exception: ' . $e->getMessage());

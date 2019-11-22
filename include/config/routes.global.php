@@ -11,11 +11,11 @@ return [
     ],    
     'passwd_change' => [
         'pattern' => '^passwd_change\/?$',
-        'file' => 'modules/misc/passwd_change.php'
+        'controller' => 'modules\misc\PasswdChangeController'
     ],    
     'passwd_recovery' => [
-        'pattern' => '^passwd_recovery\/?$',
-        'file' => 'modules/misc/passwd_recovery.php'
+        'pattern' => '^passwd_recovery\/?\w*$',
+        'controller' => 'modules\misc\PasswdRecoveryController'
     ],    
     'search' => [
         'pattern' => '^search\/?$',

@@ -1,13 +1,13 @@
 <?php
 
-return [
+return [  
     'login' => [
         'pattern' => '^login\/?$',
-        'file' => 'modules/misc/login.php'
+        'controller' => 'modules\misc\LoginController'
     ],    
     'logout' => [
         'pattern' => '^logout\/?$',
-        'file' => 'modules/misc/logout.php'
+        'controller' => 'modules\misc\LogoutController'
     ],    
     'passwd_change' => [
         'pattern' => '^passwd_change\/?$',
@@ -28,34 +28,8 @@ return [
     'request_php' => [
         'pattern' => '^.*misc\/request\.php$',
         'file' => 'modules/misc/request.php'
-    ],
-    
-    
-    /*
-    'article_pdf' => [
-        'pattern' => '^article\/(.*)\/(.*)\.pdf$',
-        'file' => 'modules/article/index.php',
-        'params' => [
-            '0' => 'uri',
-            '1' => 'pdf',
-        ]
-    ],    
-    'article' => [
-        'pattern' => '^article\/?$',
-        'file' => 'modules/article/index.php',
-        'params' => [
-            '0' => 'uri',
-        ]
-    ],    
-    'article_uri' => [
-        'pattern' => '^article\/(.*)\/?$',
-        'file' => 'modules/article/index.php',
-        'params' => [
-            '0' => 'uri',
-        ]
-    ],
-     * 
-     */
+    ],   
+
     'article-part-list' => [
         'pattern' => '^article\/?$',
         'controller' => 'modules\article\Controller',

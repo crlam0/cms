@@ -6,8 +6,7 @@ use Classes\BaseController;
 use Classes\App;
 
 class Controller extends BaseController
-{
-    
+{    
     public function actionArticle($part_alias,$alias)
     {
         $view_article = get_id_by_alias('article_item', $alias, true);
@@ -26,7 +25,7 @@ class Controller extends BaseController
         // $row['content'] = preg_replace('/width: \d+px;/', 'max-width: 100%;', $row['content']);
         $row['content'] = preg_replace('/style="width: /', 'class="img-fluid" style: style="width: ', $row['content']);
 
-        return get_tpl_by_name('article_view', $row);
+        return  App::$template->parse('article_view', $row);
     }
 
     public function actionArticleList($alias)
@@ -38,7 +37,7 @@ class Controller extends BaseController
         $this->title = $title;
         $this->breadcrumbs[] = ['title'=>'Статьи','url'=>'article/'];
         $this->breadcrumbs[] = ['title'=>$title];
-        return get_tpl_by_name('article_items', [], $result);
+        return App::$template->parse('article_items', [], $result);
     }
 
     public function actionArticlePartList()
@@ -47,7 +46,7 @@ class Controller extends BaseController
         $this->breadcrumbs[] = ['title'=>'Статьи'];
         $query = "select * from article_list";
         $result = App::$db->query($query);
-        return  get_tpl_by_name('article_list', [], $result);        
+        return App::$template->parse('article_list', [], $result);        
     }
 }
 

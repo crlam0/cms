@@ -20,7 +20,7 @@ if($controller_name = App::$routing->controller) {
         $action = App::$routing->action;
         App::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
         $controller = new $controller_name;
-        $content = $controller->execute($action, App::$routing->params);
+        $content = $controller->run($action, App::$routing->params);
         $tags['Header'] = $controller->title;
         $tags['nav_array'] = array_merge($tags['nav_array'],$controller->breadcrumbs);
         echo App::$template->parse(App::get('tpl_default'), $tags, null, $content);

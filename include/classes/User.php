@@ -3,8 +3,17 @@
 namespace Classes;
 
 class User {
+    /**
+    * @var integer User id
+    */
     private $id;
+    /**
+    * @var string User flags
+    */
     private $flags;
+    /**
+    * @var array User data
+    */
     private $data;
     
     /**

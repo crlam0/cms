@@ -52,6 +52,15 @@ return [
             '1' => 'alias'
         ]
     ],    
+    'article_pdf' => [
+        'pattern' => '^article\/(.*)\/(.*)\.pdf$',
+        'controller' => 'modules\article\Controller',
+        'action' => 'PDF',
+        'params' => [
+            '1' => 'uri',
+            '2' => 'alias',
+        ]
+    ],    
     
     
     

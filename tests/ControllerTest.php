@@ -12,8 +12,8 @@ class ControllerTest extends TestCase
         $this->Controller = new Tests\MyTestController;
     }
 
-    public function testExecute() {        
-        $result=$this->Controller->execute('index', ['arg1'=>'test1','arg2'=>'test2']);
+    public function testRun() {        
+        $result=$this->Controller->run('index', ['arg1'=>'test1','arg2'=>'test2']);
         self::assertEquals('test1<br />test2', $result);
         self::assertEquals('Test', $this->Controller->title);
     }

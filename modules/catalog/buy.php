@@ -4,7 +4,6 @@ $tags['Header'] = "Корзина";
 @include_once "../../include/common.php";
 
 use Classes\SummToStr;
-$SummToStr = new SummToStr();
 
 // $tags['nav_str'] .= "<span class=nav_next><a href=\"" . $SUBDIR . "catalog/\" class=top>Каталог</a></span>";
 // $tags['nav_str'].="<span class=nav_next>Корзина</span>";
@@ -231,7 +230,7 @@ if (isset($_SESSION["BUY"]) && is_array($_SESSION["BUY"]) && count($_SESSION["BU
             </table>
             <center>Итого на сумму <b>" . add_zero($summ) . " руб.</b>
             " . (get_discount($summ) ? " С учетом скидки <b>" . get_discount($summ) . "%</b> сумма составлет: <b>" . add_zero($summ_with_discount) . "</b>" : "") . "
-            </center><center>Итого к оплате: <b>" . $SummToStr($summ_with_discount) . "</b></center>
+            </center><center>Итого к оплате: <b>" . SummToStr::get($summ_with_discount) . "</b></center>
             <br />
             <a onClick=\"document.request_form.submit();\" style=\"cursor: pointer\" class=\"btn btn-default\"> Посчитать </a>
             <a href=" . $server["PHP_SELF"] . "?request=1 class=\"btn btn-default\"> Оформить заказ </a>

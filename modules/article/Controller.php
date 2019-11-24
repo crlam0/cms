@@ -7,6 +7,27 @@ use Classes\App;
 
 class Controller extends BaseController
 {    
+    public function actionArticlePartList()
+    {
+        $this->title = 'Статьи';
+        $this->breadcrumbs[] = ['title'=>'Статьи'];
+        $query = "select * from article_list";
+        $result = App::$db->query($query);
+        return App::$template->parse('article_list', [], $result);        
+    }
+
+    public function actionArticleList($alias)
+    {
+        $view_items = get_id_by_alias('article_list', $alias, true);
+        $query = "select * from article_item where list_id='{$view_items}'";
+        $result = App::$db->query($query);
+        list($title) = App::$db->select_row("select title from article_list where id='{$view_items}'");
+        $this->title = $title;
+        $this->breadcrumbs[] = ['title'=>'Статьи','url'=>'article/'];
+        $this->breadcrumbs[] = ['title'=>$title];
+        return App::$template->parse('article_items', [], $result);
+    }
+    
     public function actionArticle($part_alias,$alias)
     {
         $view_article = get_id_by_alias('article_item', $alias, true);
@@ -28,25 +49,16 @@ class Controller extends BaseController
         return  App::$template->parse('article_view', $row);
     }
 
-    public function actionArticleList($alias)
-    {
-        $view_items = get_id_by_alias('article_list', $alias, true);
-        $query = "select * from article_item where list_id='{$view_items}'";
-        $result = App::$db->query($query);
-        list($title) = App::$db->select_row("select title from article_list where id='{$view_items}'");
-        $this->title = $title;
-        $this->breadcrumbs[] = ['title'=>'Статьи','url'=>'article/'];
-        $this->breadcrumbs[] = ['title'=>$title];
-        return App::$template->parse('article_items', [], $result);
+    public function actionPDF($uri,$alias) {
+        $id = get_id_by_alias('article_item', $alias, true);
+        $query = "select * from article_item where id='" . $id . "'";
+        $result = my_query($query, true);
+        $row = $result->fetch_array();
+        
+        $PDF = new PDFView();
+        return $PDF->get($row, $stream = true);
     }
+    
 
-    public function actionArticlePartList()
-    {
-        $this->title = 'Статьи';
-        $this->breadcrumbs[] = ['title'=>'Статьи'];
-        $query = "select * from article_list";
-        $result = App::$db->query($query);
-        return App::$template->parse('article_list', [], $result);        
-    }
 }
 

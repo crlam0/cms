@@ -21,7 +21,7 @@ class BaseController {
         throw new \InvalidArgumentException('Method ' . $methodName . ' not found.');
     }
     
-    public function execute($action, $params) {
+    public function run($action, $params) {
         $method = 'action' . str_replace(' ', '', ucwords(implode(' ', explode('-', $action))));
         return $this->runMethod($method, $params);
     }

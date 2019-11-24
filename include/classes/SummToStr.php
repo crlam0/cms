@@ -1,4 +1,5 @@
 <?php
+
 namespace Classes;
 
 /**
@@ -7,259 +8,75 @@ namespace Classes;
  */
 class SummToStr {
 
+    public static function get($num) {
+        $nul = 'ноль';
+        $ten = array(
+            array('', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'),
+            array('', 'одна', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять')
+        );
+        $a20 = array('десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать');
+        $tens = array(2 => 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто');
+        $hundred = array('', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот');
+        $unit = array(
+            array('копейка', 'копейки', 'копеек', 1),
+            array('рубль', 'рубля', 'рублей', 0),
+            array('тысяча', 'тысячи', 'тысяч', 1),
+            array('миллион', 'миллиона', 'миллионов', 0),
+            array('миллиард', 'миллиарда', 'миллиардов', 0),
+        );
 
-    private function Number($c) {
-        $c = str_pad($c, 3, "0", STR_PAD_LEFT);
-    //---------сотни
-        switch ($c[0]) {
-            case 0:
-                $d[0] = "";
-                break;
-            case 1:
-                $d[0] = "сто";
-                break;
-            case 2:
-                $d[0] = "двести";
-                break;
-            case 3:
-                $d[0] = "триста";
-                break;
-            case 4:
-                $d[0] = "четыреста";
-                break;
-            case 5:
-                $d[0] = "пятьсот";
-                break;
-            case 6:
-                $d[0] = "шестьсот";
-                break;
-            case 7:
-                $d[0] = "семьсот";
-                break;
-            case 8:
-                $d[0] = "восемьсот";
-                break;
-            case 9:
-                $d[0] = "девятьсот";
-                break;
-        }
-    //--------------десятки
-        switch ($c[1]) {
-            case 0:
-                $d[1] = "";
-                break;
-            case 1: {
-                    $e = $c[1] . $c[2];
-                    switch ($e) {
-                        case 10:
-                            $d[1] = "десять";
-                            break;
-                        case 11:
-                            $d[1] = "одиннадцать";
-                            break;
-                        case 12:
-                            $d[1] = "двенадцать";
-                            break;
-                        case 13:
-                            $d[1] = "тринадцать";
-                            break;
-                        case 14:
-                            $d[1] = "четырнадцать";
-                            break;
-                        case 15:
-                            $d[1] = "пятнадцать";
-                            break;
-                        case 16:
-                            $d[1] = "шестнадцать";
-                            break;
-                        case 17:
-                            $d[1] = "семнадцать";
-                            break;
-                        case 18:
-                            $d[1] = "восемнадцать";
-                            break;
-                        case 19:
-                            $d[1] = "девятнадцать";
-                            break;
-                    };
+        list($rub, $kop) = explode('.', sprintf("%015.2f", floatval($num)));
+        $out = array();
+        if (intval($rub) > 0) {
+            foreach (str_split($rub, 3) as $uk => $v) {
+                if (!intval($v)){
+                    continue;
                 }
-                break;
-            case 2:
-                $d[1] = "двадцать";
-                break;
-            case 3:
-                $d[1] = "тридцать";
-                break;
-            case 4:
-                $d[1] = "сорок";
-                break;
-            case 5:
-                $d[1] = "пятьдесят";
-                break;
-            case 6:
-                $d[1] = "шестьдесят";
-                break;
-            case 7:
-                $d[1] = "семьдесят";
-                break;
-            case 8:
-                $d[1] = "восемьдесят";
-                break;
-            case 9:
-                $d[1] = "девяносто";
-                break;
-        }
-    //--------------единицы
-        $d[2] = "";
-        if ($c[1] != 1):
-            switch ($c[2]) {
-                case 0:
-                    $d[2] = "";
-                    break;
-                case 1:
-                    $d[2] = "один";
-                    break;
-                case 2:
-                    $d[2] = "два";
-                    break;
-                case 3:
-                    $d[2] = "три";
-                    break;
-                case 4:
-                    $d[2] = "четыре";
-                    break;
-                case 5:
-                    $d[2] = "пять";
-                    break;
-                case 6:
-                    $d[2] = "шесть";
-                    break;
-                case 7:
-                    $d[2] = "семь";
-                    break;
-                case 8:
-                    $d[2] = "восемь";
-                    break;
-                case 9:
-                    $d[2] = "девять";
-                    break;
+                $uk = sizeof($unit) - $uk - 1;
+                $gender = $unit[$uk][3];
+                list($i1, $i2, $i3) = array_map('intval', str_split($v, 1));
+                // mega-logic
+                $out[] = $hundred[$i1]; // 1xx-9xx
+                if ($i2 > 1){
+                    $out[] = $tens[$i2] . ' ' . $ten[$gender][$i3]; // 20-99
+                } else {
+                    $out[] = $i2 > 0 ? $a20[$i3] : $ten[$gender][$i3]; // 10-19 | 1-9
+                }
+                    
+                // units without rub & kop
+                if ($uk > 1) {
+                    $out[] = static::morph($v, $unit[$uk][0], $unit[$uk][1], $unit[$uk][2]);
+                }
             }
-        endif;
-
-        return $d[0] . ' ' . $d[1] . ' ' . $d[2];
+        } else {
+            $out[] = $nul;
+        }
+        $out[] = static::morph(intval($rub), $unit[1][0], $unit[1][1], $unit[1][2]); // rub
+        $out[] = $kop . ' ' . static::morph($kop, $unit[0][0], $unit[0][1], $unit[0][2]); // kop
+        return trim(preg_replace('/ {2,}/', ' ', join(' ', $out)));
     }
 
     /**
-     * Return string basing on $sum
-     *
-     * @param float $sum Input summ
-     *
-     * @return string Output string
+     * Склоняем словоформу
+     * @author runcore
      */
-    private function convert($sum) {
-
-    // Проверка ввода
-        $sum = str_replace(' ', '', $sum);
-        $sum = trim($sum);
-        if ((!(preg_match('/^[0-9]*' . '[,\.]' . '[0-9]*$/', $sum) || preg_match('/^[0-9]+$/', $sum))) || ($sum == '.') || ($sum == ',')) :
-            return "Это не деньги: $sum";
-        endif;
-    // Меняем запятую, если она есть, на точку
-        $sum = str_replace(',', '.', $sum);
-        if ($sum >= 1000000000):
-            return "Максимальная сумма &#151 один миллиард рублей минус одна копейка";
-        endif;
-    // Обработка копеек
-        $rub = floor($sum);
-        $kop = 100 * round($sum - $rub, 2);
-        $kop.=" коп.";
-        if (strlen($kop) == 6):
-            $kop = "0" . $kop;
-        endif;
-    // Выясняем написание слова 'рубль'
-        $one = substr($rub, -1);
-        $two = substr($rub, -2);
-        if ($two > 9 && $two < 21):
-            $namerub = "рублей";
-
-        elseif ($one == 1):
-            $namerub = "рубль";
-
-        elseif ($one > 1 && $one < 5):
-            $namerub = " рубля";
-
-        else:
-            $namerub = "рублей";
-
-        endif;
-        if ($rub == "0"):
-            return "Ноль рублей $kop";
-        endif;
-    //----------Сотни
-        $sotni = substr($rub, -3);
-        $nums = $this->Number($sotni);
-        if ($rub < 1000):
-            return ucfirst(trim("$nums $namerub $kop"));
-        endif;
-    //----------Тысячи
-        if ($rub < 1000000):
-            $ticha = substr(str_pad($rub, 6, "0", STR_PAD_LEFT), 0, 3);
-        else:
-            $ticha = substr($rub, strlen($rub) - 6, 3);
-        endif;
-        $one = substr($ticha, -1);
-        $two = substr($ticha, -2);
-        if ($two > 9 && $two < 21):
-
-            $name1000 = " тысяч";
-        elseif ($one == 1):
-
-            $name1000 = " тысяча";
-        elseif ($one > 1 && $one < 5):
-
-            $name1000 = " тысячи";
-        else:
-
-            $name1000 = " тысяч";
-        endif;
-        $numt = $this->Number($ticha);
-        if ($one == 1 && $two != 11):
-            $numt = str_replace('один', 'одна', $numt);
-        endif;
-        if ($one == 2):
-            $numt = str_replace('два', 'две', $numt);
-            $numt = str_replace('двед', 'двад', $numt);
-        endif;
-        if ($ticha != '000'):
-            $numt.=$name1000;
-        endif;
-        if ($rub < 1000000):
-            return ucfirst(trim("$numt $nums $namerub $kop"));
-        endif;
-    //----------Миллионы
-        $million = substr(str_pad($rub, 9, "0", STR_PAD_LEFT), 0, 3);
-        $one = substr($million, -1);
-        $two = substr($million, -2);
-        if ($two > 9 && $two < 21):
-
-            $name1000000 = " миллионов";
-        elseif ($one == 1):
-
-            $name1000000 = " миллион";
-        elseif ($one > 1 && $one < 5):
-
-            $name1000000 = " миллиона";
-        else:
-
-            $name1000000 = " миллионов";
-        endif;
-        $numm = $this->Number($million);
-        $numm.=$name1000000;
-
-        return ucfirst(trim("$numm $numt $nums $namerub $kop"));
+    private static function morph($n, $f1, $f2, $f5) {
+        $n = abs(intval($n)) % 100;
+        if ($n > 10 && $n < 20) {
+            return $f5;
+        }
+        $n = $n % 10;
+        if ($n > 1 && $n < 5){
+            return $f2;
+        }
+        if ($n == 1) {
+            return $f1;
+        }
+        return $f5;
     }
-    
-    public function __invoke($summ){
-        return $this->convert($summ);        
+
+    public function __invoke($summ) {
+        return $this->get($summ);
     }
+
 }

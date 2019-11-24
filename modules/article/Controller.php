@@ -7,7 +7,7 @@ use Classes\App;
 
 class Controller extends BaseController
 {    
-    public function actionArticlePartList()
+    public function actionPartList()
     {
         $this->title = 'Статьи';
         $this->breadcrumbs[] = ['title'=>'Статьи'];
@@ -16,7 +16,7 @@ class Controller extends BaseController
         return App::$template->parse('article_list', [], $result);        
     }
 
-    public function actionArticleList($alias)
+    public function actionItemsList($alias)
     {
         $view_items = get_id_by_alias('article_list', $alias, true);
         $query = "select * from article_item where list_id='{$view_items}'";
@@ -28,7 +28,7 @@ class Controller extends BaseController
         return App::$template->parse('article_items', [], $result);
     }
     
-    public function actionArticle($part_alias,$alias)
+    public function actionContent($part_alias,$alias)
     {
         $view_article = get_id_by_alias('article_item', $alias, true);
         $query = "select * from article_item where id='" . $view_article . "'";

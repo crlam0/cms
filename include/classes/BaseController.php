@@ -4,8 +4,18 @@ namespace Classes;
 
 class BaseController {
     
+    /**
+    * @var string Page title
+    */
     public $title = '';
+    /**
+    * @var array Page breadcrumns
+    */
     public $breadcrumbs = [];
+    /**
+    * @var array Additioans tags
+    */
+    public $tags = [];
     
     private function runMethod($methodName, $params) {
         if (method_exists($this, $methodName)) {

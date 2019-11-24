@@ -28,7 +28,7 @@ if ( (isset($input['uri'])) && (!isset($input['load']))) {
 }
 
 if($settings['gallery_use_popup']){
-    $tags['INCLUDE_JS'] .= '<script type="text/javascript" src="'.$BASE_HREF.'modules/gallery/gallery.js"></script>'."\n";
+    $tags['INCLUDE_JS'] .= '<script type="text/javascript" src="'.$SUBDIR.'modules/gallery/gallery.js"></script>'."\n";
 }
 
 // $tags['nav_str'].="<a href=" . $SUBDIR . "gallery/ class=nav_next>{$tags['Header']}</a>";

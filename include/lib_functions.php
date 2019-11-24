@@ -311,6 +311,7 @@ function get_block($name) {
  */
 function include_php($file_name) {
     $DIR = App::$DIR;
+    $SUBDIR = App::$SUBDIR;
     if(is_file($DIR . $file_name)) {
         ob_start();
         include_once($DIR . $file_name);

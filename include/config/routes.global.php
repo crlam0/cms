@@ -33,12 +33,12 @@ return [
     'article-part-list' => [
         'pattern' => '^article\/?$',
         'controller' => 'modules\article\Controller',
-        'action' => 'article-part-list',
+        'action' => 'part-list',
     ],    
     'article-list' => [
         'pattern' => '^article\/(\w+)\/$',
         'controller' => 'modules\article\Controller',
-        'action' => 'article-list',
+        'action' => 'items-list',
         'params' => [
             '0' => 'alias',
         ]
@@ -46,7 +46,7 @@ return [
     'article' => [
         'pattern' => '^article\/(\w+)\/(\w+)\/?$',
         'controller' => 'modules\article\Controller',
-        'action' => 'article',
+        'action' => 'content',
         'params' => [
             '0' => 'part_alias',
             '1' => 'alias'
@@ -95,22 +95,32 @@ return [
         'file' => 'modules/faq/index.php',
     ],    
     
-    'gallery' => [
+
+    'gallery-part-list' => [
         'pattern' => '^gallery\/?$',
-        'file' => 'modules/gallery/index.php',
+        'controller' => 'modules\gallery\Controller',
+        'action' => 'part-list'
     ],    
-    'gallery_uri' => [
-        'pattern' => '^gallery\/(.*)\/?$',
-        'file' => 'modules/gallery/index.php',
+    'gallery-load' => [
+        'pattern' => '^gallery\/load$',
+        'controller' => 'modules\gallery\Controller',
+        'action' => 'load'
+    ],    
+    'gallery-images-list' => [
+        'pattern' => '^gallery\/(\w+)\/?$',
+        'controller' => 'modules\gallery\Controller',
+        'action' => 'images-list',
         'params' => [
-            '0' => 'uri',
+            '0' => 'alias',
         ]
     ],    
-    'gallery_index' => [
-        'pattern' => '^gallery\/(.*)\/index\.php',
-        'file' => 'modules/gallery/index.php',
+    'gallery_images-list-page' => [
+        'pattern' => '^gallery\/(\w+)\/(\d+)\/?$',
+        'controller' => 'modules\gallery\Controller',
+        'action' => 'images-list',
         'params' => [
-            '0' => 'uri',
+            '0' => 'alias',
+            '1' => 'page',
         ]
     ],    
     

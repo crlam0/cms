@@ -6,7 +6,7 @@ $(document).ready(function () {
         var id = $(this).attr("item_id");
         var clientHeight = document.documentElement.clientHeight;
         $.ajax({
-            type: "GET", url: MYDIR + "index.php", dataType : "json", data: "load=1&id=" + id + "&clientHeight=" + clientHeight,
+            type: "GET", url: MYDIR + "load", dataType : "json", data: "id=" + id + "&clientHeight=" + clientHeight,
             success: function (msg) {
                 $('#popupHeader').html(msg.title);
                 $('#popupContent').html(msg.content);
@@ -30,7 +30,7 @@ $(document).ready(function () {
         $(".modal-dialog").fadeOut("slow", function () {
             var clientHeight = document.documentElement.clientHeight;
             $.ajax({
-                type: "GET", url: MYDIR + "index.php", dataType : "json", data: "load=1&id=" + id + "&clientHeight=" + clientHeight,
+                type: "GET", url: MYDIR + "load", dataType : "json", data: "id=" + id + "&clientHeight=" + clientHeight,
                 success: function (msg) {
                     $('#popupHeader').html(msg.title);
                     $('#popupContent').html(msg.content);

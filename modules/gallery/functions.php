@@ -23,7 +23,7 @@ function gallery_get_cache_file_name($file_name, $max_width) {
 }
 
 function show_img($row) {
-    global $DIR, $settings, $SUBDIR, $server, $input;
+    global $DIR, $settings, $SUBDIR, $input;
     $file_name = $DIR . $settings['gallery_upload_path'] . $row['file_name'];
     if (is_file($file_name)) {        
         $content='';

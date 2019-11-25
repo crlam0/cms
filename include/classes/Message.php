@@ -2,6 +2,7 @@
 
 namespace Classes;
 use Classes\App;
+use Swift;
 
 class Message {
     
@@ -96,9 +97,13 @@ class Message {
      *
      */
     function mail($message_to, $subject, $message) {
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/plain; charset=utf-8\r\n";
-        $headers .= "From: ". App::$settings['email_from_addr'] ."\r\n";
-        mail($message_to, $subject, $message, $headers);
+        $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
+        $mailer = new \Swift_Mailer($transport);
+        $message = (new \Swift_Message($subject))
+            ->setFrom(App::$settings['email_from_addr'])
+            ->setTo($message_to)
+            ->setBody($message)
+            ;
+        return $mailer->send($message);
     }    
 }

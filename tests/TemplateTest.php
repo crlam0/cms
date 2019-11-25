@@ -21,8 +21,8 @@ class TemplateTest extends TestCase
     
     public function testSQLParse()            
     {
-        $content=$this->Template->parse('user_login_promt');
-        self::assertStringStartsWith('<div class="center-block" align="center">', $content);
+        $content=$this->Template->parse('article_items');
+        self::assertStringStartsWith('<div id="articles_list">', $content);
     }
     
 }

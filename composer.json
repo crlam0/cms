@@ -4,9 +4,10 @@
     },
     "require": {
         "php": ">=7.0.0",
-        "twig/twig": "^2.4",
+        "robmorgan/phinx": "^0.10",
         "stormiix/laravel-mix-twig-extension": "dev-master",
-        "robmorgan/phinx": "^0.10"
+        "swiftmailer/swiftmailer": "^6.0",
+        "twig/twig": "^2.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",

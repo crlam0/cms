@@ -4,9 +4,9 @@ namespace Classes;
 use Classes\App;
 use Swift;
 
-class Message {
-    
-    private function getClass($message){
+class Message 
+{    
+    private function getClass($message) {
         if(!array_key_exists('type',$message)) {
             return 'success';
         }
@@ -74,7 +74,7 @@ class Message {
      *
      */
     function error($string) {
-        echo $this->get->error('error',[],$string);
+        echo $this->get('error', [], $string);
     }    
     
     /**
@@ -99,11 +99,12 @@ class Message {
     function mail($message_to, $subject, $message) {
         $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
         $mailer = new \Swift_Mailer($transport);
-        $message = (new \Swift_Message($subject))
+        $messageObj = (new \Swift_Message($subject))
             ->setFrom(App::$settings['email_from_addr'])
             ->setTo($message_to)
             ->setBody($message)
             ;
-        return $mailer->send($message);
+        return $mailer->send($messageObj);
     }    
+    
 }

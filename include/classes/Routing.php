@@ -6,7 +6,7 @@ use Classes\App;
 
 final class Routing {
     private $routes = [];
-    public $params;
+    public $params = [];
     public $request_uri;
     public $file;
     public $controller;

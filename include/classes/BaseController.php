@@ -9,29 +9,25 @@ class BaseController {
     */
     public $title = '';
     /**
-    * @var array Page breadcrumns
+    * @var array Page breadcrumbs
     */
     public $breadcrumbs = [];
     /**
-    * @var array Additioans tags
+    * @var array Additional tags
     */
     public $tags = [];
     
-    private function runMethod($methodName, $params) {
+    private function runMethod(string $methodName, array $params = []) {
         if (method_exists($this, $methodName)) {
             $method = new \ReflectionMethod($this, $methodName);
             if ($method->isPublic() && $method->getName() === $methodName) {
-                if(is_array($params)){
-                    $params = array_values($params);
-                    return $this->$methodName(... $params);
-                }
-                return $this->$methodName();
+                return $method->invokeArgs($this,$params);
             }
         }
         throw new \InvalidArgumentException('Method ' . $methodName . ' not found.');
     }
     
-    public function run($action, $params) {
+    public function run(string $action, array $params = []) {
         $method = 'action' . str_replace(' ', '', ucwords(implode(' ', explode('-', $action))));
         return $this->runMethod($method, $params);
     }

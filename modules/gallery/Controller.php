@@ -6,6 +6,7 @@ use Classes\BaseController;
 use Classes\App;
 use Classes\Comments;
 use Classes\Pagination;
+use Classes\Image;
 
 include 'functions.php';
 
@@ -80,14 +81,9 @@ class Controller extends BaseController {
         list($tags['next_id']) = App::$db->select_row("select id from gallery_images where gallery_id='{$gallery_id}' and id>'{$tags['id']}' order by id asc limit 1");
 
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $tags['file_name'];
-        if ($file_name) {
-            $cache_file_name = gallery_get_cache_file_name($file_name, gallery_get_max_width());
-            if(is_file(App::$DIR . $cache_file_name)) {
-                $tags['URL']=$cache_file_name;
-            } else {
-                $tags['URL']="modules/gallery/image.php?id={$tags['id']}&clientHeight=".App::$input['clientHeight'];
-            }
-        }
+        $image = new Image($file_name, $tags['file_type']);
+        $tags['IMAGE'] = $image->getHTML($tags, 'var/cache/gallery/','','modules/gallery/image.php?clientHeight='.App::$input['clientHeight'].'&id=', gallery_get_max_width());
+
         $json=$tags;
         $json['content'] = App::$template->parse('gallery_image_view', $tags);
         echo json_encode($json);

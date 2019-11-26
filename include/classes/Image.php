@@ -3,7 +3,8 @@
 namespace Classes;
 use Classes\App;
 
-class Image {
+class Image 
+{
     public $width = 0;
     public $height = 0;
     public $file_name;
@@ -32,7 +33,7 @@ class Image {
         }
     }
 
-    public function __construct($file_name, $file_type = null){
+    public function __construct($file_name, $file_type = null) {
         if (!is_file($file_name)) {
             App::$message->error('Файл отсутствует !');
             return false;
@@ -86,7 +87,7 @@ class Image {
         return imagecopyresampled($this->dst_image, $this->src_image, 0, 0, $src_x, $src_y, $width, $height, $src_w, $src_h);            
     }
     
-    public function resize ($max_width = 0, $max_height = 0, $fix_width = 0, $fix_height = 0){
+    public function resize ($max_width = 0, $max_height = 0, $fix_width = 0, $fix_height = 0) {
         if(!$this->src_image) {
             return false;
         }
@@ -128,7 +129,8 @@ class Image {
             return false;
         }
     }
-    public function save ($dst_file){
+    
+    public function save ($dst_file) {
         if(!file_exists(dirname($dst_file))) {
             if (!mkdir(dirname($dst_file), 0755, true)) {
                 die('Не удалось создать директории...');
@@ -141,4 +143,32 @@ class Image {
         }
         return is_file($dst_file);        
     }
+    
+    public function getFileExtension() {
+        $arr = explode('/', $this->file_type);
+        return $arr[1];
+    }
+    
+    public function getUrl($row, string $cache_path, string $script_url, $max_width = 1024) {
+        $cache_file_name = $cache_path . md5($this->file_name.$max_width) . '.' . $this->getFileExtension();
+        if (is_file($this->file_name)) {        
+            if(is_file(App::$DIR . $cache_file_name)) {
+                return $cache_file_name;
+            } else {
+                return $script_url . $row['id'];
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function getHTML($row, string $cache_path, string $css_class, string $script_url, $max_width = 1024) {
+        if($URL = $this->getUrl($row, $cache_path, $script_url, $max_width)) {
+            $content = '<img src="' . App::$SUBDIR . $URL . '" border="0" item_id="'.$row['id'].'" class="'.$css_class.'" alt="'.$row['title'].'">';
+        } else {
+            $content = '<div class="empty_img">Изображение отсутствует: '.$row['file_name'].'</div>';
+        }
+        return $content;
+    }
+    
 }

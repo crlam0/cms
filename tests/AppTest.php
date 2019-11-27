@@ -36,8 +36,13 @@ class AppTest extends TestCase
     
     public function testLoadInputData()
     {
-        $this->App->loadInputData(['test' => 'result'], [], []);
-        self::assertEquals('result', App::$get['test']);
+        $this->App->loadInputData(['test' => 'get'], [], []);
+        self::assertEquals('get', App::$get['test']);
+        self::assertEquals('get', App::$input['test']);
+        $this->App->loadInputData([], ['test' => 'post'], []);
+        self::assertEquals('post', App::$post['test']);
+        $this->App->loadInputData([], [], ['test' => 'server']);
+        self::assertEquals('server', App::$server['test']);
     }
 }
 

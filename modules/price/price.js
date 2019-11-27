@@ -1,13 +1,5 @@
 $(document).ready(function() {
-    var pathArray = window.location.pathname.split( '/' );
-    var domain = pathArray[1];
-    if(domain.match(/^[\w-.]+\.\w{1,5}$/)) {
-        var DIR = '/' + domain + '/';        
-    } else {
-        var DIR = '/';
-    }
-    // DIR = DIR + 'modules/price/';
-    $("a.buy_button").live('click',function() {
+    $('body').on('click', 'a.buy_button', function () {
         var id = $(this).attr("item_id");
         var cnt_id='.cnt_' + id;
         cnt=$(cnt_id).val();

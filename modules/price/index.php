@@ -5,11 +5,8 @@ if(!isset($input)) {
 
 $tags['Header'] = 'Прайс-лист';
 
-$tags['INCLUDE_CSS'] .= '<link href="' . $SUBDIR . 'css/price.css" type="text/css" rel=stylesheet />' . "\n";
-$tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
-$tags['INCLUDE_JS'] .=  
-        '<script type="text/javascript" src="'.$BASE_HREF.'include/js/popup.js"></script>'."\n".
-        '<script type="text/javascript" src="'.$BASE_HREF.'modules/price/price.js"></script>'."\n";
+
+$tags['INCLUDE_JS'] .= '<script type="text/javascript" src="'.$BASE_HREF.'modules/price/price.js"></script>'."\n";
 
 
 if (isset($input['add_buy']) && isset($input['cnt'])) {
@@ -22,7 +19,6 @@ if (isset($input['add_buy']) && isset($input['cnt'])) {
     }
     exit;
 }
-
 
 function part_items($part_id) {
     $content = '';
@@ -40,7 +36,7 @@ function part_items($part_id) {
 }
 
 if (true) {
-    $content .= "<div id=cat_parts>";
+    $content = "<div id=cat_parts>";
     $query = "select content from article_item where seo_alias='before_price'";
     list($before_price) = my_select_row($query);
     $content .= $before_price . "<br />";
@@ -51,7 +47,7 @@ if (true) {
         if ($deep){
             $subparts++;
         }
-        $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='$prev_id' group by cat_part.id order by cat_part.num,cat_part.title asc";
+        $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='{$prev_id}' group by cat_part.id order by cat_part.num,cat_part.title asc";
         $result = my_query($query, true);
         while ($row = $result->fetch_array()) {
 //          $subparts++;
@@ -72,7 +68,6 @@ if (true) {
 
     sub_part(0, 0, 2);
     $content .= "</div>";
-    $content .= "</div>";
 }
 
 
@@ -80,22 +75,17 @@ $price_parts_content = "";
 $query = "SELECT cat_part.*from cat_part where prev_id='0' order by cat_part.num,cat_part.title asc";
 $result = my_query($query, true);
 while ($row = $result->fetch_array()) {
-    $price_parts_content .= "<a href=#{$row['seo_alias']}>{$row['title']}<a><br />";
+    $price_parts_content .= "<a href=#{$row['seo_alias']}>{$row['title']}</a><br />";
 }
 
 $final_content = '
     <div id="price">
-    <div class="col-md-8">' . $content . '</div>
-    <div class="col-md-4" id="price_parts">' . $price_parts_content . '</div>
+    <div class="row">
+      <div class="col-sm-12 col-md-8">' . $content . '</div>
+      <div class="col-sm-12 col-md-4"><div id="price_parts">' . $price_parts_content . '</div></div>
+    </div>
     </div>
     ';
-
-/*
-if (strlen($row_part['descr_bottom'])) {
-    $content .= "<div class=part_descr>" . nl2br($row_part['descr_bottom']) . "</div>\n";
-}
- * 
- */
 
 
 echo get_tpl_by_name($part['tpl_name'], $tags, '', $final_content);

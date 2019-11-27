@@ -1,6 +1,5 @@
 <?php
 
-use Classes\Template;
 use Classes\App;
 use Classes\Blocks;
 use Classes\BlocksLocal;

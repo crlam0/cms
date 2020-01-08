@@ -22,9 +22,9 @@ if (typeof window.loadPopup == "undefined") {
 };
 
 $("#myModal").on("show.bs.modal", function() {
-    var width = $(window).width() - 40;
+    let width = $(window).width() - 40;
     $(this).find(".modal-body").css("max-width", width);
-    var height = $(window).height() - 100;
+    let height = $(window).height() - 100;
     $(this).find(".modal-body").css("max-height", height);
 });
 

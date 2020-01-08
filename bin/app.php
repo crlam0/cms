@@ -18,7 +18,7 @@ use Phinx\Console\Command;
 $App = new App($DIR, $SUBDIR);
 $App->connectDB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
-require_once $DIR__.'include/lib_functions.php';
+require_once _$DIR_.'include/lib_functions.php';
 
 $cli = new Application('Application console');
 $cli->add(new Classes\Command\CacheClearCommand($console['cachePaths']));

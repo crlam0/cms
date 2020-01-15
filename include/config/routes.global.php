@@ -29,6 +29,11 @@ return [
         'pattern' => '^.*misc\/request\.php$',
         'file' => 'modules/misc/request.php'
     ],   
+    
+    /*
+     * Article related routes
+     * 
+     */
 
     'article-part-list' => [
         'pattern' => '^article\/?$',
@@ -63,6 +68,10 @@ return [
     ],    
     
     
+    /*
+     * Blog, FAQ related routes
+     * 
+     */
     
     'blog' => [
         'pattern' => '^blog\/?$',
@@ -96,6 +105,10 @@ return [
     ],    
     
 
+    /*
+     * Gallery related routes
+     * 
+     */
     'gallery-part-list' => [
         'pattern' => '^gallery\/?$',
         'controller' => 'modules\gallery\Controller',
@@ -123,6 +136,11 @@ return [
             '1' => 'page',
         ]
     ],    
+    
+    /*
+     * Media, news related routes
+     * 
+     */   
     
     'media' => [
         'pattern' => '^media\/?$',
@@ -162,15 +180,44 @@ return [
         ]
     ],    
 
+    /*
+     * Catalog, price related routes
+     * 
+     */
 
     'catalog' => [
         'pattern' => '^catalog\/$',
-        'file' => 'modules/catalog/index.php'
-    ],    
-    'catalog_index' => [
-        'pattern' => '^catalog\/(.*)\/index\.php$',
-        'file' => 'modules/catalog/index.php'
-    ],    
+        'controller' => 'modules\catalog\Controller',
+        'action' => 'index',
+    ],  
+    'catalog_part' => [
+        'pattern' => '^catalog\/(.*)\/$',
+        'controller' => 'modules\catalog\Controller',
+        'action' => 'part-list',
+        'params' => [
+            '0' => 'uri',
+        ]
+    ],
+    'catalog_item' => [
+        'pattern' => '^catalog\/(.*)\/(.*)$',
+        'controller' => 'modules\catalog\Controller',
+        'action' => 'part-item',
+        'params' => [
+            '0' => 'uri',
+            '1' => 'item_title',
+        ]
+    ],
+    'catalog-load-image' => [
+        'pattern' => '^catalog\/load-image$',
+        'controller' => 'modules\catalog\Controller',
+        'action' => 'load-image'
+    ],
+    'catalog-add-buy' => [
+        'pattern' => '^catalog\/add-buy$',
+        'controller' => 'modules\catalog\Controller',
+        'action' => 'add-buy'
+    ],
+    
     'catalog_buy' => [
         'pattern' => '^catalog\/(.*)\/buy\.php',
         'file' => 'modules/catalog/buy.php'
@@ -179,21 +226,6 @@ return [
         'pattern' => '^catalog\/basket\/',
         'file' => 'modules/catalog/buy.php'
     ], 
-    'catalog_part' => [
-        'pattern' => '^catalog\/(.*)\/$',
-        'file' => 'modules/catalog/index.php',
-        'params' => [
-            '0' => 'uri',
-        ]
-    ],
-    'catalog_item' => [
-        'pattern' => '^catalog\/(.*)\/(.*)$',
-        'file' => 'modules/catalog/index.php',
-        'params' => [
-            '0' => 'uri',
-            '1' => 'item_title',
-        ]
-    ],    
     'price' => [
         'pattern' => '^price\/$',
         'file' => 'modules/price/index.php'

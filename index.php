@@ -16,7 +16,7 @@ if( App::$routing->isIndexPage() && file_exists('index.local.php')) {
 }
 
 if($controller_name = App::$routing->controller) {
-    try {
+//    try {
         $action = App::$routing->action;
         App::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
         $controller = new $controller_name;
@@ -26,9 +26,9 @@ if($controller_name = App::$routing->controller) {
         $tags = array_merge($tags,$controller->tags);
         echo App::$template->parse(App::get('tpl_default'), $tags, null, $content);
         exit;
-    } catch (Exception $e) {
-        App::debug('Exception: ' . $e->getMessage());
-    }
+//    } catch (Exception $e) {
+//        App::debug('Exception: ' . $e->getMessage());
+//    }
 }
 
 $file=App::$routing->file;
@@ -42,7 +42,7 @@ if($file && is_file($DIR . $file)) {
 $tags['Header'] = 'Ошибка 404';
 $tags['file_name'] = App::$server['REQUEST_URI'];
 $content = my_msg_to_str('file_not_found',$tags);
-header($server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
+header(App::$server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
 echo get_tpl_default($tags, null, $content);
 
 

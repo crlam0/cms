@@ -4,7 +4,7 @@ use Classes\App;
 use Classes\Blocks;
 use Classes\BlocksLocal;
 
-if(file_exists(__DIR__.'/Classes/BlocksLocal.php')) {
+if(file_exists(__DIR__.'/classes/BlocksLocal.php')) {
     $BlocksObject = new BlocksLocal();    
 } else {
     $BlocksObject = new Blocks();

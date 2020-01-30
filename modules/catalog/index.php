@@ -250,6 +250,7 @@ $result = my_query($query);
 
 if ($result->num_rows) {
     $tags['functions'] = [];
+    $tags['cat_part_href'] = get_cat_part_href($current_part_id);
     $content .= get_tpl_by_name('cat_part_list', $tags, $result);
 } 
 

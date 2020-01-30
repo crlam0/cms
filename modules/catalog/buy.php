@@ -29,12 +29,13 @@ if (isset($input["add_buy"])) {
 }
 
 if (isset($input["calc"])) {
-    while (list ($n, $item_cnt) = @each($input["buy_cnt"]))
+    while (list ($n, $item_cnt) = @each($input["buy_cnt"])) {
         if (is_numeric($item_cnt)) {
             $_SESSION["BUY"][$n]['count'] = $item_cnt;
             $_SESSION["BUY"][$n]["size"] = $input["buy_size"][$n];
             $_SESSION["BUY"][$n]["color"] = $input["buy_color"][$n];
         }
+    }
 //        echo "<pre>";print_r($_SESSION["BUY"]);echo "</pre>";
 }
 
@@ -49,6 +50,7 @@ function get_discount($summ){
         }
         return $discount;
 }
+
 function calc_discount($summ,$discount){
         return $summ*(1-$discount/100);
 }

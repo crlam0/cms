@@ -8,13 +8,13 @@ $(document).ready(function () {
         var cnt_id = ".cnt_" + id;
         cnt = $(cnt_id).attr("value");
         $.ajax({
-            type: "GET", url: MYDIR + "add-buy", dataType: "json", data: "item_id=" + id + "&cnt=" + cnt,
+            type: "GET", url: DIR + "basket/add-buy", dataType: "json", data: "item_id=" + id + "&cnt=" + cnt,
             success: function (msg) {
                 if (msg.result !== 'OK') {
                     alert(msg.result);
                 } else {
                     $('#popupHeader').html('Сейчас в корзине :');
-                    $('#popupContent').load(MYDIR + "buy.php?get_summary=1");
+                    $('#popupContent').load(DIR + "basket/get-summary");
                     $('.basket-button').css('display', 'inline-block');
                     $('.basket-count').html(msg.count);
                     loadPopup();

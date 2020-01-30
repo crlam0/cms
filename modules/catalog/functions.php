@@ -98,3 +98,8 @@ function get_part_image_filename($fname, $width = 0) {
     }
 }
 
+function get_items_count($id) {
+    global $_SESSION;
+    return $_SESSION['BUY'][$id]['count'];
+}
+

@@ -201,7 +201,7 @@ return [
     'catalog_item' => [
         'pattern' => '^catalog\/(.*)\/(.*)$',
         'controller' => 'modules\catalog\Controller',
-        'action' => 'part-item',
+        'action' => 'item',
         'params' => [
             '0' => 'uri',
             '1' => 'item_title',
@@ -216,6 +216,11 @@ return [
         'pattern' => '^catalog\/add-buy$',
         'controller' => 'modules\catalog\Controller',
         'action' => 'add-buy'
+    ],
+    
+    'basket' => [
+        'pattern' => '^basket\/.*$',
+        'controller' => 'modules\catalog\BasketController',
     ],
     
     'catalog_buy' => [

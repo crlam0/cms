@@ -896,7 +896,7 @@ $(document).ready(function(){
 <table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
 	<tr class=header><td colspan="2">[%form_title%]</td></tr>
 	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name=form[title] value="[%title%]"></td></tr>
-	<tr class="content" align="left"><td>Изображение:</td><td><input class="form-control" name=img_file type=file size=40></td></tr>
+	<tr class="content" align="left"><td>Заменить изображение:</td><td><input class="form-control" name=img_file type=file size=40></td></tr>
 	<tr class="content"><td align="left" colspan="2">[%descr%]</td></tr>
 	<tr class=header align="left"><td align="center" colspan="2"><input class="btn btn-primary" type="submit" value="  Сохранить  "></td></tr>
 </table>

@@ -8,14 +8,14 @@ use Classes\App;
 class PasswdChangeController extends BaseController
 {    
     
-    private function checkInput($row) {
+    private function checkInput($input, $row) {
         if(strcmp(App::$user->encryptPassword(App::$input['old_passwd'], $row['salt']),$row['passwd'])!=0){
             return App::$message->get('error','','Вы неверно ввели старый пароль');
-        }elseif( strlen(App::$input['new_passwd1'])<8 ){
+        }elseif( strlen($input['new_passwd1'])<8 ){
             return App::$message->get('error','','Новый пароль не может быть короче восьми символов');
-        }elseif( !strlen(App::$input['new_passwd2']) ){
+        }elseif( !strlen($input['new_passwd2']) ){
             return App::$message->get('error','','Повторите новый пароль');
-        }elseif(strcmp(App::$input['new_passwd1'],App::$input['new_passwd2'])!=0){
+        }elseif(strcmp($input['new_passwd1'],App::$input['new_passwd2'])!=0){
             return App::$message->get('error','','Пароли не совпадают');            
         } else {
             return true;
@@ -31,7 +31,7 @@ class PasswdChangeController extends BaseController
             return false;
         }
         $row = $result->fetch_array();
-        if(($content = $this->checkInput($row)) === true) {
+        if(($content = $this->checkInput(App::$input, $row)) === true) {
             $data=[];
             $data['salt']=$row['salt'];
             if (mb_strlen($data['salt']) !== 22) {

@@ -93,18 +93,18 @@ class Message
      *
      * @param string $message_to Destination address
      * @param string $subject Message subject
-     * @param string $message Message content
+     * @param string $content Message content
      *
      */
-    function mail($message_to, $subject, $message) {
+    function mail($message_to, $subject, $content, $content_type = 'text/plain') {
         $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
         $mailer = new \Swift_Mailer($transport);
-        $messageObj = (new \Swift_Message($subject))
+        $message = (new \Swift_Message($subject))
             ->setFrom(App::$settings['email_from_addr'])
             ->setTo($message_to)
-            ->setBody($message)
+            ->setBody($content, $content_type, 'utf-8')
             ;
-        return $mailer->send($messageObj);
+        return $mailer->send($message);
     }    
     
 }

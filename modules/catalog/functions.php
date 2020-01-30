@@ -1,5 +1,7 @@
 <?php
 
+use Classes\App;
+
 function get_max_width() {
     global $input, $settings;
     
@@ -62,9 +64,9 @@ function get_prop_names_array($part_id) {
 }
 
 function get_item_image_url($file_name, $width, $fix_size=1) {
-    global $DIR, $IMG_ITEM_PATH;
+    $IMG_ITEM_PATH = App::$DIR . App::$settings['catalog_item_img_path'];
     $cache_file_name = get_cache_file_name($IMG_ITEM_PATH . $file_name, $width);
-    if(is_file($DIR . $cache_file_name)) {
+    if(is_file(App::$DIR . $cache_file_name)) {
         return $cache_file_name;
     } else {
         return "modules/catalog/image.php?file_name={$file_name}&preview={$width}&fix_size={$fix_size}";
@@ -72,9 +74,9 @@ function get_item_image_url($file_name, $width, $fix_size=1) {
 }
 
 function get_item_image_filename($fname, $width = 0) {
-    global $IMG_ITEM_PATH, $settings;
+    $IMG_ITEM_PATH = App::$DIR . App::$settings['catalog_item_img_path'];
     if(!$width) {
-        $width = $settings['catalog_item_img_preview'];
+        $width = App::$settings['catalog_item_img_preview'];
     }        
     if (is_file($IMG_ITEM_PATH . $fname)) {
         return get_item_image_url($fname, $width);
@@ -84,14 +86,20 @@ function get_item_image_filename($fname, $width = 0) {
 }
 
 function get_part_image_filename($fname, $width = 0) {
-    global $IMG_PART_PATH, $settings;
+    $IMG_PART_PATH = App::$DIR . App::$settings['catalog_part_img_path'];
+    
     if(!$width) {
-        $width = $settings['catalog_part_img_preview'];
+        $width = App::$settings['catalog_part_img_preview'];
     }        
     if (is_file($IMG_PART_PATH . $fname)) {
-        return $settings['catalog_part_img_path'] . $fname;
+        return App::$settings['catalog_part_img_path'] . $fname;
     } else {
         return false;
     }
+}
+
+function get_items_count($id) {
+    global $_SESSION;
+    return $_SESSION['BUY'][$id]['count'];
 }
 

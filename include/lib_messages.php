@@ -38,8 +38,7 @@ function send_mail($message_to, $subject, $message) {
  *
  */
 function send_sms($message) {
-    global $settings;
-    if(!strlen($settings['sms_api_id'])){
+    if(!strlen(App::$settings['sms_api_id'])){
         return false;
     }
     
@@ -47,8 +46,8 @@ function send_sms($message) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-        'api_id' => $settings['sms_api_id'],
-        'to' => $settings['sms_my_number'],
+        'api_id' => App::$settings['sms_api_id'],
+        'to' => App::$settings['sms_my_number'],
         'text' => $message
     ));
     $body = curl_exec($ch);    

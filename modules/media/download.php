@@ -4,7 +4,7 @@ include "../../include/common.php";
 $file_name=$DIR.urldecode($input["file_name"]);
 $download_file_name=$input["download_file_name"];
 
-if(strstr($file_name,".php")){
+if(stristr($file_name,".php") || strstr($file_name,"..")){
     echo "kekeke";
     exit ();
 }

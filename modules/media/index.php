@@ -39,7 +39,7 @@ function show_size($row) {
     $content='';
     
     $f_info = pathinfo($file_name);
-    $href=dirname($server['PHP_SELF']) . "/download.php?media_file_id={$row['id']}&file_name=" . urlencode($file_name) . "&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];
+    $href=__DIR__ . "/download.php?media_file_id={$row['id']}&file_name=" . urlencode($file_name) . "&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];
     
     if (is_file($DIR . $file_name)) {
         $content = '<a href="'.$href.'" class="btn btn-primary"> <b>Скачать файл</b> ( размер: ' . convert_bytes(filesize($DIR . $file_name)) . ', загрузок '.$row['download_count'].' )</a>';

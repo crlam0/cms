@@ -5,13 +5,37 @@ namespace Classes;
 use Classes\App;
 
 final class Routing {
+    /**
+    * @var array All routes
+    */
     private $routes = [];
-    public $params = [];
+    /**
+    * @var string URI
+    */
     public $request_uri;
+    /**
+    * @var string File to include (legacy)
+    */
     public $file;
+    /**
+    * @var string Controller name
+    */
     public $controller;
+    /**
+    * @var string Controller default action
+    */
     public $action;
+    /**
+    * @var array Controller params
+    */
+    public $params = [];
     
+    /**
+     * Constructor
+     *
+     * @param string $request_uri URI from $_SERVER
+     *
+     */
     public function __construct($request_uri) {
         $this->routes = [];
         $this->request_uri = $request_uri;
@@ -34,16 +58,34 @@ final class Routing {
         $this->matchRoutes();
     }
 
+    /**
+     * Add routes from file
+     *
+     * @param string $file
+     *
+     */
     public function addRoutesFromConfig($file) {
         if(file_exists(__DIR__ . '/../config/' . $file)) {
             $this->routes = array_merge($this->routes, require __DIR__ . '/../config/' . $file);
         }
     }
     
+    /**
+     * Return true if index page
+     *
+     * @return boolean
+     */
     public function isIndexPage () {
         return !$this->request_uri or $this->request_uri==='' or $this->request_uri==='index.php';
     }
     
+    /**
+     * Add found params to input
+     *
+     * @param string $route Found route
+     * @param string $matches Found matches
+     *
+     */
     private function proceedInput ($route, $matches) {
         global $input;
         foreach($matches as $key => $value){
@@ -55,6 +97,13 @@ final class Routing {
         }
     }
     
+    /**
+     * Add found params to controller
+     *
+     * @param string $route Found route
+     * @param string $matches Found matches
+     *
+     */
     private function proceedParams ($route, $matches) {
         foreach($matches as $key => $value){
             if (array_key_exists('params', $route)) {
@@ -63,6 +112,13 @@ final class Routing {
         }
     }
     
+    /**
+     * Proceed found router
+     *
+     * @param string $route Found route
+     * @param string $matches Found matches
+     *
+     */
     private function proceedMatches ($route, $matches) {        
         if(isset($route['file'])) {
             $this->file = $route['file'];
@@ -79,6 +135,10 @@ final class Routing {
         }
     }
     
+    /**
+     * Try to find route.
+     *
+     */
     private function matchRoutes () {
         foreach($this->routes as $title => $route) {
             $matches = [];
@@ -91,6 +151,11 @@ final class Routing {
         }
     }
     
+    /**
+     * Return action from URI
+     *
+     * @return string
+     */
     private function getAction () {
         $action='';
         if(strlen($this->request_uri) == 0) {
@@ -112,6 +177,11 @@ final class Routing {
         }
     }
    
+    /**
+     * Return site part settings
+     *
+     * @return array
+     */
     public function getPartArray () {
         $query = "SELECT * FROM parts WHERE '" . $this->request_uri . "' LIKE concat(uri,'%') AND title<>'default'";
         $part = App::$db->select_row($query, true);        

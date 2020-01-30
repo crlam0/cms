@@ -273,7 +273,7 @@ if (isset($input['page'])) {
 }
 list($total) = my_select_row("SELECT count(id) from cat_item where part_id='" . $current_part_id . "'", 1);
 
-$pager = new Pagination($total,$_SESSION["catalog_page"],$settings['catalog_items_per_page']);
+$pager = new Pagination($total,$_SESSION['catalog_page'],$settings['catalog_items_per_page']);
 $tags['pager'] = $pager;
 
 $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 

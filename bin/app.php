@@ -17,12 +17,14 @@ use Phinx\Console\Command;
 
 $App = new App($DIR, $SUBDIR);
 $App->connectDB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
-unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
-require_once $DIR__.'include/lib_functions.php';
+require_once __DIR__ . '/../include/lib_functions.php';
 
 $cli = new Application('Application console');
 $cli->add(new Classes\Command\CacheClearCommand($console['cachePaths']));
+$cli->add(new Classes\Command\DBDumpCommand());
+$cli->add(new Classes\Command\DBRestoreCommand());
+$cli->add(new Classes\Command\DBDumpClearCommand());
 $cli->addCommands([
     new Command\Create(),
     new Command\Migrate(),

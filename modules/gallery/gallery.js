@@ -1,6 +1,6 @@
 $(document).ready(function () {
     
-    var MYDIR = DIR + 'modules/gallery/';
+    var MYDIR = DIR + 'gallery/';
     
     $('body').on('click', 'img.gallery_popup' , function () {
         var id = $(this).attr("item_id");

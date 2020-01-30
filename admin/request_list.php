@@ -3,13 +3,13 @@ $tags['Header']='Список заказов';
 include_once "../include/common.php";
 
 if($input['active']){
-        $query="update request set active='".$input["active"]."' where id=".$input["id"];
+        $query="update request set active='".$input['active']."' where id='{$input['id']}'";
         $result=my_query($query);
         $view=1;
 }
 
 if ($input['del']) {
-    $query = "delete from request where id='$input[id]'";
+    $query = "delete from request where id='{$input['id']}'";
     my_query($query, null, true);
 }
 
@@ -26,6 +26,6 @@ function file_info($tmp, $row) {
 $query="SELECT * from request order by id desc";
 $result=my_query($query);
 
-$content.=get_tpl_by_name("request_list",$tags,$result);
-echo get_tpl_by_name($part[tpl_name],$tags,"",$content);
+$content.=get_tpl_by_name('request_list',$tags,$result);
+echo get_tpl_default($tags,'',$content);
 

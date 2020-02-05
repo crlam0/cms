@@ -29,12 +29,11 @@ class Controller extends BaseController {
             LEFT JOIN gallery_images AS def_img ON (def_img.id=default_image_id)
             WHERE gallery_list.active='Y'
             GROUP BY gallery_list.id ORDER BY last_images_date_add DESC,gallery_list.date_add DESC";
-
-        $result = App::$db->query($query);
-        if (!$result->num_rows) {
-            return App::$message->get('part_empty');
-        } else {
+        $result = my_query($query);
+        if ($result->num_rows) {
             return App::$template->parse('gallery_part_list', [], $result);
+        } else {
+            return App::$message->get('part_empty');
         }
     }
     

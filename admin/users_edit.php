@@ -2,6 +2,8 @@
 $tags['Header']="Пользователи сервера";
 include "../include/common.php";
 
+use Classes\App;
+
 if ($input['del']) {
     $query = "delete from users where id='{$input['id']}'";
     my_query($query);

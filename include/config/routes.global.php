@@ -127,7 +127,7 @@ return [
             '0' => 'alias',
         ]
     ],    
-    'gallery_images-list-page' => [
+    'gallery-images-list-page' => [
         'pattern' => '^gallery\/(\w+)\/(\d+)\/?$',
         'controller' => 'modules\gallery\Controller',
         'action' => 'images-list',
@@ -140,7 +140,6 @@ return [
     /*
      * Media, news related routes
      * 
-     */   
     
     'media' => [
         'pattern' => '^media\/?$',
@@ -154,6 +153,29 @@ return [
         'file' => 'modules/media/index.php',
         'params' => [
             '0' => 'uri',
+        ]
+    ],    
+     */   
+    'media-part-list' => [
+        'pattern' => '^media\/?$',
+        'controller' => 'modules\media\Controller',
+        'action' => 'part-list'
+    ],    
+    'media-files-list' => [
+        'pattern' => '^media\/(\w+)\/?$',
+        'controller' => 'modules\media\Controller',
+        'action' => 'files-list',
+        'params' => [
+            '0' => 'alias',
+        ]
+    ],    
+    'media-files-list-page' => [
+        'pattern' => '^media\/(\w+)\/(\d+)\/?$',
+        'controller' => 'modules\media\Controller',
+        'action' => 'files-list',
+        'params' => [
+            '0' => 'alias',
+            '1' => 'page',
         ]
     ],    
     

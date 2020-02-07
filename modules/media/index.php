@@ -10,12 +10,13 @@ add_nav_item('Файлы', 'media/');
 $view_files = '';
 $player_show = 0;
 
+use Classes\App;
 use Classes\Pagination;
 
 if (isset($input['uri'])) {
     $params = explode('/', $input['uri']);
-    $view_files = get_id_by_alias('media_list', $params[0], true);    
-    if (is_integer($params[1])) {
+    $view_files = get_id_by_alias('media_list', $params[0], true);
+    if ($params[1]>0) {
         $media_page = (int)$params[1];
     } else {
         $media_page = 1;
@@ -31,6 +32,7 @@ if(!$input->count()){
     $media_page = 1;
 }
 
+
 $player_num=0;
 
 function show_size($row) {
@@ -39,7 +41,7 @@ function show_size($row) {
     $content='';
     
     $f_info = pathinfo($file_name);
-    $href=__DIR__ . "/download.php?media_file_id={$row['id']}&file_name=" . urlencode($file_name) . "&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];
+    $href= App::$SUBDIR . "modules/media/download.php?media_file_id={$row['id']}&file_name=" . urlencode($file_name) . "&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];
     
     if (is_file($DIR . $file_name)) {
         $content = '<a href="'.$href.'" class="btn btn-primary"> <b>Скачать файл</b> ( размер: ' . convert_bytes(filesize($DIR . $file_name)) . ', загрузок '.$row['download_count'].' )</a>';
@@ -54,10 +56,10 @@ function show_size($row) {
         $player_height = 24;
         $player_fullscreen = 'false';
     }
-    if ((stristr($file_name, ".flv")) || (stristr($file_name, ".avi")) || (stristr($file_name, ".mp4")) || (stristr($file_name, ".wmv"))) {
+    if (stristr($file_name, ".mp4")) {
         $player_show = 1;
         $player_tag = 'video';
-        $player_type='video/flv';
+        $player_type='video/mp4';
         $player_num++;
         $player_height = 240;
         $player_fullscreen = 'true';
@@ -89,7 +91,7 @@ if ($view_files) {
     if (!$result->num_rows) {
         $content = my_msg_to_str('list_empty', $tags, '');
     } else {
-        $content = get_tpl_by_name("media_files_list", $tags, $result);
+        $content = get_tpl_by_name('media_files_list', $tags, $result);
     }
     if($player_num>0){
         $tags['INCLUDE_HEAD'].='<script src="'.$SUBDIR.'modules/media/player/mediaelement-and-player.min.js"></script>

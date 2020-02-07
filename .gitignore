@@ -19,7 +19,7 @@
 /var/
 
 *.local.*
-*Local.php
+*Local*
 /admin/nav.php
 /favicon.png
 /sitemap.xml

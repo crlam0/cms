@@ -30,7 +30,7 @@ function show_img($row) {
 }
 
 function show_list_img($row) {
-    App::$input['icon']=true;
+    App::$input['icon']=true;    
     $row['file_name'] = $row['def_file_name'];
     $row['id'] = $row['def_id'];
     $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];

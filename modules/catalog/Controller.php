@@ -36,7 +36,7 @@ class Controller extends BaseController
         }
         $arr[$deep] = $result->fetch_array();
         if ($arr[$deep]['prev_id']) {
-            $arr = prev_part($arr[$deep]['prev_id'], $deep + 1, $arr);
+            $arr = $this->prev_part($arr[$deep]['prev_id'], $deep + 1, $arr);
         }
         return $arr;
     }

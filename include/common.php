@@ -73,7 +73,7 @@ $App->set('tpl_default', $part['tpl_name']);
 if(!App::$user->checkAccess($part['user_flag'])) {
     if (App::$user->id) {
         $content = App::$message->get('error', [] ,'У вас нет соответствующих прав !');
-        echo get_tpl_default([], null, $content);
+        echo App::$template->parse(App::get('tpl_default'), [], null, $content);
     } else {
         $_SESSION['GO_TO_URI'] = App::$server['REQUEST_URI'];
         redirect(App::$SUBDIR . 'login/');

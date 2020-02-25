@@ -9,12 +9,14 @@ if( isset($REDIRECT_TO_HTTPS) && App::$server['REQUEST_SCHEME'] === 'http' ){
     redirect($url);
 }
 
+/* I know, it's bad code. But its simply way for landings */
 if( App::$routing->isIndexPage() && file_exists('index.local.php')) {
     $tags['isIndexPage'] = true;
     require 'index.local.php';
     exit;
 }
 
+/* My old files */
 $file=App::$routing->file;
 if($file && is_file($DIR . $file)) {
     $server['PHP_SELF'] = $SUBDIR.$file;
@@ -23,8 +25,9 @@ if($file && is_file($DIR . $file)) {
     exit;
 } 
 
-
-if($controller_name = App::$routing->controller) {
+/* My new controllers */
+$controller_name = App::$routing->controller;
+if(strlen($controller_name)) {
     $action = App::$routing->action;
     if(class_exists($controller_name)) {
         App::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
@@ -36,12 +39,14 @@ if($controller_name = App::$routing->controller) {
             App::debug('Exception: ' . $e->getMessage());
             App::debug('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
             App::debug($e->getTraceAsString());
-            $conroller_error = true;
+            /* But show 404 error */
+            $conroller_error = true;            
         }
         if(!$conroller_error) { 
+            /* Fill tags for default template */
             $tags['Header'] = $controller->title;
-            $tags['nav_array'] = array_merge($tags['nav_array'],$controller->breadcrumbs);
-            $tags = array_merge($tags,$controller->tags);
+            $tags['nav_array'] = array_merge($tags['nav_array'], $controller->breadcrumbs);
+            $tags = array_merge($tags, $controller->tags);
             echo App::$template->parse(App::get('tpl_default'), $tags, null, $content);
             exit;
         }
@@ -52,7 +57,9 @@ if($controller_name = App::$routing->controller) {
 
 $tags['Header'] = 'Ошибка 404';
 $tags['file_name'] = App::$server['REQUEST_URI'];
-$content = my_msg_to_str('file_not_found',$tags);
+$content = App::$message->get('file_not_found',$tags);
 header(App::$server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
-echo get_tpl_default($tags, null, $content);
+echo App::$template->parse(App::get('tpl_default'), $tags, null, $content);
+
+
 

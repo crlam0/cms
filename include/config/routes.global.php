@@ -41,7 +41,7 @@ return [
         'action' => 'part-list',
     ],    
     'article-list' => [
-        'pattern' => '^article\/(\w+)\/$',
+        'pattern' => '^article\/([\w-]+)\/$',
         'controller' => 'modules\article\Controller',
         'action' => 'items-list',
         'params' => [
@@ -49,7 +49,7 @@ return [
         ]
     ],    
     'article' => [
-        'pattern' => '^article\/(\w+)\/(\w+)\/?$',
+        'pattern' => '^article\/([\w-]+)\/([\w-]+)\/?$',
         'controller' => 'modules\article\Controller',
         'action' => 'content',
         'params' => [
@@ -120,7 +120,7 @@ return [
         'action' => 'load'
     ],    
     'gallery-images-list' => [
-        'pattern' => '^gallery\/(\w+)\/?$',
+        'pattern' => '^gallery\/([\w-]+)\/?$',
         'controller' => 'modules\gallery\Controller',
         'action' => 'images-list',
         'params' => [
@@ -128,7 +128,7 @@ return [
         ]
     ],    
     'gallery-images-list-page' => [
-        'pattern' => '^gallery\/(\w+)\/(\d+)\/?$',
+        'pattern' => '^gallery\/([\w-]+)\/(\d+)\/?$',
         'controller' => 'modules\gallery\Controller',
         'action' => 'images-list',
         'params' => [

@@ -43,13 +43,6 @@ class BasketController extends BaseController
         return $summ*(1-$discount/100);
     }    
     
-    public function actionClear()
-    {
-        unset($_SESSION['BUY']);
-        redirect(App::$SUBDIR . 'basket/');
-        exit;
-    }
-    
     private function getBasketData()
     {
         global $_SESSION;        
@@ -139,8 +132,8 @@ class BasketController extends BaseController
     public function actionRequest() 
     {        
         $this->title = 'Оформить заказ';
-        $this->breadcrumbs[] = [ 'title' => 'Корзина', 'url' => 'basket/'];
-        $this->breadcrumbs[] = [ 'title' => $this->title];
+        $this->breadcrumbs[] = [ 'title' => 'Корзина', 'url' => 'basket/' ];
+        $this->breadcrumbs[] = [ 'title' => $this->title ];
         
         $content = '';
         if(App::$input['request_done']) {
@@ -164,12 +157,41 @@ class BasketController extends BaseController
         return $content;
     }
     
+    public function actionClear()
+    {
+        unset($_SESSION['BUY']);
+        redirect(App::$SUBDIR . 'basket/');
+        exit;
+    }
+    
+    public function actionDel()
+    {
+        $item_id = App::$input['item_id'];
+        unset($_SESSION['BUY'][$item_id]);
+        return $this->actionIndex();
+    }    
+    
+    private function buttonClick($type) {
+        foreach(App::$input['buy_cnt'] as $item_id => $item_cnt) {
+            if (is_numeric($item_cnt) && $item_cnt > 0 && $item_cnt < 99 ) {
+                $_SESSION['BUY'][$item_id]['count'] = $item_cnt;
+            }
+        }
+        if($type == 'request') {
+            redirect(App::$SUBDIR . 'basket/request');
+        }        
+    }
+    
     public function actionIndex()
     {
         global $_SESSION;
         
         $this->title = 'Корзина';
-        $this->breadcrumbs[] = [ 'title' => $this->title];
+        $this->breadcrumbs[] = ['title' => $this->title ];
+        
+        if(App::$input['button']) {
+            $this->buttonClick(App::$input['button']);
+        }
         
         if ( !isset($_SESSION['BUY']) || !is_array($_SESSION['BUY']) ||  !count($_SESSION['BUY'])) {
             return App::$message->get('notice',[],'Корзина пуста !');

@@ -28,7 +28,7 @@ class DBDumpCommand extends Command
         global $DBHOST, $DBUSER, $DBPASSWD, $DBNAME;
         $table = $input->getArgument('table');
 
-        $dump_name = 'dump-' . date('Y-m-d_his'). (strlen($table) ? '_'.$table : '') . '.sql';
+        $dump_name = 'dump-' . date('Y-m-d_His'). (strlen($table) ? '_'.$table : '') . '.sql';
         $output->writeln('<comment>Dumping db into </comment><info>'.$dump_name.'</info>');
         if(strlen($table)) {
             $output->writeln('<comment>Only table </comment><info>'.$table.'</info>');

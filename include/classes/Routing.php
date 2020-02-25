@@ -123,8 +123,7 @@ final class Routing {
         if(isset($route['file'])) {
             $this->file = $route['file'];
             $this->proceedInput($route, $matches);
-        }
-        if(isset($route['controller'])) {
+        } elseif (isset($route['controller'])) {
             $this->controller = $route['controller'];            
             $this->proceedParams($route, $matches);
             if(array_key_exists('action', $route)) {

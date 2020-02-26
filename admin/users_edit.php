@@ -2,6 +2,8 @@
 $tags['Header']="Пользователи сервера";
 include "../include/common.php";
 
+use Classes\App;
+
 if ($input['del']) {
     $query = "delete from users where id='{$input['id']}'";
     my_query($query);
@@ -27,7 +29,8 @@ if ($input['add']) {
 if ($input['edit']) {
     $input['form']['flags']=implode(";", $input['flags']);
     if(strlen($input['form']['passwd'])){
-        $input['form']['passwd']= App::$user->encryptPassword($input['form']['passwd'] , App::$user->getSalt($input['id']) );
+        $input['form']['salt'] = App::$user->generateSalt();
+        $input['form']['passwd']= App::$user->encryptPassword($input['form']['passwd'] , $input['form']['salt']);
     }else{
         unset($input['form']['passwd']);
     }

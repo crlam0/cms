@@ -135,6 +135,10 @@ class BasketController extends BaseController
         $this->breadcrumbs[] = [ 'title' => 'Корзина', 'url' => 'basket/' ];
         $this->breadcrumbs[] = [ 'title' => $this->title ];
         
+        if ( !isset($_SESSION['BUY']) || !is_array($_SESSION['BUY']) ||  !count($_SESSION['BUY'])) {
+            return App::$message->get('notice',[],'Корзина пуста !');
+        }
+        
         $content = '';
         if(App::$input['request_done']) {
             $input_result = $this->checkInput(App::$input['form']);

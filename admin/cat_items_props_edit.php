@@ -67,14 +67,14 @@ function part_items($part_id) {
                     }
                 }
                 foreach ($props_array as $input_name => $params) {
-                    $content .= '<td>'.$params['name'].'</td>' . PHP_EOL;
+                    $content .= '<td align="center">'.$params['name'].'</td>' . PHP_EOL;
                 }
             }
         }
         $result->data_seek(0);
         $content .= '</tr>' . PHP_EOL;
         while ($tags = $result->fetch_array()) {
-            $content .= '<tr><td>'.$tags['title'].'</td>';
+            $content .= '<tr><td width="300">'.$tags['title'].'</td>';
             $content .= '<td><input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="simple" attr_name="price" value="'.$tags['price'].'"></td>';
             // echo $tags['items_props'];
             if(strlen($tags['items_props'])) {

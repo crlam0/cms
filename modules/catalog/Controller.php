@@ -42,9 +42,10 @@ class Controller extends BaseController
     }
     
     private function getHeaderBreadCrumbs($part_id, $item_title = '') {
-        $title = isset(App::$settings['catalog_header']) ? App::$settings['catalog_header'] : 'Каталог';
+        $root_title = isset(App::$settings['catalog_header']) ? App::$settings['catalog_header'] : 'Каталог';
+        $title = $root_title;
         if ($part_id) {
-            $breadcrumbs[] = ['title' => $title, 'url' => 'catalog/'];
+            $breadcrumbs[] = ['title' => $root_title, 'url' => 'catalog/'];
             $arr = $this->prev_part($part_id, 0, []);
             $arr = array_reverse($arr);
             $max_size = sizeof($arr) - 1;
@@ -55,10 +56,11 @@ class Controller extends BaseController
                 if (($n < $max_size) || (strlen($item_title))) {
                     // add_nav_item($row['title'], get_cat_part_href($row['id']));
                     $breadcrumbs[] = ['title' => $row['title'], 'url' => get_cat_part_href($row['id'])];
-                    $title .= " - {$row['title']}";
+                    $title = $root_title . " - {$row['title']}";
                 } else {
                     // add_nav_item($row['title']);
                     $breadcrumbs[] = ['title' => $row['title']];
+                    $title = $root_title . " - {$row['title']}";
                 }
             }
         } else {

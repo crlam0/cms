@@ -3,6 +3,8 @@
 $tags['Header'] = 'Каталог';
 include '../include/common.php';
 
+use Classes\App;
+
 /*
 $query = "select * from cat_part";
 $result = my_query($query, true);
@@ -238,6 +240,9 @@ if (($input['edit']) || ($input['adding'])) {
 	$tags['form_title'] = "Добавление";
 	$tags['type'] = "added";
 	$tags['Header'] = "Добавление раздела";
+        if(isset(App::$settings['catalog']['default_items_props'])){
+            $tags['items_props'] = App::$settings['catalog']['default_items_props'];
+        }        
     }
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_MINI_INC . $EDITOR_HTML_INC;
     

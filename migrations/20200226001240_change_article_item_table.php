@@ -1,9 +1,8 @@
 <?php
 
-
 use Phinx\Migration\AbstractMigration;
 
-class CreateTestTable extends AbstractMigration
+class ChangeArticleItemTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -32,10 +31,8 @@ class CreateTestTable extends AbstractMigration
      */
     public function change()
     {
-        $test = $this->table('test');
-        $test->addColumn('username', 'string', ['limit' => 20])
-              ->addColumn('password', 'string', ['limit' => 40])
-              ->addIndex(['username'], ['unique' => true])
-              ->create();
+        $table = $this->table('article_item');
+        $table->addColumn('date_change', 'datetime')
+              ->save();
     }
 }

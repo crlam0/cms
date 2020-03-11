@@ -2,7 +2,10 @@
 if(!isset($input)) {
     require '../../include/common.php';
 }
-$tags['Header'] = 'Вопрос/ответ';
+
+use Classes\App;
+
+$tags['Header'] = isset(App::$settings['faq_header']) ? App::$settings['faq_header'] : 'Вопросы/ответы';
 
 use Classes\Pagination;
 use Classes\BBCodeEditor;

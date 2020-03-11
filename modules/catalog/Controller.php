@@ -42,9 +42,10 @@ class Controller extends BaseController
     }
     
     private function getHeaderBreadCrumbs($part_id, $item_title = '') {
-        $title = isset(App::$settings['catalog_header']) ? App::$settings['catalog_header'] : 'Каталог';
+        $root_title = isset(App::$settings['catalog_header']) ? App::$settings['catalog_header'] : 'Каталог';
+        $title = $root_title;
         if ($part_id) {
-            $breadcrumbs[] = ['title' => $title, 'url' => 'catalog/'];
+            $breadcrumbs[] = ['title' => $root_title, 'url' => 'catalog/'];
             $arr = $this->prev_part($part_id, 0, []);
             $arr = array_reverse($arr);
             $max_size = sizeof($arr) - 1;
@@ -55,10 +56,11 @@ class Controller extends BaseController
                 if (($n < $max_size) || (strlen($item_title))) {
                     // add_nav_item($row['title'], get_cat_part_href($row['id']));
                     $breadcrumbs[] = ['title' => $row['title'], 'url' => get_cat_part_href($row['id'])];
-                    $title .= " - {$row['title']}";
+                    $title = $root_title . " - {$row['title']}";
                 } else {
                     // add_nav_item($row['title']);
                     $breadcrumbs[] = ['title' => $row['title']];
+                    $title = $root_title . " - {$row['title']}";
                 }
             }
         } else {
@@ -205,12 +207,13 @@ class Controller extends BaseController
         return App::$template->parse('cat_item_view', $tags, $result);        
     }
     
-    public function actionLoadImage()
+    public function actionLoadImage()            
     {
-        list($default_img,$default_img_fname,$title)=App::$db->select_row("select default_img,fname,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='".$input['item_id']."'");
+        $input = App::$input;
+        $query = "select default_img,fname,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='{$input['item_id']}'";
+        list($default_img,$default_img_fname,$title)=App::$db->select_row($query);
 
         $nav_ins = '';
-        $input = App::$input;
 
         list($prev_id,$fname) = App::$db->select_row("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<'" . $input['image_id'] . "' and id<>'{$default_img}' order by id desc limit 1");
         if ($input['image_id'] != $default_img){
@@ -232,7 +235,7 @@ class Controller extends BaseController
 
         $URL = get_item_image_url($input['file_name'], 500, 0);
 
-        $content = '<center><img src="'.APP::$SUBDIR . $URL .'" border="0"></center>';
+        $content .= '<center><img src="' . APP::$SUBDIR . $URL .'" border="0" alt="' . $title . '"></center>';
         if(strlen($nav_ins)){
             $content.="<br /><center>{$nav_ins}</center>";
         }

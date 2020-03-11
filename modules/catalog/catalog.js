@@ -6,7 +6,8 @@ $(document).ready(function () {
     $('body').on('click', 'a.buy_button', function () {
         var id = $(this).attr("item_id");
         var cnt_id = ".cnt_" + id;
-        cnt = $(cnt_id).attr("value");
+        cnt = $(cnt_id).val();
+        console.log(cnt);
         $.ajax({
             type: "GET", url: DIR + "basket/add-buy", dataType: "json", data: "item_id=" + id + "&cnt=" + cnt,
             success: function (msg) {
@@ -23,7 +24,7 @@ $(document).ready(function () {
             }
         });
     });
-
+    
     $("img.cat_item_image_popup").click(function () {
         var file_name = $(this).attr("file_name");
         var item_id = $(this).attr("item_id");

@@ -45,6 +45,7 @@ class Controller extends BaseController
         $row['content'] = replace_base_href($row['content']);
         // $row['content'] = preg_replace('/width: \d+px;/', 'max-width: 100%;', $row['content']);
         $row['content'] = preg_replace('/style="width: /', 'class="img-fluid" style: style="width: ', $row['content']);
+        $row['content'] = preg_replace('/height: \d+px/', 'height: auto; ', $row['content']);
 
         return  App::$template->parse('article_view', $row);
     }

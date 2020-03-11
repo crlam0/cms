@@ -16,7 +16,7 @@ $content = '';
 if (isset($input['uri'])) {
     if(strstr($input['uri'],'page')){
         $page_num=str_replace('page','',$input['uri']);
-        $blog_page=is_integer($page_num) ? $page_num : 1;
+        $blog_page=$page_num>1 ? $page_num : 1;
     }else{
         $blog_page=1;
         $input['view_post'] = get_id_by_alias($TABLE, $input['uri'], true);

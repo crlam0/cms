@@ -47,11 +47,12 @@ class Controller extends BaseController {
         
         $tags['self'] = $this;
 
-        $query = "SELECT * from media_files where list_id='" . $view_media . "' order by id asc limit {$pager->getOffset()},{$pager->getLimit()}";
+        $query = "SELECT * from media_files where list_id='" . $view_media . "' order by num asc, id asc limit {$pager->getOffset()},{$pager->getLimit()}";
         $result = App::$db->query($query);
         if (!$result->num_rows) {
             $content = App::$message->get('list_empty', [], '');
         } else {
+            $tags['this'] = $this;
             $this->tags['INCLUDE_HEAD'].='<link rel="stylesheet" href="'.App::$SUBDIR.'modules/media/player/mediaelementplayer.min.css" />';
             $this->tags['INCLUDE_JS'].='<script src="'.App::$SUBDIR.'modules/media/player/mediaelement-and-player.min.js"></script>';
             $this->tags['INCLUDE_JS'].="<script>$('audio,video').mediaelementplayer();</script>";
@@ -66,7 +67,7 @@ class Controller extends BaseController {
         $content='';
 
         $f_info = pathinfo($file_name);
-        $href= App::$SUBDIR . "modules/media/download.php?media_file_id={$row['id']}&file_name=" . urlencode($file_name) . "&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];
+        $href= App::$SUBDIR . "modules/media/download.php?media_file_id={$row['id']}&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];
 
         if (is_file(App::$DIR . $file_name)) {
             $content = '<a href="'.$href.'" class="btn btn-default"> <b>Скачать файл</b> ( размер: ' . convert_bytes(filesize(App::$DIR . $file_name)) . ', загрузок '.$row['download_count'].' )</a>';

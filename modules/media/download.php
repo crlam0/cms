@@ -1,12 +1,11 @@
 <?php
 include "../../include/common.php";
 
-$file_name=$DIR.urldecode($input['file_name']);
-$download_file_name=$input['download_file_name'];
+use Classes\App;
 
-if(stristr($file_name,'.php') || strstr($file_name,'..')){
-    echo "kekeke";
-    exit ();
+if(strlen($input['file_name']) || !is_numeric($input['media_file_id'])) {
+    header($server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
+    exit();
 }
 
 if(!function_exists('mime_content_type')) {
@@ -83,13 +82,18 @@ if(!function_exists('mime_content_type')) {
     }
 }
 
+list($file_name) = my_select_row("select file_name from media_files where id='{$input['media_file_id']}'");
+
+$file_name = $DIR . App::$settings['media_upload_path'] . $file_name;
+
 $mime_type=mime_content_type($file_name);
-// echo $mime_type.$file_name;exit;
+
+// echo $mime_type.$file_name.$input['download_file_name'];exit;
 
 if(file_exists($file_name)) {
     header('Content-Description: File Transfer');
     header('Content-Type: '.$mime_type);
-    header('Content-Disposition: attachment; filename='.$download_file_name);
+    header('Content-Disposition: attachment; filename='.$input['download_file_name']);
     header('Content-Transfer-Encoding: binary');
     header('Expires: 0');
     header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -104,4 +108,9 @@ if(file_exists($file_name)) {
     }
     exit;
 }
+$tags['Header'] = 'Ошибка 404';
+$tags['file_name'] = $input['download_file_name'];
+$content = App::$message->get('file_not_found',$tags);
+header(App::$server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
+echo App::$template->parse(App::get('tpl_default'), $tags, null, $content);
 

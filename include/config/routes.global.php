@@ -171,21 +171,6 @@ return [
         ]
     ],    
 
-    /*
-    'news' => [
-        'pattern' => '^news\/?$',
-        'file' => 'modules/news/index.php',
-    ],    
-    'news_uri' => [
-        'pattern' => '^news\/(.*)\/?$',
-        'file' => 'modules/news/index.php',
-        'params' => [
-            '0' => 'uri',
-        ]
-    ],
-     * 
-     */   
-    
     'news-index' => [
         'pattern' => '^news\/?$',
         'controller' => 'modules\misc\NewsController',
@@ -244,28 +229,15 @@ return [
         'controller' => 'modules\catalog\Controller',
         'action' => 'load-image'
     ],
-    'catalog-add-buy' => [
-        'pattern' => '^catalog\/add-buy$',
-        'controller' => 'modules\catalog\Controller',
-        'action' => 'add-buy'
-    ],
     
     'basket' => [
         'pattern' => '^basket\/[\w\-]*$',
         'controller' => 'modules\catalog\BasketController',
     ],
     
-    'catalog_buy' => [
-        'pattern' => '^catalog\/(.*)\/buy\.php',
-        'file' => 'modules/catalog/buy.php'
-    ], 
-    'catalog_basket' => [
-        'pattern' => '^catalog\/basket\/',
-        'file' => 'modules/catalog/buy.php'
-    ], 
     'price' => [
-        'pattern' => '^price\/$',
-        'file' => 'modules/price/index.php'
+        'pattern' => '^price\/[\w\-]*$',
+        'controller' => 'modules\price\Controller',
     ],    
 ];
 

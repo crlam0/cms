@@ -10,7 +10,8 @@ use Stormiix\Twig\Extension\MixExtension;
 
 use Classes\App;
 
-class TwigTemplate {
+class TwigTemplate 
+{
     private $twig;
     private $environment;
     
@@ -38,7 +39,7 @@ class TwigTemplate {
      *
      * @return null
      */
-    public function __construct($template_type, $config_override = [], $content = null)
+    public function __construct(int $template_type, array $config_override = [], string $content = null)
     {
         $this->template_type = $template_type;
         
@@ -100,7 +101,7 @@ class TwigTemplate {
      *
      * @return null
      */
-    public function addFunction($name)
+    public function addFunction(string $name)
     {
         $this->twig->registerUndefinedFunctionCallback(function ($name) {
             if (function_exists($name)) {
@@ -130,13 +131,13 @@ class TwigTemplate {
      *
      * @return null
      */
-    public function render($name, array $params = [])
+    public function render(string $name, array $params = []) : string
     {
         if ($this->template_type === $this::TYPE_STRING) {
-            $name='template';
+            $name = 'template';
         }
         if ($this->template_type === $this::TYPE_FILE && !strstr($name,'.html.twig') ) {
-            $name.='.html.twig';
+            $name .= '.html.twig';
         }
         return $this->twig->render($name, $params);
     }

@@ -7,7 +7,7 @@ use Classes\App;
 
 class LogoutController extends BaseController
 {    
-    public function actionIndex()
+    public function actionIndex(): void
     {
         global $_SESSION, $COOKIE_NAME;
         App::$user->delRememberme(App::$user->id,$COOKIE_NAME);

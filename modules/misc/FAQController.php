@@ -12,12 +12,14 @@ use Classes\BBCodeEditor;
  *
  * @author BooT
  */
-class FAQController extends BaseController {
+class FAQController extends BaseController 
+{
     private $TABLE = 'faq';
     private $MSG_PER_PAGE = '20';
     private $editor;
     
-    public function __construct() {
+    public function __construct():void 
+    {
         if(isset(App::$settings['faq_msg_per_page'])) {
             $this->MSG_PER_PAGE = App::$settings['faq_msg_per_page'];
         }
@@ -27,7 +29,8 @@ class FAQController extends BaseController {
         $this->editor = new BBCodeEditor ();
     }
     
-    public function actionIndex($page = 1) {
+    public function actionIndex(int $page = 1): string 
+    {
         $query = "SELECT count(id) from {$this->TABLE} where active='Y'";
         $result = App::$db->query($query, true);
         list($total) = $result->fetch_array();
@@ -42,7 +45,8 @@ class FAQController extends BaseController {
         return App::$template->parse('faq_list', $tags, $result);        
     }
     
-    private function checkInput($input) {
+    private function checkInput(array $input)
+    {
         global $_SESSION;
         if (!check_csrf_token()) {
             return App::$message->get('error', [], 'CSRF Error');
@@ -65,7 +69,8 @@ class FAQController extends BaseController {
         return true;        
     }
     
-    private function requestDone($input) {
+    private function requestDone(array $input): void 
+    {
         $input['ip'] = App::$server['REMOTE_ADDR'];
         $input['date'] = 'now()';
         // $input[txt]=strip_tags($input[txt],"<b><i><p><br>");
@@ -84,7 +89,8 @@ class FAQController extends BaseController {
         }
     }
     
-    public function actionAdd() {
+    public function actionAdd(): string 
+    {
         global $_SESSION;
         $content = '';
         if (is_array(App::$input['form'])) {

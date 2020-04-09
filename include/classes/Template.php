@@ -7,11 +7,13 @@ use Classes\MyTemplate;
 use Classes\TwigTemplate;
 use Classes\App;
 
-class Template {
+class Template 
+{
     private $MyTemplate;
     private $TwigTemplate;
     
-    public function __construct () {
+    public function __construct () 
+    {
         $this->MyTemplate = new MyTemplate();
         $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => App::$settings['debug']]);
     }
@@ -26,7 +28,8 @@ class Template {
      *
      * @return string Output content
      */
-    private function parseTwigTemplate($template, $tags = [], $sql_result = [], $inner_content = ''){        
+    private function parseTwigTemplate(array $template, array $tags = [], $sql_result = [], string $inner_content = '') : string
+    {        
         if ($template['file_name']) {        
             if(!strstr($template['file_name'],'.html.twig')) {
                 $template['file_name'].='.html.twig';
@@ -78,7 +81,8 @@ class Template {
      *
      * @return string Output content
      */
-    private function parseMyTemplate($template, $tags = [], $sql_result = [], $inner_content = ''){
+    private function parseMyTemplate(array $template, array $tags = [], $sql_result = [], string $inner_content = '') : string
+    {
         if (array_key_exists('file_name', $template) && $template['file_name']) {
             $file_name = '';
             if (file_exists($template['file_name'])) {
@@ -112,7 +116,8 @@ class Template {
      *
      * @return string Output content
      */
-    function parse($name, $tags = [], $sql_result = [], $inner_content = '') {
+    function parse(string $name, array $tags = [], $sql_result = [], string $inner_content = '') : string 
+    {
                 
         $template = null;
 

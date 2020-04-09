@@ -15,15 +15,16 @@ include 'functions.php';
  *
  * @author User
  */
-class Controller extends BaseController {
+class Controller extends BaseController 
+{
     
-    public function actionPartList()
+    public function actionPartList(): string
     {
         $this->title = 'Галерея';
         $this->breadcrumbs[] = ['title'=>$this->title];        
         $query = "SELECT 
                 gallery_list.*,count(images.id) AS images,max(images.date_add) AS last_images_date_add,
-                def_img.id as def_id,def_img.file_name as def_file_name
+                def_img.id as def_id,def_img.file_name as def_file_name,def_img.file_type as def_file_type 
             FROM gallery_list
             LEFT JOIN gallery_images AS images ON (images.gallery_id=gallery_list.id)
             LEFT JOIN gallery_images AS def_img ON (def_img.id=default_image_id)
@@ -37,7 +38,7 @@ class Controller extends BaseController {
         }
     }
     
-    public function actionImagesList($alias, $page = 1)
+    public function actionImagesList(string $alias, int $page = 1): string
     {
         $view_gallery = get_id_by_alias('gallery_list', $alias, true);            
         list($gallery_title, $gallery_seo_alias) = App::$db->select_row("SELECT title, seo_alias from gallery_list where id='{$view_gallery}'");
@@ -70,7 +71,7 @@ class Controller extends BaseController {
         return $content;
     }
     
-    public function actionLoad()
+    public function actionLoad(): void
     {
         $query = "SELECT * from gallery_images where id='".App::$input['id']."'";
         $tags = App::$db->select_row($query);

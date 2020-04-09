@@ -27,7 +27,8 @@ namespace Classes;
 
 use Classes\App;
 
-class MyTemplate {    
+class MyTemplate 
+{    
 
     /**
      * Parse one string from template
@@ -40,7 +41,8 @@ class MyTemplate {
      *
      * @return string Output string
      */
-    private function parseString($content, $tags = array(), $sql_row = array(), $sql_row_summ = array(), $inner_content = '') {
+    private function parseString(string $content, array $tags = [], $sql_row = [], $sql_row_summ = [], string $inner_content = '') : string 
+    {
         preg_match_all("@\[\%(.*?)\%\]@", $content, $temp, PREG_SET_ORDER);
         $total = count($temp);
         $a = 0;
@@ -161,7 +163,7 @@ class MyTemplate {
      *
      * @return string Output content
      */
-    public function parse($content, $tags = array(), $sql_result = array(), $inner_content = '') {
+    public function parse(string $content, array $tags = [], $sql_result = [], $inner_content = '') {
         $tags['PHP_SELF'] = App::$server['PHP_SELF'];
         $tags['PHP_SELF_DIR'] = App::$server['PHP_SELF_DIR'];
         $tags['BASE_HREF'] = App::$SUBDIR;

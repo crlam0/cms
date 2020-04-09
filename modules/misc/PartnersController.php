@@ -7,7 +7,7 @@ use Classes\App;
 
 class PartnersController extends BaseController
 {    
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $this->title = 'Наши партнеры';
         $this->breadcrumbs[] = ['title'=>$this->title];

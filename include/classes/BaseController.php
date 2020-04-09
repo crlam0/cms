@@ -2,7 +2,8 @@
 
 namespace Classes;
 
-class BaseController {
+class BaseController 
+{
     
     /**
     * @var string Page title
@@ -25,7 +26,8 @@ class BaseController {
      *
      * @return string Content
      */
-    private function runMethod(string $methodName, array $params = []) {
+    private function runMethod(string $methodName, array $params = []) 
+    {
         if (method_exists($this, $methodName)) {
             $method = new \ReflectionMethod($this, $methodName);
             if ($method->isPublic() && $method->getName() === $methodName) {
@@ -43,7 +45,8 @@ class BaseController {
      *
      * @return string Content
      */
-    public function run(string $action, array $params = []) {
+    public function run(string $action, array $params = []) 
+    {
         $method = 'action' . str_replace(' ', '', ucwords(implode(' ', explode('-', $action))));
         return $this->runMethod($method, $params);
     }

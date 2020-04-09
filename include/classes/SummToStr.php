@@ -6,9 +6,11 @@ namespace Classes;
  * Implements work with simple blocks
  *
  */
-class SummToStr {
+class SummToStr 
+{
 
-    public static function get($num) {
+    public static function get(float $num) : string 
+    {
         $nul = 'ноль';
         $ten = array(
             array('', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'),

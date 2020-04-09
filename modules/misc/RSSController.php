@@ -7,7 +7,7 @@ use Classes\App;
 
 class RSSController extends BaseController
 {    
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $this->title = 'Новости из RSS';
         $this->breadcrumbs[] = ['title'=>$this->title];

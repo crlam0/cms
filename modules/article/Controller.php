@@ -7,7 +7,7 @@ use Classes\App;
 
 class Controller extends BaseController
 {    
-    public function actionPartList()
+    public function actionPartList(): string
     {
         $this->title = 'Статьи';
         $this->breadcrumbs[] = ['title'=>'Статьи'];
@@ -16,7 +16,7 @@ class Controller extends BaseController
         return App::$template->parse('article_list', [], $result);        
     }
 
-    public function actionItemsList($alias)
+    public function actionItemsList(string $alias): string
     {
         $view_items = get_id_by_alias('article_list', $alias, true);
         $query = "select * from article_item where list_id='{$view_items}'";
@@ -28,7 +28,7 @@ class Controller extends BaseController
         return App::$template->parse('article_items', [], $result);
     }
     
-    public function actionContent($part_alias,$alias)
+    public function actionContent(string $part_alias, string $alias): string
     {
         $view_article = get_id_by_alias('article_item', $alias, true);
         $query = "select * from article_item where id='" . $view_article . "'";
@@ -50,7 +50,8 @@ class Controller extends BaseController
         return  App::$template->parse('article_view', $row);
     }
 
-    public function actionPDF($uri,$alias) {
+    public function actionPDF(string $uri, string $alias): string 
+    {
         $id = get_id_by_alias('article_item', $alias, true);
         $query = "select * from article_item where id='" . $id . "'";
         $result = my_query($query, true);

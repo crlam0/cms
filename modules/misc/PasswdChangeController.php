@@ -8,7 +8,8 @@ use Classes\App;
 class PasswdChangeController extends BaseController
 {    
     
-    private function checkInput($input, $row) {
+    private function checkInput($input, $row)
+    {
         if(strcmp(App::$user->encryptPassword(App::$input['old_passwd'], $row['salt']),$row['passwd'])!=0){
             return App::$message->get('error','','Вы неверно ввели старый пароль');
         }elseif( strlen($input['new_passwd1'])<8 ){
@@ -23,7 +24,8 @@ class PasswdChangeController extends BaseController
     }
 
 
-    private function passwdChange() {
+    private function passwdChange(): string 
+    {
         $query = "select passwd,salt from users where id='".App::$user->id."'";
         $result = App::$db->query($query, true);
         $content = '';
@@ -46,7 +48,7 @@ class PasswdChangeController extends BaseController
     }
 
 
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $this->title = 'Смена пароля';
         $this->breadcrumbs[] = ['title'=>$this->title];

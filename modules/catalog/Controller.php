@@ -11,9 +11,11 @@ include 'functions.php';
 class Controller extends BaseController
 { 
     
-    private function parseURI($uri) {
+    private function parseURI(string $uri): array 
+    {
         $params = explode('/', $uri);
         $part_id = 0;
+        $page = 1;
         foreach ($params as $alias) {
             if(preg_match("/^page\d{1,2}$/", $alias)) {
                 $page = str_replace('page','',$alias);
@@ -28,7 +30,8 @@ class Controller extends BaseController
         return [$part_id, $page];
     }
     
-    private function prev_part($prev_id, $deep, $arr) {        
+    private function prev_part(int $prev_id, int $deep, array $arr): array 
+    {        
         $query = "SELECT id,title,prev_id from cat_part where id='{$prev_id}' order by title asc";
         $result = App::$db->query($query);
         if (!$result->num_rows) {
@@ -41,7 +44,8 @@ class Controller extends BaseController
         return $arr;
     }
     
-    private function getHeaderBreadCrumbs($part_id, $item_title = '') {
+    private function getHeaderBreadCrumbs(int $part_id, string $item_title = ''): array 
+    {
         $root_title = isset(App::$settings['catalog_header']) ? App::$settings['catalog_header'] : 'Каталог';
         $title = $root_title;
         if ($part_id) {
@@ -69,7 +73,8 @@ class Controller extends BaseController
         return([$title,$breadcrumbs] );
     }
     
-    private function getBackButton($part_id) {
+    private function getBackButton(int $part_id): string 
+    {
         if ($part_id) {
             list($href_id) = App::$db->select_row("select prev_id from cat_part where id='{$part_id}'", true);
             return '
@@ -77,10 +82,12 @@ class Controller extends BaseController
                 <center><a href="' . App::$SUBDIR . get_cat_part_href($href_id) . '" class="btn btn-default"> << Назад</a></center>
             </div>
             ';
+        } else {
+            return '';
         }    
     }
     
-    public function actionPartList($uri)
+    public function actionPartList(string $uri): string
     {        
         list($part_id, $page) = $this->parseURI($uri);
         list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs($part_id);
@@ -99,13 +106,14 @@ class Controller extends BaseController
         return $content;
     }
     
-    public function actionIndex()
+    public function actionIndex(): string
     {
-        list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs(null);
+        list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs(0);
         return $this->actionPartList('');
     }
 
-    private function getPartItemsContent($part_id, $page) {
+    private function getPartItemsContent(int $part_id, int $page): string 
+    {
         global $_SESSION;
         
         $content = '';
@@ -123,7 +131,7 @@ class Controller extends BaseController
         }
         list($total) = App::$db->select_row("SELECT count(id) from cat_item where part_id='" . $part_id . "'");
 
-        $pager = new Pagination($total,$_SESSION['catalog_page'],App::$settings['catalog_items_per_page']);
+        $pager = new Pagination($total, $_SESSION['catalog_page'], App::$settings['catalog_items_per_page']);
         $tags['pager'] = $pager;
 
         $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
@@ -144,7 +152,8 @@ class Controller extends BaseController
         return $content;
     }
     
-    private function getItemId($part_id, $item_title) {
+    private function getItemId(int $part_id, string $item_title): int 
+    {
         $query = "select id,part_id from cat_item where seo_alias = '{$item_title}' and part_id='{$part_id}'";
         $row = App::$db->select_row($query, true);
         if (is_numeric($row['id'])) {
@@ -153,7 +162,8 @@ class Controller extends BaseController
         return 0;
     }
     
-    private function getRelatedProducts($row_part) {        
+    private function getRelatedProducts(array $row_part)
+    {        
         if(!$related_products = my_json_decode($row_part['related_products'])) {
             $related_products=[];
         }
@@ -172,7 +182,7 @@ class Controller extends BaseController
         return null;
     }
     
-    public function actionItem($uri, $item_title)
+    public function actionItem(string $uri, string $item_title): string
     {        
         list($part_id, $page) = $this->parseURI($uri);
         list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs($part_id, $item_title);
@@ -207,7 +217,7 @@ class Controller extends BaseController
         return App::$template->parse('cat_item_view', $tags, $result);        
     }
     
-    public function actionLoadImage()            
+    public function actionLoadImage(): string            
     {
         $input = App::$input;
         $query = "select default_img,fname,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='{$input['item_id']}'";

@@ -10,9 +10,11 @@ use Classes\App;
  *
  * @author BooT
  */
-class Controller extends BaseController {
+class Controller extends BaseController 
+{
     
-    public function actionIndex() {
+    public function actionIndex(): string 
+    {
         $this->title = 'Прайс-лист';
         $this->breadcrumbs[] = ['title'=>$this->title];
         
@@ -29,7 +31,8 @@ class Controller extends BaseController {
         return App::$template->parse('price_index.html.twig', $tags, $result);
     }
     
-    private function part_items($row) {
+    private function part_items(array $row): string 
+    {
         $content = '';
 
         $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
@@ -44,7 +47,8 @@ class Controller extends BaseController {
         return $content;
     }
     
-    private function sub_part($prev_id, $deep, $max_deep) {
+    private function sub_part(int $prev_id, int $deep, int $max_deep): string 
+    {
         $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='{$prev_id}' group by cat_part.id order by cat_part.num,cat_part.title asc";
         $result = App::$db->query($query, true);
         while ($row = $result->fetch_array()) {

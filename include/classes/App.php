@@ -4,7 +4,8 @@ namespace Classes;
 use Classes\MyArray;
 use Classes\SQLHelper;
 
-final class App {
+final class App 
+{
     /**
     * @var SQLHelper Database object
     */
@@ -76,7 +77,8 @@ final class App {
      * @param array $subdir Subdir of App
      *
     */   
-    public function __construct(string $dir, string $subdir = '/') {
+    public function __construct(string $dir, string $subdir = '/')
+    {
         static::$DIR = $dir;
         static::$SUBDIR = $subdir;
         static::set('DIR', $dir);
@@ -92,7 +94,8 @@ final class App {
      * @param array $server _SERVER array
      *
     */    
-    public function loadInputData(array $get, array $post, array $server) {
+    public function loadInputData(array $get, array $post, array $server) : void
+    {
         static::$server = new MyArray;
         if(is_array($server)){
             foreach ($server as $key => $value){
@@ -120,7 +123,8 @@ final class App {
      * @param string $filename Config filename
      *
     */    
-    private function loadSettingsFromFile($filename){        
+    private function loadSettingsFromFile(string $filename) : void
+    {        
         $settings_local=(require $filename);
         if(is_array($settings_local)) {
             foreach ($settings_local as $key => $value){
@@ -135,7 +139,8 @@ final class App {
      * @param string $filename Config filename
      *
     */
-    public function loadSettings($filename) {
+    public function loadSettings(string $filename) : void
+    {
         static::$settings = new MyArray;
         if(file_exists($filename)) {
             $this->loadSettingsFromFile($filename);
@@ -157,7 +162,8 @@ final class App {
      *
      * @return string Output string
      */
-    public function connectDB($host, $user, $passwd, $dbname) {
+    public function connectDB(string $host, string $user, string $passwd, string $dbname) : void 
+    {
         static::$db = new SQLHelper($host, $user, $passwd, $dbname);
     }
 
@@ -165,7 +171,8 @@ final class App {
      * Put data to global arrays
      *
      */
-    public function addGlobals() {
+    public function addGlobals() : void
+    {
         global $input, $server, $settings, $mysqli;
         $input = static::$input;
         $server = static::$server;
@@ -180,7 +187,8 @@ final class App {
      *
      * @return string Output value
      */
-    public static function get($key) {
+    public static function get(string $key) 
+    {
         return (isset(static::$data[$key]) ? static::$data[$key] : null);
     }
 
@@ -191,7 +199,8 @@ final class App {
      * @param string $value Key value
      *
      */
-    public static function set($key, $value) {
+    public static function set(string $key, $value) : void 
+    {
         static::$data[$key] = $value;
     }
 
@@ -202,7 +211,8 @@ final class App {
      *
      * @return boolean True if found
      */
-    public static function has($key) {
+    public static function has(string $key) : bool
+    {
         return isset(static::$data[$key]);
     }
     
@@ -212,7 +222,8 @@ final class App {
      * @param string $message Message
      *
      */
-    public static function debug ($message) {
+    public static function debug (string $message) : void 
+    {
         $time = microtime(true) - static::$DEBUG[0];
         $time = sprintf('%.4F', $time);
         static::$DEBUG[] = $time . "\t " . $message;

@@ -10,10 +10,11 @@ use Classes\App;
  *
  * @author BooT
  */
-class ReviewsController extends BaseController {
+class ReviewsController extends BaseController 
+{
     private $TABLE = 'reviews';
     
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $this->title = 'Новости';
         $this->breadcrumbs[] = ['title'=>$this->title];
@@ -23,7 +24,7 @@ class ReviewsController extends BaseController {
         return App::$template->parse('reviews_table', ['this' => $this], $result);        
     }
     
-    public function actionItemView($alias)
+    public function actionItemView(string $alias): string
     {
         $item_id = get_id_by_alias($this->TABLE, $alias, true);
         $this->title = 'Новости';
@@ -33,7 +34,8 @@ class ReviewsController extends BaseController {
         return App::$template->parse($this->TABLE.'reviews_table', ['this' => $this], $result);        
     }    
     
-    public function getFullContent($row) {
+    public function getFullContent(array $row): string 
+    {
         if($this->tags['content-cut']==='cut') {
             $this->tags['content'] = strip_tags($row['content']);
             $this->tags['content'] = cut_string($this->tags['content'], 250);

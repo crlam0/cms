@@ -6,8 +6,9 @@ use Swift;
 
 class Message 
 {    
-    private function getClass($message) {
-        if(!array_key_exists('type',$message)) {
+    private function getClass(array $message) : string 
+    {
+        if(!array_key_exists('type', $message)) {
             return 'success';
         }
         switch ($message['type']) {
@@ -26,7 +27,7 @@ class Message
         return $class;
     }
     
-    private function parseTags($message, $tags) {
+    private function parseTags(array $message, array $tags) : array {
         if (is_array($tags)){
             if(array_key_exists('type',$tags)) {
                 $message['type'] = $tags['type'];            
@@ -49,7 +50,8 @@ class Message
      *
      * @return string Output string
      */
-    public function get($name, $tags = array(), $content = '') {
+    public function get(string $name, array $tags = [], string $content = '') : string 
+    {
         if (strlen($name)) {
             $sql = "select * from messages where name='{$name}'";
             $message = App::$db->select_row($sql, 1);
@@ -73,7 +75,8 @@ class Message
      * @param string $string Message content
      *
      */
-    function error($string) {
+    function error(string $string) : void 
+    {
         echo $this->get('error', [], $string);
     }    
     
@@ -83,7 +86,8 @@ class Message
      * @param string $message Message content
      *
      */
-    function adminLog($message) {
+    function adminLog(string $message) : void
+    {
         $query = "insert into admin_log(user_id,date,msg) values('" . App::$user->id . "',now(),'{$message}')";
         App::$db->query($query);
     }
@@ -96,7 +100,8 @@ class Message
      * @param string $content Message content
      *
      */
-    function mail($message_to, $subject, $content, $content_type = 'text/plain') {
+    function mail(string $message_to, string $subject, string $content, string $content_type = 'text/plain') 
+    {
         $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
         $mailer = new \Swift_Mailer($transport);
         $message = (new \Swift_Message($subject))

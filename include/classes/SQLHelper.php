@@ -9,7 +9,8 @@
 namespace Classes;
 use Classes\App;
 
-class SQLHelper {
+class SQLHelper 
+{
     /**
      * @var mysqli Use mysqli object
      */
@@ -44,7 +45,8 @@ class SQLHelper {
      *
      * @return null
      */    
-    public function __construct($host, $user, $passwd, $dbname) {
+    public function __construct(string $host, string $user, string $passwd, string $dbname) 
+    {
         $this->host=$host;
         $this->user=$user;
         $this->passwd=$passwd;
@@ -69,7 +71,8 @@ class SQLHelper {
      *
      * @return array mysqli result
      */
-    public function query($sql, $dont_debug=false) {
+    public function query(string $sql, bool $dont_debug=false) 
+    {
         if($this->debug){
             $start_time = microtime(true);
         }
@@ -100,7 +103,8 @@ class SQLHelper {
      *
      * @return array One row
      */
-    public function select_row($sql, $dont_debug=false) {
+    public function select_row(string $sql, bool $dont_debug = false) 
+    {
         $result = $this->query($sql, $dont_debug);    
         if ($result->num_rows) {
             $row = $result->fetch_array();
@@ -115,7 +119,8 @@ class SQLHelper {
      *
      * @return integer 
      */
-    public function insert_id(): int {
+    public function insert_id(): int 
+    {
         return $this->mysqli->insert_id;
     }
     
@@ -126,7 +131,8 @@ class SQLHelper {
      *
      * @return string Output string
      */
-    public function test_param($str,$param='') {
+    public function test_param($str, $param='') 
+    {
         if (is_array($str)) {
             foreach ($str as $key => $value) {
                 $str[$key]=$this->test_param($value);
@@ -153,7 +159,8 @@ class SQLHelper {
      *
      * @return string
      */
-    public function escape_string($str) {
+    public function escape_string(string $str) : string 
+    {
         return $this->mysqli->escape_string($str);        
     }
 
@@ -165,7 +172,8 @@ class SQLHelper {
      *
      * @return string Complete string for query
      */
-    public function special_chars($value, $field = '') {
+    public function special_chars(string $value, string $field = '') : string 
+    {
         if($field == 'title' || $field == 'name') {
             $value = htmlspecialchars($value);
         }
@@ -179,7 +187,8 @@ class SQLHelper {
      *
      * @return string Complete string for query
      */
-    public function insert_fields($fields) {
+    public function insert_fields(array $fields) : string 
+    {
         $total = count($fields);
         $output = '';
         $str_fields = '';
@@ -219,7 +228,8 @@ class SQLHelper {
      *
      * @return string Complete string for query
      */
-    public function update_fields($fields) {
+    public function update_fields(array $fields) : string 
+    {
         $total = count($fields);
         $output = '';
         $a = 0;

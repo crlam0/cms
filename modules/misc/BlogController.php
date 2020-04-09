@@ -12,18 +12,21 @@ use Classes\Comments;
  *
  * @author BooT
  */
-class BlogController extends BaseController {
+class BlogController extends BaseController 
+{
     private $MSG_PER_PAGE = 20;
     private $TABLE = 'blog_posts';
     private $comments;
     
-    public function __construct() {
+    public function __construct() 
+    {
         if(isset(App::$settings['blog_msg_per_page'])) {
             $this->MSG_PER_PAGE = App::$settings['blog_msg_per_page'];
         }
     }
     
-    public function getPostContent ($row) {
+    public function getPostContent (array $row): string 
+    {
         $content = replace_base_href($row['content'], false);
         $content = preg_replace('/height: \d+px;/', 'max-width: 100%;', $content);
 
@@ -34,11 +37,13 @@ class BlogController extends BaseController {
         return $content;
     }
 
-    public function getPostCommentsCount ($row) {
+    public function getPostCommentsCount (array $row): string 
+    {
         return $this->comments->show_count($row['id']);
     }
 
-    public function actionIndex($page = 1) {
+    public function actionIndex(int $page = 1): string 
+    {
         $this->title = 'Блог';
         $this->breadcrumbs[] = ['title'=>$this->title];
         
@@ -65,7 +70,8 @@ class BlogController extends BaseController {
         return $content;
     }
 
-    public function actionPostView($alias) {        
+    public function actionPostView(string $alias):string 
+    {        
         $post_id = get_id_by_alias($this->TABLE, $alias, true);
         $query = "select {$this->TABLE}.*,users.fullname as author from {$this->TABLE} left join users on (users.id=uid) where {$this->TABLE}.id='{$post_id}'";
         $result = App::$db->query($query);

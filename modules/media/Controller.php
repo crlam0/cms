@@ -11,9 +11,10 @@ use Classes\Pagination;
  *
  * @author User
  */
-class Controller extends BaseController {
+class Controller extends BaseController 
+{
     
-    public function actionPartList()
+    public function actionPartList(): string
     {
         $this->title = 'Файлы';
         $this->breadcrumbs[] = ['title'=>$this->title];        
@@ -30,7 +31,7 @@ class Controller extends BaseController {
         }
     }
     
-    public function actionFilesList($alias, $page = 1)
+    public function actionFilesList(string $alias, int $page = 1): string
     {
         $view_media = get_id_by_alias('media_list', $alias, true);            
         list($media_title, $media_seo_alias, $media_descr) = App::$db->select_row("SELECT title, seo_alias, descr from media_list where id='{$view_media}'");
@@ -61,7 +62,8 @@ class Controller extends BaseController {
         return $content;
     }
     
-    public function actionDownload() {
+    public function actionDownload(): string 
+    {
         $file_id = App::$input['media_file_id'];
         
         if(is_numeric($file_id)) {
@@ -92,17 +94,20 @@ class Controller extends BaseController {
         return $content;
     }    
     
-    public function isFileExists($row) {
+    public function isFileExists(array $row): bool 
+    {
         $file_name = App::$settings['media_upload_path'] . $row['file_name'];
         return is_file(App::$DIR . $file_name);
     }
 
-    public function getHREF($row) {
+    public function getHREF(array $row): string 
+    {
         $f_info = pathinfo($row['file_name']);
         return App::$SUBDIR . "media/download?media_file_id={$row['id']}&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];        
     }
 
-    public function getFileSize($row) {
+    public function getFileSize(array $row): string 
+    {
         $file_name = App::$settings['media_upload_path'] . $row['file_name'];
         if (is_file(App::$DIR . $file_name)) {
             return convert_bytes(filesize(App::$DIR . $file_name));
@@ -111,7 +116,8 @@ class Controller extends BaseController {
         }        
     }
     
-    public function getPlayerTag($row) {        
+    public function getPlayerTag(array $row): string 
+    {        
         global $player_num, $player_show;
         $file_name = App::$settings['media_upload_path'] . $row['file_name'];
         if (stristr($file_name, ".mp3")) {

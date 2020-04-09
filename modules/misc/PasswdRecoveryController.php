@@ -9,7 +9,8 @@ use Classes\User;
 class PasswdRecoveryController extends BaseController
 {    
     
-    private function checkInput() {
+    private function checkInput()
+    {
         if( strlen(App::$input['new_passwd1'])<8 ){
             return App::$message->get('error','','Новый пароль не может быть короче восьми символов');
         }elseif( !strlen(App::$input['new_passwd2']) ){
@@ -21,7 +22,8 @@ class PasswdRecoveryController extends BaseController
         }
     }
     
-    private function passwdChange($user) {
+    private function passwdChange(array $user): string 
+    {
         $data = [];
         $data['salt']=$user['salt'];
         if (mb_strlen($data['salt']) !== 22) {
@@ -34,7 +36,8 @@ class PasswdRecoveryController extends BaseController
         return App::$message->get('info','','Пароль успешно изменен !');          
     }
 
-    public function actionStep2() {
+    public function actionStep2(): string 
+    {
         $this->title = 'Восстановление пароля';
         $this->breadcrumbs[] = ['title'=>$this->title];
         $content = '';        
@@ -50,7 +53,8 @@ class PasswdRecoveryController extends BaseController
         return $content;
     }
 
-    public function actionStep1() {
+    public function actionStep1(): string 
+    {
         $this->title = 'Восстановление пароля';
         $this->breadcrumbs[] = ['title'=>$this->title];
         
@@ -71,7 +75,7 @@ class PasswdRecoveryController extends BaseController
         }
     }
 
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $this->title = 'Восстановление пароля';
         $this->breadcrumbs[] = ['title'=>$this->title];

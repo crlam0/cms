@@ -30,11 +30,14 @@ function show_img($row) {
 }
 
 function show_list_img($row) {
+    if(!$row['def_file_name']) {
+        return '';
+    }
     App::$input['icon']=true;    
     $row['file_name'] = $row['def_file_name'];
     $row['id'] = $row['def_id'];
     $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
-    $image = new Image($file_name, $row['file_type']);
+    $image = new Image($file_name, $row['def_file_type']);
     return $image->getHTML($row, 'var/cache/gallery/','','modules/gallery/image.php?icon=1&id=', gallery_get_max_width());
 }
 

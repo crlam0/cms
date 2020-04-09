@@ -12,14 +12,14 @@ class TwigTemplateTest extends TestCase
 
     public function testStringParse()
     {
-        $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, true, 'Hello {{ name }}');
+        $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, [], 'Hello {{ name }}');
         $content = $twig->render('', ['name'=>'Test']);
         self::assertEquals('Hello Test', $content);
     }
     
     public function testFunctionParse()
     {
-        $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, true, '{{ TwigTest(123) }}');
+        $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, [], '{{ TwigTest(123) }}');
         function TwigTest($param){
             return 'TwigTestFunction: ' . $param;
         }
@@ -33,7 +33,7 @@ class TwigTemplateTest extends TestCase
         $result=Classes\App::$db->query("select login from users where login='boot'");
         $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
         
-        $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, true, '{% for row in rows %}{{ row.login }}{% endfor %}');
+        $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, [], '{% for row in rows %}{{ row.login }}{% endfor %}');
         $content = $twig->render('index.html.twig', ['name'=>'Test', 'rows' => $rows]);
         self::assertEquals('boot', $content);
     }

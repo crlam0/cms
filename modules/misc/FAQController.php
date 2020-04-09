@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\faq;
+namespace modules\misc;
 
 use Classes\BaseController;
 use Classes\App;
@@ -12,7 +12,7 @@ use Classes\BBCodeEditor;
  *
  * @author BooT
  */
-class Controller extends BaseController {
+class FAQController extends BaseController {
     private $TABLE = 'faq';
     private $MSG_PER_PAGE = '20';
     private $editor;

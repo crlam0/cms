@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\blog;
+namespace modules\misc;
 
 use Classes\BaseController;
 use Classes\App;
@@ -12,7 +12,7 @@ use Classes\Comments;
  *
  * @author BooT
  */
-class Controller extends BaseController {
+class BlogController extends BaseController {
     private $MSG_PER_PAGE = 20;
     private $TABLE = 'blog_posts';
     private $comments;

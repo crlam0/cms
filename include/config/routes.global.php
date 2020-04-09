@@ -75,11 +75,11 @@ return [
 
     'blog-index' => [
         'pattern' => '^blog\/?$',
-        'controller' => 'modules\blog\Controller',
+        'controller' => 'modules\misc\BlogController',
     ],    
     'blog-index-with-page' => [
         'pattern' => '^blog\/page(\d+)\/?$',
-        'controller' => 'modules\blog\Controller',
+        'controller' => 'modules\misc\BlogController',
         'action' => 'index',
         'params' => [
             '0' => 'page',
@@ -87,7 +87,7 @@ return [
     ],    
     'blog-post-view' => [
         'pattern' => '^blog\/([\w_\-]+)\/?$',
-        'controller' => 'modules\blog\Controller',
+        'controller' => 'modules\misc\BlogController',
         'action' => 'post-view',
         'params' => [
             '0' => 'alias',
@@ -96,11 +96,11 @@ return [
     
     'faq-index' => [
         'pattern' => '^faq\/?[\w\-]*$',
-        'controller' => 'modules\faq\Controller',
+        'controller' => 'modules\misc\FAQController',
     ],    
     'faq-index-with-page' => [
         'pattern' => '^faq\/page(\d+)\/?$',
-        'controller' => 'modules\faq\Controller',
+        'controller' => 'modules\misc\FAQController',
         'action' => 'index',
         'params' => [
             '0' => 'page',
@@ -170,7 +170,8 @@ return [
             '1' => 'page',
         ]
     ],    
-    
+
+    /*
     'news' => [
         'pattern' => '^news\/?$',
         'file' => 'modules/news/index.php',
@@ -181,16 +182,33 @@ return [
         'params' => [
             '0' => 'uri',
         ]
+    ],
+     * 
+     */   
+    
+    'news-index' => [
+        'pattern' => '^news\/?$',
+        'controller' => 'modules\misc\NewsController',
     ],    
-    'offers' => [
-        'pattern' => '^offers\/?$',
-        'file' => 'modules/offers/index.php',
-    ],    
-    'offers_uri' => [
-        'pattern' => '^offers\/(.*)\/?$',
-        'file' => 'modules/offers/index.php',
+    'news-item-view' => [
+        'pattern' => '^news\/([\w_\-]+)\/?$',
+        'controller' => 'modules\misc\NewsController',
+        'action' => 'item-view',
         'params' => [
-            '0' => 'uri',
+            '0' => 'alias',
+        ]
+    ],    
+    
+    'offers-index' => [
+        'pattern' => '^offers\/?$',
+        'controller' => 'modules\misc\OffersController',
+    ],    
+    'offers-item-view' => [
+        'pattern' => '^offers\/([\w_\-]+)\/?$',
+        'controller' => 'modules\misc\OffersController',
+        'action' => 'item-view',
+        'params' => [
+            '0' => 'alias',
         ]
     ],    
 

@@ -14,7 +14,7 @@ return [
         'controller' => 'modules\misc\PasswdChangeController'
     ],    
     'passwd_recovery' => [
-        'pattern' => '^passwd_recovery\/?\w*$',
+        'pattern' => '^passwd_recovery\/?[\w\-]*$',
         'controller' => 'modules\misc\PasswdRecoveryController'
     ],    
     'search' => [
@@ -71,39 +71,41 @@ return [
     /*
      * Blog, FAQ related routes
      * 
-     */
-    
-    'blog' => [
+     */    
+
+    'blog-index' => [
         'pattern' => '^blog\/?$',
-        'file' => 'modules/blog/index.php',
+        'controller' => 'modules\blog\Controller',
     ],    
-    'blog_uri_with_slash' => [
-        'pattern' => '^blog\/(.*)\/$',
-        'file' => 'modules/blog/index.php',
+    'blog-index-with-page' => [
+        'pattern' => '^blog\/page(\d+)\/?$',
+        'controller' => 'modules\blog\Controller',
+        'action' => 'index',
         'params' => [
-            '0' => 'uri',
+            '0' => 'page',
         ]
     ],    
-    'blog_uri' => [
-        'pattern' => '^blog\/(.*)$',
-        'file' => 'modules/blog/index.php',
+    'blog-post-view' => [
+        'pattern' => '^blog\/([\w_\-]+)\/?$',
+        'controller' => 'modules\blog\Controller',
+        'action' => 'post-view',
         'params' => [
-            '0' => 'uri',
+            '0' => 'alias',
         ]
     ],    
     
-    'faq_uri' => [
-        'pattern' => '^faq\/(.*)\/$',
-        'file' => 'modules/faq/index.php',
+    'faq-index' => [
+        'pattern' => '^faq\/?[\w\-]*$',
+        'controller' => 'modules\faq\Controller',
+    ],    
+    'faq-index-with-page' => [
+        'pattern' => '^faq\/page(\d+)\/?$',
+        'controller' => 'modules\faq\Controller',
+        'action' => 'index',
         'params' => [
-            '0' => 'uri',
+            '0' => 'page',
         ]
-    ],    
-    'faq' => [
-        'pattern' => '^faq\/.*$',
-        'file' => 'modules/faq/index.php',
-    ],    
-    
+    ],
 
     /*
      * Gallery related routes
@@ -231,7 +233,7 @@ return [
     ],
     
     'basket' => [
-        'pattern' => '^basket\/.*$',
+        'pattern' => '^basket\/[\w\-]*$',
         'controller' => 'modules\catalog\BasketController',
     ],
     

@@ -10,7 +10,14 @@ namespace Classes;
 use Classes\App;
 
 class SQLHelper {
+    /**
+     * @var mysqli Use mysqli object
+     */
     public $mysqli;
+    /**
+     * @var boolean Write debug information if true.
+     */
+    public $debug = false;
     
     /**
      * @var Array Debug array of all SQL query
@@ -63,13 +70,13 @@ class SQLHelper {
      * @return array mysqli result
      */
     public function query($sql, $dont_debug=false) {
-        if(App::$settings['debug']){
+        if($this->debug){
             $start_time = microtime(true);
         }
         if($this->mysqli) {
             $result = $this->mysqli->query($sql);
         }
-        if(App::$settings['debug']){
+        if($this->debug){
             $time = sprintf('%.4F', microtime(true) - $start_time);
             $this->query_log_array[] = $time . "\t" . $sql;
             if(strlen($this->mysqli->info)) {
@@ -77,7 +84,7 @@ class SQLHelper {
             }
         }
         if (!$result) {            
-            if(App::$settings['debug']){
+            if($this->debug){
                 throw new \InvalidArgumentException('SQL Error: ' . $this->mysqli->error . ' Query is: ' . $sql);
             }
             die('SQL Error: '.$this->mysqli->error);

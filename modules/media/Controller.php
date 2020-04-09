@@ -61,19 +61,59 @@ class Controller extends BaseController {
         return $content;
     }
     
-    public function show_size($row) {
+    public function actionDownload() {
+        $file_id = App::$input['media_file_id'];
+        
+        if(is_numeric($file_id)) {
+            list($file_name) = App::$db->select_row("select file_name from media_files where id='{$file_id}'");
+            $file_name = App::$DIR . App::$settings['media_upload_path'] . $file_name;
+            echo $file_name;
+            if(file_exists($file_name)) {
+                $mime_type=mime_content_type($file_name);
+                header('Content-Description: File Transfer');
+                header('Content-Type: ' . $mime_type);
+                header('Content-Disposition: attachment; filename=' . App::$input['download_file_name']);
+                header('Content-Transfer-Encoding: binary');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize($file_name));
+                ob_clean();
+                flush();
+                readfile($file_name);
+                $query="update media_files set download_count=download_count+1 where id='{$file_id}'";
+                App::$db->query($query);
+                exit;
+            }
+        }
+        $tags['Header'] = 'Ошибка 404';
+        $tags['file_name'] = App::$input['download_file_name'];
+        $content = App::$message->get('file_not_found',$tags);
+        return $content;
+    }    
+    
+    public function isFileExists($row) {
+        $file_name = App::$settings['media_upload_path'] . $row['file_name'];
+        return is_file(App::$DIR . $file_name);
+    }
+
+    public function getHREF($row) {
+        $f_info = pathinfo($row['file_name']);
+        return App::$SUBDIR . "media/download?media_file_id={$row['id']}&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];        
+    }
+
+    public function getFileSize($row) {
+        $file_name = App::$settings['media_upload_path'] . $row['file_name'];
+        if (is_file(App::$DIR . $file_name)) {
+            return convert_bytes(filesize(App::$DIR . $file_name));
+        } else {
+            return "Файл отсутствует";
+        }        
+    }
+    
+    public function getPlayerTag($row) {        
         global $player_num, $player_show;
         $file_name = App::$settings['media_upload_path'] . $row['file_name'];
-        $content='';
-
-        $f_info = pathinfo($file_name);
-        $href= App::$SUBDIR . "modules/media/download.php?media_file_id={$row['id']}&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];
-
-        if (is_file(App::$DIR . $file_name)) {
-            $content = '<a href="'.$href.'" class="btn btn-default"> <b>Скачать файл</b> ( размер: ' . convert_bytes(filesize(App::$DIR . $file_name)) . ', загрузок '.$row['download_count'].' )</a>';
-        } else {
-            $content = "Файл отсутствует";
-        }
         if (stristr($file_name, ".mp3")) {
             $player_show = 1;
             $player_tag = 'audio';
@@ -91,16 +131,13 @@ class Controller extends BaseController {
             $player_fullscreen = 'true';
         }
         if ($player_show) {
-            $content .= '
+            return '
                 <div class="player-tag">
                     <'.$player_tag.' id="player'.$player_num.'" src="'.App::$SUBDIR.$file_name.'" type="'.$player_type.'" controls="controls" width="320" height="'.$player_height.'"></'.$player_tag.'>		
                 </div>
             ';
         }
-        return $content;
-    }
-
-    
+    }   
     
 }
 

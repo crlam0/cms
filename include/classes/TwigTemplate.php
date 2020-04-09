@@ -100,7 +100,7 @@ class TwigTemplate {
      *
      * @return null
      */
-    public function add_function($name)
+    public function addFunction($name)
     {
         $this->twig->registerUndefinedFunctionCallback(function ($name) {
             if (function_exists($name)) {
@@ -116,11 +116,11 @@ class TwigTemplate {
      * @param string $template Template content
      *
      * @return $template
-     */
     public function create_template($template)
     {
         return $this->twig->createTemplate($template);
     }        
+     */
 
     /**
      * Render twig object

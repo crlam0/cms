@@ -15,7 +15,7 @@ class Template {
         $this->MyTemplate = new MyTemplate();
         $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => App::$settings['debug']]);
     }
-
+    
     /**
      * Parse Twig template by array
      *
@@ -26,24 +26,22 @@ class Template {
      *
      * @return string Output content
      */
-    private function parse_twig_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){        
-        App::debug("Parse template '{$template['name']}'");    
+    private function parseTwigTemplate($template, $tags = [], $sql_result = [], $inner_content = ''){        
         if ($template['file_name']) {        
             if(!strstr($template['file_name'],'.html.twig')) {
                 $template['file_name'].='.html.twig';
             }
-            $fname = '';
+            $file_name = '';
             if (file_exists(App::$DIR . 'templates/' . $template['file_name'])) {
-                $fname = App::$DIR . 'templates/' . $template['file_name'];
-                $fname = $template['file_name'];
+                $file_name = App::$DIR . 'templates/' . $template['file_name'];
+                $file_name = $template['file_name'];
             }    
-            if ($fname) {
+            if ($file_name) {
                 $twig = $this->TwigTemplate;
-                $template['name'] = $fname;
+                $template['name'] = $file_name;
             } else {
                 $tags['file_name'] = $template['file_name'];
-                App::$message->get('file_not_found', $tags);
-                return '';
+                return App::$message->get('file_not_found', $tags);
             }
         } else {
             $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, ['debug' => App::$settings['debug']], $template['content']);
@@ -58,12 +56,12 @@ class Template {
             $tags['inner_content'] = '';
         }
         
-        $twig->add_function('add_block');
-        $twig->add_function('include_php');
-        $twig->add_function('path');
+        $twig->addFunction('add_block');
+        $twig->addFunction('include_php');
+        $twig->addFunction('path');
         if(array_key_exists('functions',$tags) && is_array($tags['functions'])) {
             foreach($tags['functions'] as $function) {
-                $twig->add_function($function);
+                $twig->addFunction($function);
             }
             unset($tags['functions']);
         }        
@@ -80,17 +78,17 @@ class Template {
      *
      * @return string Output content
      */
-    private function parse_my_tpl($template, $tags = [], $sql_result = [], $inner_content = ''){
+    private function parseMyTemplate($template, $tags = [], $sql_result = [], $inner_content = ''){
         if (array_key_exists('file_name', $template) && $template['file_name']) {
-            $fname = '';
+            $file_name = '';
             if (file_exists($template['file_name'])) {
-                $fname = $template['file_name'];
+                $file_name = $template['file_name'];
             }    
             if (file_exists(App::$DIR . $template['file_name'])) {
-                $fname = App::$DIR . $template['file_name'];
+                $file_name = App::$DIR . $template['file_name'];
             }    
-            if ($fname) {
-                $template['content'] = implode('', file($fname));
+            if ($file_name) {
+                $template['content'] = implode('', file($file_name));
             } else {
                 $tags['file_name'] = $template['file_name'];
                 App::$message->get('file_not_found', $tags);
@@ -119,7 +117,7 @@ class Template {
         $template = null;
 
         if (file_exists(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl')) {
-            $temp = $this->MyTemplate->load_from_file(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl', $name);
+            $temp = $this->MyTemplate->loadFromFile(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl', $name);
             if ($temp) {
                 $template['name'] = $name;            
                 $template['content'] = $temp;
@@ -145,10 +143,11 @@ class Template {
         if (!$template) {
             return App::$message->get('tpl_not_found', ['name'=>$name]);
         }
+        App::debug("Parse template '{$template['name']}'");    
         if ($template['template_type'] === 'my') {
-            return $this->parse_my_tpl($template, $tags, $sql_result, $inner_content);        
+            return $this->parseMyTemplate($template, $tags, $sql_result, $inner_content);        
         } elseif($template['template_type'] === 'twig') {
-            return $this->parse_twig_tpl($template, $tags, $sql_result, $inner_content);
+            return $this->parseTwigTemplate($template, $tags, $sql_result, $inner_content);
         } else {
             $tags['type'] = $template['template_type'];
             App::$message->get('', $tags, 'Unknown template type "[%type%]"');

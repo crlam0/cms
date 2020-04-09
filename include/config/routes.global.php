@@ -140,22 +140,12 @@ return [
     /*
      * Media, news related routes
      * 
-    
-    'media' => [
-        'pattern' => '^media\/?$',
-        'file' => 'modules/media/index.php',
-        'params' => [
-            '0' => 'uri',
-        ]
+     */
+    'media-download' => [
+        'pattern' => '^media\/download$',
+        'controller' => 'modules\media\Controller',
+        'action' => 'download',
     ],    
-    'media_uri' => [
-        'pattern' => '^media\/(.*)\/?$',
-        'file' => 'modules/media/index.php',
-        'params' => [
-            '0' => 'uri',
-        ]
-    ],    
-     */   
     'media-part-list' => [
         'pattern' => '^media\/?$',
         'controller' => 'modules\media\Controller',

@@ -40,7 +40,7 @@ class MyTemplate {
      *
      * @return string Output string
      */
-    private function parse_string($content, $tags = array(), $sql_row = array(), $sql_row_summ = array(), $inner_content = '') {
+    private function parseString($content, $tags = array(), $sql_row = array(), $sql_row_summ = array(), $inner_content = '') {
         preg_match_all("@\[\%(.*?)\%\]@", $content, $temp, PREG_SET_ORDER);
         $total = count($temp);
         $a = 0;
@@ -179,7 +179,7 @@ class MyTemplate {
                 unset($mysql_row_summ);
                 if ($sql_result){
                     while ($row = $sql_result->fetch_array()) {
-                        $result.=$this->parse_string($loop_content, $tags, $row, $inner_content) . "\n";
+                        $result.=$this->parseString($loop_content, $tags, $row, $inner_content) . "\n";
                         foreach ($row as $key => $value)
                             if ((is_double($value))or ( is_numeric($value))){
                                 $mysql_row_summ[$key] = +$value;
@@ -190,9 +190,9 @@ class MyTemplate {
             } elseif ($loop_start) {
                 $loop_content.=$value;
             } elseif (isset($mysql_row_summ)) {
-                $result.=$this->parse_string($value, $tags, $sql_result, $mysql_row_summ, $inner_content) . "\n";
+                $result.=$this->parseString($value, $tags, $sql_result, $mysql_row_summ, $inner_content) . "\n";
             } else {
-                $result.=$this->parse_string($value, $tags, $sql_result, [], $inner_content) . "\n";
+                $result.=$this->parseString($value, $tags, $sql_result, [], $inner_content) . "\n";
             }
         }
         return $result;
@@ -206,7 +206,7 @@ class MyTemplate {
      *
      * @return string Output template
      */
-    public function load_from_file($file_name, $title) {
+    public function loadFromFile($file_name, $title) {
         $tpl_file = @file($file_name);
         if ($tpl_file == false) {
             echo 'Error open ' . $file_name;

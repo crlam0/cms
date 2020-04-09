@@ -23,7 +23,7 @@ class TwigTemplateTest extends TestCase
         function TwigTest($param){
             return 'TwigTestFunction: ' . $param;
         }
-        $twig->add_function('TwigTest');
+        $twig->addFunction('TwigTest');
         $content = $twig->render('', []);
         self::assertEquals('TwigTestFunction: 123', $content);
     }

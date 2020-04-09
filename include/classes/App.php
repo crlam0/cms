@@ -148,7 +148,7 @@ final class App {
     }    
     
     /**
-     * Test field parameter for deny SQL injections
+     * Create SQLHelper object.
      *
      * @param string $host Host
      * @param string $user Username

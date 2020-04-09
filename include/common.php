@@ -26,7 +26,8 @@ $App->connectDB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 $App->loadSettings(__DIR__.'/config/settings.local.php');
 $App->loadInputData($_GET, $_POST, $_SERVER);
 $App->addGlobals();
-$App->debug('App created, arrays loaded');
+App::$db->debug = App::$settings['debug'];
+App::debug('App created, arrays loaded');
 unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
 App::$user = new User();

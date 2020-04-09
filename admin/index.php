@@ -9,9 +9,9 @@ $content='';
 
 if($input['clear_cache']) {
     if(clear_cache_dir()){
-        $content.=my_msg_to_str('','','Директория кэша очищена');
+        $content.=my_msg_to_str('',[],'Директория кэша очищена');
     } else {
-        $content.=my_msg_to_str('error','','Директория кэша не очищена !');
+        $content.=my_msg_to_str('error',[],'Директория кэша не очищена !');
     }
 }
 
@@ -22,12 +22,12 @@ if(file_exists($sitemap)){
 }
 
 if($time_diff>7*24*60*60){
-    $content.=my_msg_to_str('','','Файл sitemap.xml не обновлялся более недели.');
+    $content.=my_msg_to_str('',[],'Файл sitemap.xml не обновлялся более недели.');
     $sitemap= new Sitemap();
     $types = explode(';', $settings['sitemap_types']);
     $sitemap->build_pages_array($types);
     $result=$sitemap->write();    
-    $content.=my_msg_to_str('','',"Файл sitemap.xml сгенерирован, записано {$result['count']} позиций.");
+    $content.=my_msg_to_str('',[],"Файл sitemap.xml сгенерирован, записано {$result['count']} позиций.");
 }
 
 $tables = my_query("SHOW TABLES LIKE 'comments'");

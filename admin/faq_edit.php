@@ -19,14 +19,14 @@ if ($input["del"]) {
     $query = "delete from $TABLE where id=" . $input["id"];
     $result = my_query($query, true);
     $list = 1;
-    $content.=my_msg_to_str("", "", "Сообщение успешно удалено.");
+    $content.=my_msg_to_str('', [], "Сообщение успешно удалено.");
 }
 
 if ($input["edited"]) {
     $query = "update $TABLE set " . db_update_fields($input['form']) . " where id=" . $input["edited"];
     $result = my_query($query, true);
     $list = 1;
-    $content.=my_msg_to_str("", "", "Сообщение успешно изменено.");
+    $content.=my_msg_to_str('', [], "Сообщение успешно изменено.");
 }
 
 if ($input["edit"]) {

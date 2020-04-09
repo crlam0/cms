@@ -19,7 +19,7 @@ if (isset($_SESSION['view_articles']) && $_SESSION['view_articles']) {
 if ($input['del_article']) {
     $query = "delete from article_item where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str('', '', 'Статья успешно удалена.');
+    $content.=my_msg_to_str('', [], 'Статья успешно удалена.');
 }
 
 if ($input['added_article']) {
@@ -33,7 +33,7 @@ if ($input['added_article']) {
     }
     $query = "insert into article_item" . db_insert_fields($input['form']);
     my_query($query, true);
-    $content.=my_msg_to_str('', '', 'Статья успешно добавлена.');
+    $content.=my_msg_to_str('', [], 'Статья успешно добавлена.');
 }
 
 if($input['revert']){
@@ -50,7 +50,7 @@ if ($input['edited_article']) {
     }
     $query = "update article_item set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
-    $content.=my_msg_to_str('', '', 'Статья успешно изменена.');
+    $content.=my_msg_to_str('', [], 'Статья успешно изменена.');
     if($input['update']){
         $input['edit_article']=1;
     }
@@ -89,11 +89,11 @@ if ($input['del_list']) {
     $query = "select id from article_item where list_id='{$input['id']}'";
     $result = my_query($query);
     if ($result->num_rows) {
-	$content.=my_msg_to_str("error","","Этот раздел не пустой !");
+	$content.=my_msg_to_str('error', [],"Этот раздел не пустой !");
     } else {
         $query = "delete from article_list where id='{$input['id']}'";
         my_query($query);
-	$content.=my_msg_to_str("", "", "Раздел успешно удален.");
+	$content.=my_msg_to_str('', [], "Раздел успешно удален.");
     }
 }
 
@@ -104,7 +104,7 @@ if ($input['added_list']) {
     }
     $query = "insert into article_list " . db_insert_fields($input['form']);
     my_query($query);
-    $content.=my_msg_to_str("", "", "Раздел успешно добавлен.");
+    $content.=my_msg_to_str('', [], "Раздел успешно добавлен.");
 }
 
 if ($input["edited_list"]) {
@@ -113,7 +113,7 @@ if ($input["edited_list"]) {
     }
     $query = "update article_list set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str('', '', 'Раздел успешно изменен.');
+    $content.=my_msg_to_str('', [], 'Раздел успешно изменен.');
 }
 
 if (($input['edit_list']) || ($input['add_list'])) {

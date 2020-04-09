@@ -47,7 +47,7 @@ class BlogController extends BaseController
         $this->title = 'Блог';
         $this->breadcrumbs[] = ['title'=>$this->title];
         
-        $this->comments = new Comments ('blog', null);
+        $this->comments = new Comments ('blog', 0);
 
         $query = "SELECT count(id) from {$this->TABLE} where active='Y'";
         list($total) = App::$db->select_row($query);
@@ -88,7 +88,7 @@ class BlogController extends BaseController
         $tags['post_view'] = true;
         $content .= App::$template->parse('blog_posts', $tags, $result);
 
-        $this->comments->get_form_data(App::$input);
+        $this->comments->get_form_data(App::$input['form']);
         $content .= $this->comments->show_list();
         $tags['action'] = App::$SUBDIR.get_post_href(null,$row) . '#comments';
         $content .= $this->comments->show_form($tags);        

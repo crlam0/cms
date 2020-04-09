@@ -105,11 +105,11 @@ if ($input['del']) {
 	union select count(id) as cnt from cat_item where part_id='" . $input['id'] . "' having cnt>0";
     $result = my_query($query);
     if ($result->num_rows) {
-        $content.=my_msg_to_str('error','','Этот раздел не пустой !');
+        $content.=my_msg_to_str('error', [],'Этот раздел не пустой !');
     } else {
         list($img) = my_select_row("select image_name from cat_part where id='{$input['id']}'");
 	if (is_file($IMG_PATH . $img)) {
-	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
+	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error', [], 'Ошибка удаления файла !');
 	}
 	$query = "delete from cat_part where id=" . $input['id'];
 	my_query($query);
@@ -120,13 +120,13 @@ if ($input['del_img']) {
     list($img) = my_select_row("select image_name from cat_part where id='{$input['id']}'");
     if (is_file($IMG_PATH . $img)) {
 	if (!unlink($IMG_PATH . $img)){
-            $content.=my_msg_to_str('error','','Ошибка удаления файла !');
+            $content.=my_msg_to_str('error', [],'Ошибка удаления файла !');
         }    
     }
     $query = "update cat_part set image_name='-' where id=" . $input['id'];
     my_query($query);
     $input["edit"] = 1;
-    $content.=my_msg_to_str('','','Изображение удалено');
+    $content.=my_msg_to_str('',[],'Изображение удалено');
 }
 
 if ($input["copy"]) {
@@ -155,7 +155,7 @@ if ($input["copy"]) {
             my_query("update cat_item set seo_alias='{$seo_alias}' where id='{$insert_id}'");
         }
     }
-    $content.=my_msg_to_str('','','Раздел успешно скопирован.');
+    $content.=my_msg_to_str('',[],'Раздел успешно скопирован.');
 }
 
 
@@ -181,7 +181,7 @@ if ($input["added"]) {
         $input['form']['seo_alias'].='_'.$insert_id;
         my_query("update cat_part set seo_alias='{$input['form']['seo_alias']}' where id='{$insert_id}'");
     }
-    $content.=my_msg_to_str('','','Раздел успешно добавлен.');
+    $content.=my_msg_to_str('',[],'Раздел успешно добавлен.');
     if ($_FILES['img_file']['size']) {
 	$part_id = $insert_id;
 	$f_info = pathinfo($_FILES['img_file']['name']);
@@ -190,7 +190,7 @@ if ($input["added"]) {
 	    $query = "update cat_part set image_name='{$img}',image_type='{$_FILES['img_file']['type']}' where id='{$part_id}'";
 	    my_query($query);
 	} else {
-            $content.=my_msg_to_str('error','','Ошибка копирования файла !');
+            $content.=my_msg_to_str('error', [],'Ошибка копирования файла !');
 	}
     }
 }
@@ -209,11 +209,11 @@ if ($input['edited']) {
     $input['form']['date_change']='now()';
     $query = "update cat_part set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
-    $content.=my_msg_to_str('','','Раздел успешно изменен.');
+    $content.=my_msg_to_str('',[],'Раздел успешно изменен.');
     if ($_FILES['img_file']['size'] > 100) {
 	list($img) = my_select_row("select image_name from cat_part where id='{$input['id']}'");
 	if (is_file($IMG_PATH . $img)) {
-	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
+	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error', [],'Ошибка удаления файла !');
 	}
 	$f_info = pathinfo($_FILES['img_file']['name']);
 	$img = $input['id'] . "." . $f_info['extension'];
@@ -222,7 +222,7 @@ if ($input['edited']) {
 	    $query = "update cat_part set image_name='{$img}',image_type='{$_FILES['img_file']['type']}' where id='{$input['id']}'";
 	    my_query($query);
 	} else {
-	   $content.=my_msg_to_str('error','','Ошибка копирования файла !');
+	   $content.=my_msg_to_str('error', [],'Ошибка копирования файла !');
 	}
     }
 }

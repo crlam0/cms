@@ -176,7 +176,7 @@ class Controller extends BaseController
                 order by cat_item.num,b_code,title asc";
             $result = App::$db->query($query);
             if ($result->num_rows) {
-                return App::$template->parse('cat_item_list', $tags, $result);
+                return App::$template->parse('cat_item_list', [], $result);
             }
         }
         return null;

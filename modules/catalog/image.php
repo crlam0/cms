@@ -6,7 +6,7 @@ include 'functions.php';
 use Classes\Image;
 
 if (isset($input['id'])) {
-    list($file_name,$file_type) = my_select_row("select fname,file_type from cat_item_images where id='{$input['id']}'", true);
+    list($file_name, $file_type) = my_select_row("select fname,file_type from cat_item_images where id='{$input['id']}'");
     $file_name = $DIR . $settings['catalog_item_img_path'] . $file_name;
 } else {
     $file_name = $DIR . $settings['catalog_item_img_path'] . $input['file_name'];
@@ -16,7 +16,6 @@ $crop = $input['fix_size'];
 if (!is_file($file_name)) {
     exit();
 }
-
 if (!$input['clientHeight']) {
     $input['clientHeight'] = 800;
 }
@@ -35,7 +34,7 @@ if(file_exists($cache_file_name)) {
     print $img;
     exit;
 }
-$Image = new Image($file_name,$file_type);
+$Image = new Image($file_name, $file_type);
 if(!$Image->width) {
     die('Load error');
 }

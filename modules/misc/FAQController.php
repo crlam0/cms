@@ -18,7 +18,7 @@ class FAQController extends BaseController
     private $MSG_PER_PAGE = '20';
     private $editor;
     
-    public function __construct():void 
+    public function __construct()
     {
         if(isset(App::$settings['faq_msg_per_page'])) {
             $this->MSG_PER_PAGE = App::$settings['faq_msg_per_page'];
@@ -29,7 +29,7 @@ class FAQController extends BaseController
         $this->editor = new BBCodeEditor ();
     }
     
-    public function actionIndex(int $page = 1): string 
+    public function actionIndex(int $page = 1) : string 
     {
         $query = "SELECT count(id) from {$this->TABLE} where active='Y'";
         $result = App::$db->query($query, true);
@@ -69,7 +69,7 @@ class FAQController extends BaseController
         return true;        
     }
     
-    private function requestDone(array $input): void 
+    private function requestDone(array $input) : void 
     {
         $input['ip'] = App::$server['REMOTE_ADDR'];
         $input['date'] = 'now()';
@@ -89,7 +89,7 @@ class FAQController extends BaseController
         }
     }
     
-    public function actionAdd(): string 
+    public function actionAdd() : string 
     {
         global $_SESSION;
         $content = '';

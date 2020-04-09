@@ -157,7 +157,7 @@ if ($input["del_menu"]) {
     $query = "select id from menu_item where menu_id={$input['id']}";
     $result = my_query($query);
     if ($result->num_rows) {
-	$content.=my_msg_to_str("error","","Этот раздел не пустой !");
+	$content.=my_msg_to_str('error', [],"Этот раздел не пустой !");
     } else {
 	$query = "delete from menu_list where id='{$input['id']}'";
 	my_query($query);

@@ -45,7 +45,7 @@ if($input['revert']){
 if ($input['add']) {
     if($input['form']['template_type']==='twig' && strlen($input['form']['file_name'])) {
         if(!twig_tpl_save($input['form']['file_name'],$input['form']['content'])) {
-            $content.=my_msg_to_str('error', '', 'Ошибка сохранения файла шаблона.');
+            $content.=my_msg_to_str('error', [], 'Ошибка сохранения файла шаблона.');
         }
     }    
     $query = "insert into templates " . db_insert_fields($input['form']);
@@ -57,7 +57,7 @@ if ($input['add']) {
 if ($input['edit']) {    
     if($input['form']['template_type']==='twig' && strlen($input['form']['file_name'])) {
         if(!twig_tpl_save($input['form']['file_name'],$input['form']['content'])) {
-            $content.=my_msg_to_str('error', '', 'Ошибка сохранения файла шаблона.');
+            $content.=my_msg_to_str('error', [], 'Ошибка сохранения файла шаблона.');
         }
     }    
     $query = "update templates set " . db_update_fields($input['form']) . " where id='{$input['id']}'";

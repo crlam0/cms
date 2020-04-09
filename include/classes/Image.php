@@ -34,7 +34,7 @@ class Image
         }
     }
 
-    public function __construct(string $file_name, string $file_type = '') 
+    public function __construct(string $file_name, ?string $file_type = '') 
     {
         if (!is_file($file_name)) {
             App::$message->error('Файл отсутствует !');

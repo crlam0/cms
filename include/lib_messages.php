@@ -15,7 +15,7 @@ use Classes\App;
  *
  * @return string Output string
  */
-function my_msg_to_str($title, $tags = array(), $str = '') {
+function my_msg_to_str($title, $tags = [], $str = '') {
     return App::$message->get($title, $tags, $str);
 }
 

@@ -34,7 +34,7 @@ class Image
         }
     }
 
-    public function __construct(string $file_name, ?string $file_type = '') 
+    public function __construct(string $file_name, $file_type = '') 
     {
         if (!is_file($file_name)) {
             App::$message->error('Файл отсутствует !');
@@ -152,14 +152,15 @@ class Image
     
     public function getFileExtension() : string
     {
-        $arr = explode('/', $this->file_type);
-        if(!$arr[1]) {
-            return '';
+        if(strlen($this->file_type)) {
+            $arr = explode('/', $this->file_type);
+            return $arr[1];
+        } else {
+            return 'none';
         }
-        return $arr[1];
     }
     
-    public function getUrl(array $row, string $cache_path, string $script_url, $max_width = 1024) 
+    public function getUrl(array $row, string $cache_path, string $script_url, int $max_width = 1024) 
     {
         $cache_file_name = $cache_path . md5($this->file_name.$max_width) . '.' . $this->getFileExtension();
         if (is_file($this->file_name)) {        

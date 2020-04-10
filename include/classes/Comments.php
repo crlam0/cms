@@ -123,7 +123,7 @@ class Comments
      * @param array $input Input array
      *
      */
-    public function get_form_data(?array $input)
+    public function get_form_data($input)
     {
         if(!$input['add_comment']) {
             return false;

@@ -11,13 +11,13 @@ class PasswdChangeController extends BaseController
     private function checkInput($input, $row)
     {
         if(strcmp(App::$user->encryptPassword(App::$input['old_passwd'], $row['salt']),$row['passwd'])!=0){
-            return App::$message->get('error','','Вы неверно ввели старый пароль');
+            return App::$message->get('error', [], 'Вы неверно ввели старый пароль');
         }elseif( strlen($input['new_passwd1'])<8 ){
-            return App::$message->get('error','','Новый пароль не может быть короче восьми символов');
+            return App::$message->get('error', [], 'Новый пароль не может быть короче восьми символов');
         }elseif( !strlen($input['new_passwd2']) ){
-            return App::$message->get('error','','Повторите новый пароль');
+            return App::$message->get('error', [], 'Повторите новый пароль');
         }elseif(strcmp($input['new_passwd1'],App::$input['new_passwd2'])!=0){
-            return App::$message->get('error','','Пароли не совпадают');            
+            return App::$message->get('error', [], 'Пароли не совпадают');            
         } else {
             return true;
         }
@@ -42,7 +42,7 @@ class PasswdChangeController extends BaseController
             $data['passwd']=App::$user->encryptPassword(App::$input['new_passwd1'], $data['salt']);
             $query="update users set ". db_update_fields($data) ." where id='".App::$user->id."'";
             App::$db->query($query);
-            $content = App::$message->get('info','','Пароль успешно изменен !');            
+            $content = App::$message->get('info',[],'Пароль успешно изменен !');            
         }
         return $content;
     }
@@ -59,7 +59,7 @@ class PasswdChangeController extends BaseController
         }
         
         if (App::$user->id) {
-            $content .= App::$template->parse('user_passwd_change', $tags);
+            $content .= App::$template->parse('user_passwd_change');
             return $content;
         } else {
             redirect('login/');

@@ -2,13 +2,11 @@
 
 namespace modules\gallery;
 
-use Classes\BaseController;
 use Classes\App;
+use Classes\BaseController;
 use Classes\Comments;
 use Classes\Pagination;
 use Classes\Image;
-
-include 'functions.php';
 
 /**
  * Description of Controller
@@ -32,7 +30,7 @@ class Controller extends BaseController
             GROUP BY gallery_list.id ORDER BY last_images_date_add DESC,gallery_list.date_add DESC";
         $result = App::$db->query($query);
         if ($result->num_rows) {
-            return App::$template->parse('gallery_part_list', [], $result);
+            return App::$template->parse('gallery_part_list', ['this'=>$this], $result);
         } else {
             return App::$message->get('part_empty');
         }
@@ -58,6 +56,7 @@ class Controller extends BaseController
         if (!$result->num_rows) {
             $content = App::$message->get('list_empty', [], '');
         } else {
+            $tags['this'] = $this;
             $content = App::$template->parse('gallery_images_list', $tags, $result);
         }
 
@@ -82,7 +81,7 @@ class Controller extends BaseController
 
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $tags['file_name'];
         $image = new Image($file_name, $tags['file_type']);
-        $tags['IMAGE'] = $image->getHTML($tags, 'var/cache/gallery/','','modules/gallery/image.php?clientHeight='.App::$input['clientHeight'].'&id=', gallery_get_max_width());
+        $tags['IMAGE'] = $image->getHTML($tags, 'var/cache/gallery/','','modules/gallery/image.php?clientHeight='.App::$input['clientHeight'].'&id=', $this->getMaxWidth());
 
         $json=$tags;
         $json['content'] = App::$template->parse('gallery_image_view', $tags);
@@ -90,4 +89,53 @@ class Controller extends BaseController
         exit();
     }
     
+    public function getMaxWidth() {
+        if (App::$input['preview']) {
+            $max_width = App::$settings['gallery_max_width_preview'];
+        } else {
+            $max_width = App::$settings['gallery_max_width'];
+        }
+        if (App::$input['icon'] && App::$settings['gallery_icon_width']) {
+            $max_width = App::$settings['gallery_icon_width'];
+        }
+        if (App::$input['width'] && is_integer(App::$input['width'])) {
+            $max_width = App::$input['width'];
+        }    
+        return $max_width;        
+    }
+    
+    public function getImage($row)
+    {
+        App::$input['preview']=true;
+        $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
+        $image = new Image($file_name, $row['file_type']);
+        return $image->getHTML($row, 'var/cache/gallery/', 'gallery_popup', 'modules/gallery/image.php?preview=1&id=', $this->getMaxWidth());
+    }
+    
+    public function getListImage($row)
+    {
+        if(!$row['def_file_name']) {
+            return 'Изображение отсутствует';
+        }
+        App::$input['icon']=true;    
+        $row['file_name'] = $row['def_file_name'];
+        $row['id'] = $row['def_id'];
+        $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
+        $image = new Image($file_name, $row['def_file_type']);
+        return $image->getHTML($row, 'var/cache/gallery/', '', 'modules/gallery/image.php?icon=1&id=', $this->getMaxWidth());        
+    }
+    
+    public function getIcons($row)
+    {
+        $content='';
+        App::$input['icon']=true;
+        $query="select * from gallery_images where gallery_id='{$row['id']}' limit 6";
+        $result = App::$db->query($query);
+        while($row = $result->fetch_array()){
+            $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
+            $image = new Image($file_name, $row['file_type']);
+            $content .= $image->getHTML($row, 'var/cache/gallery/', 'list_icon', 'modules/gallery/image.php?preview=1&id=', $this->getMaxWidth());
+        }
+        return $content;        
+    }
 }

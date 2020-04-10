@@ -32,7 +32,7 @@ class FAQController extends BaseController
     public function actionIndex(int $page = 1) : string 
     {
         $query = "SELECT count(id) from {$this->TABLE} where active='Y'";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         list($total) = $result->fetch_array();
 
 
@@ -40,7 +40,7 @@ class FAQController extends BaseController
         $tags['pager'] = $pager;
 
         $query = "SELECT {$this->TABLE}.* from {$this->TABLE} where {$this->TABLE}.active='Y' group by {$this->TABLE}.id order by {$this->TABLE}.id desc limit {$pager->getOffset()},{$pager->getLimit()}";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
 
         return App::$template->parse('faq_list', $tags, $result);        
     }
@@ -84,7 +84,7 @@ class FAQController extends BaseController
         $message.='Сообщение:' . PHP_EOL;
         $message.=str_replace('\r\n', PHP_EOL, $input['txt']) . PHP_EOL;
         echo $message;
-        if(!App::$settings['debug']){
+        if(!App::$debug){
             App::$message->mail(App::$settings['email_to_addr'], 'На сайте http://' . App::$server['HTTP_HOST'] . App::$SUBDIR . ' оставлено новое сообщение.', $message);
         }
     }

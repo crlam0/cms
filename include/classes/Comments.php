@@ -3,8 +3,8 @@
 
 namespace Classes;
 
-use Classes\BBCodeEditor;
 use Classes\App;
+use Classes\BBCodeEditor;
 
 /**
  * Add coments to some content
@@ -48,7 +48,7 @@ class Comments
     public function show_count(int $target_id) : string
     {        
         $query="select count(id) from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id='{$target_id}'";
-        list($count) = my_select_row($query, true);
+        list($count) = App::$db->getRow($query, true);
         return $count;
     }
     
@@ -123,7 +123,7 @@ class Comments
      * @param array $input Input array
      *
      */
-    public function get_form_data(array $input)
+    public function get_form_data(?array $input)
     {
         if(!$input['add_comment']) {
             return false;
@@ -149,7 +149,7 @@ class Comments
             $message.="IP: {$input['ip']} ( {$remote_host} )\n";
             $message.="Сообщение:\n";
             $message.=str_replace('\r\n',"\n",$input['content']) . "\n";
-            if(!App::$settings['debug']){
+            if(!App::$debug){
                 App::$message->mail(App::$settings['email_to_addr'], 'На сайте http://'.App::$server['HTTP_HOST'].App::$SUBDIR.' оставлен новый комментарий.', $message);
             }    
 

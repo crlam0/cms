@@ -2,8 +2,8 @@
 
 namespace modules\article;
 
-use Classes\BaseController;
 use Classes\App;
+use Classes\BaseController;
 
 class Controller extends BaseController
 {    
@@ -21,7 +21,7 @@ class Controller extends BaseController
         $view_items = get_id_by_alias('article_list', $alias, true);
         $query = "select * from article_item where list_id='{$view_items}'";
         $result = App::$db->query($query);
-        list($title) = App::$db->select_row("select title from article_list where id='{$view_items}'");
+        list($title) = App::$db->getRow("select title from article_list where id='{$view_items}'");
         $this->title = $title;
         $this->breadcrumbs[] = ['title'=>'Статьи','url'=>'article/'];
         $this->breadcrumbs[] = ['title'=>$title];
@@ -35,7 +35,7 @@ class Controller extends BaseController
         $result = App::$db->query($query);
         $row = $result->fetch_array();
 
-        list($id, $title) = App::$db->select_row("select id,title from article_list where id='{$row['list_id']}'");
+        list($id, $title) = App::$db->getRow("select id,title from article_list where id='{$row['list_id']}'");
 
         $this->title = $row['title'];
         $this->breadcrumbs[] = ['title'=>'Статьи','url'=>'article/'];
@@ -54,7 +54,7 @@ class Controller extends BaseController
     {
         $id = get_id_by_alias('article_item', $alias, true);
         $query = "select * from article_item where id='" . $id . "'";
-        $result = my_query($query, true);
+        $result = App::$db->query($query, true);
         $row = $result->fetch_array();
         
         $PDF = new PDFView();

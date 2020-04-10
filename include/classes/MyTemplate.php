@@ -129,7 +129,7 @@ class MyTemplate
                         return '';
                     }
                 } elseif ($tagclass == 'template') {
-                    $replace_str = get_tpl_by_name($tagparam,$tags, null, $inner_content);
+                    $replace_str = App::$template->parse($tagparam, $tags, null, $inner_content);
                     if (!$replace_str) {
                         App::$message->get('tpl_not_found', ['name' => $tagparam]);
                         return '';

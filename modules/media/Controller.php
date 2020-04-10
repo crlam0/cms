@@ -23,7 +23,7 @@ class Controller extends BaseController
             FROM media_list
             LEFT JOIN media_files AS files ON (files.list_id=media_list.id)
             GROUP BY media_list.id ORDER BY last_files_date_add DESC,media_list.date_add DESC";
-        $result = my_query($query);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             return App::$template->parse('media_part_list', [], $result);
         } else {
@@ -34,14 +34,14 @@ class Controller extends BaseController
     public function actionFilesList(string $alias, int $page = 1): string
     {
         $view_media = get_id_by_alias('media_list', $alias, true);            
-        list($media_title, $media_seo_alias, $media_descr) = App::$db->select_row("SELECT title, seo_alias, descr from media_list where id='{$view_media}'");
+        list($media_title, $media_seo_alias, $media_descr) = App::$db->getRow("SELECT title, seo_alias, descr from media_list where id='{$view_media}'");
         $tags['list_descr'] = $media_descr;
         
         $this->title = $media_title;
         $this->breadcrumbs[] = ['title' => 'Файлы', 'url'=>'media/'];        
         $this->breadcrumbs[] = ['title' => $media_title];
 
-        list($total) =  App::$db->select_row("SELECT count(id) from media_files where list_id='{$view_media}'");
+        list($total) =  App::$db->getRow("SELECT count(id) from media_files where list_id='{$view_media}'");
         $pager = new Pagination($total, $page, App::$settings['media_files_per_page']);
         $tags['pager'] = $pager;
         $tags['media_list_href'] = 'media/'.$media_seo_alias.'/';
@@ -67,7 +67,7 @@ class Controller extends BaseController
         $file_id = App::$input['media_file_id'];
         
         if(is_numeric($file_id)) {
-            list($file_name) = App::$db->select_row("select file_name from media_files where id='{$file_id}'");
+            list($file_name) = App::$db->getRow("select file_name from media_files where id='{$file_id}'");
             $file_name = App::$DIR . App::$settings['media_upload_path'] . $file_name;
             echo $file_name;
             if(file_exists($file_name)) {

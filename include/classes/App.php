@@ -4,8 +4,12 @@ namespace Classes;
 use Classes\MyArray;
 use Classes\SQLHelper;
 
-final class App 
+class App 
 {
+    /**
+    * @var debug Use or not debug routines
+    */
+    public static $debug = false;
     /**
     * @var SQLHelper Database object
     */
@@ -85,6 +89,17 @@ final class App
         static::set('SUBDIR', $subdir);
         static::$DEBUG[0] = microtime(true);
     }
+    
+    /**
+     * Set Database object
+     *
+     * @param object $db
+     *
+    */    
+    public function setDB($db)
+    {
+        static::$db = $db;
+    }
 
     /**
      * Load settings from arrays
@@ -153,21 +168,6 @@ final class App
     }    
     
     /**
-     * Create SQLHelper object.
-     *
-     * @param string $host Host
-     * @param string $user Username
-     * @param string $passwd Password
-     * @param string $dbname DB
-     *
-     * @return string Output string
-     */
-    public function connectDB(string $host, string $user, string $passwd, string $dbname) : void 
-    {
-        static::$db = new SQLHelper($host, $user, $passwd, $dbname);
-    }
-
-    /**
      * Put data to global arrays
      *
      */
@@ -227,6 +227,46 @@ final class App
         $time = microtime(true) - static::$DEBUG[0];
         $time = sprintf('%.4F', $time);
         static::$DEBUG[] = $time . "\t " . $message;
+    }
+    
+    private function runController($controller_name, $action, $tags)
+    {
+        static::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
+        $controller = new $controller_name;
+        try {
+            $content = $controller->run($action, static::$routing->params);
+            /* Fill tags for default template */
+            $tags['Header'] = $controller->title;
+            $tags['nav_array'] = array_merge($tags['nav_array'], $controller->breadcrumbs);
+            $tags = array_merge($tags, $controller->tags);
+            echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
+            exit;
+        } catch (Exception $e) {
+            static::debug('Exception: ' . $e->getMessage());
+            static::debug('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
+            static::debug($e->getTraceAsString());
+            /* But show 404 error */
+        }        
+    }
+    
+    public function run ($tags) : void 
+    {
+        $file=static::$routing->file;
+        if($file && is_file(static::$DIR . $file)) {
+            $server['PHP_SELF'] = static::$SUBDIR.$file;
+            $server['PHP_SELF_DIR'] = static::$SUBDIR.dirname($file) . '/';
+            require static::$DIR . $file;
+            exit;
+        } 
+        
+        $controller_name = static::$routing->controller;
+        if(strlen($controller_name)) {
+            if(class_exists($controller_name)) {
+                $this->runController($controller_name, static::$routing->action, $tags);
+            } else {
+                static::debug('Controller "' . $controller_name . '" not exists !"');
+            }
+        }        
     }
     
 }

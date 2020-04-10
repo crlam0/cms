@@ -27,7 +27,7 @@ class PasswdChangeController extends BaseController
     private function passwdChange(): string 
     {
         $query = "select passwd,salt from users where id='".App::$user->id."'";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         $content = '';
         if (!$result->num_rows) {
             return false;

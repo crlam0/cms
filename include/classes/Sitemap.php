@@ -60,12 +60,12 @@ class Sitemap {
         if(in_array('article', $types)){
             $this->add_page('article/', 'monthly', '0.50');
             $query = 'SELECT * from article_list order by date_add asc';
-            $result = App::$db->query($query, true);
+            $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_article_list_href($row['id']), 'monthly', '0.80');
             }
             $query = 'SELECT * from article_item order by date_add asc';
-            $result = App::$db->query($query, true);
+            $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_article_href($row['id']), 'monthly', '0.80');
             }
@@ -73,7 +73,7 @@ class Sitemap {
         if(in_array('blog', $types)){
             $this->add_page('blog/', 'monthly', '0.50');
             $query = "SELECT * from blog_posts where active='Y' order by date_add asc";
-            $result = App::$db->query($query, true);
+            $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_post_href(NULL,$row), 'monthly', '0.80');
             }    
@@ -81,7 +81,7 @@ class Sitemap {
         if(in_array('gallery', $types)){
             $this->add_page('gallery/', 'monthly', '0.50');
             $query = 'SELECT * from gallery_list order by title asc';
-            $result = App::$db->query($query, true);
+            $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_gallery_list_href($row['id']), 'monthly', '0.80');
             }
@@ -89,12 +89,12 @@ class Sitemap {
         if(in_array('catalog', $types)){
             $this->add_page('catalog/', 'monthly', '0.80');
             $query = 'SELECT id from cat_part order by num,title asc';
-            $result = App::$db->query($query, true);
+            $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
                 $this->add_page(get_cat_part_href($row['id']), 'monthly', '0.40');
             }
             $query = 'SELECT part_id,seo_alias from cat_item order by num,title asc';
-            $result = App::$db->query($query, true);
+            $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
                 $url = get_cat_part_href($row['part_id']) . $row['seo_alias'];
                 $this->add_page($url, 'monthly', '0.30');

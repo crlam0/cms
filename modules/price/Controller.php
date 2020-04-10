@@ -21,7 +21,7 @@ class Controller extends BaseController
         $this->tags['INCLUDE_JS'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/price/price.js"></script>' . "\n";
         
         $query = "select content from article_item where seo_alias='before_price'";
-        list($before_price) = App::$db->select_row($query);
+        list($before_price) = App::$db->getRow($query);
         $content .= $before_price . "<br />";
 
         $tags['subparts'] = $this->sub_part(0, 0, 2);        
@@ -50,7 +50,7 @@ class Controller extends BaseController
     private function sub_part(int $prev_id, int $deep, int $max_deep): string 
     {
         $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='{$prev_id}' group by cat_part.id order by cat_part.num,cat_part.title asc";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         while ($row = $result->fetch_array()) {
             if (($deep) || ($prev_id)) {
                 unset($row['seo_alias']);

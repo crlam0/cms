@@ -11,12 +11,8 @@ if(file_exists($DIR.'vendor/autoload.php')) {
     die('Cant find autoloader');
 }
 
-use Classes\App;
 use Symfony\Component\Console\Application;
 use Phinx\Console\Command;
-
-$App = new App($DIR, $SUBDIR);
-$App->connectDB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
 require_once __DIR__ . '/../include/lib_functions.php';
 

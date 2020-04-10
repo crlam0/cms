@@ -50,7 +50,7 @@ class BlogController extends BaseController
         $this->comments = new Comments ('blog', 0);
 
         $query = "SELECT count(id) from {$this->TABLE} where active='Y'";
-        list($total) = App::$db->select_row($query);
+        list($total) = App::$db->getRow($query);
 
         $pager = new Pagination($total, $page, $this->MSG_PER_PAGE);
         $tags['pager'] = $pager;        

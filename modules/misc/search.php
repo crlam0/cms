@@ -1,6 +1,8 @@
 <?php
 $tags['Header']="Поиск";
 
+use Classes\App;
+
 $content='
 <form action="'.$SUBDIR.'search/" method="post">
     <input type="edit" maxlength="255" size="48" name="search_str" value="'.$input["search_str"].'">
@@ -17,7 +19,7 @@ if(strlen($input['search_str'])>3){
     FROM blog_posts
     WHERE MATCH (title,content) AGAINST ('{$input["search_str"]}'))
     order by score desc";
-    $result=my_query($query);
+    $result=App::$db->query($query);
     $result_cnt=$result->num_rows;
     if($result_cnt>0){
         $content.="<h5>Найдено {$result_cnt} совпадений.</h5><br />";
@@ -36,10 +38,10 @@ if(strlen($input['search_str'])>3){
             $content.="<span class=search_content>".$content_str."</span><br />";
         }
     }else{
-        $content.=my_msg_to_str('warnig', $tags, 'Ничего не найдено.');
+        $content.=App::$message->get('warnig', $tags, 'Ничего не найдено.');
     }
 }else{
-    $content.=my_msg_to_str('warnig', $tags, 'Поисковый запрос слишком короткий.');
+    $content.=App::$message->get('warnig', $tags, 'Поисковый запрос слишком короткий.');
 }
 
 echo get_tpl_by_name($part['tpl_name'],$tags,'',$content);

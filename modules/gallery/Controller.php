@@ -30,7 +30,7 @@ class Controller extends BaseController
             LEFT JOIN gallery_images AS def_img ON (def_img.id=default_image_id)
             WHERE gallery_list.active='Y'
             GROUP BY gallery_list.id ORDER BY last_images_date_add DESC,gallery_list.date_add DESC";
-        $result = my_query($query);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             return App::$template->parse('gallery_part_list', [], $result);
         } else {
@@ -41,14 +41,14 @@ class Controller extends BaseController
     public function actionImagesList(string $alias, int $page = 1): string
     {
         $view_gallery = get_id_by_alias('gallery_list', $alias, true);            
-        list($gallery_title, $gallery_seo_alias) = App::$db->select_row("SELECT title, seo_alias from gallery_list where id='{$view_gallery}'");
+        list($gallery_title, $gallery_seo_alias) = App::$db->getRow("SELECT title, seo_alias from gallery_list where id='{$view_gallery}'");
         
         $this->title = $gallery_title;
         $this->breadcrumbs[] = ['title' => 'Галерея', 'url'=>'gallery/'];        
         $this->breadcrumbs[] = ['title' => $gallery_title];
         $this->tags['INCLUDE_JS'] .= '<script type="text/javascript" src="'.App::$SUBDIR.'modules/gallery/gallery.js"></script>'."\n";
 
-        list($total) =  App::$db->select_row("SELECT count(id) from gallery_images where gallery_id='{$view_gallery}'");
+        list($total) =  App::$db->getRow("SELECT count(id) from gallery_images where gallery_id='{$view_gallery}'");
         $pager = new Pagination($total, $page, App::$settings['gallery_images_per_page']);
         $tags['pager'] = $pager;
         $tags['gallery_list_href'] = 'gallery/'.$gallery_seo_alias.'/';
@@ -63,7 +63,7 @@ class Controller extends BaseController
 
         if(App::$settings['gallery_use_comments']) {
             $comments = new Comments ('gallery',$view_gallery);
-            $comments->get_form_data(App::$input);
+            $comments->get_form_data(App::$input['form']);
             $content.=$comments->show_list();
             $tags['action']=App::$SUBDIR . $tags['gallery_list_href'] . '#comments';
             $content.=$comments->show_form($tags);
@@ -74,11 +74,11 @@ class Controller extends BaseController
     public function actionLoad(): void
     {
         $query = "SELECT * from gallery_images where id='".App::$input['id']."'";
-        $tags = App::$db->select_row($query);
+        $tags = App::$db->getRow($query);
         $gallery_id = $tags['gallery_id'];
 
-        list($tags['prev_id']) = App::$db->select_row("select id from gallery_images where gallery_id='{$gallery_id}' and id<'{$tags['id']}' order by id desc limit 1");
-        list($tags['next_id']) = App::$db->select_row("select id from gallery_images where gallery_id='{$gallery_id}' and id>'{$tags['id']}' order by id asc limit 1");
+        list($tags['prev_id']) = App::$db->getRow("select id from gallery_images where gallery_id='{$gallery_id}' and id<'{$tags['id']}' order by id desc limit 1");
+        list($tags['next_id']) = App::$db->getRow("select id from gallery_images where gallery_id='{$gallery_id}' and id>'{$tags['id']}' order by id asc limit 1");
 
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $tags['file_name'];
         $image = new Image($file_name, $tags['file_type']);

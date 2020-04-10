@@ -3,10 +3,11 @@
 include "../../include/common.php";
 include 'functions.php';
 
+use Classes\App;
 use Classes\Image;
 
 if (isset($input['id'])) {
-    list($file_name, $file_type) = my_select_row("select fname,file_type from cat_item_images where id='{$input['id']}'");
+    list($file_name, $file_type) = App::$db->getRow("select fname,file_type from cat_item_images where id='{$input['id']}'");
     $file_name = $DIR . $settings['catalog_item_img_path'] . $file_name;
 } else {
     $file_name = $DIR . $settings['catalog_item_img_path'] . $input['file_name'];

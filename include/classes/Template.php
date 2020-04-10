@@ -15,7 +15,7 @@ class Template
     public function __construct () 
     {
         $this->MyTemplate = new MyTemplate();
-        $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => App::$settings['debug']]);
+        $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => App::$debug]);
     }
     
     /**
@@ -47,7 +47,7 @@ class Template
                 return App::$message->get('file_not_found', $tags);
             }
         } else {
-            $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, ['debug' => App::$settings['debug']], $template['content']);
+            $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, ['debug' => App::$debug], $template['content']);
         }
 
         if($sql_result instanceof \mysqli_result) {
@@ -140,10 +140,10 @@ class Template
             $template['template_type'] = 'twig';
         }
         if (!$template) {
-            $template = App::$db->select_row("SELECT * FROM templates WHERE name='{$name}' AND '" . App::$server['REQUEST_URI'] . "' LIKE concat('%',uri,'%')", true);
+            $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}' AND '" . App::$server['REQUEST_URI'] . "' LIKE concat('%',uri,'%')", true);
         }
         if (!$template) {
-            $template = App::$db->select_row("SELECT * FROM templates WHERE name='{$name}'", true);
+            $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}'", true);
         }
         if (!$template) {
             return App::$message->get('tpl_not_found', ['name'=>$name]);

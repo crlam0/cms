@@ -193,10 +193,10 @@ final class Routing
     public function getPartArray () 
     {
         $query = "SELECT * FROM parts WHERE '" . $this->request_uri . "' LIKE concat(uri,'%') AND title<>'default'";
-        $part = App::$db->select_row($query);        
+        $part = App::$db->getRow($query);        
         if (!$part['id']) {
             $query = "SELECT * FROM parts WHERE title='default'";
-            $part = App::$db->select_row($query);
+            $part = App::$db->getRow($query);
         }
         return $part;        
     }

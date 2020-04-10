@@ -9,7 +9,7 @@
 namespace Classes;
 use Classes\App;
 
-class SQLHelper 
+class DB 
 {
     /**
      * @var mysqli Use mysqli object
@@ -103,7 +103,7 @@ class SQLHelper
      *
      * @return array One row
      */
-    public function select_row(string $sql, bool $dont_debug = false) 
+    public function getRow(string $sql, bool $dont_debug = false) 
     {
         $result = $this->query($sql, $dont_debug);    
         if ($result->num_rows) {

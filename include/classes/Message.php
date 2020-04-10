@@ -54,7 +54,7 @@ class Message
     {
         if (strlen($name)) {
             $sql = "select * from messages where name='{$name}'";
-            $message = App::$db->select_row($sql, 1);
+            $message = App::$db->getRow($sql);
         }
         if (strlen($content)){
             $message['content'] = $content;

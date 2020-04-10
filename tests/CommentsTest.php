@@ -63,7 +63,7 @@ class CommentsTest extends TestCase
         $Comments = new Comments('test');
 
         $input['CSRF_Token'] = $_SESSION['CSRF_Token'];
-        $Comments->get_form_data(['add_comment'=>'1','form'=>['author'=>'test']]);
+        $Comments->get_form_data(['add_comment'=>'1','author'=>'test']);
         $content = $Comments->show_form();
         self::assertContains('Вы неверно ввели E-Mail адрес !', $content);
     }
@@ -73,7 +73,7 @@ class CommentsTest extends TestCase
         $Comments = new Comments('test');
 
         $input['CSRF_Token'] = $_SESSION['CSRF_Token'];
-        $Comments->get_form_data(['add_comment'=>'1','form'=>['author'=>'test', 'email'=>'test@test.com']]);
+        $Comments->get_form_data(['add_comment'=>'1','author'=>'test', 'email'=>'test@test.com']);
         $content = $Comments->show_form();
         self::assertContains('Вы не ввели сообщение, или оно слишком короткое !', $content);
     }

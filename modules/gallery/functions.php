@@ -45,7 +45,7 @@ function get_icons($gallery_id){
     global $DIR, $SUBDIR;
     $content='';
     $query="select * from gallery_images where gallery_id='{$gallery_id}' limit 6";
-    $result = my_query($query, true);
+    $result = App::$db->query($query);
     while($row = $result->fetch_array()){
         if (is_file($DIR . App::$settings['gallery_upload_path'] . $row['file_name'])) {
             $content.='<img src="' . $SUBDIR . 'modules/gallery/image.php?icon=1&id='.$row['id'].'" class="list_icon" border="0" alt="'.$row['title'].'" />';

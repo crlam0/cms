@@ -68,7 +68,7 @@ class User
     private function getData(int $id) : bool
     {
         $query = "select * from users where id='" . $id . "'";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             $this->data = $row = $result->fetch_array();
             return true;
@@ -137,7 +137,7 @@ class User
     public function authByLoginPassword(string $login, string $password) 
     {
         $query = "select id,flags,passwd,salt from users where login='" . $login . "' and flags like '%active%'";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             $row = $result->fetch_array();        
             if(password_verify($password, $row['passwd'])) {
@@ -212,7 +212,7 @@ class User
      */
     public function getSalt(int $uid) : string
     {
-        list($salt) = my_select_row("SELECT salt FROM users WHERE id='{$uid}'");
+        list($salt) = App::$db->getRow("SELECT salt FROM users WHERE id='{$uid}'");
         return $salt;
     }
 

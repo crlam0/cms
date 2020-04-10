@@ -21,7 +21,7 @@ class Controller extends BaseController
                 $page = str_replace('page','',$alias);
             } else {
                 $query = "select id from cat_part where seo_alias like '$alias' and prev_id='{$part_id}'";
-                $row = App::$db->select_row($query, true);
+                $row = App::$db->getRow($query);
                 if (is_numeric($row['id'])) {
                     $part_id = $row['id'];
                 }
@@ -76,7 +76,7 @@ class Controller extends BaseController
     private function getBackButton(int $part_id): string 
     {
         if ($part_id) {
-            list($href_id) = App::$db->select_row("select prev_id from cat_part where id='{$part_id}'", true);
+            list($href_id) = App::$db->getRow("select prev_id from cat_part where id='{$part_id}'");
             return '
             <div class="cat_back">
                 <center><a href="' . App::$SUBDIR . get_cat_part_href($href_id) . '" class="btn btn-default"> << Назад</a></center>
@@ -118,7 +118,7 @@ class Controller extends BaseController
         
         $content = '';
         
-        $row_part = App::$db->select_row("select * from cat_part where id='{$part_id}'");
+        $row_part = App::$db->getRow("select * from cat_part where id='{$part_id}'");
         
         if (isset($row_part['descr']) && strlen($row_part['descr'])) {
             $tags['part_descr'] = $row_part['descr'];
@@ -129,7 +129,7 @@ class Controller extends BaseController
         if ($page ) {
             $_SESSION['catalog_page'] = $page;
         }
-        list($total) = App::$db->select_row("SELECT count(id) from cat_item where part_id='" . $part_id . "'");
+        list($total) = App::$db->getRow("SELECT count(id) from cat_item where part_id='" . $part_id . "'");
 
         $pager = new Pagination($total, $_SESSION['catalog_page'], App::$settings['catalog_items_per_page']);
         $tags['pager'] = $pager;
@@ -139,7 +139,7 @@ class Controller extends BaseController
                 where part_id='" . $part_id . "'
                 group by cat_item.id   
                 order by cat_item.num,b_code,title asc limit {$pager->getOffset()},{$pager->getLimit()}";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             $tags['cat_part_href'] = get_cat_part_href($part_id);
             $tags['functions'] = [];
@@ -155,7 +155,7 @@ class Controller extends BaseController
     private function getItemId(int $part_id, string $item_title): int 
     {
         $query = "select id,part_id from cat_item where seo_alias = '{$item_title}' and part_id='{$part_id}'";
-        $row = App::$db->select_row($query, true);
+        $row = App::$db->getRow($query);
         if (is_numeric($row['id'])) {
             return $row['id'];
         }
@@ -199,7 +199,7 @@ class Controller extends BaseController
             return  App::$message->get('notice', [], 'Товар не найден');
         }
         $tags = $result->fetch_array();
-        $row_part = App::$db->select_row("select * from cat_part where id='{$part_id}'");
+        $row_part = App::$db->getRow("select * from cat_part where id='{$part_id}'");
 
         $this->title = $tags['title'];
         $this->breadcrumbs[] = ['title' => $tags['title']];
@@ -221,23 +221,23 @@ class Controller extends BaseController
     {
         $input = App::$input;
         $query = "select default_img,fname,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='{$input['item_id']}'";
-        list($default_img,$default_img_fname,$title)=App::$db->select_row($query);
+        list($default_img,$default_img_fname,$title)=App::$db->getRow($query);
 
         $nav_ins = '';
 
-        list($prev_id,$fname) = App::$db->select_row("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<'" . $input['image_id'] . "' and id<>'{$default_img}' order by id desc limit 1");
+        list($prev_id,$fname) = App::$db->getRow("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<'" . $input['image_id'] . "' and id<>'{$default_img}' order by id desc limit 1");
         if ($input['image_id'] != $default_img){
             if ($prev_id){
                 $nav_ins.= "<a image_id={$prev_id} item_id={$input['item_id']} file_name={$fname} class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
             }else{     
                 $nav_ins.= "<a image_id={$default_img} item_id={$input["item_id"]} file_name=\"{$default_img_fname}\" class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
             }
-            list($next_id,$fname) = App::$db->select_row("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id>'" . $input['image_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
+            list($next_id,$fname) = App::$db->getRow("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id>'" . $input['image_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
             if ($next_id) {
                 $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$fname} class=\"cat_image_button btn btn-default\">Следующая >></a>";
             }
         }else{
-            list($next_id,$fname) = App::$db->select_row("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
+            list($next_id,$fname) = App::$db->getRow("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
             if ($next_id) {
                 $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$fname} class=\"cat_image_button btn btn-default\">Следующая >></a>";
             }

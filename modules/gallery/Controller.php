@@ -16,6 +16,8 @@ use Classes\Image;
 class Controller extends BaseController 
 {
     
+    public static $cache_path = 'var/cache/gallery/';
+    
     public function actionPartList(): string
     {
         $this->title = 'Галерея';
@@ -32,7 +34,7 @@ class Controller extends BaseController
         if ($result->num_rows) {
             return App::$template->parse('gallery_part_list', ['this'=>$this], $result);
         } else {
-            return App::$message->get('part_empty');
+            return App::$message->get('list_empty');
         }
     }
     
@@ -54,7 +56,7 @@ class Controller extends BaseController
         $query = "SELECT * from gallery_images where gallery_id='" . $view_gallery . "' order by id asc limit {$pager->getOffset()},{$pager->getLimit()}";
         $result = App::$db->query($query);
         if (!$result->num_rows) {
-            $content = App::$message->get('list_empty', [], '');
+            $content = App::$message->get('list_empty');
         } else {
             $tags['this'] = $this;
             $content = App::$template->parse('gallery_images_list', $tags, $result);
@@ -89,7 +91,7 @@ class Controller extends BaseController
         exit();
     }
     
-    public function getMaxWidth() {
+    public static function getMaxWidth() {
         if (App::$input['preview']) {
             $max_width = App::$settings['gallery_max_width_preview'];
         } else {
@@ -109,7 +111,7 @@ class Controller extends BaseController
         App::$input['preview']=true;
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
         $image = new Image($file_name, $row['file_type']);
-        return $image->getHTML($row, 'var/cache/gallery/', 'gallery_popup', 'modules/gallery/image.php?preview=1&id=', $this->getMaxWidth());
+        return $image->getHTML($row, static::$cache_path, 'gallery_popup', 'modules/gallery/image.php?preview=1&id=', $this->getMaxWidth());
     }
     
     public function getListImage($row)
@@ -122,7 +124,7 @@ class Controller extends BaseController
         $row['id'] = $row['def_id'];
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
         $image = new Image($file_name, $row['def_file_type']);
-        return $image->getHTML($row, 'var/cache/gallery/', '', 'modules/gallery/image.php?icon=1&id=', $this->getMaxWidth());        
+        return $image->getHTML($row, static::$cache_path, '', 'modules/gallery/image.php?icon=1&id=', $this->getMaxWidth());        
     }
     
     public function getIcons($row)
@@ -134,8 +136,9 @@ class Controller extends BaseController
         while($row = $result->fetch_array()){
             $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
             $image = new Image($file_name, $row['file_type']);
-            $content .= $image->getHTML($row, 'var/cache/gallery/', 'list_icon', 'modules/gallery/image.php?preview=1&id=', $this->getMaxWidth());
+            $content .= $image->getHTML($row, static::$cache_path, 'list_icon', 'modules/gallery/image.php?preview=1&id=', $this->getMaxWidth());
         }
         return $content;        
     }
+
 }

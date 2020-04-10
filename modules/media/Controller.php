@@ -27,7 +27,7 @@ class Controller extends BaseController
         if ($result->num_rows) {
             return App::$template->parse('media_part_list', [], $result);
         } else {
-            return App::$message->get('part_empty');
+            return App::$message->get('list_empty');
         }
     }
     
@@ -51,7 +51,7 @@ class Controller extends BaseController
         $query = "SELECT * from media_files where list_id='" . $view_media . "' order by num asc, id asc limit {$pager->getOffset()},{$pager->getLimit()}";
         $result = App::$db->query($query);
         if (!$result->num_rows) {
-            $content = App::$message->get('list_empty', [], '');
+            $content = App::$message->get('list_empty');
         } else {
             $tags['this'] = $this;
             $this->tags['INCLUDE_HEAD'].='<link rel="stylesheet" href="'.App::$SUBDIR.'modules/media/player/mediaelementplayer.min.css" />';

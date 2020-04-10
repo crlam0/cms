@@ -1,16 +1,23 @@
 <?php
 
 include '../../include/common.php';
-include 'functions.php';
 
 use Classes\App;
 use Classes\Image;
+use modules\gallery\Controller;
 
 list($file_name, $file_type) = App::$db->getRow("select file_name,file_type from gallery_images where id='{$input['id']}'");
 $file_name = $DIR . $settings['gallery_upload_path'] . $file_name;
 
 if (!is_file($file_name)) {
     exit();
+}
+
+if(strlen($file_type)) {
+    $arr = explode('/', $file_type);
+    $file_ext = $arr[1];
+} else {
+    $file_ext = 'jpg';
 }
 
 if (!$input['preview']) {
@@ -27,8 +34,8 @@ if (!$input['clientHeight']) {
 }
 $input['clientHeight'] = $input['clientHeight'] - 210;
 
-$max_width = gallery_get_max_width();
-$cache_file_name = $DIR . gallery_get_cache_file_name($file_name, $max_width);
+$max_width = Controller::getMaxWidth();
+$cache_file_name = $DIR . Controller::$cache_path . md5($file_name.$max_width) . '.' . $file_ext;
 
 $max_height = $max_width;
 if ((!empty($input['clientHeight'])) && ($max_height > $input['clientHeight'])) {

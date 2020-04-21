@@ -3,7 +3,7 @@
 $tags['Header'] = 'Каталог';
 include '../include/common.php';
 
-use Classes\App;
+use classes\App;
 
 /*
 $query = "select * from cat_part";

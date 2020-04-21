@@ -2,10 +2,10 @@
 
 namespace modules\misc;
 
-use Classes\BaseController;
-use Classes\App;
-use Classes\Pagination;
-use Classes\Comments;
+use classes\BaseController;
+use classes\App;
+use classes\Pagination;
+use classes\Comments;
 
 /**
  * Description of Controller

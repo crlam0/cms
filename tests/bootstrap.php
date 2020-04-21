@@ -1,10 +1,10 @@
 <?PHP
 
-use Classes\App;
-use Classes\Message;
-use Classes\DB;
+use classes\App;
+use classes\Message;
+use classes\DB;
 
-require_once dirname(__FILE__) . '/../include/config/config.local.php';
+require_once dirname(__FILE__) . '/../local/config.php';
 
 $DIR=dirname(dirname(__FILE__)) . '/';
 

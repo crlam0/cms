@@ -1,7 +1,7 @@
 <?php
 
-namespace Classes;
-use Classes\App;
+namespace classes;
+use classes\App;
 
 /**
  * Implements work with simple blocks

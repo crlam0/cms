@@ -2,8 +2,8 @@
 
 include "../../include/common.php";
 
-use Classes\App;
-use Classes\Image;
+use classes\App;
+use classes\Image;
 use modules\catalog\Controller;
 
 

@@ -2,9 +2,9 @@
 
 namespace modules\misc;
 
-use Classes\BaseController;
-use Classes\App;
-use Classes\User;
+use classes\BaseController;
+use classes\App;
+use classes\User;
 
 class PasswdRecoveryController extends BaseController
 {    

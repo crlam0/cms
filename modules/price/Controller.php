@@ -2,8 +2,8 @@
 
 namespace modules\price;
 
-use Classes\BaseController;
-use Classes\App;
+use classes\BaseController;
+use classes\App;
 
 /**
  * Controller for module 'price'.

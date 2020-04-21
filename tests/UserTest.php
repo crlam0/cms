@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\User;
+use classes\User;
 
 class UserTest extends TestCase
 {

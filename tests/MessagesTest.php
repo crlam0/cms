@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\Message;
+use classes\Message;
 
 class MessagesTest extends TestCase
 {

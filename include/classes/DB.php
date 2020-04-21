@@ -6,8 +6,8 @@
 
   ========================================================================= */
 
-namespace Classes;
-use Classes\App;
+namespace classes;
+use classes\App;
 
 class DB 
 {

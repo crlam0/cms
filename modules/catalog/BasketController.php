@@ -2,9 +2,9 @@
 
 namespace modules\catalog;
 
-use Classes\BaseController;
-use Classes\App;
-use Classes\SummToStr;
+use classes\BaseController;
+use classes\App;
+use classes\SummToStr;
 
 include 'functions.php';
 

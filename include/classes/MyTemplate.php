@@ -23,9 +23,9 @@
 
  */
 
-namespace Classes;
+namespace classes;
 
-use Classes\App;
+use classes\App;
 
 class MyTemplate 
 {    

@@ -17,10 +17,10 @@ use Phinx\Console\Command;
 require_once __DIR__ . '/../include/lib_functions.php';
 
 $cli = new Application('Application console');
-$cli->add(new Classes\Command\CacheClearCommand($console['cachePaths']));
-$cli->add(new Classes\Command\DBDumpCommand());
-$cli->add(new Classes\Command\DBRestoreCommand());
-$cli->add(new Classes\Command\DBDumpClearCommand());
+$cli->add(new classes\commands\CacheClearCommand($console['cachePaths']));
+$cli->add(new classes\commands\DBDumpCommand());
+$cli->add(new classes\commands\DBRestoreCommand());
+$cli->add(new classes\commands\DBDumpClearCommand());
 $cli->addCommands([
     new Command\Create(),
     new Command\Migrate(),

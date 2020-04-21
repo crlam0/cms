@@ -1,11 +1,10 @@
 <?php
 
-use Classes\App;
-use Classes\Blocks;
-use Classes\BlocksLocal;
+use classes\App;
+use classes\Blocks;
 
-if(file_exists(__DIR__.'/classes/BlocksLocal.php')) {
-    $BlocksObject = new BlocksLocal();    
+if(file_exists(__DIR__.'/../local/classes/Blocks.php')) {
+    $BlocksObject = new local\Blocks();    
 } else {
     $BlocksObject = new Blocks();
 }

@@ -9,7 +9,7 @@ class ControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Controller = new Tests\MyTestController;
+        $this->Controller = new tests\MyTestController;
     }
 
     public function testRun() {        

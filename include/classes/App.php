@@ -1,8 +1,8 @@
 <?php
 
-namespace Classes;
-use Classes\MyArray;
-use Classes\SQLHelper;
+namespace classes;
+use classes\MyArray;
+use classes\SQLHelper;
 
 class App 
 {

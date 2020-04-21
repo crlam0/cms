@@ -2,7 +2,7 @@
 $tags['Header']="Пользователи сервера";
 include "../include/common.php";
 
-use Classes\App;
+use classes\App;
 
 if ($input['del']) {
     $query = "delete from users where id='{$input['id']}'";

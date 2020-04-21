@@ -1,11 +1,11 @@
 <?php
 
-namespace Classes;
+namespace classes;
 
 
-use Classes\MyTemplate;
-use Classes\TwigTemplate;
-use Classes\App;
+use classes\MyTemplate;
+use classes\TwigTemplate;
+use classes\App;
 
 class Template 
 {

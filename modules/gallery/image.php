@@ -2,8 +2,8 @@
 
 include '../../include/common.php';
 
-use Classes\App;
-use Classes\Image;
+use classes\App;
+use classes\Image;
 use modules\gallery\Controller;
 
 list($file_name, $file_type) = App::$db->getRow("select file_name,file_type from gallery_images where id='" . App::$input['id'] ."'");

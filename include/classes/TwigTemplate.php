@@ -1,6 +1,6 @@
 <?php
 
-namespace Classes;
+namespace classes;
 use Twig\Environment;
 use Twig\TwigFunction;
 use Twig\Loader\ArrayLoader;
@@ -8,7 +8,7 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Extension\DebugExtension;
 use Stormiix\Twig\Extension\MixExtension;
 
-use Classes\App;
+use classes\App;
 
 class TwigTemplate 
 {

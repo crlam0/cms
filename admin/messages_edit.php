@@ -2,7 +2,7 @@
 $tags['Header']='Сообщения';
 include '../include/common.php';
 
-use Classes\App;
+use classes\App;
 
 if ($input['del']){
 	$query="delete from messages where id='{$input['id']}'";

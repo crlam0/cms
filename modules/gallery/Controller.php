@@ -2,11 +2,11 @@
 
 namespace modules\gallery;
 
-use Classes\App;
-use Classes\BaseController;
-use Classes\Comments;
-use Classes\Pagination;
-use Classes\Image;
+use classes\App;
+use classes\BaseController;
+use classes\Comments;
+use classes\Pagination;
+use classes\Image;
 
 /**
  * Description of Controller

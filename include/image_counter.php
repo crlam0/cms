@@ -1,7 +1,7 @@
 <?php 
 include "common.php";
 
-use Classes\App;
+use classes\App;
 
 $query="select count(id),count(distinct remote_addr) from visitor_log";
 list($hits,$unique)=App::$db->getRow($query,true);

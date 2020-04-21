@@ -4,7 +4,7 @@
   Messages library.
  */
 
-use Classes\App;
+use classes\App;
 
 /**
  * Return message by title

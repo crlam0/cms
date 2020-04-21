@@ -2,9 +2,9 @@
 
 namespace modules\media;
 
-use Classes\BaseController;
-use Classes\App;
-use Classes\Pagination;
+use classes\BaseController;
+use classes\App;
+use classes\Pagination;
 
 /**
  * Description of Controller

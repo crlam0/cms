@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\TwigTemplate;
+use classes\TwigTemplate;
 
 class TwigTemplateTest extends TestCase
 {
@@ -30,7 +30,7 @@ class TwigTemplateTest extends TestCase
     
     public function testSQLParse()            
     {
-        $result=Classes\App::$db->query("select login from users where login='boot'");
+        $result=classes\App::$db->query("select login from users where login='boot'");
         $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
         
         $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, [], '{% for row in rows %}{{ row.login }}{% endfor %}');

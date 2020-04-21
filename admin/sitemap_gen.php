@@ -3,7 +3,7 @@
 $tags['Header'] = 'Генератор sitemap.xml';
 require '../include/common.php';
 
-use Classes\Sitemap;
+use classes\Sitemap;
 
 $sitemap=new Sitemap();
 // $sitemap->build_pages_array(array('article','blog','gallery'));

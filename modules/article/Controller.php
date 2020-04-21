@@ -2,8 +2,8 @@
 
 namespace modules\article;
 
-use Classes\App;
-use Classes\BaseController;
+use classes\App;
+use classes\BaseController;
 
 class Controller extends BaseController
 {    

@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Classes\BaseController;
+use classes\BaseController;
 
 class MyTestController extends BaseController
 {

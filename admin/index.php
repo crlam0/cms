@@ -2,7 +2,7 @@
 $tags['Header']='Страница администрирования';
 require '../include/common.php';
 
-use Classes\Sitemap;
+use classes\Sitemap;
 
 $content='';
 

@@ -1,11 +1,11 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\Comments;
-use Classes\App;
-use Classes\User;
-use Classes\Message;
-use Classes\Template;
+use classes\Comments;
+use classes\App;
+use classes\User;
+use classes\Message;
+use classes\Template;
 
 /**
  * Return CSRF token value from session. 

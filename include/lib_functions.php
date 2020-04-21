@@ -6,8 +6,8 @@
 
   ========================================================================= */
 
-use Classes\App;
-use Classes\Image;
+use classes\App;
+use classes\Image;
 
 /**
  * Check $key in $array

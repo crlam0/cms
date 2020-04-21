@@ -1,10 +1,14 @@
 <?php
 
-require __DIR__.'/config/config.local.php';
+if(file_exists(__DIR__.'/../local/config.php')) {
+    require __DIR__.'/../local/config.php';
+} else {
+    die('Main config not found');
+}
 require __DIR__.'/config/misc.php';
 
-if(file_exists(__DIR__.'/config/misc.local.php')) {
-    require_once __DIR__.'/config/misc.local.php';
+if(file_exists(__DIR__.'/../local/misc.local.php')) {
+    require_once __DIR__.'/../local/misc.local.php';
 }    
 
 if(file_exists($DIR.'vendor/autoload.php')) {
@@ -13,18 +17,18 @@ if(file_exists($DIR.'vendor/autoload.php')) {
     die('Cant find autoloader');
 }
 
-use Classes\App;
-use Classes\DB;
-use Classes\Routing;
-use Classes\User;
-use Classes\Template;
-use Classes\Message;
+use classes\App;
+use classes\DB;
+use classes\Routing;
+use classes\User;
+use classes\Template;
+use classes\Message;
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
 
 $App = new App($DIR, $SUBDIR);
 $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
-$App->loadSettings(__DIR__.'/config/settings.local.php');
+$App->loadSettings(__DIR__.'/local/settings.php');
 $App->loadInputData($_GET, $_POST, $_SERVER);
 $App->addGlobals();
 App::$debug = App::$settings['debug'];

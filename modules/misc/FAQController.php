@@ -2,10 +2,10 @@
 
 namespace modules\misc;
 
-use Classes\BaseController;
-use Classes\App;
-use Classes\Pagination;
-use Classes\BBCodeEditor;
+use classes\BaseController;
+use classes\App;
+use classes\Pagination;
+use classes\BBCodeEditor;
 
 /**
  * Controller for FAQ page.

@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\Template;
+use classes\Template;
 
 class TemplateTest extends TestCase
 {

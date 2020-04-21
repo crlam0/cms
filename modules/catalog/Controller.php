@@ -2,10 +2,10 @@
 
 namespace modules\catalog;
 
-use Classes\BaseController;
-use Classes\App;
-use Classes\Pagination;
-use Classes\Image;
+use classes\BaseController;
+use classes\App;
+use classes\Pagination;
+use classes\Image;
 
 class Controller extends BaseController
 { 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Classes;
+namespace classes;
 
 class MyArray implements \ArrayAccess 
 {

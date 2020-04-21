@@ -2,8 +2,8 @@
 
 
 namespace modules\misc;
-use Classes\BaseController;
-use Classes\App;
+use classes\BaseController;
+use classes\App;
 
 /**
  * Description of NewsController

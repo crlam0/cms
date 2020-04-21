@@ -1,6 +1,10 @@
 <?php
 
 return [  
+    'site-index' => [
+        'pattern' => '^\/?$',
+        'controller' => 'modules\misc\IndexController'
+    ],    
     'login' => [
         'pattern' => '^login\/?$',
         'controller' => 'modules\misc\LoginController'

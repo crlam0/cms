@@ -7,7 +7,7 @@
  */
 
 namespace modules\article;
-use Classes\App;
+use classes\App;
 
 if(file_exists(__DIR__ . '/dompdf/autoload.inc.php')) {
     include_once __DIR__ . '/dompdf/autoload.inc.php';

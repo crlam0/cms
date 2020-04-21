@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Classes;
+namespace classes;
 
-use Classes\App;
-use Classes\BBCodeEditor;
+use classes\App;
+use classes\BBCodeEditor;
 
 /**
  * Add coments to some content

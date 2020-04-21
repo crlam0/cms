@@ -1,13 +1,13 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\DB;
+use classes\DB;
 
 class DBTest extends TestCase
 {
     public function testUsers()
     {
-        $row = Classes\App::$db->getRow("select login from users where login='boot'");
+        $row = classes\App::$db->getRow("select login from users where login='boot'");
         self::assertEquals($row['login'], 'boot');
     }
 
@@ -21,13 +21,13 @@ class DBTest extends TestCase
 
     public function testInsert()
     {
-        $insert = Classes\App::$db->insert_fields(['id'=>'1']);
+        $insert = classes\App::$db->insert_fields(['id'=>'1']);
         self::assertEquals($insert, "(id) VALUES('1')");
     }
     
     public function testUpdate()
     {
-        $insert = Classes\App::$db->update_fields(['id'=>'1']);
+        $insert = classes\App::$db->update_fields(['id'=>'1']);
         self::assertEquals($insert, "id='1'");
     }
     

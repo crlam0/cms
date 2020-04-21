@@ -1,8 +1,8 @@
 <?php
 
-namespace Classes;
+namespace classes;
 
-use Classes\App;
+use classes\App;
 
 final class Routing 
 {
@@ -42,8 +42,8 @@ final class Routing
         $this->routes = [];
         $this->request_uri = $request_uri;
         
-        $this->addRoutesFromConfig('routes.global.php');
-        $this->addRoutesFromConfig('routes.local.php');       
+        $this->addRoutesFromConfig('/../config/routes.php');
+        $this->addRoutesFromConfig('/../../local/routes.php');       
         
         if(App::$SUBDIR !== '/') {
             $this->request_uri = str_replace(App::$SUBDIR, '', $this->request_uri);
@@ -68,8 +68,8 @@ final class Routing
      */
     public function addRoutesFromConfig(string $file) : void
     {
-        if(file_exists(__DIR__ . '/../config/' . $file)) {
-            $this->routes = array_merge($this->routes, require __DIR__ . '/../config/' . $file);
+        if(file_exists(__DIR__ . $file)) {
+            $this->routes = array_merge($this->routes, require __DIR__ . $file);
         }
     }
     
@@ -165,22 +165,16 @@ final class Routing
      */
     private function getAction () 
     {
-        $action='';
         if(strlen($this->request_uri) == 0) {
-            $action='index';
+            return 'index';
         }
         if(strpos($this->request_uri, '/')) {
             $arr = explode('/',$this->request_uri);
             if(end($arr) == '') {
-                $action='index';
+                return 'index';
             } else {
-                $action = end($arr);
+                return end($arr);
             }
-        } else {
-            $action = $this->request_uri;
-        }
-        if(strlen($action)) {
-            return $action;
         } else {
             throw new \InvalidArgumentException('Cant find default action');
         }

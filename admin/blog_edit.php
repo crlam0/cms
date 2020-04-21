@@ -5,7 +5,7 @@ include '../include/common.php';
 
 $IMG_PATH = $DIR.$settings['blog_img_path'];
 
-use Classes\App;
+use classes\App;
 
 if ($input['get_target_select']) {
     $query = "select target_id,href from blog_posts where id='{$input['item_id']}'";

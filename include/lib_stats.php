@@ -1,6 +1,6 @@
 <?php
 
-use Classes\App;
+use classes\App;
 
 $deny_urls=array('img','image','admin/','favicon');
 $deny_remote_hosts=array('bot','spider','yandex','google','mail.ru','crawl');

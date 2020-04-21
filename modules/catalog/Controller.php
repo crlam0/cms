@@ -5,11 +5,11 @@ namespace modules\catalog;
 use Classes\BaseController;
 use Classes\App;
 use Classes\Pagination;
-
-include 'functions.php';
+use Classes\Image;
 
 class Controller extends BaseController
 { 
+    public static $cache_path = 'var/cache/catalog/';
     
     private function parseURI(string $uri): array 
     {
@@ -99,6 +99,7 @@ class Controller extends BaseController
         if ($result->num_rows) {
             $tags['functions'] = [];
             // $tags['cat_part_href'] = get_cat_part_href($part_id);
+            $tags['this'] = $this;
             $content .= App::$template->parse('cat_part_list', $tags, $result);
         } 
         $content .= $this->getPartItemsContent($part_id, $page);
@@ -143,6 +144,7 @@ class Controller extends BaseController
         if ($result->num_rows) {
             $tags['cat_part_href'] = get_cat_part_href($part_id);
             $tags['functions'] = [];
+            $tags['this'] = $this;
             $content .= App::$template->parse('cat_item_list', $tags, $result);
         } else {
             $tags['title'] = $row_part['title'];
@@ -176,7 +178,8 @@ class Controller extends BaseController
                 order by cat_item.num,b_code,title asc";
             $result = App::$db->query($query);
             if ($result->num_rows) {
-                return App::$template->parse('cat_item_list', [], $result);
+                
+                return App::$template->parse('cat_item_list', ['this' => $this], $result);
             }
         }
         return null;
@@ -189,7 +192,7 @@ class Controller extends BaseController
 
         $item_id = $this->getItemId($part_id, $item_title);
 
-        $query = "select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='" . $item_id . "'";
+        $query = "select cat_item.*,fname,file_type,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='" . $item_id . "'";
         $result = App::$db->query($query);
         
         if (!$result->num_rows) {
@@ -214,6 +217,7 @@ class Controller extends BaseController
         if($_SESSION['catalog_page']>1) {
             $tags['page'] = 'page' . $_SESSION['catalog_page'] . '/';
         }
+        $tags['this'] = $this;
         return App::$template->parse('cat_item_view', $tags, $result);        
     }
     
@@ -243,7 +247,7 @@ class Controller extends BaseController
             }
         }
 
-        $URL = get_item_image_url($input['file_name'], 500, 0);
+        $URL = $this->getImageUrl($input['file_name'], '', App::$settings['catalog_item_img_max_width'], 0);
 
         $content .= '<center><img src="' . APP::$SUBDIR . $URL .'" border="0" alt="' . $title . '"></center>';
         if(strlen($nav_ins)){
@@ -255,6 +259,108 @@ class Controller extends BaseController
         echo json_encode($json);
         exit;        
     }
+    
+    /*  ???  */
+    public function getPropValue($row,$name) {
+        if($props_values = my_json_decode($row['props'])) {
+            $result = $props_values[$name];        
+            return strlen($result)>0 ? $result : false;
+        }
+        return false;
+    }
+
+    /*  +++ */
+    public function getPropsArray($props) {    
+        if($props_values = my_json_decode($props)) {
+            foreach($props_values as $key => $value ){
+                if(!strlen($props_values[$key])) {
+                    unset($props_values[$key]);
+                }
+            }
+            return $props_values;
+        }
+        return false;
+    }
+
+    /*  ??? */
+    public function getPropName($part_id,$name) {
+        $query = "select items_props from cat_part where id='{$part_id}'";
+        list($items_props) = my_select_row($query, true);
+        if($props_values = my_json_decode($items_props)) {
+            return $props_values[$name]['name'];
+        }
+        return false;
+    }
+
+    /*  ??? */
+    public function getPropNamesArray($part_id) {
+        $query = "select items_props from cat_part where id='{$part_id}'";
+        list($items_props) = my_select_row($query, true);
+        if($props_values = my_json_decode($items_props)) {        
+            $result=[];
+            foreach($props_values as $name){
+                $result[$name]=$props_values[$name]['name'];
+            }
+            return $result;
+        }
+        return false;    
+    }
+    
+    public static function getCacheFilename($file_name, $file_type, $max_width) {
+        if(!$file_type || !strlen($file_type)) {
+            list($file_type) = App::$db->getRow("select file_type from cat_item_images where fname='" . $file_name ."'");            
+        }
+        $file_extension = Image::getFileExt($file_type);
+        $IMG_ITEM_PATH = App::$DIR . App::$settings['catalog_item_img_path'];
+        $file_name = $IMG_ITEM_PATH . $file_name;
+        return static::$cache_path . md5($file_name . $max_width) . '.' . $file_extension;
+    }
+    
+    public function getImageUrl($file_name, $file_type, $width, $crop = true) {
+        $cache_file_name = $this->getCacheFilename($file_name, $file_type, $width);
+        if(is_file(App::$DIR . $cache_file_name)) {
+            return $cache_file_name;
+        } else {
+            return "modules/catalog/image.php?file_name={$file_name}&preview={$width}&crop={$crop}";
+        }
+    }
+
+    public function getImageFilename($file_name, $file_type, $width = 0, $crop = true) {
+        $IMG_ITEM_PATH = App::$DIR . App::$settings['catalog_item_img_path'];
+        if(!$width) {
+            $width = App::$settings['catalog_item_img_preview'];
+        }        
+        if (is_file($IMG_ITEM_PATH . $file_name)) {
+            return $this->getImageUrl($file_name, $file_type, $width, $crop);
+        } else {
+            return false;
+        }
+    }
+
+    public function getListImage($row) {
+        App::$input['preview']=true;
+        $file_name = App::$DIR . App::$settings['catalog_item_img_path'] . $row['fname'];
+        $image = new Image($file_name, $row['file_type']);
+        $cript_name = 'modules/catalog/image.php?preview='.App::$settings['catalog_item_img_preview'].'&crop=1&id=' . $row['image_id'];
+        return $image->getHTML($row, static::$cache_path, 'catalog_popup', $cript_name, App::$settings['catalog_item_img_preview']);
+    }
+
+    public function getPartImageFilename($fname, $width = 0) {
+        $IMG_PART_PATH = App::$DIR . App::$settings['catalog_part_img_path'];
+        if(!$width) {
+            $width = App::$settings['catalog_part_img_preview'];
+        }        
+        if (is_file($IMG_PART_PATH . $fname)) {
+            return App::$settings['catalog_part_img_path'] . $fname;
+        } else {
+            return false;
+        }
+    }
+
+    public function getItemsCount($id) {
+        global $_SESSION;
+        return $_SESSION['BUY'][$id]['count'];
+    }    
     
 }
 

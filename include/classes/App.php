@@ -239,6 +239,7 @@ class App
             $tags['Header'] = $controller->title;
             $tags['nav_array'] = array_merge($tags['nav_array'], $controller->breadcrumbs);
             $tags = array_merge($tags, $controller->tags);
+            header(App::$server['SERVER_PROTOCOL'] . ' 200 Ok', true, 200);
             echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
             exit;
         } catch (Exception $e) {

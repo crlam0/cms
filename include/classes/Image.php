@@ -15,25 +15,6 @@ class Image
     
     private $validImageTypes = array('image/pjpeg', 'image/jpeg', 'image/gif', 'image/png', 'image/x-png');
     
-    private function getFileType(string $file_name, string $file_type) : string 
-    {
-        if(!$file_type) {
-            if((preg_match("/^.*\.jpg$/i", $file_name)) || (preg_match("/^.*\.jpeg$/i", $file_name))) {
-                return 'image/jpeg';
-            }
-            if(preg_match("/^.*\.png$/i", $file_name)) {
-                return 'image/png';
-            }
-        }
-        if (($file_type == 'image/jpeg') || ($file_type == 'image/pjpeg')) {
-            return 'image/jpeg';
-        } elseif (($file_type == 'image/png') || ($file_type == 'image/x-png') ) {
-            return 'image/png';
-        } else {
-            return false;
-        }
-    }
-
     public function __construct(string $file_name, $file_type = '') 
     {
         if (!is_file($file_name)) {
@@ -55,6 +36,25 @@ class Image
             return false;
         }
         list($this->width, $this->height) = getimagesize($file_name);
+    }
+
+    public static function getFileType(string $file_name, $file_type) : string 
+    {
+        if(!$file_type) {
+            if((preg_match("/^.*\.jpg$/i", $file_name)) || (preg_match("/^.*\.jpeg$/i", $file_name))) {
+                return 'image/jpeg';
+            }
+            if(preg_match("/^.*\.png$/i", $file_name)) {
+                return 'image/png';
+            }
+        }
+        if (($file_type == 'image/jpeg') || ($file_type == 'image/pjpeg')) {
+            return 'image/jpeg';
+        } elseif (($file_type == 'image/png') || ($file_type == 'image/x-png') ) {
+            return 'image/png';
+        } else {
+            return false;
+        }
     }
     
     private function checkAlpha() : void 
@@ -150,14 +150,24 @@ class Image
         return is_file($dst_file);        
     }
     
-    public function getFileExtension() : string
+
+    
+    public static function getFileExt($file_type) : string 
     {
-        if(strlen($this->file_type)) {
-            $arr = explode('/', $this->file_type);
+        if(strlen($file_type)) {
+            $arr = explode('/', $file_type);
+            if($arr[1] == 'pjpeg') {
+                return 'jpeg';
+            }
             return $arr[1];
         } else {
             return 'none';
-        }
+        }        
+    }
+
+    public function getFileExtension() : string
+    {
+        return $this->getFileExt($this->file_type);
     }
     
     public function getUrl(array $row, string $cache_path, string $script_url, int $max_width = 1024) 
@@ -167,7 +177,7 @@ class Image
             if(is_file(App::$DIR . $cache_file_name)) {
                 return $cache_file_name;
             } else {
-                return $script_url . $row['id'];
+                return $script_url;
             }
         } else {
             return false;

@@ -83,7 +83,7 @@ class Controller extends BaseController
 
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $tags['file_name'];
         $image = new Image($file_name, $tags['file_type']);
-        $tags['IMAGE'] = $image->getHTML($tags, 'var/cache/gallery/','','modules/gallery/image.php?clientHeight='.App::$input['clientHeight'].'&id=', $this->getMaxWidth());
+        $tags['IMAGE'] = $image->getHTML($tags, 'var/cache/gallery/','','modules/gallery/image.php?clientHeight='.App::$input['clientHeight'].'&id=' . $tags['id'], $this->getMaxWidth());
 
         $json=$tags;
         $json['content'] = App::$template->parse('gallery_image_view', $tags);
@@ -111,7 +111,7 @@ class Controller extends BaseController
         App::$input['preview']=true;
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
         $image = new Image($file_name, $row['file_type']);
-        return $image->getHTML($row, static::$cache_path, 'gallery_popup', 'modules/gallery/image.php?preview=1&id=', $this->getMaxWidth());
+        return $image->getHTML($row, static::$cache_path, 'gallery_popup', 'modules/gallery/image.php?preview=1&id=' . $row['id'], $this->getMaxWidth());
     }
     
     public function getListImage($row)
@@ -124,7 +124,7 @@ class Controller extends BaseController
         $row['id'] = $row['def_id'];
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
         $image = new Image($file_name, $row['def_file_type']);
-        return $image->getHTML($row, static::$cache_path, '', 'modules/gallery/image.php?icon=1&id=', $this->getMaxWidth());        
+        return $image->getHTML($row, static::$cache_path, '', 'modules/gallery/image.php?icon=1&id=' . $row['id'], $this->getMaxWidth());        
     }
     
     public function getIcons($row)
@@ -136,7 +136,7 @@ class Controller extends BaseController
         while($row = $result->fetch_array()){
             $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
             $image = new Image($file_name, $row['file_type']);
-            $content .= $image->getHTML($row, static::$cache_path, 'list_icon', 'modules/gallery/image.php?preview=1&id=', $this->getMaxWidth());
+            $content .= $image->getHTML($row, static::$cache_path, 'list_icon', 'modules/gallery/image.php?preview=1&id=' . $row['id'], $this->getMaxWidth());
         }
         return $content;        
     }

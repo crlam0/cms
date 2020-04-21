@@ -76,6 +76,7 @@ return [
     'blog-index' => [
         'pattern' => '^blog\/?$',
         'controller' => 'modules\misc\BlogController',
+        'action' => 'index',
     ],    
     'blog-index-with-page' => [
         'pattern' => '^blog\/page(\d+)\/?$',

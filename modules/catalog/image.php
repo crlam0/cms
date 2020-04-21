@@ -1,33 +1,34 @@
 <?php
 
 include "../../include/common.php";
-include 'functions.php';
 
 use Classes\App;
 use Classes\Image;
+use modules\catalog\Controller;
 
-if (isset($input['id'])) {
-    list($file_name, $file_type) = App::$db->getRow("select fname,file_type from cat_item_images where id='{$input['id']}'");
-    $file_name = $DIR . $settings['catalog_item_img_path'] . $file_name;
+
+if (isset(App::$input['id'])) {
+    list($file_name, $file_type) = App::$db->getRow("select fname,file_type from cat_item_images where id='" . App::$input['id'] ."'");
 } else {
-    $file_name = $DIR . $settings['catalog_item_img_path'] . $input['file_name'];
-}
-$crop = $input['fix_size'];
-
-if (!is_file($file_name)) {
-    exit();
-}
-if (!$input['clientHeight']) {
-    $input['clientHeight'] = 800;
-}
-$input['clientHeight'] = $input['clientHeight'] - 210;
-
-$max_width = $settings['catalog_item_img_preview'];
-if ($input['preview']) {
-    $max_width = $input['preview'];
+    list($file_name, $file_type) = App::$db->getRow("select fname,file_type from cat_item_images where fname='" . App::$input['file_name'] ."'");
 }
 
-$cache_file_name = $DIR . get_cache_file_name($file_name, $max_width);
+$crop = App::$input['crop'];
+
+if (!App::$input['clientHeight']) {
+    App::$input['clientHeight'] = 800;
+}
+$input['clientHeight'] = App::$input['clientHeight'] - 210;
+
+$max_width = App::$settings['catalog_item_img_max_width'];
+
+if (App::$input['preview']) {
+    $max_width = App::$input['preview'];
+}
+
+$cache_file_name = App::$DIR . Controller::getCacheFilename($file_name, $file_type, $max_width);
+
+// echo $cache_file_name;exit;
 
 if(file_exists($cache_file_name)) {
     header('Content-type: ' . $file_type);
@@ -35,14 +36,17 @@ if(file_exists($cache_file_name)) {
     print $img;
     exit;
 }
+$file_name = App::$DIR . App::$settings['catalog_item_img_path'] . $file_name;
+
 $Image = new Image($file_name, $file_type);
 if(!$Image->width) {
     die('Load error');
 }
+
 if($crop) {
     $result = $Image->crop($max_width,$max_width);
 } else {
-    $result = $Image->resize($max_width,$max_height);
+    $result = $Image->resize($max_width,$max_width);
 }    
 
 if(!$Image->save($cache_file_name)) {

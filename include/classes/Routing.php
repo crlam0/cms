@@ -170,10 +170,11 @@ final class Routing
             $action='index';
         }
         if(strpos($this->request_uri, '/')) {
-            if(end(explode('/',$this->request_uri)) == '') {
+            $arr = explode('/',$this->request_uri);
+            if(end($arr) == '') {
                 $action='index';
             } else {
-                $action = end(explode('/',$this->request_uri));
+                $action = end($arr);
             }
         } else {
             $action = $this->request_uri;

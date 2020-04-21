@@ -6,40 +6,39 @@ use Classes\App;
 use Classes\Image;
 use modules\gallery\Controller;
 
-list($file_name, $file_type) = App::$db->getRow("select file_name,file_type from gallery_images where id='{$input['id']}'");
-$file_name = $DIR . $settings['gallery_upload_path'] . $file_name;
+list($file_name, $file_type) = App::$db->getRow("select file_name,file_type from gallery_images where id='" . App::$input['id'] ."'");
+$file_name = App::$DIR . App::$settings['gallery_upload_path'] . $file_name;
 
 if (!is_file($file_name)) {
     exit();
 }
 
 if(strlen($file_type)) {
-    $arr = explode('/', $file_type);
-    $file_ext = $arr[1];
+    $file_ext = Image::getFileExt($file_type);
 } else {
-    $file_ext = 'jpg';
+    $file_ext = 'jpeg';
 }
 
-if (!$input['preview']) {
-    App::$db->query("update gallery_images set view_count=view_count+1 where id='{$input['id']}'", true);
+if (!App::$input['preview']) {
+    App::$db->query("update gallery_images set view_count=view_count+1 where id='".App::$input['id']."'");
 }
 
 $crop = ($settings['gallery_fix_size']) && ($input['preview']);
-if ($input['icon'] && $settings['gallery_icon_width']) {
+if (App::$input['icon'] && App::$settings['gallery_icon_width']) {
     $crop = true;
 }
 
-if (!$input['clientHeight']) {
-    $input['clientHeight'] = 800;
+if (!App::$input['clientHeight']) {
+    App::$input['clientHeight'] = 800;
 }
-$input['clientHeight'] = $input['clientHeight'] - 210;
+App::$input['clientHeight'] = App::$input['clientHeight'] - 210;
 
 $max_width = Controller::getMaxWidth();
-$cache_file_name = $DIR . Controller::$cache_path . md5($file_name.$max_width) . '.' . $file_ext;
+$cache_file_name = App::$DIR . Controller::$cache_path . md5($file_name.$max_width) . '.' . $file_ext;
 
 $max_height = $max_width;
-if ((!empty($input['clientHeight'])) && ($max_height > $input['clientHeight'])) {
-    $max_height = $input['clientHeight'];
+if ((!empty(App::$input['clientHeight'])) && ($max_height > App::$input['clientHeight'])) {
+    $max_height = App::$input['clientHeight'];
 }
 
 if(file_exists($cache_file_name)) {

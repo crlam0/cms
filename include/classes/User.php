@@ -32,10 +32,10 @@ class User
     */
     const TOKEN_NULL = 2;
     
-    public function __construct() 
+    public function __construct($flags = '') 
     {
         $this->id = 0;
-        $this->flags = '';
+        $this->flags = $flags;
         $this->data=null;
     }
     
@@ -248,14 +248,14 @@ class User
         $expire=time() + $expire_days*24*3600;
         switch ($type) {
             case static::TOKEN_SALT:
-                $token=$this->generateSalt();
+                $token = $this->generateSalt();
                 break;
             case static::TOKEN_NULL:
-                $token='';
-                $expire=0;
+                $token = '';
+                $expire = 0;
                 break;
             default:
-                $token=$this->encryptPassword($this->generateSalt(), $this->generateSalt());
+                $token = $this->encryptPassword($this->generateSalt(), $this->generateSalt());
         }
         
         $query = "update users set token='" . $token . "', token_expire='.$expire.' where id='".$user_id."'";
@@ -277,7 +277,7 @@ class User
         if(!$result->num_rows) {
             return false;
         }
-        $data=$result->fetch_array();
+        $data = $result->fetch_array();
         if($data['token_expire'] > time()) {
             return $data;
         } else {

@@ -3,11 +3,12 @@
 use classes\App;
 use classes\Blocks;
 
-if(file_exists(__DIR__.'/../local/classes/Blocks.php')) {
-    $BlocksObject = new local\Blocks();    
+if(class_exists('\local\Blocks')) {
+    $BlocksObject = new \local\Blocks();    
 } else {
     $BlocksObject = new Blocks();
 }
+
 App::set('Blocks', $BlocksObject);
 
 /**

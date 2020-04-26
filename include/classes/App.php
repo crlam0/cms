@@ -11,7 +11,7 @@ class App
     */
     public static $debug = false;
     /**
-    * @var SQLHelper Database object
+    * @var DB Database object
     */
     public static $db;
     /**

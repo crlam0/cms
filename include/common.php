@@ -36,7 +36,7 @@ App::$db->debug = App::$settings['debug'];
 App::debug('App created, arrays loaded');
 unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
-App::$user = new User();
+App::$user = new User(App::$settings['default_flags']);
 App::$template = new Template();
 App::$message = new Message();
 App::$routing = new Routing (App::$server['REQUEST_URI']);

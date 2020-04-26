@@ -15,7 +15,7 @@ class IndexController extends BaseController
 {    
     public function actionIndex(): string
     {
-        if(file_exists(__DIR__.'/../../local/classes/IndexController.php')) {
+        if(class_exists('\local\IndexController')) {
             $controller = new \local\IndexController();
             return $controller->actionIndex();
         }

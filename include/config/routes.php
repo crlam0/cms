@@ -13,13 +13,17 @@ return [
         'pattern' => '^logout\/?$',
         'controller' => 'modules\misc\LogoutController'
     ],    
-    'passwd_change' => [
+    'passwd-change' => [
         'pattern' => '^passwd_change\/?$',
         'controller' => 'modules\misc\PasswdChangeController'
     ],    
-    'passwd_recovery' => [
+    'passwd-recovery' => [
         'pattern' => '^passwd_recovery\/?[\w\-]*$',
         'controller' => 'modules\misc\PasswdRecoveryController'
+    ],    
+    'signup' => [
+        'pattern' => '^signup\/?[\w\-]*$',
+        'controller' => 'modules\misc\SignupController'
     ],    
     'search' => [
         'pattern' => '^search\/?$',
@@ -29,7 +33,7 @@ return [
         'pattern' => '^request\/?$',
         'file' => 'modules/misc/request.php'
     ],    
-    'request_php' => [
+    'request.php' => [
         'pattern' => '^.*misc\/request\.php$',
         'file' => 'modules/misc/request.php'
     ],   
@@ -61,7 +65,7 @@ return [
             '1' => 'alias'
         ]
     ],    
-    'article_pdf' => [
+    'article-pdf' => [
         'pattern' => '^article\/(.*)\/(.*)\.pdf$',
         'controller' => 'modules\article\Controller',
         'action' => 'PDF',
@@ -212,7 +216,7 @@ return [
         'controller' => 'modules\catalog\Controller',
         'action' => 'index',
     ],  
-    'catalog_part' => [
+    'catalog-part' => [
         'pattern' => '^catalog\/(.*)\/$',
         'controller' => 'modules\catalog\Controller',
         'action' => 'part-list',
@@ -220,7 +224,7 @@ return [
             '0' => 'uri',
         ]
     ],
-    'catalog_item' => [
+    'catalog-item' => [
         'pattern' => '^catalog\/(.*)\/(.*)$',
         'controller' => 'modules\catalog\Controller',
         'action' => 'item',

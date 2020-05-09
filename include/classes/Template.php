@@ -102,7 +102,6 @@ class Template
         if (!strstr($template['content'], '[%')) {
             return($template['content']);
         }
-        App::debug("Parse template '{$template['name']}'");
         return $this->MyTemplate->parse($template['content'], $tags, $sql_result, $inner_content);
     }
 

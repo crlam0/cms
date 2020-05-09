@@ -178,9 +178,9 @@ class Blocks
                 return App::$template->parse('block_partners', [], $result);
 
             case 'banners':
-                if(file_exists(App::$DIR . 'banners.local.php')) {
+                if(file_exists(App::$DIR . 'local/banners.php')) {
                     ob_start();
-                    include_once(App::$DIR . 'banners.local.php');
+                    include_once(App::$DIR . 'local/banners.php');
                     $content = ob_get_clean();
                     return $content;
                 } else {

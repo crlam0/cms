@@ -210,7 +210,7 @@ class DB
                     $str_values.=stripcslashes($value) . $str;
                 }else{
                     $value=$this->special_chars($value, $key);
-                    // $value=$this->escape_string($value);
+                    $value=$this->escape_string($value);
                     $str_values.= ( $value == 'now()' ? $value . $str : "'$value'$str");
                 }    
             }
@@ -247,7 +247,7 @@ class DB
                 $output.="$key=".stripcslashes($value) . $str;
             }else{
                 $value=$this->special_chars($value, $key);
-                // $value=$this->escape_string($value);
+                $value=$this->escape_string($value);
                 $output.= ( $value == 'now()' ? "$key=$value" . $str : "$key='$value'$str");
             }    
         }

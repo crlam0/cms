@@ -150,8 +150,6 @@ class Image
         return is_file($dst_file);        
     }
     
-
-    
     public static function getFileExt($file_type) : string 
     {
         if(strlen($file_type)) {

@@ -91,6 +91,7 @@ class Controller extends BaseController
         $tags['Header'] = 'Ошибка 404';
         $tags['file_name'] = App::$input['download_file_name'];
         $content = App::$message->get('file_not_found',$tags);
+        header(App::$server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
         return $content;
     }    
     

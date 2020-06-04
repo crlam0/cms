@@ -1,4 +1,4 @@
-<form action="{{ SUBDIR }}admin/slider-edit/{{ action }}" method="POST" enctype="multipart/form-data">
+<form action="{{ this.path }}{{ action }}" method="POST" enctype="multipart/form-data">
 <input type="hidden" name=MAX_FILE_SIZE value=16000000>		
 <input type="hidden" name="id" value="{{ id }}">
 <table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
@@ -21,6 +21,6 @@
 </form>
 <br>
 <center>
-    <a href="{{ SUBDIR }}admin/slider-edit/" class="btn btn-default"><< Назад</a>
+    <a href="{{ this.path }}" class="btn btn-default"><< Назад</a>
 </center>
 

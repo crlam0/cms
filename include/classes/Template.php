@@ -50,7 +50,7 @@ class Template
             }
         } else {
             $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, ['debug' => App::$debug], $template['content']);
-        }
+        }        
 
         if($sql_result instanceof \mysqli_result) {
             $tags['rows'] = $sql_result->fetch_all(MYSQLI_ASSOC);
@@ -69,7 +69,7 @@ class Template
                 $twig->addFunction($function);
             }
             unset($tags['functions']);
-        }        
+        }
         return $twig->render($template['name'], $tags);
     }
 

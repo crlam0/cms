@@ -10,6 +10,7 @@ class SliderEditController extends BaseController
 {    
     
     private $TABLE;
+    public $path;
     private $image_path;
     private $image_width;
     private $image_height;
@@ -17,16 +18,17 @@ class SliderEditController extends BaseController
     public function __construct() {
         parent::__construct();
         $this->TABLE = 'slider_images';
+        $this->path = App::$SUBDIR . 'admin/slider-edit/';
         $this->image_path = App::$settings['slider']['upload_path'];
         $this->image_width = App::$settings['slider']['image_width'];
         $this->image_height = App::$settings['slider']['$image_height'];
+
+        $this->title = 'Картинки для слайдера';
+        $this->breadcrumbs[] = ['title'=>$this->title];
     }
 
     public function actionIndex(): string
     {
-        $this->title = 'Картинки для слайдера';
-        $this->breadcrumbs[] = ['title'=>$this->title];
-
         $query = "SELECT * from {$this->TABLE} order by pos,title asc";
         $result = App::$db->query($query);
         

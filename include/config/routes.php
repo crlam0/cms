@@ -256,13 +256,23 @@ return [
      * Controllers for admin/
      * 
      */
+    
+    'admin-index' => [
+        'pattern' => '^admin\/?$',
+        'controller' => 'admin\Controllers\IndexController'
+    ],      
     'slider-edit' => [
         'pattern' => '^admin\/slider\-edit\/[\w\-]*$',
         'controller' => 'admin\Controllers\SliderEditController',
     ],
-    
-    
-    
+    'templates-edit' => [
+        'pattern' => '^admin\/templates\-edit\/[\w\-]*$',
+        'controller' => 'admin\Controllers\TemplatesEditController',
+    ],
+    'settings-edit' => [
+        'pattern' => '^admin\/settings\-edit\/[\w\-]*$',
+        'controller' => 'admin\Controllers\SettingsEditController',
+    ],
     
 ];
 

@@ -8,13 +8,10 @@ use classes\BaseController;
 class SettingsEditController extends BaseController
 {        
     private $TABLE;
-    public $path;
     
     public function __construct() {
         parent::__construct();
-        $this->TABLE = 'settings';
-        $this->path = App::$SUBDIR . 'admin/settings-edit/';
-        
+        $this->TABLE = 'settings';        
         $this->title = 'Настройки';
         $this->breadcrumbs[] = ['title'=>$this->title];
     }
@@ -23,6 +20,7 @@ class SettingsEditController extends BaseController
     {
         $query = "SELECT * from {$this->TABLE} order by name asc";
         $result = App::$db->query($query);
+        // throw new \InvalidArgumentException('test');
         
         return App::$template->parse('settings_table.html.twig', ['this' => $this], $result);        
     }
@@ -30,8 +28,7 @@ class SettingsEditController extends BaseController
     public function actionCreate(): string 
     {
         if(is_array(App::$input['form'])) {
-            $query = "insert into {$this->TABLE} " . App::$db->insertFields(App::$input['form']);
-            App::$db->query($query);
+            App::$db->insertTable($this->TABLE, App::$input['form']);
             return $this->actionIndex();
         }
         $tags = [
@@ -50,8 +47,7 @@ class SettingsEditController extends BaseController
     public function actionUpdate(): string 
     {
         if(is_array(App::$input['form'])) {
-            $query = "update {$this->TABLE} set " . App::$db->updateFields(App::$input['form']) . ' where id=?';
-            App::$db->query($query, ['id' => App::$input['id']]);
+            App::$db->updateTable($this->TABLE, App::$input['form'], ['id' => App::$input['id']]);
             return $this->actionIndex();
         }        
         $tags = App::$db->getRow("select * from {$this->TABLE} where id=?", ['id' => App::$input['id']]);

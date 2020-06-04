@@ -9,12 +9,10 @@ class TemplatesEditController extends BaseController
 {    
     
     private $TABLE;
-    public $path;
     
     public function __construct() {
         parent::__construct();
-        $this->TABLE = 'templates';
-        $this->path = App::$SUBDIR . 'admin/templates-edit/';        
+        $this->TABLE = 'templates';     
         $this->title = 'Шаблоны';
         $this->breadcrumbs[] = ['title'=>$this->title];
     }
@@ -30,8 +28,9 @@ class TemplatesEditController extends BaseController
     public function actionCreate(): string 
     {
         if(is_array(App::$input['form'])) {
-            $query = "insert into {$this->TABLE} " . App::$db->insertFields(App::$input['form']);
-            App::$db->query($query);
+            // $query = "insert into {$this->TABLE} " . App::$db->insertFields(App::$input['form']);
+            // App::$db->query($query);
+            App::$db->insertTable($this->TABLE, App::$input['form']);
         }
         $tags = [
             'this' => $this,
@@ -59,8 +58,7 @@ class TemplatesEditController extends BaseController
                     echo App::$message->get('error', [], 'Ошибка сохранения файла шаблона.');
                 }
             }    
-            $query = "update {$this->TABLE} set " . App::$db->updateFields(App::$input['form']) . ' where id=?';
-            App::$db->query($query, ['id' => App::$input['id']]);
+            App::$db->updateTable($this->TABLE, App::$input['form'], ['id' => App::$input['id']]);
         }
         
         if(App::$input['update_and_exit']) {

@@ -1,5 +1,5 @@
 <center>
-    <form action="{{ this.path }}create" method=get>
+    <form action="{{ this.base_url }}create" method=get>
         <input class="btn btn-primary" type="submit" value="Добавить">
     </form>
 </center>
@@ -17,14 +17,14 @@
 	<td><b>{{ row.name }}</b></td>
 	<td>{{ row.comment }}</td>
 	<td>{{ row.template_type }}</td>
-	<td width=16><a href="{{ this.path }}update?id={{ row.id }}"><img src="{{ SUBDIR }}images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href="{{ this.path }}update?id={{ row.id }}"><img src="{{ SUBDIR }}images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href="{{ this.base_url }}update?id={{ row.id }}"><img src="{{ SUBDIR }}images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href="{{ this.base_url }}update?id={{ row.id }}"><img src="{{ SUBDIR }}images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
     </tr>
 {% endfor %}
 </table>
 <br>
 <center>
-    <form action="{{ this.path }}create" method=get>
+    <form action="{{ this.base_url }}create" method=get>
 	<input class="btn btn-primary" type="submit" value="Добавить">
     </form>
 </center>

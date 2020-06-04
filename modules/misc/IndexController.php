@@ -19,7 +19,7 @@ class IndexController extends BaseController
             return $controller->actionIndex();
         }
         
-        $query="select title,content from article_item where seo_alias='main'";
+        $query="select title,content from article_item where seo_alias1='main'";
         $result=App::$db->query($query);
         list($title,$text)=$result->fetch_array();
         

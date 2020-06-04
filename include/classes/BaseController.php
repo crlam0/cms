@@ -18,7 +18,12 @@ class BaseController
     /**
     * @var array Additional tags
     */
-    public $tags = [];
+    public $tags = [];    
+    
+    /**
+    * @var string Base URL for controller's views
+    */
+    public $base_url = '';
     
     /**
      * Set empty values for HTML blocks.

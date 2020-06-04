@@ -10,7 +10,6 @@ class SliderEditController extends BaseController
 {    
     
     private $TABLE;
-    public $path;
     private $image_path;
     private $image_width;
     private $image_height;
@@ -18,10 +17,9 @@ class SliderEditController extends BaseController
     public function __construct() {
         parent::__construct();
         $this->TABLE = 'slider_images';
-        $this->path = App::$SUBDIR . 'admin/slider-edit/';
         $this->image_path = App::$settings['slider']['upload_path'];
         $this->image_width = App::$settings['slider']['image_width'];
-        $this->image_height = App::$settings['slider']['$image_height'];
+        $this->image_height = App::$settings['slider']['image_height'];
 
         $this->title = 'Картинки для слайдера';
         $this->breadcrumbs[] = ['title'=>$this->title];
@@ -40,12 +38,10 @@ class SliderEditController extends BaseController
         global $_FILES;
         $content = '';
         if(is_array(App::$input['form'])) {
-            $form = App::$input['form'];
-            $query = "insert into {$this->TABLE} " . App::$db->insertFields($form);
-            App::$db->query($query);
+            App::$db->insertTable($this->TABLE, App::$input['form']);
             $image_id = App::$db->insert_id();
             $file = $_FILES['image_file'];    
-            $content .= $this->saveImage($file, $image_id, $form['title']);
+            $content .= $this->saveImage($file, $image_id, $image_id);
         }
         $tags = [
             'this' => $this,
@@ -67,12 +63,10 @@ class SliderEditController extends BaseController
         global $_FILES;
         $content = '';
         if(is_array(App::$input['form'])) {
-            $form = App::$input['form'];
-            $query = "update {$this->TABLE} set " . App::$db->updateFields($form) . ' where id=?';
-            App::$db->query($query, ['id' => App::$input['id']]);
+            App::$db->updateTable($this->TABLE, App::$input['form'], ['id' => App::$input['id']]);
             $image_id = App::$input['id'];
             $file = $_FILES['image_file'];    
-            $content .= $this->saveImage($file, $image_id, $form['title']);
+            $content .= $this->saveImage($file, $image_id, $image_id);
         }
         $tags = App::$db->getRow("select * from {$this->TABLE} where id=?", ['id' => App::$input['id']]);
         $tags['this'] = $this;

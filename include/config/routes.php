@@ -263,14 +263,17 @@ return [
     ],      
     'slider-edit' => [
         'pattern' => '^admin\/slider\-edit\/[\w\-]*$',
+        'base_url' => 'admin/slider-edit/',
         'controller' => 'admin\Controllers\SliderEditController',
     ],
     'templates-edit' => [
         'pattern' => '^admin\/templates\-edit\/[\w\-]*$',
+        'base_url' => 'admin/templates-edit/',
         'controller' => 'admin\Controllers\TemplatesEditController',
     ],
     'settings-edit' => [
         'pattern' => '^admin\/settings\-edit\/[\w\-]*$',
+        'base_url' => 'admin/settings-edit/',
         'controller' => 'admin\Controllers\SettingsEditController',
     ],
     

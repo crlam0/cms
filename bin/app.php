@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 
 <?php
-require __DIR__.'/../include/config/config.local.php';
+require __DIR__.'/../local/config.php';
 require __DIR__.'/../include/config/misc.php';
 $DIR = __DIR__.'/../';
 

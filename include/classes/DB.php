@@ -55,13 +55,50 @@ class DB
         if (mysqli_connect_error()) {
             die('DB connect error ' . mysqli_connect_errno() . ': ' . mysqli_connect_error());
         }
-        $this->query('SET character_set_client = utf8', true);
-        $this->query('SET character_set_results = utf8', true);
-        $this->query('SET character_set_connection = utf8', true);
+        $this->query('SET character_set_client = utf8');
+        $this->query('SET character_set_results = utf8');
+        $this->query('SET character_set_connection = utf8');
         empty($this->query_log_array);
         $this->query_log_array[] = 'Connected to ' . $host;
     }
-    
+
+    private function bindParams($stmt, $params) {
+        $types = '';
+        $values = [];
+        foreach ($params as $name => $value) {            
+            if($name == 'id') {
+                $types .= 'i';
+            } else {
+                $types .= 's';
+            }
+            $values[] = $value;
+        }
+        if(!$stmt->bind_param($types, ...$values)) {
+            throw new \InvalidArgumentException('Cant bind params: ' . $stmt->error);
+        }
+        return $stmt;
+    }
+
+    public function prepareAndExecute(string $sql, array $params = []) {
+        if($this->debug){
+            $start_time = microtime(true);
+        }
+        $stmt = $this->mysqli->prepare($sql);
+        if(!$stmt) {
+            throw new \InvalidArgumentException('SQL Prepare error: ' . $this->mysqli->error . ' Query is: ' . $sql);
+        }
+        $this->bindParams($stmt, $params);
+        if (!$stmt->execute()) {
+            throw new \InvalidArgumentException('SQL Execute error: ' . $stmt->error . ' Query is: ' . $sql);
+        }        
+        if($this->debug){
+            $time = sprintf('%.4F', microtime(true) - $start_time);
+            $this->query_log_array[] = $time . "\t" . $sql;
+        }
+        $result = $stmt->get_result();
+        $stmt->free_result();
+        return $result;
+    }
     
     /**
      * Replace for mysql_query
@@ -71,22 +108,20 @@ class DB
      *
      * @return array mysqli result
      */
-    public function query(string $sql, bool $dont_debug=false) 
+    public function query(string $sql, array $params = []) 
     {
+        if(count($params)) {
+            return $this->prepareAndExecute($sql, $params);
+        }
         if($this->debug){
             $start_time = microtime(true);
         }
-        if($this->mysqli) {
-            $result = $this->mysqli->query($sql);
-        }
+        $result = $this->mysqli->query($sql);
         if($this->debug){
             $time = sprintf('%.4F', microtime(true) - $start_time);
             $this->query_log_array[] = $time . "\t" . $sql;
-            if(strlen($this->mysqli->info)) {
-                $this->query_log_array[] = $this->mysqli->info;
-            }
         }
-        if (!$result) {            
+        if (!$result) {
             if($this->debug){
                 throw new \InvalidArgumentException('SQL Error: ' . $this->mysqli->error . ' Query is: ' . $sql);
             }
@@ -103,9 +138,9 @@ class DB
      *
      * @return array One row
      */
-    public function getRow(string $sql, bool $dont_debug = false) 
+    public function getRow(string $sql, array $params = []) 
     {
-        $result = $this->query($sql, $dont_debug);    
+        $result = $this->query($sql, $params);    
         if ($result->num_rows) {
             $row = $result->fetch_array();
             return $row;
@@ -142,7 +177,7 @@ class DB
         if(!strstr(App::$server['PHP_SELF'], 'admin/')) {
             $str=htmlspecialchars($str);            
         }
-        $str=$this->escape_string($str);        
+        $str=$this->escapeString($str);        
         foreach($this->DENIED_WORDS as $word) {
             if(stristr($str, $word)){
                 header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
@@ -159,7 +194,7 @@ class DB
      *
      * @return string
      */
-    public function escape_string(string $str) : string 
+    public function escapeString(string $str) : string 
     {
         return $this->mysqli->escape_string($str);        
     }
@@ -167,12 +202,12 @@ class DB
     /**
      * Return htmlspecialchars() for $value if needed.
      *
-     * @param string $field Field name
      * @param string $value Field value
+     * @param string $field Field name
      *
      * @return string Complete string for query
      */
-    public function special_chars(string $value, string $field = '') : string 
+    public function specialChars(string $value, string $field = '') : string 
     {
         if($field == 'title' || $field == 'name') {
             $value = htmlspecialchars($value);
@@ -187,7 +222,7 @@ class DB
      *
      * @return string Complete string for query
      */
-    public function insert_fields(array $fields) : string 
+    public function insertFields(array $fields) : string 
     {
         $total = count($fields);
         $output = '';
@@ -209,8 +244,8 @@ class DB
                 if(strstr($value,'date_format')){
                     $str_values.=stripcslashes($value) . $str;
                 }else{
-                    $value=$this->special_chars($value, $key);
-                    // $value=$this->escape_string($value);
+                    $value=$this->specialChars($value, $key);
+                    // $value=$this->escapeString($value);
                     $str_values.= ( $value == 'now()' ? $value . $str : "'$value'$str");
                 }    
             }
@@ -228,7 +263,7 @@ class DB
      *
      * @return string Complete string for query
      */
-    public function update_fields(array $fields) : string 
+    public function updateFields(array $fields) : string 
     {
         $total = count($fields);
         $output = '';
@@ -246,8 +281,8 @@ class DB
             if(strstr($value,'date_format')){
                 $output.="$key=".stripcslashes($value) . $str;
             }else{
-                $value=$this->special_chars($value, $key);
-                // $value=$this->escape_string($value);
+                $value=$this->specialChars($value, $key);
+                // $value=$this->escapeString($value);
                 $output.= ( $value == 'now()' ? "$key=$value" . $str : "$key='$value'$str");
             }    
         }

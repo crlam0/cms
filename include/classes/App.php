@@ -161,7 +161,7 @@ class App
             $this->loadSettingsFromFile($filename);
         }
         $query='SELECT name,value FROM settings';
-        $result=static::$db->query($query,true);
+        $result=static::$db->query($query);
         while ($row = $result->fetch_array()) {
             static::$settings[$row['name']] = $row['value'];
         }        
@@ -234,6 +234,7 @@ class App
         static::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
         $controller = new $controller_name;
         try {
+
             $content = $controller->run($action, static::$routing->params);
             /* Fill tags for default template */
             $tags['Header'] = $controller->title;

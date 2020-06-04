@@ -48,7 +48,7 @@ class Comments
     public function show_count(int $target_id) : string
     {        
         $query="select count(id) from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id='{$target_id}'";
-        list($count) = App::$db->getRow($query, true);
+        list($count) = App::$db->getRow($query);
         return $count;
     }
     

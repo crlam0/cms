@@ -36,7 +36,9 @@ class Template
             }
             $file_name = '';
             if (file_exists(App::$DIR . 'templates/' . $template['file_name'])) {
-                $file_name = App::$DIR . 'templates/' . $template['file_name'];
+                $file_name = $template['file_name'];
+            }    
+            if (file_exists(App::$DIR . 'admin/templates/' . $template['file_name'])) {
                 $file_name = $template['file_name'];
             }    
             if ($file_name) {
@@ -102,7 +104,6 @@ class Template
         if (!strstr($template['content'], '[%')) {
             return($template['content']);
         }
-        App::debug("Parse template '{$template['name']}'");
         return $this->MyTemplate->parse($template['content'], $tags, $sql_result, $inner_content);
     }
 
@@ -140,10 +141,10 @@ class Template
             $template['template_type'] = 'twig';
         }
         if (!$template) {
-            $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}' AND '" . App::$server['REQUEST_URI'] . "' LIKE concat('%',uri,'%')", true);
+            $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}' AND '" . App::$server['REQUEST_URI'] . "' LIKE concat('%',uri,'%')");
         }
         if (!$template) {
-            $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}'", true);
+            $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}'");
         }
         if (!$template) {
             return App::$message->get('tpl_not_found', ['name'=>$name]);

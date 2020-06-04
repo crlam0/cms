@@ -17,6 +17,7 @@
         "psr-4": {
             "classes\\": "include/classes/",
             "modules\\": "modules/",
+            "admin\\": "admin/",
             "local\\": "local/classes/",
             "tests\\": "tests/"
         }

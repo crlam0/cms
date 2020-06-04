@@ -40,5 +40,8 @@
         </table>
         <script src="[%SUBDIR%]include/js/bootstrap.min.js"></script>
         <script src="[%SUBDIR%]include/js/misc.js"></script>
+
+        [%block(debug)%]
+
     </body>
 </html>

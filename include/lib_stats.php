@@ -53,6 +53,6 @@ if (!$deny) {
     $data['user_agent']=$server['HTTP_USER_AGENT'];
 
     $query = "insert into visitor_log" . db_insert_fields($data);
-    App::$db->query($query, true);
+    App::$db->query($query);
     unset($data);
 }

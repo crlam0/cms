@@ -5,7 +5,6 @@ namespace Modules\misc;
 use classes\App;
 use classes\BaseController;
 
-
 /**
  * Default controller for index page.
  *
@@ -25,6 +24,7 @@ class IndexController extends BaseController
         list($title,$text)=$result->fetch_array();
         
         $this->title = $title;
+        $this->tags['isIndexPage'] = true;
         $content = \replace_base_href($text);
         return $content;
         

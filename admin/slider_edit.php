@@ -1,15 +1,14 @@
 <?php
+$tags['Header'] = 'Картинки для слайдера';
+include '../include/common.php';
 
-$tags['Header'] = "Картинки для слайдера";
-include "../include/common.php";
-
-// print_array($settings);
+use Classes\App;
 
 $image_path = $settings['slider']['upload_path'];
 
 function show_img($tmp, $row) {
-    global $DIR, $image_path;
-    if (is_file($DIR . $image_path . $row['file_name'])) {
+    global $image_path;
+    if (is_file(App::$DIR . $image_path . $row['file_name'])) {
         return "<img src=\"../".$image_path.$row['file_name']."\" border=0 width=200></a>";
     } else {
         return "Отсутствует";
@@ -27,8 +26,6 @@ if ($input["del_image"]) {
     my_query($query);
     $content.=my_msg_to_str('', [], "Изображение успешно удалено.");
 }
-
-// ($_FILES["img_file"]);
 
 if ($input["added_image"]) {
     $query = "insert into slider_images " . db_insert_fields($input['form']);
@@ -76,27 +73,27 @@ if ($input["edited_image"]) {
     my_query($query);
 }
 
-if (($input["edit_image"]) || ($input["add_image"])) {
-    if ($input["edit_image"]) {
-        $query = "select * from slider_images where id='{$input['id']}'";
-        $result = my_query($query);
-        $tags = array_merge($tags, $result->fetch_array());
-        $tags['type'] = "edited_image";
-        $tags['form_title'] = "Редактирование";
+if (($input['edit_image']) || ($input['add_image'])) {
+    if ($input['edit_image']) {
+        $query = "select * from slider_images where id=?";
+        $result = App::$db->query($query, ['id' => $input['id']]);
+        $tags = array_merge($tags, $result->fetch_assoc());
+        $tags['type'] = 'edited_image';
+        $tags['form_title'] = 'Редактирование';
     } else {
-        $tags['type'] = "added_image";
-        $tags['form_title'] = "Добавление";
+        $tags['type'] = 'added_image';
+        $tags['form_title'] = 'Добавление';
         $tags['descr'] = '';
     }
     $tags['descr'] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
-    $content.=get_tpl_by_name("slider_images_edit_form", $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    $content .= App::$template->parse('slider_images_edit_form', $tags);
+    echo get_tpl_default($tags, '', $content);
     exit();
 }
 
 $query = "SELECT * from slider_images order by pos,title asc";
-$result = my_query($query, true);
-$content.=get_tpl_by_name("slider_images_edit_table", $tags, $result);
+$result = my_query($query);
+$content .= App::$template->parse('slider_images_edit_table', $tags, $result);
 
-echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+echo get_tpl_default($tags, '', $content);
 

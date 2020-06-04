@@ -54,7 +54,7 @@ class Controller extends BaseController
     {
         $id = get_id_by_alias('article_item', $alias, true);
         $query = "select * from article_item where id='" . $id . "'";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         $row = $result->fetch_array();
         
         $PDF = new PDFView();

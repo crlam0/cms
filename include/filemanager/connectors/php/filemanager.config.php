@@ -23,16 +23,16 @@ function auth() {
   // If you use a session variable, you've got to start the session first (session_start())
   // return true;
 
-  include_once "../../../config/config.local.php";
+  include_once "../../../../local/config.php";
 
-  $_SESSION["UID"]=0;
-  $_SESSION["FLAGS"]='';
+  $_SESSION['UID']=0;
+  $_SESSION['FLAGS']='';
 
   session_cache_limiter('nocache');
   session_name($SESSID);
   session_start();
 
-  return strstr($_SESSION["FLAGS"],"admin"); 
+  return strstr($_SESSION['FLAGS'],'admin'); 
 }
 
 

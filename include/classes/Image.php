@@ -13,7 +13,7 @@ class Image
     private $dst_image;
     private $file_type;
     
-    private $validImageTypes = array('image/pjpeg', 'image/jpeg', 'image/gif', 'image/png', 'image/x-png');
+    public static $validImageTypes = ['image/pjpeg', 'image/jpeg', 'image/gif', 'image/png', 'image/x-png'];
     
     public function __construct(string $file_name, $file_type = '') 
     {
@@ -23,7 +23,7 @@ class Image
         }
         $this->file_name = $file_name;
         $this->file_type = $this->getFileType($file_name, $file_type);
-        if (!in_array($this->file_type, $this->validImageTypes)) {
+        if (!in_array($this->file_type, static::$validImageTypes)) {
             App::$message->error('Неверный тип файла !');
             return false;
         }
@@ -91,7 +91,7 @@ class Image
         return imagecopyresampled($this->dst_image, $this->src_image, 0, 0, $src_x, $src_y, $width, $height, $src_w, $src_h);            
     }
     
-    public function resize (int $max_width = 0, int $max_height = 0, int $fix_width = 0, int $fix_height = 0) : bool
+    public function resize ($max_width = 0, $max_height = 0, int $fix_width = 0, int $fix_height = 0) : bool
     {
         if(!$this->src_image) {
             return false;
@@ -149,8 +149,6 @@ class Image
         }
         return is_file($dst_file);        
     }
-    
-
     
     public static function getFileExt($file_type) : string 
     {

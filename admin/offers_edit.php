@@ -107,7 +107,7 @@ if (($input["edit_offers"]) || ($input["add_offers"])) {
 }
 
 $query = "SELECT * from offers order by date,title asc";
-$result = my_query($query, true);
+$result = my_query($query);
 $content.=get_tpl_by_name("offers_edit_table", $tags, $result);
 
 echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

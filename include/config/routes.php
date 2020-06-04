@@ -248,5 +248,21 @@ return [
         'pattern' => '^price\/[\w\-]*$',
         'controller' => 'modules\price\Controller',
     ],    
+    
+    
+    
+    
+    /*
+     * Controllers for admin/
+     * 
+     */
+    'slider-edit' => [
+        'pattern' => '^admin\/slider\-edit\/[\w\-]*$',
+        'controller' => 'admin\Controllers\SliderEditController',
+    ],
+    
+    
+    
+    
 ];
 

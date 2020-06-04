@@ -23,7 +23,10 @@ class TwigTemplate
 
     private $config = [
         'debug' => false,
-        'template_dir' => 'templates',
+        'template_dirs' => [
+            'templates',
+            'admin/templates',
+        ],
         'cache_dir' => 'var/cache/twig',
         'autoescape' => '',
         'extensions' => [
@@ -52,7 +55,9 @@ class TwigTemplate
         switch ($this->template_type) {
             case $this::TYPE_FILE:
                     $loader = new FilesystemLoader();
-                    $loader->addPath(App::$DIR . $this->config['template_dir']);
+                    foreach($this->config['template_dirs'] as $path) {
+                        $loader->addPath(App::$DIR . $path);
+                    }
                 break;
             case $this::TYPE_ARRAY:
                     $loader = new ArrayLoader($content);

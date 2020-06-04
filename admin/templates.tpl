@@ -220,11 +220,11 @@ $(document).ready(function(){
 	<tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[title]" value="[%title%]"></td></tr>
 	<tr class="content" align="left"><td>Алиас:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[seo_alias]" value="[%seo_alias%]"></td></tr>
  	<tr class="content" align="left"><td>Ссылается на:</td><td>[%target_type_select%]</td></tr>
+        <tr class="content" align="left" id="target_select"></tr>
         <tr class="content" align="left">
             <td>Изображение:</td>
             <td>[%image_tag%][%del_button%]<br><input class="form-control" name="image_file" type="file" size="40"></td>
         </tr>
-        <tr class="content" align="left" id="target_select"></tr>
 	<tr class="content"><td align="left" colspan="2">
 		<textarea class="form-control" id="editor" name="form[content]" rows="35" cols="80" maxlength="64000">[%content%]</textarea>
 	</td></tr>

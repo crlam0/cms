@@ -2,12 +2,13 @@
 
 namespace modules\misc;
 
-use Classes\BaseController;
-use Classes\App;
+use classes\BaseController;
+use classes\App;
 
 class LoginController extends BaseController
 {    
-    private function auth() {
+    private function auth(): string 
+    {
         global $_SESSION, $COOKIE_NAME;
         if($row = App::$user->authByLoginPassword(App::$input['login'],App::$input['passwd'])) {
             $_SESSION['UID']=App::$user->id;
@@ -30,12 +31,13 @@ class LoginController extends BaseController
     }
 
 
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $this->title = 'Вход в систему';
         $this->breadcrumbs[] = ['title'=>$this->title];
 
         $content = '';
+        $tags = [];
         if (App::$input['logon'] && check_csrf_token()) {
             $content = $this->auth();
         }

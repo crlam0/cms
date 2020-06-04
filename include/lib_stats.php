@@ -1,6 +1,6 @@
 <?php
 
-use Classes\App;
+use classes\App;
 
 $deny_urls=array('img','image','admin/','favicon');
 $deny_remote_hosts=array('bot','spider','yandex','google','mail.ru','crawl');
@@ -33,7 +33,7 @@ if (!$deny) {
      */
     $unique=0;
     $query="SELECT id FROM visitor_log WHERE remote_addr='" . $server['REMOTE_ADDR'] . "'";
-    $result=App::$db->query($query, true);
+    $result=App::$db->query($query);
     if(!$result->num_rows)$unique=1;    
     $data['date']='now()';
     $data['day']="date_format(now(),'%Y-%m-%d')";

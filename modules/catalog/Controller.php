@@ -2,24 +2,26 @@
 
 namespace modules\catalog;
 
-use Classes\BaseController;
-use Classes\App;
-use Classes\Pagination;
-
-include 'functions.php';
+use classes\BaseController;
+use classes\App;
+use classes\Pagination;
+use classes\Image;
 
 class Controller extends BaseController
 { 
+    public static $cache_path = 'var/cache/catalog/';
     
-    private function parseURI($uri) {
+    private function parseURI(string $uri): array 
+    {
         $params = explode('/', $uri);
         $part_id = 0;
+        $page = 1;
         foreach ($params as $alias) {
             if(preg_match("/^page\d{1,2}$/", $alias)) {
                 $page = str_replace('page','',$alias);
             } else {
                 $query = "select id from cat_part where seo_alias like '$alias' and prev_id='{$part_id}'";
-                $row = App::$db->select_row($query, true);
+                $row = App::$db->getRow($query);
                 if (is_numeric($row['id'])) {
                     $part_id = $row['id'];
                 }
@@ -28,7 +30,8 @@ class Controller extends BaseController
         return [$part_id, $page];
     }
     
-    private function prev_part($prev_id, $deep, $arr) {        
+    private function prev_part(int $prev_id, int $deep, array $arr): array 
+    {        
         $query = "SELECT id,title,prev_id from cat_part where id='{$prev_id}' order by title asc";
         $result = App::$db->query($query);
         if (!$result->num_rows) {
@@ -41,7 +44,8 @@ class Controller extends BaseController
         return $arr;
     }
     
-    private function getHeaderBreadCrumbs($part_id, $item_title = '') {
+    private function getHeaderBreadCrumbs(int $part_id, string $item_title = ''): array 
+    {
         $root_title = isset(App::$settings['catalog_header']) ? App::$settings['catalog_header'] : 'Каталог';
         $title = $root_title;
         if ($part_id) {
@@ -69,18 +73,21 @@ class Controller extends BaseController
         return([$title,$breadcrumbs] );
     }
     
-    private function getBackButton($part_id) {
+    private function getBackButton(int $part_id): string 
+    {
         if ($part_id) {
-            list($href_id) = App::$db->select_row("select prev_id from cat_part where id='{$part_id}'", true);
+            list($href_id) = App::$db->getRow("select prev_id from cat_part where id='{$part_id}'");
             return '
             <div class="cat_back">
                 <center><a href="' . App::$SUBDIR . get_cat_part_href($href_id) . '" class="btn btn-default"> << Назад</a></center>
             </div>
             ';
+        } else {
+            return '';
         }    
     }
     
-    public function actionPartList($uri)
+    public function actionPartList(string $uri): string
     {        
         list($part_id, $page) = $this->parseURI($uri);
         list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs($part_id);
@@ -92,6 +99,7 @@ class Controller extends BaseController
         if ($result->num_rows) {
             $tags['functions'] = [];
             // $tags['cat_part_href'] = get_cat_part_href($part_id);
+            $tags['this'] = $this;
             $content .= App::$template->parse('cat_part_list', $tags, $result);
         } 
         $content .= $this->getPartItemsContent($part_id, $page);
@@ -99,18 +107,19 @@ class Controller extends BaseController
         return $content;
     }
     
-    public function actionIndex()
+    public function actionIndex(): string
     {
-        list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs(null);
+        list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs(0);
         return $this->actionPartList('');
     }
 
-    private function getPartItemsContent($part_id, $page) {
+    private function getPartItemsContent(int $part_id, int $page): string 
+    {
         global $_SESSION;
         
         $content = '';
         
-        $row_part = App::$db->select_row("select * from cat_part where id='{$part_id}'");
+        $row_part = App::$db->getRow("select * from cat_part where id='{$part_id}'");
         
         if (isset($row_part['descr']) && strlen($row_part['descr'])) {
             $tags['part_descr'] = $row_part['descr'];
@@ -121,9 +130,9 @@ class Controller extends BaseController
         if ($page ) {
             $_SESSION['catalog_page'] = $page;
         }
-        list($total) = App::$db->select_row("SELECT count(id) from cat_item where part_id='" . $part_id . "'");
+        list($total) = App::$db->getRow("SELECT count(id) from cat_item where part_id='" . $part_id . "'");
 
-        $pager = new Pagination($total,$_SESSION['catalog_page'],App::$settings['catalog_items_per_page']);
+        $pager = new Pagination($total, $_SESSION['catalog_page'], App::$settings['catalog_items_per_page']);
         $tags['pager'] = $pager;
 
         $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
@@ -131,10 +140,11 @@ class Controller extends BaseController
                 where part_id='" . $part_id . "'
                 group by cat_item.id   
                 order by cat_item.num,b_code,title asc limit {$pager->getOffset()},{$pager->getLimit()}";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             $tags['cat_part_href'] = get_cat_part_href($part_id);
             $tags['functions'] = [];
+            $tags['this'] = $this;
             $content .= App::$template->parse('cat_item_list', $tags, $result);
         } else {
             $tags['title'] = $row_part['title'];
@@ -144,16 +154,18 @@ class Controller extends BaseController
         return $content;
     }
     
-    private function getItemId($part_id, $item_title) {
+    private function getItemId(int $part_id, string $item_title): int 
+    {
         $query = "select id,part_id from cat_item where seo_alias = '{$item_title}' and part_id='{$part_id}'";
-        $row = App::$db->select_row($query, true);
+        $row = App::$db->getRow($query);
         if (is_numeric($row['id'])) {
             return $row['id'];
         }
         return 0;
     }
     
-    private function getRelatedProducts($row_part) {        
+    private function getRelatedProducts(array $row_part)
+    {        
         if(!$related_products = my_json_decode($row_part['related_products'])) {
             $related_products=[];
         }
@@ -166,20 +178,21 @@ class Controller extends BaseController
                 order by cat_item.num,b_code,title asc";
             $result = App::$db->query($query);
             if ($result->num_rows) {
-                return App::$template->parse('cat_item_list', $tags, $result);
+                
+                return App::$template->parse('cat_item_list', ['this' => $this], $result);
             }
         }
         return null;
     }
     
-    public function actionItem($uri, $item_title)
+    public function actionItem(string $uri, string $item_title): string
     {        
         list($part_id, $page) = $this->parseURI($uri);
         list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs($part_id, $item_title);
 
         $item_id = $this->getItemId($part_id, $item_title);
 
-        $query = "select cat_item.*,fname,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='" . $item_id . "'";
+        $query = "select cat_item.*,fname,file_type,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='" . $item_id . "'";
         $result = App::$db->query($query);
         
         if (!$result->num_rows) {
@@ -189,7 +202,7 @@ class Controller extends BaseController
             return  App::$message->get('notice', [], 'Товар не найден');
         }
         $tags = $result->fetch_array();
-        $row_part = App::$db->select_row("select * from cat_part where id='{$part_id}'");
+        $row_part = App::$db->getRow("select * from cat_part where id='{$part_id}'");
 
         $this->title = $tags['title'];
         $this->breadcrumbs[] = ['title' => $tags['title']];
@@ -204,36 +217,37 @@ class Controller extends BaseController
         if($_SESSION['catalog_page']>1) {
             $tags['page'] = 'page' . $_SESSION['catalog_page'] . '/';
         }
+        $tags['this'] = $this;
         return App::$template->parse('cat_item_view', $tags, $result);        
     }
     
-    public function actionLoadImage()            
+    public function actionLoadImage(): string            
     {
         $input = App::$input;
         $query = "select default_img,fname,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id='{$input['item_id']}'";
-        list($default_img,$default_img_fname,$title)=App::$db->select_row($query);
+        list($default_img,$default_img_fname,$title)=App::$db->getRow($query);
 
         $nav_ins = '';
 
-        list($prev_id,$fname) = App::$db->select_row("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<'" . $input['image_id'] . "' and id<>'{$default_img}' order by id desc limit 1");
+        list($prev_id,$fname) = App::$db->getRow("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<'" . $input['image_id'] . "' and id<>'{$default_img}' order by id desc limit 1");
         if ($input['image_id'] != $default_img){
             if ($prev_id){
                 $nav_ins.= "<a image_id={$prev_id} item_id={$input['item_id']} file_name={$fname} class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
             }else{     
                 $nav_ins.= "<a image_id={$default_img} item_id={$input["item_id"]} file_name=\"{$default_img_fname}\" class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
             }
-            list($next_id,$fname) = App::$db->select_row("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id>'" . $input['image_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
+            list($next_id,$fname) = App::$db->getRow("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id>'" . $input['image_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
             if ($next_id) {
                 $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$fname} class=\"cat_image_button btn btn-default\">Следующая >></a>";
             }
         }else{
-            list($next_id,$fname) = App::$db->select_row("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
+            list($next_id,$fname) = App::$db->getRow("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
             if ($next_id) {
                 $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$fname} class=\"cat_image_button btn btn-default\">Следующая >></a>";
             }
         }
 
-        $URL = get_item_image_url($input['file_name'], 500, 0);
+        $URL = $this->getImageUrl($input['file_name'], '', App::$settings['catalog_item_img_max_width'], 0);
 
         $content .= '<center><img src="' . APP::$SUBDIR . $URL .'" border="0" alt="' . $title . '"></center>';
         if(strlen($nav_ins)){
@@ -245,6 +259,108 @@ class Controller extends BaseController
         echo json_encode($json);
         exit;        
     }
+    
+    /*  ???  */
+    public function getPropValue($row,$name) {
+        if($props_values = my_json_decode($row['props'])) {
+            $result = $props_values[$name];        
+            return strlen($result)>0 ? $result : false;
+        }
+        return false;
+    }
+
+    /*  +++ */
+    public function getPropsArray($props) {    
+        if($props_values = my_json_decode($props)) {
+            foreach($props_values as $key => $value ){
+                if(!strlen($props_values[$key])) {
+                    unset($props_values[$key]);
+                }
+            }
+            return $props_values;
+        }
+        return false;
+    }
+
+    /*  ??? */
+    public function getPropName($part_id,$name) {
+        $query = "select items_props from cat_part where id='{$part_id}'";
+        list($items_props) = my_select_row($query, true);
+        if($props_values = my_json_decode($items_props)) {
+            return $props_values[$name]['name'];
+        }
+        return false;
+    }
+
+    /*  ??? */
+    public function getPropNamesArray($part_id) {
+        $query = "select items_props from cat_part where id='{$part_id}'";
+        list($items_props) = my_select_row($query, true);
+        if($props_values = my_json_decode($items_props)) {        
+            $result=[];
+            foreach($props_values as $name){
+                $result[$name]=$props_values[$name]['name'];
+            }
+            return $result;
+        }
+        return false;    
+    }
+    
+    public static function getCacheFilename($file_name, $file_type, $max_width) {
+        if(!$file_type || !strlen($file_type)) {
+            list($file_type) = App::$db->getRow("select file_type from cat_item_images where fname='" . $file_name ."'");            
+        }
+        $file_extension = Image::getFileExt($file_type);
+        $IMG_ITEM_PATH = App::$DIR . App::$settings['catalog_item_img_path'];
+        $file_name = $IMG_ITEM_PATH . $file_name;
+        return static::$cache_path . md5($file_name . $max_width) . '.' . $file_extension;
+    }
+    
+    public function getImageUrl($file_name, $file_type, $width, $crop = true) {
+        $cache_file_name = $this->getCacheFilename($file_name, $file_type, $width);
+        if(is_file(App::$DIR . $cache_file_name)) {
+            return $cache_file_name;
+        } else {
+            return "modules/catalog/image.php?file_name={$file_name}&preview={$width}&crop={$crop}";
+        }
+    }
+
+    public function getImageFilename($file_name, $file_type, $width = 0, $crop = true) {
+        $IMG_ITEM_PATH = App::$DIR . App::$settings['catalog_item_img_path'];
+        if(!$width) {
+            $width = App::$settings['catalog_item_img_preview'];
+        }        
+        if (is_file($IMG_ITEM_PATH . $file_name)) {
+            return $this->getImageUrl($file_name, $file_type, $width, $crop);
+        } else {
+            return false;
+        }
+    }
+
+    public function getListImage($row) {
+        App::$input['preview']=true;
+        $file_name = App::$DIR . App::$settings['catalog_item_img_path'] . $row['fname'];
+        $image = new Image($file_name, $row['file_type']);
+        $cript_name = 'modules/catalog/image.php?preview='.App::$settings['catalog_item_img_preview'].'&crop=1&id=' . $row['image_id'];
+        return $image->getHTML($row, static::$cache_path, 'catalog_popup', $cript_name, App::$settings['catalog_item_img_preview']);
+    }
+
+    public function getPartImageFilename($fname, $width = 0) {
+        $IMG_PART_PATH = App::$DIR . App::$settings['catalog_part_img_path'];
+        if(!$width) {
+            $width = App::$settings['catalog_part_img_preview'];
+        }        
+        if (is_file($IMG_PART_PATH . $fname)) {
+            return App::$settings['catalog_part_img_path'] . $fname;
+        } else {
+            return false;
+        }
+    }
+
+    public function getItemsCount($id) {
+        global $_SESSION;
+        return $_SESSION['BUY'][$id]['count'];
+    }    
     
 }
 

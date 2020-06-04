@@ -7,7 +7,6 @@ $(document).ready(function () {
         var id = $(this).attr("item_id");
         var cnt_id = ".cnt_" + id;
         cnt = $(cnt_id).val();
-        console.log(cnt);
         $.ajax({
             type: "GET", url: DIR + "basket/add-buy", dataType: "json", data: "item_id=" + id + "&cnt=" + cnt,
             success: function (msg) {

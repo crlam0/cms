@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 
 <?php
-require __DIR__.'/../include/config/config.local.php';
+require __DIR__.'/../local/config.php';
 require __DIR__.'/../include/config/misc.php';
 $DIR = __DIR__.'/../';
 
@@ -11,20 +11,16 @@ if(file_exists($DIR.'vendor/autoload.php')) {
     die('Cant find autoloader');
 }
 
-use Classes\App;
 use Symfony\Component\Console\Application;
 use Phinx\Console\Command;
-
-$App = new App($DIR, $SUBDIR);
-$App->connectDB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
 require_once __DIR__ . '/../include/lib_functions.php';
 
 $cli = new Application('Application console');
-$cli->add(new Classes\Command\CacheClearCommand($console['cachePaths']));
-$cli->add(new Classes\Command\DBDumpCommand());
-$cli->add(new Classes\Command\DBRestoreCommand());
-$cli->add(new Classes\Command\DBDumpClearCommand());
+$cli->add(new classes\commands\CacheClearCommand($console['cachePaths']));
+$cli->add(new classes\commands\DBDumpCommand());
+$cli->add(new classes\commands\DBRestoreCommand());
+$cli->add(new classes\commands\DBDumpClearCommand());
 $cli->addCommands([
     new Command\Create(),
     new Command\Migrate(),

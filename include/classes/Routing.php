@@ -1,10 +1,11 @@
 <?php
 
-namespace Classes;
+namespace classes;
 
-use Classes\App;
+use classes\App;
 
-final class Routing {
+final class Routing 
+{
     /**
     * @var array All routes
     */
@@ -36,12 +37,13 @@ final class Routing {
      * @param string $request_uri URI from $_SERVER
      *
      */
-    public function __construct($request_uri) {
+    public function __construct(string $request_uri) 
+    {
         $this->routes = [];
         $this->request_uri = $request_uri;
         
-        $this->addRoutesFromConfig('routes.global.php');
-        $this->addRoutesFromConfig('routes.local.php');       
+        $this->addRoutesFromConfig('/../config/routes.php');
+        $this->addRoutesFromConfig('/../../local/routes.php');       
         
         if(App::$SUBDIR !== '/') {
             $this->request_uri = str_replace(App::$SUBDIR, '', $this->request_uri);
@@ -64,9 +66,10 @@ final class Routing {
      * @param string $file
      *
      */
-    public function addRoutesFromConfig($file) {
-        if(file_exists(__DIR__ . '/../config/' . $file)) {
-            $this->routes = array_merge($this->routes, require __DIR__ . '/../config/' . $file);
+    public function addRoutesFromConfig(string $file) : void
+    {
+        if(file_exists(__DIR__ . $file)) {
+            $this->routes = array_merge($this->routes, require __DIR__ . $file);
         }
     }
     
@@ -75,7 +78,8 @@ final class Routing {
      *
      * @return boolean
      */
-    public function isIndexPage () {
+    public function isIndexPage () : bool 
+    {
         return !$this->request_uri or $this->request_uri==='' or $this->request_uri==='index.php';
     }
     
@@ -86,7 +90,8 @@ final class Routing {
      * @param string $matches Found matches
      *
      */
-    private function proceedInput ($route, $matches) {
+    private function proceedInput (array $route, array $matches) : void 
+    {
         global $input;
         foreach($matches as $key => $value){
             if (array_key_exists('params', $route)) {
@@ -104,7 +109,8 @@ final class Routing {
      * @param string $matches Found matches
      *
      */
-    private function proceedParams ($route, $matches) {
+    private function proceedParams (array $route, array $matches) : void 
+    {
         foreach($matches as $key => $value){
             if (array_key_exists('params', $route)) {
                 $this->params[$route['params'][$key]] = App::$db->test_param($value);
@@ -119,7 +125,8 @@ final class Routing {
      * @param string $matches Found matches
      *
      */
-    private function proceedMatches ($route, $matches) {        
+    private function proceedMatches (array $route, array $matches) : void 
+    {        
         if(isset($route['file'])) {
             $this->file = $route['file'];
             $this->proceedInput($route, $matches);
@@ -138,7 +145,8 @@ final class Routing {
      * Try to find route.
      *
      */
-    private function matchRoutes () {
+    private function matchRoutes () 
+    {
         foreach($this->routes as $title => $route) {
             $matches = [];
             if (preg_match('/'.$route['pattern'].'/', $this->request_uri, $matches) === 1) {
@@ -155,22 +163,18 @@ final class Routing {
      *
      * @return string
      */
-    private function getAction () {
-        $action='';
+    private function getAction () 
+    {
         if(strlen($this->request_uri) == 0) {
-            $action='index';
+            return 'index';
         }
         if(strpos($this->request_uri, '/')) {
-            if(end(explode('/',$this->request_uri)) == '') {
-                $action='index';
+            $arr = explode('/',$this->request_uri);
+            if(end($arr) == '') {
+                return 'index';
             } else {
-                $action = end(explode('/',$this->request_uri));
+                return end($arr);
             }
-        } else {
-            $action = $this->request_uri;
-        }
-        if(strlen($action)) {
-            return $action;
         } else {
             throw new \InvalidArgumentException('Cant find default action');
         }
@@ -181,12 +185,13 @@ final class Routing {
      *
      * @return array
      */
-    public function getPartArray () {
+    public function getPartArray () 
+    {
         $query = "SELECT * FROM parts WHERE '" . $this->request_uri . "' LIKE concat(uri,'%') AND title<>'default'";
-        $part = App::$db->select_row($query, true);        
+        $part = App::$db->getRow($query);        
         if (!$part['id']) {
             $query = "SELECT * FROM parts WHERE title='default'";
-            $part = App::$db->select_row($query, true);
+            $part = App::$db->getRow($query);
         }
         return $part;        
     }

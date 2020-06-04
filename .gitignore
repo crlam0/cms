@@ -20,7 +20,6 @@
 
 *.local.*
 *Local*
-/admin/nav.php
 /favicon.png
 /sitemap.xml
 

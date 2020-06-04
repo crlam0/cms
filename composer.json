@@ -15,9 +15,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Classes\\": "include/classes/",
+            "classes\\": "include/classes/",
             "modules\\": "modules/",
-            "Tests\\": "tests/"
+            "local\\": "local/classes/",
+            "tests\\": "tests/"
         }
     },
     "scripts": {

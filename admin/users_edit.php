@@ -2,19 +2,19 @@
 $tags['Header']="Пользователи сервера";
 include "../include/common.php";
 
-use Classes\App;
+use classes\App;
 
 if ($input['del']) {
     $query = "delete from users where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str("", "", "Пользователь успешно удален !");
+    $content.=my_msg_to_str('', [], "Пользователь успешно удален !");
 }
 
 if ($input['add']) {
     $query="select id from users where login='".$input['form']['login']."'";
     $result=my_query($query);
     if($result->num_rows){
-            $content.=my_msg_to_str('error','','Такой пользователь уже существует ! ('.$input['form']['login'].')');
+            $content.=my_msg_to_str('error', [],'Такой пользователь уже существует ! ('.$input['form']['login'].')');
     }else{
         $input['form']['flags'] = implode(";", $input['flags']);
         $input['form']['salt'] = App::$user->generateSalt();
@@ -22,7 +22,7 @@ if ($input['add']) {
         $input['form']['regdate'] = 'now()';
         $query = "insert into users " . db_insert_fields($input['form']);
         my_query($query);
-        $content.=my_msg_to_str('', '', 'Пользователь успешно добавлен !');
+        $content.=my_msg_to_str('', [], 'Пользователь успешно добавлен !');
     }
 }
 
@@ -36,7 +36,7 @@ if ($input['edit']) {
     }
     $query = "update users set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str('', '', 'Редактирование успешно завершено !');
+    $content.=my_msg_to_str('', [], 'Редактирование успешно завершено !');
 }
 
 if (($input['view']) || ($input['adding'])) {

@@ -14,21 +14,21 @@ if ($input["list_vote"]) {
 if ($input["del_variant"]) {
     $query = "delete from vote_variants where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str("", "", "Вариант успешно удален.");
+    $content.=my_msg_to_str('', [], "Вариант успешно удален.");
 }
 
 if ($input["added_variant"]) {
     $input['form'][vote_id] = $_SESSION["view_vote"];
     $query = "insert into vote_variants " . db_insert_fields($input['form']);
     my_query($query);
-    $content.=my_msg_to_str("", "", "Вариант успешно добавлен.");
+    $content.=my_msg_to_str('', [], "Вариант успешно добавлен.");
 }
 
 if ($input["edited_variant"]) {
     $input['form']['vote_id'] = $_SESSION["view_vote"];
     $query = "update vote_variants set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str("", "", "Вариант успешно изменен.");
+    $content.=my_msg_to_str('', [], "Вариант успешно изменен.");
 }
 
 if (($input["edit_variant"]) || ($input["add_variant"])) {
@@ -61,11 +61,11 @@ if ($input["del_vote"]) {
     $query = "select id from vote_variants where vote_id='{$input['id']}'";
     $result = my_query($query);
     if ($result->num_rows) {
-	$content.=my_msg_to_str("error","","Этот раздел не пустой !");
+	$content.=my_msg_to_str('error', [],"Этот раздел не пустой !");
     } else {
         $query = "delete from vote_list where id='{$input['id']}'";
         my_query($query);
-        $content.=my_msg_to_str("", "", "Голосование успешно удалено.");
+        $content.=my_msg_to_str('', [], "Голосование успешно удалено.");
     }
 }
 
@@ -74,7 +74,7 @@ if ($input["added_vote"]) {
 	)$input['form']['active'] = 0;
     $query = "insert into vote_list " . db_insert_fields($input['form']);
     my_query($query);
-    $content.=my_msg_to_str("", "", "Вариант успешно добавлено.");
+    $content.=my_msg_to_str('', [], "Вариант успешно добавлено.");
 }
 
 if ($input["edited_vote"]) {
@@ -82,7 +82,7 @@ if ($input["edited_vote"]) {
 	)$input['form']['active'] = 0;
     $query = "update vote_list set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str("", "", "Вариант успешно изменено.");
+    $content.=my_msg_to_str('', [], "Вариант успешно изменено.");
 }
 
 if (($input["edit_vote"]) || ($input["add_vote"])) {

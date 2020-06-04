@@ -2,16 +2,16 @@
 $tags['Header']='Страница администрирования';
 require '../include/common.php';
 
-use Classes\Sitemap;
+use classes\Sitemap;
 
 $content='';
 
 
 if($input['clear_cache']) {
     if(clear_cache_dir()){
-        $content.=my_msg_to_str('','','Директория кэша очищена');
+        $content.=my_msg_to_str('',[],'Директория кэша очищена');
     } else {
-        $content.=my_msg_to_str('error','','Директория кэша не очищена !');
+        $content.=my_msg_to_str('error',[],'Директория кэша не очищена !');
     }
 }
 
@@ -22,27 +22,27 @@ if(file_exists($sitemap)){
 }
 
 if($time_diff>7*24*60*60){
-    $content.=my_msg_to_str('','','Файл sitemap.xml не обновлялся более недели.');
+    $content.=my_msg_to_str('',[],'Файл sitemap.xml не обновлялся более недели.');
     $sitemap= new Sitemap();
     $types = explode(';', $settings['sitemap_types']);
     $sitemap->build_pages_array($types);
     $result=$sitemap->write();    
-    $content.=my_msg_to_str('','',"Файл sitemap.xml сгенерирован, записано {$result['count']} позиций.");
+    $content.=my_msg_to_str('',[],"Файл sitemap.xml сгенерирован, записано {$result['count']} позиций.");
 }
 
-$tables = my_query("SHOW TABLES LIKE 'comments'",null,true);
+$tables = my_query("SHOW TABLES LIKE 'comments'");
 if($tables->num_rows){
     $query="select * from comments order by date_add desc limit 5";
-    $result=my_query($query,null,true);
+    $result=my_query($query);
     if($result->num_rows){
         $content.=get_tpl_by_name('admin_last_comments',$tags,$result);
     }    
 }
 
-$tables = my_query("SHOW TABLES LIKE 'request'",null,true);
+$tables = my_query("SHOW TABLES LIKE 'request'");
 if($tables->num_rows){
     $query="select * from request order by date desc limit 5";
-    $result=my_query($query,null,true);
+    $result=my_query($query);
     if($result->num_rows){
         $content.=get_tpl_by_name('admin_last_requests',$tags,$result);
     }    

@@ -19,13 +19,13 @@ if ($input["del_comment"]) {
     $query = "delete from $TABLE where id={$input["id"]}";
     $result = my_query($query, true);
     $list = 1;
-    $content.=my_msg_to_str("", "", "Комментарий успешно удален.");
+    $content.=my_msg_to_str('', [], "Комментарий успешно удален.");
 }
 
 if ($input["edited_comment"]) {
     $query = "update $TABLE set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query, true);
-    $content.=my_msg_to_str("", "", "Комментарий успешно изменен.");
+    $content.=my_msg_to_str('', [], "Комментарий успешно изменен.");
 }
 
 if (($input["edit_comment"]) || ($input["add_comment"])) {

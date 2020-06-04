@@ -1,6 +1,10 @@
 <?php
 
 return [  
+    'site-index' => [
+        'pattern' => '^\/?$',
+        'controller' => 'modules\misc\IndexController'
+    ],    
     'login' => [
         'pattern' => '^login\/?$',
         'controller' => 'modules\misc\LoginController'
@@ -9,13 +13,17 @@ return [
         'pattern' => '^logout\/?$',
         'controller' => 'modules\misc\LogoutController'
     ],    
-    'passwd_change' => [
+    'passwd-change' => [
         'pattern' => '^passwd_change\/?$',
         'controller' => 'modules\misc\PasswdChangeController'
     ],    
-    'passwd_recovery' => [
-        'pattern' => '^passwd_recovery\/?\w*$',
+    'passwd-recovery' => [
+        'pattern' => '^passwd_recovery\/?[\w\-]*$',
         'controller' => 'modules\misc\PasswdRecoveryController'
+    ],    
+    'signup' => [
+        'pattern' => '^signup\/?[\w\-]*$',
+        'controller' => 'modules\misc\SignupController'
     ],    
     'search' => [
         'pattern' => '^search\/?$',
@@ -25,7 +33,7 @@ return [
         'pattern' => '^request\/?$',
         'file' => 'modules/misc/request.php'
     ],    
-    'request_php' => [
+    'request.php' => [
         'pattern' => '^.*misc\/request\.php$',
         'file' => 'modules/misc/request.php'
     ],   
@@ -57,7 +65,7 @@ return [
             '1' => 'alias'
         ]
     ],    
-    'article_pdf' => [
+    'article-pdf' => [
         'pattern' => '^article\/(.*)\/(.*)\.pdf$',
         'controller' => 'modules\article\Controller',
         'action' => 'PDF',
@@ -71,39 +79,42 @@ return [
     /*
      * Blog, FAQ related routes
      * 
-     */
-    
-    'blog' => [
+     */    
+
+    'blog-index' => [
         'pattern' => '^blog\/?$',
-        'file' => 'modules/blog/index.php',
+        'controller' => 'modules\misc\BlogController',
+        'action' => 'index',
     ],    
-    'blog_uri_with_slash' => [
-        'pattern' => '^blog\/(.*)\/$',
-        'file' => 'modules/blog/index.php',
+    'blog-index-with-page' => [
+        'pattern' => '^blog\/page(\d+)\/?$',
+        'controller' => 'modules\misc\BlogController',
+        'action' => 'index',
         'params' => [
-            '0' => 'uri',
+            '0' => 'page',
         ]
     ],    
-    'blog_uri' => [
-        'pattern' => '^blog\/(.*)$',
-        'file' => 'modules/blog/index.php',
+    'blog-post-view' => [
+        'pattern' => '^blog\/([\w_\-]+)\/?$',
+        'controller' => 'modules\misc\BlogController',
+        'action' => 'post-view',
         'params' => [
-            '0' => 'uri',
+            '0' => 'alias',
         ]
     ],    
     
-    'faq_uri' => [
-        'pattern' => '^faq\/(.*)\/$',
-        'file' => 'modules/faq/index.php',
+    'faq-index' => [
+        'pattern' => '^faq\/?[\w\-]*$',
+        'controller' => 'modules\misc\FAQController',
+    ],    
+    'faq-index-with-page' => [
+        'pattern' => '^faq\/page(\d+)\/?$',
+        'controller' => 'modules\misc\FAQController',
+        'action' => 'index',
         'params' => [
-            '0' => 'uri',
+            '0' => 'page',
         ]
-    ],    
-    'faq' => [
-        'pattern' => '^faq\/.*$',
-        'file' => 'modules/faq/index.php',
-    ],    
-    
+    ],
 
     /*
      * Gallery related routes
@@ -140,22 +151,12 @@ return [
     /*
      * Media, news related routes
      * 
-    
-    'media' => [
-        'pattern' => '^media\/?$',
-        'file' => 'modules/media/index.php',
-        'params' => [
-            '0' => 'uri',
-        ]
+     */
+    'media-download' => [
+        'pattern' => '^media\/download$',
+        'controller' => 'modules\media\Controller',
+        'action' => 'download',
     ],    
-    'media_uri' => [
-        'pattern' => '^media\/(.*)\/?$',
-        'file' => 'modules/media/index.php',
-        'params' => [
-            '0' => 'uri',
-        ]
-    ],    
-     */   
     'media-part-list' => [
         'pattern' => '^media\/?$',
         'controller' => 'modules\media\Controller',
@@ -178,27 +179,30 @@ return [
             '1' => 'page',
         ]
     ],    
-    
-    'news' => [
+
+    'news-index' => [
         'pattern' => '^news\/?$',
-        'file' => 'modules/news/index.php',
+        'controller' => 'modules\misc\NewsController',
     ],    
-    'news_uri' => [
-        'pattern' => '^news\/(.*)\/?$',
-        'file' => 'modules/news/index.php',
+    'news-item-view' => [
+        'pattern' => '^news\/([\w_\-]+)\/?$',
+        'controller' => 'modules\misc\NewsController',
+        'action' => 'item-view',
         'params' => [
-            '0' => 'uri',
+            '0' => 'alias',
         ]
     ],    
-    'offers' => [
+    
+    'offers-index' => [
         'pattern' => '^offers\/?$',
-        'file' => 'modules/offers/index.php',
+        'controller' => 'modules\misc\OffersController',
     ],    
-    'offers_uri' => [
-        'pattern' => '^offers\/(.*)\/?$',
-        'file' => 'modules/offers/index.php',
+    'offers-item-view' => [
+        'pattern' => '^offers\/([\w_\-]+)\/?$',
+        'controller' => 'modules\misc\OffersController',
+        'action' => 'item-view',
         'params' => [
-            '0' => 'uri',
+            '0' => 'alias',
         ]
     ],    
 
@@ -212,7 +216,7 @@ return [
         'controller' => 'modules\catalog\Controller',
         'action' => 'index',
     ],  
-    'catalog_part' => [
+    'catalog-part' => [
         'pattern' => '^catalog\/(.*)\/$',
         'controller' => 'modules\catalog\Controller',
         'action' => 'part-list',
@@ -220,7 +224,7 @@ return [
             '0' => 'uri',
         ]
     ],
-    'catalog_item' => [
+    'catalog-item' => [
         'pattern' => '^catalog\/(.*)\/(.*)$',
         'controller' => 'modules\catalog\Controller',
         'action' => 'item',
@@ -234,28 +238,15 @@ return [
         'controller' => 'modules\catalog\Controller',
         'action' => 'load-image'
     ],
-    'catalog-add-buy' => [
-        'pattern' => '^catalog\/add-buy$',
-        'controller' => 'modules\catalog\Controller',
-        'action' => 'add-buy'
-    ],
     
     'basket' => [
-        'pattern' => '^basket\/.*$',
+        'pattern' => '^basket\/[\w\-]*$',
         'controller' => 'modules\catalog\BasketController',
     ],
     
-    'catalog_buy' => [
-        'pattern' => '^catalog\/(.*)\/buy\.php',
-        'file' => 'modules/catalog/buy.php'
-    ], 
-    'catalog_basket' => [
-        'pattern' => '^catalog\/basket\/',
-        'file' => 'modules/catalog/buy.php'
-    ], 
     'price' => [
-        'pattern' => '^price\/$',
-        'file' => 'modules/price/index.php'
+        'pattern' => '^price\/[\w\-]*$',
+        'controller' => 'modules\price\Controller',
     ],    
 ];
 

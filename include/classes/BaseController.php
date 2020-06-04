@@ -1,21 +1,35 @@
 <?php
 
-namespace Classes;
+namespace classes;
 
-class BaseController {
+class BaseController 
+{
     
     /**
     * @var string Page title
     */
     public $title = '';
+    
     /**
     * @var array Page breadcrumbs
     */
     public $breadcrumbs = [];
+    
     /**
     * @var array Additional tags
     */
     public $tags = [];
+    
+    /**
+     * Set empty values for HTML blocks.
+     *
+     */
+    public function __construct() 
+    {
+        $this->tags['INCLUDE_HEAD']='';
+        $this->tags['INCLUDE_CSS']='';
+        $this->tags['INCLUDE_JS']='';
+    }
     
     /**
      * Check method and run it if exists
@@ -25,7 +39,8 @@ class BaseController {
      *
      * @return string Content
      */
-    private function runMethod(string $methodName, array $params = []) {
+    private function runMethod(string $methodName, array $params = []) 
+    {
         if (method_exists($this, $methodName)) {
             $method = new \ReflectionMethod($this, $methodName);
             if ($method->isPublic() && $method->getName() === $methodName) {
@@ -43,7 +58,8 @@ class BaseController {
      *
      * @return string Content
      */
-    public function run(string $action, array $params = []) {
+    public function run(string $action, array $params = []) 
+    {
         $method = 'action' . str_replace(' ', '', ucwords(implode(' ', explode('-', $action))));
         return $this->runMethod($method, $params);
     }

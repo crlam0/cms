@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\Blocks;
+use classes\Blocks;
 
 require_once 'bootstrap.php';
 

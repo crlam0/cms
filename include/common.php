@@ -1,10 +1,14 @@
 <?php
 
-require __DIR__.'/config/config.local.php';
+if(file_exists(__DIR__.'/../local/config.php')) {
+    require __DIR__.'/../local/config.php';
+} else {
+    die('Main config not found');
+}
 require __DIR__.'/config/misc.php';
 
-if(file_exists(__DIR__.'/config/misc.local.php')) {
-    require_once __DIR__.'/config/misc.local.php';
+if(file_exists(__DIR__.'/../local/misc.local.php')) {
+    require_once __DIR__.'/../local/misc.local.php';
 }    
 
 if(file_exists($DIR.'vendor/autoload.php')) {
@@ -13,28 +17,31 @@ if(file_exists($DIR.'vendor/autoload.php')) {
     die('Cant find autoloader');
 }
 
-use Classes\App;
-use Classes\Routing;
-use Classes\User;
-use Classes\Template;
-use Classes\Message;
+use classes\App;
+use classes\DB;
+use classes\Routing;
+use classes\User;
+use classes\Template;
+use classes\Message;
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
 
 $App = new App($DIR, $SUBDIR);
-$App->connectDB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
-$App->loadSettings(__DIR__.'/config/settings.local.php');
+$App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
+$App->loadSettings(__DIR__.'/local/settings.php');
 $App->loadInputData($_GET, $_POST, $_SERVER);
 $App->addGlobals();
-$App->debug('App created, arrays loaded');
+App::$debug = App::$settings['debug'];
+App::$db->debug = App::$settings['debug'];
+App::debug('App created, arrays loaded');
 unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
-App::$user = new User();
+App::$user = new User(App::$settings['default_flags']);
 App::$template = new Template();
 App::$message = new Message();
 App::$routing = new Routing (App::$server['REQUEST_URI']);
 
-if(App::$settings['debug']) {
+if(App::$debug) {
     $whoops = new Run();
     $whoops->writeToOutput(true);
     $whoops->allowQuit(true);

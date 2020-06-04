@@ -2,15 +2,15 @@
 
 namespace modules\catalog;
 
-use Classes\BaseController;
-use Classes\App;
-use Classes\SummToStr;
+use classes\BaseController;
+use classes\App;
+use classes\SummToStr;
 
 include 'functions.php';
 
 class BasketController extends BaseController
 { 
-    public function actionAddBuy()
+    public function actionAddBuy(): string
     {
         global $_SESSION;
         if (!isset($_SESSION['BUY'][App::$input['item_id']]['count'])) {
@@ -28,9 +28,10 @@ class BasketController extends BaseController
         exit;        
     }
     
-    private function getDiscount($summ){        
+    private function getDiscount(int $summ): int
+    {        
         $query="SELECT discount from discount where summ<='{$summ}' order by summ desc";
-        $result=my_query($query);
+        $result=App::$db->query($query);
         if($result->num_rows){
             list($discount)=$result->fetch_array();
         }else{
@@ -39,11 +40,12 @@ class BasketController extends BaseController
         return $discount;
     }
 
-    private function calcDiscount($summ,$discount){
+    private function calcDiscount(int $summ, int $discount): float
+    {
         return $summ*(1-$discount/100);
     }    
     
-    private function getBasketData()
+    private function getBasketData(): array
     {
         global $_SESSION;        
         $where='';
@@ -51,7 +53,7 @@ class BasketController extends BaseController
             $where.= !strlen($where) ? " id='{$item_id}'" : " or id='{$item_id}'" ;
         } 
         $query = "select * from cat_item where $where order by b_code,title asc";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         $summ = 0;
         $cnt = 0;
         $item_list = '';
@@ -65,7 +67,7 @@ class BasketController extends BaseController
         return ['summ' => $summ, 'cnt' => $cnt, 'item_list' => $item_list, 'result' => $result];
     }
     
-    public function actionGetSummary()
+    public function actionGetSummary(): void
     {
         global $_SESSION;
         if (count($_SESSION['BUY'])) {
@@ -84,7 +86,7 @@ class BasketController extends BaseController
         exit();
     }
     
-    private function checkInput($input) {        
+    private function checkInput(array $input) {        
         if (strlen($input['lastname'])<3) {
             return App::$message->get('error', [], 'Неверно заполнено поле &quot;Фамилия&quot;');
         }
@@ -100,7 +102,7 @@ class BasketController extends BaseController
         return true;
     }
     
-    private function requestDone($form) 
+    private function requestDone(array $form) : string
     {        
         global $BASE_HREF, $_SESSION;
         $data = $this->getBasketData();
@@ -114,7 +116,7 @@ class BasketController extends BaseController
         $tags['summ_with_discount'] = add_zero($this->calcDiscount($summ, $tags['discount']));
         $tags['form'] = $form;
         $content = App::$template->parse('basket_mail.html.twig', $tags, $result);
-        if(!App::$settings['debug']){
+        if(!App::$debug){
             App::$message->mail(App::$settings['email_to_addr'], 'Запрос с сайта ' . $BASE_HREF, $content, 'text/html');
         }
         
@@ -126,10 +128,10 @@ class BasketController extends BaseController
         $query = "insert into request(date,item_list,contact_info,comment) values(now(),'" . $item_list . "','" . $contact_info . "','" . $form['comment']."')";
         App::$db->query($query, true);
         unset($_SESSION['BUY']);
-        return my_msg_to_str('',[],'Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.');
+        return App::$message->get('',[],'Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.');
     }
     
-    public function actionRequest() 
+    public function actionRequest() : string
     {        
         $this->title = 'Оформить заказ';
         $this->breadcrumbs[] = [ 'title' => 'Корзина', 'url' => 'basket/' ];
@@ -161,21 +163,22 @@ class BasketController extends BaseController
         return $content;
     }
     
-    public function actionClear()
+    public function actionClear(): void
     {
         unset($_SESSION['BUY']);
         redirect(App::$SUBDIR . 'basket/');
         exit;
     }
     
-    public function actionDel()
+    public function actionDel(): string
     {
         $item_id = App::$input['item_id'];
         unset($_SESSION['BUY'][$item_id]);
         return $this->actionIndex();
     }    
     
-    private function buttonClick($type) {
+    private function buttonClick(string $type) : void
+    {
         foreach(App::$input['buy_cnt'] as $item_id => $item_cnt) {
             if (is_numeric($item_cnt) && $item_cnt > 0 && $item_cnt < 99 ) {
                 $_SESSION['BUY'][$item_id]['count'] = $item_cnt;
@@ -186,7 +189,7 @@ class BasketController extends BaseController
         }        
     }
     
-    public function actionIndex()
+    public function actionIndex() : string
     {
         global $_SESSION;
         
@@ -207,7 +210,7 @@ class BasketController extends BaseController
             $count = $count + (int)$cnt;
         }
         $query = "select cat_item.*,fname,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         $summ = 0;
         $cnt = 0;
         while ($row = $result->fetch_array()) {

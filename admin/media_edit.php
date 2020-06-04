@@ -30,11 +30,11 @@ if ($input["del_file"]) {
     list($fname_old) = my_select_row("select file_name from media_files where id='{$input['id']}'");
     if (is_file($DIR . $settings["media_upload_path"] . $fname_old)) {
 	if (!unlink($DIR . $settings["media_upload_path"] . $fname_old)
-	    )$content.=my_msg_to_str("error","","Ошибка удаления файла");
+	    )$content.=my_msg_to_str('error', [],"Ошибка удаления файла");
     }
     $query = "delete from media_files where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str("", "", "Файл успешно удален.");
+    $content.=my_msg_to_str('', [], "Файл успешно удален.");
 }
 
 if ($input["added_file"]) {
@@ -48,13 +48,13 @@ if ($input["added_file"]) {
 	if (move_uploaded_file($_FILES["uploaded_file"]["tmp_name"], $DIR . $settings["media_upload_path"] . $file_name)) {
 	    $input['form']['file_name'] = $file_name;
 	} else {
-	    $content.=my_msg_to_str("error","","Ошибка копирования файла !");
+	    $content.=my_msg_to_str('error', [],"Ошибка копирования файла !");
 	}
     }
 
     $query = "insert into media_files " . db_insert_fields($input['form']);
     my_query($query);
-    $content.=my_msg_to_str("", "", "Файл успешно добавлен.");
+    $content.=my_msg_to_str('', [], "Файл успешно добавлен.");
 }
 
 if ($input["edited_file"]) {
@@ -62,7 +62,7 @@ if ($input["edited_file"]) {
 	list($fname_old) = my_select_row("select file_name from media_files where id='{$input['id']}'");
 	if (is_file($DIR . $settings["media_upload_path"] . $fname_old)) {
 	    if (!unlink($DIR . $settings["media_upload_path"] . $fname_old)){
-                $content.=my_msg_to_str("error","","Ошибка удаления файла");
+                $content.=my_msg_to_str('error', [],"Ошибка удаления файла");
             }
 	}
       	$f_info = pathinfo($_FILES["uploaded_file"]["name"]);        
@@ -71,12 +71,12 @@ if ($input["edited_file"]) {
 	if (move_uploaded_file($_FILES["uploaded_file"]["tmp_name"], $DIR . $settings["media_upload_path"] . $file_name)) {
 	    $input['form'][file_name] = $file_name;
 	} else {
-	    $content.=my_msg_to_str("error","","Ошибка копирования файла !");
+	    $content.=my_msg_to_str('error', [],"Ошибка копирования файла !");
 	}
     }
     $query = "update media_files set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str("", "", "Файл успешно изменен.");
+    $content.=my_msg_to_str('', [], "Файл успешно изменен.");
 }
 
 if (($input["edit_file"]) || ($input["add_file"])) {
@@ -110,11 +110,11 @@ if ($input["del_list"]) {
     $query = "select id from media_files where list_id='{$input['id']}'";
     $result = my_query($query);
     if ($result->num_rows) {
-	$content.=my_msg_to_str("error","","Этот раздел не пустой !");
+	$content.=my_msg_to_str('error', [],"Этот раздел не пустой !");
     } else {
 	$query = "delete from media_list where id='{$input['id']}'";
 	my_query($query);
-	$content.=my_msg_to_str("", "", "Раздел успешно удален.");
+	$content.=my_msg_to_str('', [], "Раздел успешно удален.");
     }
 }
 
@@ -125,7 +125,7 @@ if ($input["added_list"]) {
     $input['form']['date_add'] = "now()";
     $query = "insert into media_list " . db_insert_fields($input['form']);
     my_query($query);
-    $content.=my_msg_to_str("", "", "Раздел успешно добавлен.");
+    $content.=my_msg_to_str('', [], "Раздел успешно добавлен.");
 }
 
 if ($input["edited_list"]) {
@@ -134,7 +134,7 @@ if ($input["edited_list"]) {
     }
     $query = "update media_list set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str("", "", "Раздел успешно изменен.");
+    $content.=my_msg_to_str('', [], "Раздел успешно изменен.");
 }
 
 if (($input["edit_list"]) || ($input["add_list"])) {

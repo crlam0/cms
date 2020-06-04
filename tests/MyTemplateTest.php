@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\MyTemplate;
+use classes\MyTemplate;
 
 class MyTemplateTest extends TestCase
 {
@@ -22,7 +22,7 @@ class MyTemplateTest extends TestCase
     
     public function testSQLParse()            
     {
-        $result=Classes\App::$db->query("select login from users where login='boot'");
+        $result=classes\App::$db->query("select login from users where login='boot'");
         $content=$this->MyTemplate->parse("[%loop_begin%]\n[%row(login)%]\n[%loop_end%]",[],$result);
         self::assertEquals('boot' . "\n", $content);
     }

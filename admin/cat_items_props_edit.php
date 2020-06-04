@@ -57,7 +57,7 @@ function part_items($part_id) {
             $props_array = json_decode($tags['items_props'], true);
             // print_array($props_array);
             if(!is_array($props_array)) {
-                $content.=my_msg_to_str('','','Массив свойств неверен');
+                $content.=my_msg_to_str('',[],'Массив свойств неверен');
             } else {
                 $props_values=json_decode($tags['props'], true);
                 // print_array($props_values);
@@ -81,7 +81,7 @@ function part_items($part_id) {
                 $props_array = json_decode($tags['items_props'], true);
                 // print_array($props_array);
                 if(!is_array($props_array)) {
-                    $content.=my_msg_to_str('','','Массив свойств неверен');
+                    $content.=my_msg_to_str('',[],'Массив свойств неверен');
                 } else {
                     $props_values=json_decode($tags['props'], true);
                     // print_array($props_values);

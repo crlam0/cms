@@ -20,12 +20,12 @@ if ($input["del_reviews"]) {
     list($img_old) = my_select_row("select file_name from reviews where id='{$input['id']}'");
     if (is_file($DIR . $image_path . $img_old)) {
         if (!unlink($DIR . $image_path . $img_old)) {
-            $content.=my_msg_to_str("error", "", "Ошибка удаления файла");
+            $content.=my_msg_to_str('error', [], "Ошибка удаления файла");
         }
     }
     $query = "delete from reviews where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str("", "", "Изображение успешно удалено.");
+    $content.=my_msg_to_str('', [], "Изображение успешно удалено.");
 }
 
 // ($_FILES["img_file"]);
@@ -36,7 +36,7 @@ if ($input["added_reviews"]) {
     my_query($query);
     if ($_FILES["img_file"]["size"] > 100) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
-            $content.=my_msg_to_str("error", "", "Неверный тип файла !");
+            $content.=my_msg_to_str('error', [], "Неверный тип файла !");
         } else {
             $image_id = $mysqli->insert_id;
             $f_info = pathinfo($_FILES["img_file"]["name"]);
@@ -44,9 +44,9 @@ if ($input["added_reviews"]) {
             if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, $settings['reviews']['image_width'], $settings['reviews']['image_height'])) {
                 $query = "update reviews set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
                 my_query($query);
-                $content.=my_msg_to_str("", "", "Изображение успешно добавлено.");
+                $content.=my_msg_to_str('', [], "Изображение успешно добавлено.");
             } else {
-                $content.=my_msg_to_str("error", "", "Ошибка копирования файла !");
+                $content.=my_msg_to_str('error', [], "Ошибка копирования файла !");
             }
         }
     }
@@ -56,21 +56,21 @@ if ($input["edited_reviews"]) {
     $input['form']['content'] = replace_base_href($input['form']['content'], true);
     if ($_FILES["img_file"]["size"] > 100) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
-            $content.=my_msg_to_str("error", "", "Неверный тип файла !");
+            $content.=my_msg_to_str('error', [], "Неверный тип файла !");
         } else {
             list($img_old) = my_select_row("select file_name from reviews where id='{$input['id']}'");
             if (is_file($DIR . $image_path . $img_old)) {
                 if (!unlink($DIR . $image_path . $img_old))
-                    $content.=my_msg_to_str("error", "", "Ошибка удаления файла");
+                    $content.=my_msg_to_str('error', [], "Ошибка удаления файла");
             }
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name =$input['id'] . "." . $f_info["extension"];
             if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, $settings['reviews']['image_width'], $settings['reviews']['image_height'])) {
                 $input['form']['file_name'] = $file_name;
                 $input['form']['file_type'] = $_FILES["img_file"]["type"];
-                $content.=my_msg_to_str("", "", "Изображение успешно изменено.");
+                $content.=my_msg_to_str('', [], "Изображение успешно изменено.");
             } else {
-                $content.=my_msg_to_str("error", "", "Ошибка копирования файла !");
+                $content.=my_msg_to_str('error', [], "Ошибка копирования файла !");
             }
         }
     }

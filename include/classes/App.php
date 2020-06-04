@@ -1,12 +1,17 @@
 <?php
 
-namespace Classes;
-use Classes\MyArray;
-use Classes\SQLHelper;
+namespace classes;
+use classes\MyArray;
+use classes\SQLHelper;
 
-final class App {
+class App 
+{
     /**
-    * @var SQLHelper Database object
+    * @var debug Use or not debug routines
+    */
+    public static $debug = false;
+    /**
+    * @var DB Database object
     */
     public static $db;
     /**
@@ -76,12 +81,24 @@ final class App {
      * @param array $subdir Subdir of App
      *
     */   
-    public function __construct(string $dir, string $subdir = '/') {
+    public function __construct(string $dir, string $subdir = '/')
+    {
         static::$DIR = $dir;
         static::$SUBDIR = $subdir;
         static::set('DIR', $dir);
         static::set('SUBDIR', $subdir);
         static::$DEBUG[0] = microtime(true);
+    }
+    
+    /**
+     * Set Database object
+     *
+     * @param object $db
+     *
+    */    
+    public function setDB($db)
+    {
+        static::$db = $db;
     }
 
     /**
@@ -92,7 +109,8 @@ final class App {
      * @param array $server _SERVER array
      *
     */    
-    public function loadInputData(array $get, array $post, array $server) {
+    public function loadInputData(array $get, array $post, array $server) : void
+    {
         static::$server = new MyArray;
         if(is_array($server)){
             foreach ($server as $key => $value){
@@ -120,7 +138,8 @@ final class App {
      * @param string $filename Config filename
      *
     */    
-    private function loadSettingsFromFile($filename){        
+    private function loadSettingsFromFile(string $filename) : void
+    {        
         $settings_local=(require $filename);
         if(is_array($settings_local)) {
             foreach ($settings_local as $key => $value){
@@ -135,7 +154,8 @@ final class App {
      * @param string $filename Config filename
      *
     */
-    public function loadSettings($filename) {
+    public function loadSettings(string $filename) : void
+    {
         static::$settings = new MyArray;
         if(file_exists($filename)) {
             $this->loadSettingsFromFile($filename);
@@ -148,24 +168,11 @@ final class App {
     }    
     
     /**
-     * Test field parameter for deny SQL injections
-     *
-     * @param string $host Host
-     * @param string $user Username
-     * @param string $passwd Password
-     * @param string $dbname DB
-     *
-     * @return string Output string
-     */
-    public function connectDB($host, $user, $passwd, $dbname) {
-        static::$db = new SQLHelper($host, $user, $passwd, $dbname);
-    }
-
-    /**
      * Put data to global arrays
      *
      */
-    public function addGlobals() {
+    public function addGlobals() : void
+    {
         global $input, $server, $settings, $mysqli;
         $input = static::$input;
         $server = static::$server;
@@ -180,7 +187,8 @@ final class App {
      *
      * @return string Output value
      */
-    public static function get($key) {
+    public static function get(string $key) 
+    {
         return (isset(static::$data[$key]) ? static::$data[$key] : null);
     }
 
@@ -191,7 +199,8 @@ final class App {
      * @param string $value Key value
      *
      */
-    public static function set($key, $value) {
+    public static function set(string $key, $value) : void 
+    {
         static::$data[$key] = $value;
     }
 
@@ -202,7 +211,8 @@ final class App {
      *
      * @return boolean True if found
      */
-    public static function has($key) {
+    public static function has(string $key) : bool
+    {
         return isset(static::$data[$key]);
     }
     
@@ -212,10 +222,52 @@ final class App {
      * @param string $message Message
      *
      */
-    public static function debug ($message) {
+    public static function debug (string $message) : void 
+    {
         $time = microtime(true) - static::$DEBUG[0];
         $time = sprintf('%.4F', $time);
         static::$DEBUG[] = $time . "\t " . $message;
+    }
+    
+    private function runController($controller_name, $action, $tags)
+    {
+        static::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
+        $controller = new $controller_name;
+        try {
+            $content = $controller->run($action, static::$routing->params);
+            /* Fill tags for default template */
+            $tags['Header'] = $controller->title;
+            $tags['nav_array'] = array_merge($tags['nav_array'], $controller->breadcrumbs);
+            $tags = array_merge($tags, $controller->tags);
+            header(App::$server['SERVER_PROTOCOL'] . ' 200 Ok', true, 200);
+            echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
+            exit;
+        } catch (Exception $e) {
+            static::debug('Exception: ' . $e->getMessage());
+            static::debug('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
+            static::debug($e->getTraceAsString());
+            /* But show 404 error */
+        }        
+    }
+    
+    public function run ($tags) : void 
+    {
+        $file=static::$routing->file;
+        if($file && is_file(static::$DIR . $file)) {
+            $server['PHP_SELF'] = static::$SUBDIR.$file;
+            $server['PHP_SELF_DIR'] = static::$SUBDIR.dirname($file) . '/';
+            require static::$DIR . $file;
+            exit;
+        } 
+        
+        $controller_name = static::$routing->controller;
+        if(strlen($controller_name)) {
+            if(class_exists($controller_name)) {
+                $this->runController($controller_name, static::$routing->action, $tags);
+            } else {
+                static::debug('Controller "' . $controller_name . '" not exists !"');
+            }
+        }        
     }
     
 }

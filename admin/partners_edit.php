@@ -17,11 +17,11 @@ if ($input["del_partner"]) {
     if (is_file($DIR . $settings['partners']['upload_path'] . $img_old)) {
         if (!unlink($DIR . $settings['partners']['upload_path'] . $img_old)
         )
-            $content.=my_msg_to_str("error", "", "Ошибка удаления файла");
+            $content.=my_msg_to_str('error', [], "Ошибка удаления файла");
     }
     $query = "delete from partners where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str("", "", "Картинка успешно удалена.");
+    $content.=my_msg_to_str('', [], "Картинка успешно удалена.");
 }
 
 // ($_FILES["img_file"]);
@@ -31,7 +31,7 @@ if ($input["added_partner"]) {
     my_query($query);
     if ($_FILES["img_file"]["size"] > 100) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
-            $content.=my_msg_to_str("error", "", "Неверный тип файла !");
+            $content.=my_msg_to_str('error', [], "Неверный тип файла !");
         } else {
             $image_id = $mysqli->insert_id;
             $f_info = pathinfo($_FILES["img_file"]["name"]);
@@ -39,9 +39,9 @@ if ($input["added_partner"]) {
             if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['partners']['upload_path'] . $file_name, $settings['partners']['image_width'])) {
                 $query = "update partners set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
                 my_query($query);
-                $content.=my_msg_to_str("", "", "Картинка успешно добавлена.");
+                $content.=my_msg_to_str('', [], "Картинка успешно добавлена.");
             } else {
-                $content.=my_msg_to_str("error", "", "Ошибка копирования файла !");
+                $content.=my_msg_to_str('error', [], "Ошибка копирования файла !");
             }
         }
     }
@@ -50,21 +50,21 @@ if ($input["added_partner"]) {
 if ($input["edited_partner"]) {
     if ($_FILES["img_file"]["size"] > 100) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
-            $content.=my_msg_to_str("error", "", "Неверный тип файла !");
+            $content.=my_msg_to_str('error', [], "Неверный тип файла !");
         } else {
             list($img_old) = my_select_row("select file_name from partners where id='{$input['id']}'");
             if (is_file($DIR . $settings['partners']['upload_path'] . $img_old)) {
                 if (!unlink($DIR . $settings['partners']['upload_path'] . $img_old))
-                    $content.=my_msg_to_str("error", "", "Ошибка удаления файла");
+                    $content.=my_msg_to_str('error', [], "Ошибка удаления файла");
             }
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
             if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['partners']['upload_path'] . $file_name, $settings['partners']['image_width'])) {
                 $input['form']['file_name'] = $file_name;
                 $input['form']['file_type'] = $_FILES["img_file"]["type"];
-                $content.=my_msg_to_str("", "", "Картинка успешно изменена.");
+                $content.=my_msg_to_str('', [], "Картинка успешно изменена.");
             } else {
-                $content.=my_msg_to_str("error", "", "Ошибка копирования файла !");
+                $content.=my_msg_to_str('error', [], "Ошибка копирования файла !");
             }
         }
     }

@@ -2,12 +2,12 @@
 
 namespace modules\misc;
 
-use Classes\BaseController;
-use Classes\App;
+use classes\BaseController;
+use classes\App;
 
 class PartnersController extends BaseController
 {    
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $this->title = 'Наши партнеры';
         $this->breadcrumbs[] = ['title'=>$this->title];

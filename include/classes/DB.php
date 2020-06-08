@@ -382,9 +382,7 @@ class DB
                 $params['$field'] = $value;            
             }
         }
-        $result = $this->query($sql, $params);
-        var_dump($result);
-        return $result;
+        return $this->query($sql, $params);
     }
     
     public function findOne($table, $id) {

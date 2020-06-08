@@ -92,6 +92,40 @@ class BaseModel implements \ArrayAccess
         return count($this->errors) == 0;
     }
     
+    private function checkRule(string $field, array $rule) {
+        switch ($rule[1]) {
+            case 'required':
+                if(!isset($this->$field)) {
+                    return true;
+                }
+                break;
+            case 'integer':
+                if($this->checkInteger($this->$field, $rule)) {
+                    return true;
+                }
+                break;
+            case 'string':
+                if($this->checkString($this->$field, $rule)) {
+                    return true;
+                }
+                break;
+            case 'number':
+                if(is_numeric($this->$field)) {
+                    return true;
+                }
+                break;
+            case 'text':
+                if(is_string($this->$field)) {
+                    return true;
+                }
+                break;
+            default:
+                break;
+        }
+        $this->errors[] = "Field {$field} Rule {$rule[1]} failed.";
+        return false;
+    }
+    
     private function checkInteger($value, $rule)
     {
         if(!is_int($value)) {
@@ -124,40 +158,6 @@ class BaseModel implements \ArrayAccess
             return false;
         }
         return true;
-    }
-    
-    private function checkRule(string $field, array $rule) {
-        switch ($rule[1]) {
-            case 'required':
-                if($this->$field) {
-                    return true;
-                }
-                break;
-            case 'integer':
-                if($this->checkInteger($this->$field, $rule)) {
-                    return true;
-                }
-                break;
-            case 'string':
-                if($this->checkString($this->$field, $rule)) {
-                    return true;
-                }
-                break;
-            case 'number':
-                if(is_numeric($this->$field)) {
-                    return true;
-                }
-                break;
-            case 'text':
-                if(is_string($this->$field)) {
-                    return true;
-                }
-                break;
-            default:
-                break;
-        }
-        $this->errors[] = "Field {$field} Rule {$rule[1]} failed.";
-        return false;
     }
     
     /**

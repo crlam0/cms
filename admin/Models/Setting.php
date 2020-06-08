@@ -1,6 +1,6 @@
 <?php
 
-namespace admin\Models;
+namespace admin\models;
 
 use classes\BaseModel;
 

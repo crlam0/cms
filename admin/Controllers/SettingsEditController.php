@@ -1,11 +1,11 @@
 <?php
 
-namespace admin\Controllers;
+namespace admin\controllers;
 
 use classes\App;
 use classes\BaseController;
 
-use admin\Models\Setting;
+use admin\models\Setting;
 
 class SettingsEditController extends BaseController
 {        
@@ -32,6 +32,8 @@ class SettingsEditController extends BaseController
         if($model->load(App::$input['form'])) {
             if($model->save()) {
                 redirect($this->base_url);
+            } else {
+                echo nl2br($model->getErrorsAsString());
             }
         }
         $tags = $model->asArray();

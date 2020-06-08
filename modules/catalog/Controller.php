@@ -18,7 +18,7 @@ class Controller extends BaseController
         $page = 1;
         foreach ($params as $alias) {
             if(preg_match("/^page\d{1,2}$/", $alias)) {
-                $page = str_replace('page','',$alias);
+                $page = str_replace('page', '', $alias);
             } else {
                 $query = "select id from cat_part where seo_alias like '$alias' and prev_id='{$part_id}'";
                 $row = App::$db->getRow($query);
@@ -96,13 +96,15 @@ class Controller extends BaseController
         $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='{$part_id}' group by cat_part.id order by cat_part.num,cat_part.title asc";
         $result =App::$db->query($query);
 
+        $show_empty_message = true;
         if ($result->num_rows) {
             $tags['functions'] = [];
-            // $tags['cat_part_href'] = get_cat_part_href($part_id);
+            $tags['cat_part_href'] = get_cat_part_href($part_id);
             $tags['this'] = $this;
             $content .= App::$template->parse('cat_part_list', $tags, $result);
+            $show_empty_message = false;
         } 
-        $content .= $this->getPartItemsContent($part_id, $page);
+        $content .= $this->getPartItemsContent($part_id, $page, $show_empty_message);
         $content .= $this->getBackButton($part_id);
         return $content;
     }
@@ -113,7 +115,7 @@ class Controller extends BaseController
         return $this->actionPartList('');
     }
 
-    private function getPartItemsContent(int $part_id, int $page): string 
+    private function getPartItemsContent(int $part_id, int $page, bool $show_empty_message = true): string 
     {
         global $_SESSION;
         
@@ -146,7 +148,7 @@ class Controller extends BaseController
             $tags['functions'] = [];
             $tags['this'] = $this;
             $content .= App::$template->parse('cat_item_list', $tags, $result);
-        } else {
+        } elseif ($show_empty_message) {
             $tags['title'] = $row_part['title'];
             $tags['image_name'] = $row_part['image_name'];
             $content .= App::$template->parse('cat_item_list_empty.html.twig', $tags);
@@ -285,7 +287,7 @@ class Controller extends BaseController
     /*  ??? */
     public function getPropName($part_id,$name) {
         $query = "select items_props from cat_part where id='{$part_id}'";
-        list($items_props) = my_select_row($query, true);
+        list($items_props) = my_select_row($query);
         if($props_values = my_json_decode($items_props)) {
             return $props_values[$name]['name'];
         }
@@ -295,7 +297,7 @@ class Controller extends BaseController
     /*  ??? */
     public function getPropNamesArray($part_id) {
         $query = "select items_props from cat_part where id='{$part_id}'";
-        list($items_props) = my_select_row($query, true);
+        list($items_props) = my_select_row($query);
         if($props_values = my_json_decode($items_props)) {        
             $result=[];
             foreach($props_values as $name){
@@ -308,7 +310,7 @@ class Controller extends BaseController
     
     public static function getCacheFilename($file_name, $file_type, $max_width) {
         if(!$file_type || !strlen($file_type)) {
-            list($file_type) = App::$db->getRow("select file_type from cat_item_images where fname='" . $file_name ."'");            
+            $file_type = Image::getFileType($file_name, '');
         }
         $file_extension = Image::getFileExt($file_type);
         $IMG_ITEM_PATH = App::$DIR . App::$settings['catalog_item_img_path'];

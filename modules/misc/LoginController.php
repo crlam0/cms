@@ -46,7 +46,7 @@ class LoginController extends BaseController
             if(isset(App::$input['login'])) {
                 $tags['login'] = App::$input['login'];
             }
-            $content .= App::$template->parse('user_login_promt', $tags);
+            $content .= App::$template->parse('user_login_promt.html.twig', $tags);
             return $content;
         } else {
             return App::$message->get('user_already_logged_on');

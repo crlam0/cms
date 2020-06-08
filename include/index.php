@@ -1,3 +1,3 @@
 <?php
-include 'config/config.local.php';
+include 'common.php';
 redirect($BASE_HREF);

@@ -32,7 +32,7 @@ if ($input['added_article']) {
         $input['form']['seo_alias'] = encodestring($input['form']['title']);
     }
     $query = "insert into article_item" . db_insert_fields($input['form']);
-    my_query($query, true);
+    my_query($query);
     $content.=my_msg_to_str('', [], 'Статья успешно добавлена.');
 }
 
@@ -49,7 +49,7 @@ if ($input['edited_article']) {
         $input['form']['seo_alias'] = encodestring($input['form']['title']);
     }
     $query = "update article_item set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, true);
+    my_query($query);
     $content.=my_msg_to_str('', [], 'Статья успешно изменена.');
     if($input['update']){
         $input['edit_article']=1;
@@ -79,7 +79,7 @@ if (($input['edit_article']) || ($input['add_article'])) {
 
 if (isset($_SESSION['view_articles']) && $_SESSION['view_articles']) {
     $query = "SELECT * from article_item where list_id=" . $_SESSION['view_articles'] . " order by date_add asc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     $content.=get_tpl_by_name("article_edit_table", $tags, $result);
     echo get_tpl_default($tags, '', $content);
     exit();
@@ -139,7 +139,7 @@ $query = "SELECT article_list.*,count(article_item.id) as files
 from article_list 
 left join article_item on (article_item.list_id=article_list.id) 
 group by article_list.id order by article_list.date_add desc";
-$result = my_query($query, true);
+$result = my_query($query);
 
 $content.=get_tpl_by_name('article_list_edit_table', $tags, $result);
 echo get_tpl_default($tags, '', $content);

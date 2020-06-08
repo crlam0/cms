@@ -20,6 +20,7 @@ $tags['nav_array'][] = [
 
 $console = [
     'cachePaths' => [
+        'log' => 'var/log',
         'twig' => 'var/cache/twig',
         'catalog' => 'var/cache/catalog',
         'gallery' => 'var/cache/gallery',

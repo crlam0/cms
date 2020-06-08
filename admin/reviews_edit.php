@@ -100,7 +100,7 @@ if (($input["edit_reviews"]) || ($input["add_reviews"])) {
 }
 
 $query = "SELECT * from reviews order by date asc";
-$result = my_query($query, true);
+$result = my_query($query);
 $content.=get_tpl_by_name("reviews_edit_table", $tags, $result);
 
 echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

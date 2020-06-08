@@ -63,6 +63,10 @@ class App
     * @var Array Debug array
     */
     public static $DEBUG;
+    /**
+    * @var Monolog\Logger Object of logger
+    */    
+    public static $logger;
     
 
     /**
@@ -161,7 +165,7 @@ class App
             $this->loadSettingsFromFile($filename);
         }
         $query='SELECT name,value FROM settings';
-        $result=static::$db->query($query,true);
+        $result=static::$db->query($query);
         while ($row = $result->fetch_array()) {
             static::$settings[$row['name']] = $row['value'];
         }        
@@ -227,6 +231,7 @@ class App
         $time = microtime(true) - static::$DEBUG[0];
         $time = sprintf('%.4F', $time);
         static::$DEBUG[] = $time . "\t " . $message;
+        static::$logger->debug($message);
     }
     
     private function runController($controller_name, $action, $tags)
@@ -234,6 +239,7 @@ class App
         static::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
         $controller = new $controller_name;
         try {
+            $controller->base_url = static::$routing->base_url;
             $content = $controller->run($action, static::$routing->params);
             /* Fill tags for default template */
             $tags['Header'] = $controller->title;
@@ -242,17 +248,16 @@ class App
             header(App::$server['SERVER_PROTOCOL'] . ' 200 Ok', true, 200);
             echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
             exit;
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             static::debug('Exception: ' . $e->getMessage());
             static::debug('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
             static::debug($e->getTraceAsString());
-            /* But show 404 error */
-        }        
+        }
     }
     
     public function run ($tags) : void 
     {
-        $file=static::$routing->file;
+        $file = static::$routing->file;
         if($file && is_file(static::$DIR . $file)) {
             $server['PHP_SELF'] = static::$SUBDIR.$file;
             $server['PHP_SELF_DIR'] = static::$SUBDIR.dirname($file) . '/';

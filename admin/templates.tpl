@@ -1554,7 +1554,6 @@ $(document).ready(function(){
 	<input type="hidden" name=add_image value=1>
 	<input class="btn btn-primary" type="submit" value="Добавить">
 </form></center>
-<center><a href=[%PHP_SELF%]?list_gallery=1 class="btn btn-default"><<  Назад</a></center>
 
 <!--[/content]-->
 

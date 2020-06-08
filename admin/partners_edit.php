@@ -91,7 +91,7 @@ if (($input["edit_partner"]) || ($input["add_partner"])) {
 }
 
 $query = "SELECT * from partners order by pos,title asc";
-$result = my_query($query, true);
+$result = my_query($query);
 $content.=get_tpl_by_name("partners_edit_table", $tags, $result);
 echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

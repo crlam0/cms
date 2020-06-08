@@ -24,5 +24,3 @@ $content = App::$message->get('file_not_found',$tags);
 header(App::$server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
 echo App::$template->parse(App::get('tpl_default'), $tags, null, $content);
 
-
-

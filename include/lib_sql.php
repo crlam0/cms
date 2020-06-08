@@ -42,7 +42,7 @@ function my_select_row($sql, $dont_debug=false) {
  */
 
 function db_insert_fields($fields) {
-    return App::$db->insert_fields($fields);
+    return App::$db->insertFields($fields);
 }
 
 /**
@@ -54,7 +54,7 @@ function db_insert_fields($fields) {
  */
 
 function db_update_fields($fields) {
-    return App::$db->update_fields($fields);
+    return App::$db->updateFields($fields);
 }
 
 

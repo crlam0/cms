@@ -5,18 +5,18 @@ include "../include/common.php";
 
 if ($input["del"]) {
     $query = "delete from parts where id='{$input['id']}'";
-    my_query($query, true);
+    my_query($query);
 }
 
 if ($input["add"]) {
     $query = "insert into parts " . db_insert_fields($input['form']);
-    my_query($query, true);
+    my_query($query);
 }
 
 
 if ($input["edit"]) {
     $query = "update parts set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, true);
+    my_query($query);
 }
 
 if (($input["view"]) || ($input["adding"])) {

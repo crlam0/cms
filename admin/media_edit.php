@@ -100,7 +100,7 @@ if (($input["edit_file"]) || ($input["add_file"])) {
 
 if (isset($_SESSION["view_files"])) {
     $query = "SELECT * from media_files where list_id='" . $_SESSION["view_files"] . "' order by num asc, date_add desc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     $content.=get_tpl_by_name("media_files_edit_table", $tags, $result);
     echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
@@ -160,7 +160,7 @@ $query = "SELECT media_list.*,count(media_files.id) as files
 from media_list 
 left join media_files on (media_files.list_id=media_list.id) 
 group by media_list.id order by media_list.date_add desc";
-$result = my_query($query, true);
+$result = my_query($query);
 $content.=get_tpl_by_name("media_list_edit_table", $tags, $result);
 echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

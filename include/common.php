@@ -25,23 +25,22 @@ use classes\Template;
 use classes\Message;
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+App::$logger = new Logger('main');
+App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/error.log', Logger::ERROR));
 
 $App = new App($DIR, $SUBDIR);
 $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
-$App->loadSettings(__DIR__.'/local/settings.php');
+$App->loadSettings(__DIR__.'/../local/settings.php');
 $App->loadInputData($_GET, $_POST, $_SERVER);
 $App->addGlobals();
 App::$debug = App::$settings['debug'];
 App::$db->debug = App::$settings['debug'];
-App::debug('App created, arrays loaded');
-unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
-
-App::$user = new User(App::$settings['default_flags']);
-App::$template = new Template();
-App::$message = new Message();
-App::$routing = new Routing (App::$server['REQUEST_URI']);
 
 if(App::$debug) {
+    App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/debug.log', Logger::DEBUG));
     $whoops = new Run();
     $whoops->writeToOutput(true);
     $whoops->allowQuit(true);
@@ -51,6 +50,16 @@ if(App::$debug) {
     $whoops->register();
     $App->debug('Added exception handler');
 }
+
+
+App::debug('App created, arrays loaded');
+unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
+
+App::$user = new User(App::$settings['default_flags']);
+App::$template = new Template();
+App::$message = new Message();
+App::$routing = new Routing (App::$server['REQUEST_URI']);
+
 
 require_once __DIR__.'/lib_sql.php';
 require_once __DIR__.'/lib_messages.php';

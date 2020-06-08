@@ -51,7 +51,7 @@ if ($_SESSION["view_vote"]) {
     $query = "SELECT vote_variants.*,count(vote_log.id) as hits from vote_variants
 	left join vote_log on (vote_log.variant_id=vote_variants.id)
 	where vote_id=" . $_SESSION["view_vote"] . " group by vote_variants.id order by num asc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     $content.=get_tpl_by_name("vote_variants_edit_table", $tags, $result);
     echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
@@ -111,7 +111,7 @@ $query = "SELECT vote_list.*,count(vote_variants.id) as variants
 from vote_list 
 left join vote_variants on (vote_variants.vote_id=vote_list.id) 
 group by vote_list.id order by vote_list.title desc";
-$result = my_query($query, true);
+$result = my_query($query);
 
 $content.=get_tpl_by_name("vote_list_edit_table", $tags, $result);
 echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

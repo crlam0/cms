@@ -51,7 +51,7 @@ class DB
         $this->passwd = $passwd;
         $this->dbname = $dbname;
         $this->mysqli = new \mysqli($this->host, $this->user, $this->passwd, $this->dbname);
-        
+
         if ($this->mysqli->connect_error) {
             App::$logger->error('DB connect error ' . $this->mysqli->connect_errno . ': ' . $this->mysqli->connect_error);
             die('DB connect error ' . $this->mysqli->connect_errno . ': ' . $this->mysqli->connect_error);
@@ -162,8 +162,7 @@ class DB
     {
         $result = $this->query($sql, $params);    
         if ($result->num_rows) {
-            $row = $result->fetch_array();
-            return $row;
+            return $result->fetch_assoc();
         } else {
             return false;
         }
@@ -339,7 +338,7 @@ class DB
                 $str_values .= ',';
             }            
         }
-        $sql = "insert into {$table}({$str_fields}) values({$str_values})";
+        $sql = "INSERT INTO {$table}({$str_fields}) VALUES({$str_values})";
         return $this->query($sql, $params);        
     }
     
@@ -354,7 +353,7 @@ class DB
      */
     public function updateTable(string $table, array $fields, array $where) : bool
     {
-        $sql = "update {$table} set ";
+        $sql = "UPDATE {$table} SET ";
         $params=[];
         $total = count($fields);
         $a=0;
@@ -371,20 +370,43 @@ class DB
             }            
         }
         if(count($where)) {
-            $sql .= ' where ';
+            $sql .= ' WHERE ';
             $total = count($where);
             $a=0;
             foreach($where as $field => $value) {
                 $a++;
                 $sql .= $field . ' = ?';    
                 if ($a != $total) {
-                    $sql .= ' and ';
+                    $sql .= ' AND ';
                 }            
                 $params['$field'] = $value;            
             }
         }
-        return $this->query($sql, $params);        
+        $result = $this->query($sql, $params);
+        var_dump($result);
+        return $result;
     }
+    
+    public function findOne($table, $id) {
+        $query = "SELECT * FROM {$table} WHERE id=?";
+        return $this->query($query, ['id' => $id]);          
+    }
+    
+    public function findAll($table, $where = [], $order_by = 'id desc') {
+        if(!count($where)) {
+            return $this->query("SELECT * FROM {$table} ORDER BY {$order_by}");
+        }
+        $expr = '';
+        foreach($where as $key){
+            if(strlen($expr) == 0) {
+                $expr .= $key . '=?';                
+            } else {
+                $expr .= ' AND ' . $key . '=?';
+            }
+        }
+        $query = "SELECT * FROM {$table} WHERE {$expr} ORDER BY {$order_by}";
+        return $this->query($query , $where);          
+    }    
     
 }
 

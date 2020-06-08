@@ -5,6 +5,8 @@ namespace admin\Controllers;
 use classes\App;
 use classes\BaseController;
 
+use admin\Models\Setting;
+
 class SettingsEditController extends BaseController
 {        
     private $TABLE;
@@ -18,39 +20,39 @@ class SettingsEditController extends BaseController
 
     public function actionIndex(): string
     {
-        $query = "SELECT * from {$this->TABLE} order by name asc";
-        $result = App::$db->query($query);
-        // throw new \InvalidArgumentException('test');
+        $model = new Setting;
+        $result = $model->findAll([], 'name ASC');
         
         return App::$template->parse('settings_table.html.twig', ['this' => $this], $result);        
     }
     
     public function actionCreate(): string 
     {
-        if(is_array(App::$input['form'])) {
-            App::$db->insertTable($this->TABLE, App::$input['form']);
-            return $this->actionIndex();
+        $model = new Setting();
+        if($model->load(App::$input['form'])) {
+            if($model->save()) {
+                redirect($this->base_url);
+            }
         }
-        $tags = [
-            'this' => $this,
-            'action' => 'create',
-            'id' => '',
-            'form_title' => 'Добавление',
-            'name' => '',
-            'value' => '',
-            'comment' => '',
-        ];
+        $tags = $model->asArray();
+        $tags['this'] = $this;
+        $tags['action'] = 'create';
+        $tags['form_title'] = 'Добавление';
         
         return App::$template->parse('settings_form.html.twig', $tags);
     }
 
     public function actionUpdate(): string 
     {
-        if(is_array(App::$input['form'])) {
-            App::$db->updateTable($this->TABLE, App::$input['form'], ['id' => App::$input['id']]);
-            return $this->actionIndex();
-        }        
-        $tags = App::$db->getRow("select * from {$this->TABLE} where id=?", ['id' => App::$input['id']]);
+        $model = new Setting(App::$input['id']);        
+        if($model->load(App::$input['form'])) {
+            if($model->save()) {
+                redirect($this->base_url);
+            } else {
+                echo nl2br($model->getErrorsAsString());
+            }
+        }
+        $tags = $model->asArray();
         $tags['this'] = $this;
         $tags['action'] = 'update';
         $tags['form_title'] = 'Изменение';
@@ -59,9 +61,9 @@ class SettingsEditController extends BaseController
     
     public function actionDelete(): string 
     {
-        $query = "delete from {$this->TABLE} where id=?";
-        App::$db->query($query , ['id' => App::$input['id']]);  
-        return $this->actionIndex();
+        $model = new Setting(App::$input['id']);
+        $model->delete();
+        redirect($this->base_url);
     }    
 
 }

@@ -64,7 +64,7 @@ class App
     */
     public static $DEBUG;
     /**
-    * @var Logger Object of logger
+    * @var Monolog\Logger Object of logger
     */    
     public static $logger;
     
@@ -257,7 +257,7 @@ class App
     
     public function run ($tags) : void 
     {
-        $file=static::$routing->file;
+        $file = static::$routing->file;
         if($file && is_file(static::$DIR . $file)) {
             $server['PHP_SELF'] = static::$SUBDIR.$file;
             $server['PHP_SELF_DIR'] = static::$SUBDIR.dirname($file) . '/';

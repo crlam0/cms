@@ -40,7 +40,7 @@ App::$debug = App::$settings['debug'];
 App::$db->debug = App::$settings['debug'];
 
 if(App::$debug) {
-    App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/last.log', Logger::DEBUG));
+    App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/debug.log', Logger::DEBUG));
     $whoops = new Run();
     $whoops->writeToOutput(true);
     $whoops->allowQuit(true);

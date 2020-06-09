@@ -21,51 +21,47 @@ class SettingsEditController extends BaseController
     public function actionIndex(): string
     {
         $model = new Setting;
-        $result = $model->findAll([], 'name ASC');
-        
+        $result = $model->findAll([], 'name ASC');        
         return App::$template->parse('settings_table.html.twig', ['this' => $this], $result);        
     }
     
     public function actionCreate(): string 
     {
         $model = new Setting();
-        if($model->load(App::$input['form'])) {
-            if($model->save()) {
-                redirect($this->base_url);
-            } else {
-                echo nl2br($model->getErrorsAsString());
-            }
+        if($model->load(App::$input['form']) && $model->save()) {
+            $this->redirect('index');
+        } else {
+            echo nl2br($model->getErrorsAsString());
         }
-        $tags = $model->asArray();
-        $tags['this'] = $this;
-        $tags['action'] = 'create';
-        $tags['form_title'] = 'Добавление';
-        
-        return App::$template->parse('settings_form.html.twig', $tags);
+        return App::$template->parse('settings_form.html.twig', [
+            'this' => $this,
+            'model' => $model,
+            'action' => 'create',
+            'form_title' => 'Добавление',            
+        ]);
     }
 
     public function actionUpdate(): string 
     {
         $model = new Setting(App::$input['id']);        
-        if($model->load(App::$input['form'])) {
-            if($model->save()) {
-                redirect($this->base_url);
-            } else {
-                echo nl2br($model->getErrorsAsString());
-            }
+        if($model->load(App::$input['form']) && $model->save()) {
+            $this->redirect('index');
+        } else {
+            echo nl2br($model->getErrorsAsString());
         }
-        $tags = $model->asArray();
-        $tags['this'] = $this;
-        $tags['action'] = 'update';
-        $tags['form_title'] = 'Изменение';
-        return App::$template->parse('settings_form.html.twig', $tags);        
+        return App::$template->parse('settings_form.html.twig', [
+            'this' => $this,
+            'model' => $model,
+            'action' => 'update',
+            'form_title' => 'Изменение',            
+        ]);
     }
     
     public function actionDelete(): string 
     {
         $model = new Setting(App::$input['id']);
         $model->delete();
-        redirect($this->base_url);
+        $this->redirect('index');
     }    
 
 }

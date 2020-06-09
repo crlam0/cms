@@ -184,6 +184,13 @@ class BaseModel implements \ArrayAccess
     }
     
     
+    /**
+     * Save model to DB.
+     * 
+     * @param boolean check rules before save.
+     * 
+     * @return boolean TRUE if complete.
+     */
     public function save($check_rules = true)             
     {
         if($check_rules) {
@@ -195,16 +202,31 @@ class BaseModel implements \ArrayAccess
             App::$db->updateTable(static::tableName(), $this->data, ['id' => $this->data['id']]);
         } else {
             App::$db->insertTable(static::tableName(), $this->data);
+            $this->data['id'] = App::$db->insert_id();
         }
         return true;
     }
     
+    /**
+     * Delete model from DB.
+     * 
+     * @return \mysqli_result.
+     */
     public function delete()
     {
-        $query = "delete from " . static::tableName() . " where id=?";
-        return App::$db->query($query , ['id' => $this->data['id']]);  
+        if(!is_integer($this->data['id'])) {
+            throw new \InvalidArgumentException('ID is empty');
+        }
+        return App::$db->deleteFromTable(static::tableName(), ['id' => $this->data['id']]);  
     }    
     
+    /**
+     * Return model data from DB.
+     * 
+     * @param integer $id
+     * 
+     * @return \mysqli_result.
+     */
     public static function findOne($id) {
         if($id !== null) {
             return App::$db->findOne(static::tableName() , $id);
@@ -212,32 +234,54 @@ class BaseModel implements \ArrayAccess
         return null;
     }
     
+    /**
+     * Return model's data from DB.
+     * 
+     * @param array $where params for where statement.
+     * @param string $order_by Order by string.
+     * 
+     * @return \mysqli_result.
+     */
     public static function findAll($where = [], $order_by = 'id desc') {
         return App::$db->findAll(static::tableName() , $where, $order_by);          
     }
     
+    /**
+     * Return model's data
+     * 
+     * @return array
+     */
+    public function asArray() {
+        return $this->data;
+    }
+
+    /**
+     * Function for \ArrayAccess implement
+     */
     public function offsetSet($offset, $value) 
     {
         $this->$offset = $value;
     }
-
+    /**
+     * Function for \ArrayAccess implement
+     */
     public function offsetExists($offset) 
     {
         return array_key_exists($offset, $this->data);
     }
-
+    /**
+     * Function for \ArrayAccess implement
+     */
     public function offsetUnset($offset) 
     {
-        $this->data[$offset] = '';
+        $this->$offset = '';
     }
-
+    /**
+     * Function for \ArrayAccess
+     */
     public function offsetGet($offset) 
     {
         return $this->$offset;
-    }
-    
-    public function asArray() {
-        return $this->data;
     }
    
 }

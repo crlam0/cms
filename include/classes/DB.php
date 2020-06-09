@@ -162,7 +162,7 @@ class DB
     {
         $result = $this->query($sql, $params);    
         if ($result->num_rows) {
-            return $result->fetch_assoc();
+            return $result->fetch_array();
         } else {
             return false;
         }
@@ -385,17 +385,34 @@ class DB
         return $this->query($sql, $params);
     }
     
+    /**
+     * Select record from DB.
+     *
+     * @param string $table Table name
+     * @param integer $id
+     * 
+     * @return \mysqli_result.
+     */
     public function findOne($table, $id) {
         $query = "SELECT * FROM {$table} WHERE id=?";
         return $this->query($query, ['id' => $id]);          
     }
     
+    /**
+     * Select records from DB.
+     *
+     * @param string $table Table name
+     * @param array $where Fields for where statement
+     * @param string $order_by Expression for ORDER BY
+     * 
+     * @return \mysqli_result.
+     */
     public function findAll($table, $where = [], $order_by = 'id desc') {
         if(!count($where)) {
             return $this->query("SELECT * FROM {$table} ORDER BY {$order_by}");
         }
         $expr = '';
-        foreach($where as $key){
+        while (list($key) = each($where)) {
             if(strlen($expr) == 0) {
                 $expr .= $key . '=?';                
             } else {
@@ -405,6 +422,29 @@ class DB
         $query = "SELECT * FROM {$table} WHERE {$expr} ORDER BY {$order_by}";
         return $this->query($query , $where);          
     }    
+    
+    /**
+     * Delete record from DB.
+     *
+     * @param string $table Table name
+     * @param array $where Fields for where statement
+     * 
+     * @return \mysqli_result.
+     */
+    public function deleteFromTable($table, $where)
+    {
+        
+        $expr = '';
+        while (list($key) = each($where)) {
+            if(strlen($expr) == 0) {
+                $expr .= $key . '=?';                
+            } else {
+                $expr .= ' AND ' . $key . '=?';
+            }
+        }
+        $query = "delete from {$table} where {$expr}";
+        return App::$db->query($query , $where);  
+    }        
     
 }
 

@@ -5,6 +5,8 @@ namespace admin\Controllers;
 use classes\App;
 use classes\BaseController;
 
+use admin\models\Template;
+
 class TemplatesEditController extends BaseController
 {    
     
@@ -19,70 +21,66 @@ class TemplatesEditController extends BaseController
 
     public function actionIndex(): string
     {
-        $query = "SELECT * from {$this->TABLE} order by name asc";
-        $result = App::$db->query($query);
-        
-        return App::$template->parse('templates_table.html.twig', ['this' => $this], $result);        
+        $model = new Template;
+        $result = $model->findAll([], 'name ASC');        
+        return App::$template->parse('templates_table.html.twig', ['this' => $this], $result);    
     }
     
     public function actionCreate(): string 
     {
-        if(is_array(App::$input['form'])) {
-            // $query = "insert into {$this->TABLE} " . App::$db->insertFields(App::$input['form']);
-            // App::$db->query($query);
-            App::$db->insertTable($this->TABLE, App::$input['form']);
+        $model = new Template();
+        if($model->load(App::$input['form']) && $model->save()) {
+            $this->redirect('update?id=' . $model->id);
+        } else {
+            echo nl2br($model->getErrorsAsString());
         }
-        $tags = [
-            'this' => $this,
-            'action' => 'create',
-            'id' => '',
-            'form_title' => 'Добавление',
-            'name' => '',
-            'content' => '',
-            'comment' => '',
-            'uri' => '',
-            'file_name' => null,
-            'template_type' => 'twig',
-        ];
         
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/edit_area/edit_area_full.js"></script>' . "\n";
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor_html.js"></script>' . "\n";
-        return App::$template->parse('templates_form.html.twig', $tags);
+        
+        return App::$template->parse('templates_form.html.twig', [
+            'this' => $this,
+            'model' => $model,
+            'action' => 'create',
+            'form_title' => 'Добавление',            
+        ]);
     }
 
     public function actionUpdate(): string 
     {
-        if(is_array(App::$input['form']) && !App::$input['revert']) {
-            if(App::$input['form']['template_type']==='twig' && strlen(App::$input['form']['file_name'])) {
-                if(!$this->twigTplSave(App::$input['form']['file_name'], App::$input['form']['content'])) {
-                    echo App::$message->get('error', [], 'Ошибка сохранения файла шаблона.');
-                }
-            }    
-            App::$db->updateTable($this->TABLE, App::$input['form'], ['id' => App::$input['id']]);
+        $model = new Template(App::$input['id']);
+        if(!App::$input['revert'] && $model->load(App::$input['form']) && $model->save()) {
+            if(!$this->twigTplSave(App::$input['form'])) {
+                echo App::$message->get('error', [], 'Ошибка сохранения файла шаблона.');
+            }
+        } else {
+            echo nl2br($model->getErrorsAsString());
         }
         
         if(App::$input['update_and_exit']) {
             return $this->actionIndex();
-        }
-        
-        $tags = App::$db->getRow("select * from {$this->TABLE} where id=?", ['id' => App::$input['id']]);
-        $tags['this'] = $this;
-        $tags['action'] = 'update';
-        $tags['form_title'] = 'Изменение';
-        if($tags['template_type']==='twig' && strlen($tags['file_name'])) {
-            $tags['content'] = $this->twigTplLoad($tags['file_name']);
+        }        
+
+        if($model->template_type==='twig' && strlen($model->file_name)) {
+            $model->content = $this->twigTplLoad($model->file_name);
         }         
 
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/edit_area/edit_area_full.js"></script>' . "\n";
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor_html.js"></script>' . "\n";
-        return App::$template->parse('templates_form.html.twig', $tags);        
+        
+        return App::$template->parse('templates_form.html.twig', [
+            'this' => $this,
+            'model' => $model,
+            'action' => 'update',
+            'form_title' => 'Изменение',            
+        ]);        
     }
     
     public function actionDelete(): string 
     {
-        $query = "delete from {$this->TABLE} where id=?";
-        App::$db->query($query , ['id' => App::$input['id']]);  
-        return $this->actionIndex();
+        $model = new Template(App::$input['id']);
+        $model->delete();
+        redirect($this->base_url);
     }
     
     private function twigTplLoad($filename){
@@ -97,18 +95,15 @@ class TemplatesEditController extends BaseController
         }    
     }
 
-    private function twigTplSave($filename, $content){
-        if(!strstr($filename,'.html.twig')) {
-            $filename.='.html.twig';
+    private function twigTplSave($form){
+        if($form['template_type']!='twig' || !strlen($form['content']) || !strlen($form['file_name'])) {
+            return true;
         }
-        $filename = App::$DIR . 'templates/' . $filename;
-        if(!strlen($content)) {
-            if(file_exists($filename)) {
-                return true;
-            }
-            $content = PHP_EOL;
+        if(!strstr($form['file_name'],'.html.twig')) {
+            $form['file_name'].='.html.twig';
         }
-        return file_put_contents($filename, stripcslashes($content)) && clear_cache_dir('twig');
+        $filename = App::$DIR . 'templates/' . $form['file_name'];
+        return file_put_contents($filename, stripcslashes($form['content'])) && clear_cache_dir('twig');
     }
 
 }

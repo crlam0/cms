@@ -1,5 +1,8 @@
 <?PHP
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 use classes\App;
 use classes\Message;
 use classes\DB;
@@ -10,6 +13,9 @@ $DIR=dirname(dirname(__FILE__)) . '/';
 
 $App = new App($DIR, $SUBDIR);
 $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
+
+App::$logger = new Logger('main');
+App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/test.log', Logger::ERROR));
 
 require_once $DIR.'vendor/autoload.php';
 

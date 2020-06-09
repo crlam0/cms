@@ -69,4 +69,14 @@ class BaseController
         return $this->runMethod($method, $params);
     }
     
+    /**
+     * Redirect to self 
+     *
+     * @param string $url Additioanal URL
+     *
+     */
+    public function redirect($url = '') {
+        redirect($this->base_url . $url);
+    }
+    
 }

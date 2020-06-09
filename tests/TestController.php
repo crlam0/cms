@@ -4,7 +4,7 @@ namespace Tests;
 
 use classes\BaseController;
 
-class MyTestController extends BaseController
+class TestController extends BaseController
 {
     
     public function actionIndex($arg1, $arg2)

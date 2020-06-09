@@ -1,10 +1,10 @@
 <form action="{{ this.base_url }}{{ action }}" method="POST">
-    <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="id" value="{{ model.id }}">
     <table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
         <tr class=header><td colspan="2">{{ form_title }}</td></tr>
-        <tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[name]" value="{{ name }}"></td></tr>
-        <tr class="content" align="left"><td>Значение:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[value]" value="{{ value }}"></td></tr>
-        <tr class="content" align="left"><td>Описание:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[comment]" value="{{ comment }}"></td></tr>
+        <tr class="content" align="left"><td>Название:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[name]" value="{{ model.name }}"></td></tr>
+        <tr class="content" align="left"><td>Значение:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[value]" value="{{ model.value }}"></td></tr>
+        <tr class="content" align="left"><td>Описание:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[comment]" value="{{ model.comment }}"></td></tr>
         <tr class=header align="left"><td align="center" colspan="2">
                 <input class="btn btn-primary" type="submit" name="update" value="  Сохранить  "> 
         </td></tr>

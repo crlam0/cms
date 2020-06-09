@@ -227,11 +227,12 @@ if ($input['edited']) {
     }
 }
 
+
 if (($input['edit']) || ($input['adding'])) {
     if ($input['edit']) {
 	$query = "select * from cat_part where id='{$input['id']}'";
 	$result = my_query($query);
-	$tags = $result->fetch_array();
+	$tags = array_merge($tags, $result->fetch_assoc());
 	$tags['form_title'] = 'Редактирование';
 	$tags['type'] = 'edited';
 	$tags['Header'] = 'Редактирование раздела';
@@ -244,8 +245,7 @@ if (($input['edit']) || ($input['adding'])) {
             $tags['items_props'] = App::$settings['catalog']['default_items_props'];
         }        
     }
-    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_MINI_INC . $EDITOR_HTML_INC;
-    
+    $tags['INCLUDE_HEAD'] = $EDITOR_MINI_INC . $EDITOR_HTML_INC;
     $prev_id_select = '';
     function sub_part_select($prev_id, $deep) {
         global $prev_id_select, $tags;

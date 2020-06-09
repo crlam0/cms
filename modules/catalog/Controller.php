@@ -172,8 +172,8 @@ class Controller extends BaseController
             $related_products=[];
         }
         if(count($related_products)) {
-            $where_str=implode(',',array_keys($related_products));
-            $query ="select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
+            $where_str = implode(',', array_keys($related_products));
+            $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
                 left join cat_item_images on (cat_item_images.id=default_img)
                 where cat_item.id in (" . $where_str . ")
                 group by cat_item.num   

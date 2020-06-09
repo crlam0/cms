@@ -130,7 +130,7 @@ class BasketController extends Controller
         $data['item_list'] = $item_list;
         $data['comment'] = $form['comment'];
         
-        $query = "insert into request" . App::$db->insert_fields($data);
+        $query = "insert into request" . App::$db->insertFields($data);
         App::$db->query($query);
         unset($_SESSION['BUY']);
         return App::$message->get('',[],'Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.');

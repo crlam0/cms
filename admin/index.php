@@ -2,7 +2,7 @@
 $tags['Header']='Страница администрирования';
 require '../include/common.php';
 
-$controller = new admin\Controllers\IndexController();
+$controller = new admin\controllers\IndexController();
 $content = $controller->actionIndex();
 
 echo get_tpl_default($tags, [], $content);

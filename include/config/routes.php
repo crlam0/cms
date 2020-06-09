@@ -259,22 +259,22 @@ return [
     
     'admin-index' => [
         'pattern' => '^admin\/?$',
-        'controller' => 'admin\Controllers\IndexController'
+        'controller' => 'admin\controllers\IndexController'
     ],      
     'slider-edit' => [
         'pattern' => '^admin\/slider\-edit\/[\w\-]*$',
         'base_url' => 'admin/slider-edit/',
-        'controller' => 'admin\Controllers\SliderEditController',
+        'controller' => 'admin\controllers\SliderEditController',
     ],
     'templates-edit' => [
         'pattern' => '^admin\/templates\-edit\/[\w\-]*$',
         'base_url' => 'admin/templates-edit/',
-        'controller' => 'admin\Controllers\TemplatesEditController',
+        'controller' => 'admin\controllers\TemplatesEditController',
     ],
     'settings-edit' => [
         'pattern' => '^admin\/settings\-edit\/[\w\-]*$',
         'base_url' => 'admin/settings-edit/',
-        'controller' => 'admin\Controllers\SettingsEditController',
+        'controller' => 'admin\controllers\SettingsEditController',
     ],
     
 ];

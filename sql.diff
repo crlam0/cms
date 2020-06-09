@@ -1,3 +1,8 @@
+=== 2020-06-09
+
+UPDATE `templates` SET `file_name`='admin.html.twig', `template_type`='twig' WHERE  `id`=30;
+
+
 === 2019-11-08
 
 ALTER TABLE `users`

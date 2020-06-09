@@ -194,9 +194,9 @@ class DB
             return $str;
         }    
         if(!strstr(App::$server['REQUEST_URI'], 'admin/')) {
-            $str = htmlspecialchars($str);            
+            $str = htmlspecialchars($str);
         }
-        $str = $this->escapeString($str);        
+        $str = $this->escapeString($str);
         foreach($this->DENIED_WORDS as $word) {
             if(stristr($str, $word)){
                 App::$logger->error('test_param denied word', ['URI'=>App::$server['REQUEST_URI']]);
@@ -216,7 +216,7 @@ class DB
      */
     public function escapeString(string $str) : string 
     {
-        return $this->mysqli->escape_string($str);        
+        return $this->mysqli->real_escape_string($str);        
     }
 
     /**
@@ -331,7 +331,7 @@ class DB
                 $str_values .= $value;
             } else {
                 $str_values .= '?';
-                $params[$field] = $value;            
+                $params[$field] = stripcslashes($value);
             }
             if ($a != $total) {
                 $str_fields .= ',';
@@ -363,7 +363,7 @@ class DB
                 $sql .= $field . "='{$value}'";
             } else {
                 $sql .= $field . '=?';
-                $params[$field] = $value;
+                $params[$field] = stripcslashes($value);
             }
             if ($a != $total) {
                 $sql .= ',';

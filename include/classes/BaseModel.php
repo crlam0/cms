@@ -14,9 +14,28 @@ class BaseModel implements \ArrayAccess
     private $data;
     private $errors;
     
+    /**
+     * @return string Table name
+     */
+    public static function tableName()
+    {
+        return '';
+    }
+    
     public function __construct($id = null) 
     {
         $this->errors = [];
+        if($id !== null) {
+            return $this->loadFromDb($id);
+        }
+        foreach(static::$fields as $key) {
+            $this->data[$key] = '';
+        }
+        return $this;
+    }
+    
+    public function loadFromDb($id = null) 
+    {
         $result = static::findOne($id);
         if($result !== null && $result->num_rows) {
             $row = $result->fetch_assoc();
@@ -25,18 +44,7 @@ class BaseModel implements \ArrayAccess
             }
             return $this;
         }
-        foreach(static::$fields as $key) {
-            $this->data[$key] = '';
-        }
-        return $this;
-    }
-    
-    /**
-     * @return string Table name
-     */
-    public static function tableName()
-    {
-        return '';
+        return null;
     }
     
     public function __get(string $name) 

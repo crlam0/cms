@@ -75,7 +75,19 @@ class BaseController
      * @param string $url Additioanal URL
      *
      */
-    public function redirect($url = '') {
+    public function redirect($url = '', $params = []) {        
+        if(count($params)) {
+            $url .= '?';
+            $first = true;
+            foreach ($params as $param => $value) {
+                if($first) {
+                    $first = false;
+                } else {
+                    $url .= '&';
+                }
+                $url .= urlencode($param) . '=' . urlencode($value);
+            }
+        }        
         redirect($this->base_url . $url);
     }
     

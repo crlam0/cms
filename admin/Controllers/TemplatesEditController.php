@@ -30,7 +30,7 @@ class TemplatesEditController extends BaseController
     {
         $model = new Template();
         if($model->load(App::$input['form']) && $model->save()) {
-            $this->redirect('update?id=' . $model->id);
+            $this->redirect('update', ['id' =>$model->id]);
         } else {
             echo nl2br($model->getErrorsAsString());
         }
@@ -52,6 +52,8 @@ class TemplatesEditController extends BaseController
         if(!App::$input['revert'] && $model->load(App::$input['form']) && $model->save()) {
             if(!$this->twigTplSave(App::$input['form'])) {
                 echo App::$message->get('error', [], 'Ошибка сохранения файла шаблона.');
+            } else {
+                $this->redirect('update', ['id' => $model->id]);
             }
         } else {
             echo nl2br($model->getErrorsAsString());

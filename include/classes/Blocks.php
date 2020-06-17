@@ -110,15 +110,8 @@ class Blocks
     }
     
     protected function slider () : string
-    {        
-        $URI = App::$server['REQUEST_URI'];
-        if (strlen(App::$SUBDIR) > 1){
-            $URI = str_replace(App::$SUBDIR, "/", $URI);
-        }
-        if(strstr($URI,'?')) {
-            $URI = substr($URI,0,strpos($URI,'?'));
-        }
-        if ($URI == '/') {
+    {
+        if (App::$routing->isIndexPage()) {
             $query = "SELECT * FROM slider_images WHERE length(file_name)>0 ORDER BY pos,title ASC";
             $result = App::$db->query($query);
             return App::$template->parse('slider_items', [], $result);
@@ -203,6 +196,8 @@ class Blocks
                 if ($settings['debug']) {
                     ob_start();
                     print_array(App::$DEBUG);
+                    echo 'Total time: <b>' . sprintf('%.4F', microtime(true) - App::$DEBUG[0]) . ' s.</b> ';
+                    echo 'Memory: <b>' . convert_bytes(memory_get_usage(true)) . '</b><br /><br />';
                     print_array(App::$db->query_log_array);
                     $content = ob_get_clean();
                     return $content;

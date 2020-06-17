@@ -81,9 +81,7 @@ class DB
     }
 
     public function prepareAndExecute(string $sql, array $params = []) {
-        if($this->debug){
-            $start_time = microtime(true);
-        }
+
         $stmt = $this->mysqli->prepare($sql);
         if(!$stmt) {
             throw new \InvalidArgumentException('SQL Prepare error: ' . $this->mysqli->error . ' Query is: ' . $sql);
@@ -91,10 +89,6 @@ class DB
         $this->bindParams($stmt, $params);
         if (!$stmt->execute()) {
             throw new \InvalidArgumentException('SQL Execute error: ' . $stmt->error . ' Query is: ' . $sql);
-        }        
-        if($this->debug){
-            $time = sprintf('%.4F', microtime(true) - $start_time);
-            $this->query_log_array[] = $time . "\t" . $sql;
         }
         $result = $stmt->get_result();
         $stmt->free_result();
@@ -114,14 +108,7 @@ class DB
         if(count($params)) {
             return $this->prepareAndExecute($sql, $params);
         }
-        if($this->debug){
-            $start_time = microtime(true);
-        }
         $result = $this->mysqli->query($sql);
-        if($this->debug){
-            $time = sprintf('%.4F', microtime(true) - $start_time);
-            $this->query_log_array[] = $time . "\t" . $sql;
-        }
         if (!$result) {
             throw new \InvalidArgumentException('SQL Error: ' . $this->mysqli->error . ' Query is: ' . $sql);
         }
@@ -139,7 +126,15 @@ class DB
     public function query(string $sql, array $params = [])             
     {
         try {
-            return $this->queryUnsafe($sql, $params);
+            if($this->debug){
+                $start_time = microtime(true);
+            }
+            $result = $this->queryUnsafe($sql, $params);
+            if($this->debug){
+                $time = sprintf('%.4F', microtime(true) - $start_time);
+                $this->query_log_array[] = $time . "\t" . $sql;
+            }
+            return $result;
         } catch (\InvalidArgumentException $e) {
             App::$logger->error($e->getMessage());
             if($this->debug) {                

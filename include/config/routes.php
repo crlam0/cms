@@ -5,6 +5,11 @@ return [
         'pattern' => '^\/?$',
         'controller' => 'modules\misc\IndexController'
     ],    
+    'site-index-php' => [
+        'pattern' => '^index.php$',
+        'controller' => 'modules\misc\IndexController',
+        'action' => 'index'
+    ],    
     'login' => [
         'pattern' => '^login\/?$',
         'controller' => 'modules\misc\LoginController'

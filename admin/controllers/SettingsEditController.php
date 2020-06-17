@@ -8,12 +8,9 @@ use classes\BaseController;
 use admin\models\Setting;
 
 class SettingsEditController extends BaseController
-{        
-    private $TABLE;
-    
+{
     public function __construct() {
         parent::__construct();
-        $this->TABLE = 'settings';        
         $this->title = 'Настройки';
         $this->breadcrumbs[] = ['title'=>$this->title];
     }
@@ -41,9 +38,9 @@ class SettingsEditController extends BaseController
         ]);
     }
 
-    public function actionUpdate(): string 
+    public function actionUpdate(int $id): string 
     {
-        $model = new Setting(App::$input['id']);        
+        $model = new Setting($id);        
         if($model->load(App::$input['form']) && $model->save()) {
             $this->redirect('index');
         } else {
@@ -52,14 +49,14 @@ class SettingsEditController extends BaseController
         return App::$template->parse('settings_form.html.twig', [
             'this' => $this,
             'model' => $model,
-            'action' => 'update',
+            'action' => $this->getUrl('update', ['id' => $id]),
             'form_title' => 'Изменение',            
         ]);
     }
     
-    public function actionDelete(): string 
+    public function actionDelete(int $id): string 
     {
-        $model = new Setting(App::$input['id']);
+        $model = new Setting($id);
         $model->delete();
         $this->redirect('index');
     }    

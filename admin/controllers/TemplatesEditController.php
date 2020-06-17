@@ -41,27 +41,25 @@ class TemplatesEditController extends BaseController
         return App::$template->parse('templates_form.html.twig', [
             'this' => $this,
             'model' => $model,
-            'action' => 'create',
+            'action' => $this->getUrl('create'),
             'form_title' => 'Добавление',            
         ]);
     }
 
-    public function actionUpdate(): string 
+    public function actionUpdate(int $id): string 
     {
-        $model = new Template(App::$input['id']);
+        $model = new Template($id);
         if(!App::$input['revert'] && $model->load(App::$input['form']) && $model->save()) {
             if(!$this->twigTplSave(App::$input['form'])) {
                 echo App::$message->get('error', [], 'Ошибка сохранения файла шаблона.');
+            } elseif(App::$input['update_and_exit']) {
+                $this->redirect('index');
             } else {
-                $this->redirect('update', ['id' => $model->id]);
+                $this->redirect('update', ['id' => $id]);
             }
         } else {
             echo nl2br($model->getErrorsAsString());
         }
-        
-        if(App::$input['update_and_exit']) {
-            return $this->actionIndex();
-        }        
 
         if($model->template_type==='twig' && strlen($model->file_name)) {
             $model->content = $this->twigTplLoad($model->file_name);
@@ -73,16 +71,16 @@ class TemplatesEditController extends BaseController
         return App::$template->parse('templates_form.html.twig', [
             'this' => $this,
             'model' => $model,
-            'action' => 'update',
+            'action' => $this->getUrl('update', ['id' => $id]),
             'form_title' => 'Изменение',            
         ]);        
     }
     
-    public function actionDelete(): string 
+    public function actionDelete(int $id): string 
     {
-        $model = new Template(App::$input['id']);
+        $model = new Template($id);
         $model->delete();
-        redirect($this->base_url);
+        $this->redirect('index');
     }
     
     private function twigTplLoad($filename){

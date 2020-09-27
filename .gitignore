@@ -20,7 +20,7 @@
 
 *.local.*
 *Local*
-/favicon.png
+/favicon.*
 /sitemap.xml
 
 

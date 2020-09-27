@@ -89,7 +89,18 @@ class Controller extends BaseController
     
     public function actionPartList(string $uri): string
     {        
-        list($part_id, $page) = $this->parseURI($uri);
+        if(strlen($uri)) {
+            list($part_id, $page) = $this->parseURI($uri);
+            if (!$part_id) {
+                $tags['Header'] = 'Ошибка 404';
+                $tags['file_name'] = App::$server['REQUEST_URI'];
+                header(App::$server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
+                return  App::$message->get('notice', [], 'Раздел не найден');
+            }
+        } else {
+            $part_id = 0;
+            $page = 1;
+        }
         list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs($part_id);
         $this->tags['INCLUDE_JS'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/catalog/catalog.js"></script>' . "\n";
         

@@ -1,7 +1,19 @@
 <?php
 
-$tags['Header'] = "Партнеры";
-include "../include/common.php";
+use classes\App;
+
+$tags['Header'] = 'Партнеры';
+include '../include/common.php';
+
+if (App::$input['active']) {
+    $query = "update partners set active='" . App::$input["active"] . "' where id='" . App::$input['id'] ."'";
+    if (App::$db->query($query)) {
+        print App::$input['active'];
+    } else {
+        print App::$db->error();
+    }
+    exit;
+}
 
 function show_img($tmp, $row) {
     global $DIR, $settings;
@@ -12,7 +24,7 @@ function show_img($tmp, $row) {
     }
 }
 
-if ($input["del_partner"]) {
+if ($input['del_partner']) {
     list($img_old) = my_select_row("select file_name from partners where id='{$input['id']}'");
     if (is_file($DIR . $settings['partners']['upload_path'] . $img_old)) {
         if (!unlink($DIR . $settings['partners']['upload_path'] . $img_old)
@@ -26,45 +38,45 @@ if ($input["del_partner"]) {
 
 // ($_FILES["img_file"]);
 
-if ($input["added_partner"]) {
+if ($input['added_partner']) {
     $query = "insert into partners " . db_insert_fields($input['form']);
     my_query($query);
-    if ($_FILES["img_file"]["size"] > 100) {
-        if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
-            $content.=my_msg_to_str('error', [], "Неверный тип файла !");
+    if ($_FILES['img_file']['size'] > 100) {
+        if (!in_array($_FILES['img_file']['type'], $validImageTypes)) {
+            $content.=my_msg_to_str('error', [], 'Неверный тип файла !');
         } else {
             $image_id = $mysqli->insert_id;
-            $f_info = pathinfo($_FILES["img_file"]["name"]);
+            $f_info = pathinfo($_FILES['img_file']['name']);
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
-            if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['partners']['upload_path'] . $file_name, $settings['partners']['image_width'])) {
+            if (move_uploaded_image($_FILES['img_file'], $DIR . $settings['partners']['upload_path'] . $file_name, $settings['partners']['image_width'])) {
                 $query = "update partners set file_name='$file_name',file_type='" . $_FILES["img_file"]["type"] . "' where id='$image_id'";
                 my_query($query);
-                $content.=my_msg_to_str('', [], "Картинка успешно добавлена.");
+                $content.=my_msg_to_str('', [], 'Картинка успешно добавлена.');
             } else {
-                $content.=my_msg_to_str('error', [], "Ошибка копирования файла !");
+                $content.=my_msg_to_str('error', [], 'Ошибка копирования файла !');
             }
         }
     }
 }
 
-if ($input["edited_partner"]) {
+if ($input['edited_partner']) {
     if ($_FILES["img_file"]["size"] > 100) {
-        if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
-            $content.=my_msg_to_str('error', [], "Неверный тип файла !");
+        if (!in_array($_FILES['img_file']['type'], $validImageTypes)) {
+            $content.=my_msg_to_str('error', [], 'Неверный тип файла !');
         } else {
             list($img_old) = my_select_row("select file_name from partners where id='{$input['id']}'");
             if (is_file($DIR . $settings['partners']['upload_path'] . $img_old)) {
                 if (!unlink($DIR . $settings['partners']['upload_path'] . $img_old))
                     $content.=my_msg_to_str('error', [], "Ошибка удаления файла");
             }
-            $f_info = pathinfo($_FILES["img_file"]["name"]);
-            $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
+            $f_info = pathinfo($_FILES['img_file']['name']);
+            $file_name = encodestring($input['form']['title']) . "." . $f_info['extension'];
             if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['partners']['upload_path'] . $file_name, $settings['partners']['image_width'])) {
                 $input['form']['file_name'] = $file_name;
                 $input['form']['file_type'] = $_FILES["img_file"]["type"];
-                $content.=my_msg_to_str('', [], "Картинка успешно изменена.");
+                $content.=my_msg_to_str('', [], 'Картинка успешно изменена.');
             } else {
-                $content.=my_msg_to_str('error', [], "Ошибка копирования файла !");
+                $content.=my_msg_to_str('error', [], 'Ошибка копирования файла !');
             }
         }
     }
@@ -72,20 +84,20 @@ if ($input["edited_partner"]) {
     my_query($query);
 }
 
-if (($input["edit_partner"]) || ($input["add_partner"])) {
-    if ($_GET["edit_partner"]) {
+if (($input['edit_partner']) || ($input['add_partner'])) {
+    if ($input["edit_partner"]) {
         $query = "select * from partners where id='{$input['id']}'";
         $result = my_query($query);
         $tags = array_merge($tags, $result->fetch_array());
-        $tags['type'] = "edited_partner";
-        $tags['form_title'] = "Редактирование";
+        $tags['type'] = 'edited_partner';
+        $tags['form_title'] = 'Редактирование';
     } else {
-        $tags['type'] = "added_partner";
-        $tags['form_title'] = "Добавление";
+        $tags['type'] = 'added_partner';
+        $tags['form_title'] = 'Добавление';
     }
-    $tags['descr'] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>$tags[descr]</textarea>";
+    $tags['descr'] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
     $tags['head_inc'] = $EDITOR_SIMPLE_INC;
-    $content.=get_tpl_by_name("partners_edit_form", $tags);
+    $content.=get_tpl_by_name('partners_edit_form', $tags);
     echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
 }

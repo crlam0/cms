@@ -35,6 +35,7 @@ class Setting extends BaseModel {
             [['name', 'value'], 'required'],
             [['name'], 'string', ['min' => 1, 'max' => 255]],
             [['value', 'comment'], 'text'],
+            [['value'], 'string', ['min' => 10, 'max' => 255]],
         ];
     }
 

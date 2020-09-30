@@ -69,6 +69,19 @@ class Message
         }
     }
     
+    
+    
+    /**
+     * Return error message
+     *
+     * @param string $string Message content
+     *
+     */
+    function getError(string $string) : string 
+    {
+        return $this->get('error', [], $string);
+    }    
+    
     /**
      * Print error message
      *
@@ -77,9 +90,35 @@ class Message
      */
     function error(string $string) : void 
     {
-        echo $this->get('error', [], $string);
+        echo $this->getError($string);
     }    
     
+    /**
+     * Return error messages from array
+     *
+     * @param string $string Message content
+     *
+     */
+    function getErrorsFromArray(array $errors) : string
+    {
+        $content = '';
+        foreach($errors as $error) {
+            $content .= $this->getError($error);
+        }
+        return $content;
+    }    
+    
+    /**
+     * Print error messages from array
+     *
+     * @param string $string Message content
+     *
+     */
+    function errorsFromArray(array $errors) : void 
+    {
+        echo $this->getErrorsFromArray($errors);
+    }    
+
     /**
      * Add message to admin_log table
      *

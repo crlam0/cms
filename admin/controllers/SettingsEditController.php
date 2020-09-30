@@ -46,10 +46,9 @@ class SettingsEditController extends BaseController
         $model = new Setting(App::$input['id']);        
         if($model->load(App::$input['form']) && $model->save()) {
             $this->redirect('index');
-        } else {
-            echo nl2br($model->getErrorsAsString());
-        }
-        return App::$template->parse('settings_form.html.twig', [
+        } 
+        $errors = App::$message->getErrorsFromArray($model->getErrors());        
+        return $errors . App::$template->parse('settings_form.html.twig', [
             'this' => $this,
             'model' => $model,
             'action' => 'update',

@@ -34,6 +34,20 @@ class BaseModel implements \ArrayAccess
         return $this;
     }
     
+    public function attributeLabels()
+    {
+        return [];
+    }
+    
+    public function label($name)
+    {
+        $labels = $this->attributeLabels();
+        if(isset($labels[$name])) {
+            return $labels[$name];
+        }        
+        return $name;
+    }
+    
     public function loadFromDb($id = null) 
     {
         $result = static::findOne($id);
@@ -103,34 +117,35 @@ class BaseModel implements \ArrayAccess
     private function checkRule(string $field, array $rule) {
         switch ($rule[1]) {
             case 'required':
-                if(!isset($this->$field)) {
+                if(isset($field)) {
                     return true;
                 }
                 break;
             case 'integer':
-                if($this->checkInteger($this->$field, $rule)) {
+                if($this->checkInteger($field, $rule)) {
                     return true;
                 }
                 break;
             case 'string':
-                if($this->checkString($this->$field, $rule)) {
+                if($this->checkString($field, $rule)) {
                     return true;
                 }
                 break;
             case 'number':
-                if(is_numeric($this->$field)) {
+                if(is_numeric($field)) {
                     return true;
                 }
                 break;
             case 'text':
-                if(is_string($this->$field)) {
+                if(is_string($field)) {
                     return true;
                 }
                 break;
             default:
                 break;
         }
-        $this->errors[] = "Field {$field} Rule {$rule[1]} failed.";
+        App::debug("Field '{$field}' Rule '{$rule[1]}' failed.");
+        $this->errors[] = "Поле '{$this->label($field)}' заполнено неверно.";
         return false;
     }
     

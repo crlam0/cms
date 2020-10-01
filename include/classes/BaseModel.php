@@ -108,36 +108,36 @@ class BaseModel implements \ArrayAccess
         $this->errors = [];
         foreach($rules as $rule) {            
             foreach($rule[0] as $field) {
-                $this->checkRule($field, $rule);
+                $this->checkRule($field, $this->data[$field], $rule);
             }
         }        
         return count($this->errors) == 0;
     }
     
-    private function checkRule(string $field, array $rule) {
+    private function checkRule(string $field, $value, array $rule) {
         switch ($rule[1]) {
             case 'required':
-                if(isset($field)) {
+                if(isset($value)) {
                     return true;
                 }
                 break;
             case 'integer':
-                if($this->checkInteger($field, $rule)) {
+                if($this->checkInteger($value, $rule)) {
                     return true;
                 }
                 break;
             case 'string':
-                if($this->checkString($field, $rule)) {
+                if($this->checkString($value, $rule)) {
                     return true;
                 }
                 break;
             case 'number':
-                if(is_numeric($field)) {
+                if(is_numeric($value)) {
                     return true;
                 }
                 break;
             case 'text':
-                if(is_string($field)) {
+                if(is_string($value)) {
                     return true;
                 }
                 break;
@@ -151,7 +151,7 @@ class BaseModel implements \ArrayAccess
     
     private function checkInteger($value, $rule)
     {
-        if(!is_int($value)) {
+        if(strlen($value) != strlen(intval($value))) {
             return false;
         }        
         if(is_array($rule[2])) {

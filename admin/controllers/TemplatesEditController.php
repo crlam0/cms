@@ -31,14 +31,13 @@ class TemplatesEditController extends BaseController
         $model = new Template();
         if($model->load(App::$input['form']) && $model->save()) {
             $this->redirect('update', ['id' =>$model->id]);
-        } else {
-            echo nl2br($model->getErrorsAsString());
         }
         
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/edit_area/edit_area_full.js"></script>' . "\n";
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor_html.js"></script>' . "\n";
         
-        return App::$template->parse('templates_form.html.twig', [
+        $errors = App::$message->getErrorsFromArray($model->getErrors());
+        return $errors . App::$template->parse('templates_form.html.twig', [
             'this' => $this,
             'model' => $model,
             'action' => 'create',
@@ -55,8 +54,6 @@ class TemplatesEditController extends BaseController
             } else {
                 $this->redirect('update', ['id' => $model->id]);
             }
-        } else {
-            echo nl2br($model->getErrorsAsString());
         }
         
         if(App::$input['update_and_exit']) {
@@ -70,7 +67,8 @@ class TemplatesEditController extends BaseController
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/edit_area/edit_area_full.js"></script>' . "\n";
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor_html.js"></script>' . "\n";
         
-        return App::$template->parse('templates_form.html.twig', [
+        $errors = App::$message->getErrorsFromArray($model->getErrors());
+        return $errors . App::$template->parse('templates_form.html.twig', [
             'this' => $this,
             'model' => $model,
             'action' => 'update',

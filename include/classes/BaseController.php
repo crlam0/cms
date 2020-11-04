@@ -49,7 +49,7 @@ class BaseController
         if (method_exists($this, $methodName)) {
             $method = new \ReflectionMethod($this, $methodName);
             if ($method->isPublic() && $method->getName() === $methodName) {
-                return $method->invokeArgs($this,$params);
+                return $method->invokeArgs($this, $params);
             }
         }
         throw new \InvalidArgumentException('Method ' . $methodName . ' not found.');
@@ -73,9 +73,21 @@ class BaseController
      * Redirect to self 
      *
      * @param string $url Additioanal URL
+     * @param array $params Additioanal params
      *
      */
-    public function redirect($url = '', $params = []) {        
+    public function redirect($url = '', $params = []) {   
+        redirect($this->getUrl($url, $params));
+    }
+
+    /**
+     * Get action Url
+     *
+     * @param string $url Additioanal URL
+     * @param array $params Additioanal params
+     *
+     */
+    public function getUrl($url = '', $params = []) {        
         if(count($params)) {
             $url .= '?';
             $first = true;
@@ -88,7 +100,8 @@ class BaseController
                 $url .= urlencode($param) . '=' . urlencode($value);
             }
         }        
-        redirect($this->base_url . $url);
+        return $this->base_url . $url;
     }
+    
     
 }

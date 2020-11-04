@@ -58,30 +58,29 @@ class SliderEditController extends BaseController
         return $content;
     }
 
-    public function actionUpdate(): string 
+    public function actionUpdate(int $id): string 
     {
         global $_FILES;
         $content = '';
         if(is_array(App::$input['form'])) {
-            App::$db->updateTable($this->TABLE, App::$input['form'], ['id' => App::$input['id']]);
-            $image_id = App::$input['id'];
+            App::$db->updateTable($this->TABLE, App::$input['form'], ['id' => $id]);
             $file = $_FILES['image_file'];    
-            $content .= $this->saveImage($file, $image_id, $image_id);
+            $content .= $this->saveImage($file, $id, $id);
         }
-        $tags = App::$db->getRow("select * from {$this->TABLE} where id=?", ['id' => App::$input['id']]);
+        $tags = App::$db->getRow("select * from {$this->TABLE} where id=?", ['id' => $id]);
         $tags['this'] = $this;
-        $tags['action'] = 'update';
+        $tags['action'] = $this->getUrl('update', ['id' => $id]);
         $tags['form_title'] = 'Изменение';
       
         $content .= App::$template->parse('slider_images_form.html.twig', $tags);
         return $content;        
     }
     
-    public function actionDelete(): string 
+    public function actionDelete(int $id): string 
     {
-        $content = $this->deleteImageFile(App::$input['id']);
+        $content = $this->deleteImageFile($id);
         $query = "delete from {$this->TABLE} where id=?";
-        App::$db->query($query , ['id' => App::$input['id']]);  
+        App::$db->query($query , ['id' => $id]);  
         $content .= $this->actionIndex();
         return $content;
     }

@@ -195,7 +195,7 @@ class Blocks
                 if (App::$settings['debug']) {
                     ob_start();
                     print_array(App::$DEBUG_ARRAY);
-                    echo 'Total time: <b>' . sprintf('%.4F', microtime(true) - App::$DEBUG[0]) . ' s.</b> ';
+                    echo 'Total time: <b>' . sprintf('%.4F', microtime(true) - App::$DEBUG_ARRAY[0]) . ' s.</b> ';
                     echo 'Memory: <b>' . convert_bytes(memory_get_usage(true)) . '</b><br /><br />';
                     print_array(App::$db->query_log_array);
                     $content = ob_get_clean();

@@ -52,17 +52,17 @@ class App
     */
     public static $settings;
     /**
-    * @var Array Full path to App
+    * @var String Full path to App
     */
     public static $DIR;
     /**
-    * @var Array Subdir of App
+    * @var String Subdir of App
     */
     public static $SUBDIR;
     /**
     * @var Array Debug array
     */
-    public static $DEBUG;
+    public static $DEBUG_ARRAY;
     /**
     * @var Monolog\Logger Object of logger
     */    
@@ -91,7 +91,7 @@ class App
         static::$SUBDIR = $subdir;
         static::set('DIR', $dir);
         static::set('SUBDIR', $subdir);
-        static::$DEBUG[0] = microtime(true);
+        static::$DEBUG_ARRAY[0] = microtime(true);
     }
     
     /**
@@ -228,9 +228,9 @@ class App
      */
     public static function debug (string $message) : void 
     {
-        $time = microtime(true) - static::$DEBUG[0];
+        $time = microtime(true) - static::$DEBUG_ARRAY[0];
         $time = sprintf('%.4F', $time);
-        static::$DEBUG[] = $time . "\t " . $message;
+        static::$DEBUG_ARRAY[] = $time . "\t " . $message;
         static::$logger->debug($message);
     }
     

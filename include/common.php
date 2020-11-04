@@ -45,7 +45,7 @@ if(App::$debug) {
     $whoops->writeToOutput(true);
     $whoops->allowQuit(true);
     $PrettyPageHandler = new PrettyPageHandler();
-    $PrettyPageHandler->addDataTable('DEBUG Array',  App::$DEBUG);
+    $PrettyPageHandler->addDataTable('DEBUG Array',  App::$DEBUG_ARRAY);
     $whoops->pushHandler($PrettyPageHandler);
     $whoops->register();
     $App->debug('Added exception handler');

@@ -174,6 +174,16 @@ class DB
     }
     
     /**
+     * Return last insert ID.
+     *
+     * @return integer 
+     */
+    public function error(): int 
+    {
+        return $this->mysqli->error;
+    }
+    
+    /**
      * Test field parameter for deny SQL injections
      *
      * @param string $sql Input string

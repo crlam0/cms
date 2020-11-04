@@ -160,13 +160,12 @@ class Blocks
      */
     public function content(string $block_name) : string
     {
-        global $settings, $DEBUG, $DIR, $SUBDIR;
         
         App::debug('Parse block ' . $block_name);        
         switch ($block_name) {
             
             case 'partners':
-                $query = "SELECT * FROM partners order by pos asc";
+                $query = "SELECT * FROM partners WHERE active='Y' order by pos asc";
                 $result = App::$db->query($query);
                 return App::$template->parse('block_partners', [], $result);
 
@@ -193,9 +192,9 @@ class Blocks
                 return $content;
                 
             case 'debug':
-                if ($settings['debug']) {
+                if (App::$settings['debug']) {
                     ob_start();
-                    print_array(App::$DEBUG);
+                    print_array(App::$DEBUG_ARRAY);
                     echo 'Total time: <b>' . sprintf('%.4F', microtime(true) - App::$DEBUG[0]) . ' s.</b> ';
                     echo 'Memory: <b>' . convert_bytes(memory_get_usage(true)) . '</b><br /><br />';
                     print_array(App::$db->query_log_array);

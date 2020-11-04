@@ -115,9 +115,14 @@ final class Routing
      */
     private function proceedParams (array $route, array $matches) : void 
     {
-        foreach($matches as $key => $value){
-            if (array_key_exists('params', $route)) {
+        if (array_key_exists('params', $route)) {
+            foreach($matches as $key => $value){
                 $this->params[$route['params'][$key]] = App::$db->test_param($value);
+            }
+        }
+        if(count(App::$get)) {
+            foreach(App::$get as $value) {
+                $this->params[] = $value;
             }
         }
     }

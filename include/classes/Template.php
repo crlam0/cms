@@ -36,7 +36,9 @@ class Template
             }
             $file_name = '';
             if (file_exists(App::$DIR . 'templates/' . $template['file_name'])) {
-                $file_name = App::$DIR . 'templates/' . $template['file_name'];
+                $file_name = $template['file_name'];
+            }    
+            if (file_exists(App::$DIR . 'admin/templates/' . $template['file_name'])) {
                 $file_name = $template['file_name'];
             }    
             if ($file_name) {
@@ -48,7 +50,7 @@ class Template
             }
         } else {
             $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, ['debug' => App::$debug], $template['content']);
-        }
+        }        
 
         if($sql_result instanceof \mysqli_result) {
             $tags['rows'] = $sql_result->fetch_all(MYSQLI_ASSOC);
@@ -67,7 +69,7 @@ class Template
                 $twig->addFunction($function);
             }
             unset($tags['functions']);
-        }        
+        }
         return $twig->render($template['name'], $tags);
     }
 
@@ -139,10 +141,10 @@ class Template
             $template['template_type'] = 'twig';
         }
         if (!$template) {
-            $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}' AND '" . App::$server['REQUEST_URI'] . "' LIKE concat('%',uri,'%')", true);
+            $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}' AND '" . App::$server['REQUEST_URI'] . "' LIKE concat('%',uri,'%')");
         }
         if (!$template) {
-            $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}'", true);
+            $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}'");
         }
         if (!$template) {
             return App::$message->get('tpl_not_found', ['name'=>$name]);

@@ -51,11 +51,13 @@ class Controller extends BaseController
     {
         $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='{$prev_id}' group by cat_part.id order by cat_part.num,cat_part.title asc";
         $result = App::$db->query($query);
+        $content = '';
         while ($row = $result->fetch_array()) {
             if (($deep) || ($prev_id)) {
                 unset($row['seo_alias']);
             }
             $content .= $this->part_items($row);
+
             if ($deep < $max_deep){
                 $this->sub_part($row['id'], $deep + 1, $max_deep);
             }

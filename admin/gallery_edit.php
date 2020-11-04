@@ -15,7 +15,7 @@ if ($input['list_gallery']) {
 
 if ($input['active']) {
     $query = "update gallery_list set active='" . $input['active'] . "' where id='" . $input['id'] . "'";
-    if (my_query($query, true)) {
+    if (my_query($query)) {
         print $input['active'];
     } else {
         print mysql_error();
@@ -31,7 +31,7 @@ if (isset($_SESSION['view_gallery'])) {
 if ($input['default_image_id']) {
     list($gallery_id) = my_select_row("select gallery_id from gallery_images where id='" . $_POST["default_image_id"] . "'", 1);
     $query = "update gallery_list set default_image_id='" . $_POST["default_image_id"] . "' where id='{$gallery_id}'";
-    echo (my_query($query, true) ? "OK" : mysql_error() );
+    echo (my_query($query) ? "OK" : mysql_error() );
     exit;
 }
 
@@ -181,7 +181,7 @@ if (($input['edit_image']) || ($input['add_image'])) {
 
 if (isset($_SESSION['view_gallery'])) {
     $query = "SELECT * from gallery_images where gallery_id='" . $_SESSION['view_gallery'] . "' order by date_add asc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     $content.=get_tpl_by_name('gallery_image_edit_table', $tags, $result);
     $tags['INCLUDE_HEAD']=$JQUERY_INC;
     echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
@@ -283,7 +283,7 @@ $query = "SELECT gallery_list.*,count(gallery_images.id) as images
 from gallery_list 
 left join gallery_images on (gallery_images.gallery_id=gallery_list.id) 
 group by gallery_list.id order by gallery_list.date_add desc";
-$result = my_query($query, true);
+$result = my_query($query);
 
 $tags['INCLUDE_HEAD']=$JQUERY_INC;
 

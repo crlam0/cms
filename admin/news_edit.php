@@ -107,7 +107,7 @@ if (($input["edit_news"]) || ($input["add_news"])) {
 }
 
 $query = "SELECT * from news order by date,title asc";
-$result = my_query($query, true);
+$result = my_query($query);
 $content.=get_tpl_by_name("news_edit_table", $tags, $result);
 
 echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);

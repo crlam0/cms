@@ -18,7 +18,12 @@ class BaseController
     /**
     * @var array Additional tags
     */
-    public $tags = [];
+    public $tags = [];    
+    
+    /**
+    * @var string Base URL for controller's views
+    */
+    public $base_url = '';
     
     /**
      * Set empty values for HTML blocks.
@@ -62,6 +67,28 @@ class BaseController
     {
         $method = 'action' . str_replace(' ', '', ucwords(implode(' ', explode('-', $action))));
         return $this->runMethod($method, $params);
+    }
+    
+    /**
+     * Redirect to self 
+     *
+     * @param string $url Additioanal URL
+     *
+     */
+    public function redirect($url = '', $params = []) {        
+        if(count($params)) {
+            $url .= '?';
+            $first = true;
+            foreach ($params as $param => $value) {
+                if($first) {
+                    $first = false;
+                } else {
+                    $url .= '&';
+                }
+                $url .= urlencode($param) . '=' . urlencode($value);
+            }
+        }        
+        redirect($this->base_url . $url);
     }
     
 }

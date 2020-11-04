@@ -25,9 +25,13 @@ final class Routing
     /**
     * @var string Controller default action
     */
-    public $action;
+    public $action;    
     /**
-    * @var array Controller params
+    * @var string Base URL for controller's views
+    */
+    public $base_url;
+    /**
+    * @var array Controller param's
     */
     public $params = [];
     
@@ -137,6 +141,11 @@ final class Routing
                 $this->action = $route['action'];
             } else {
                 $this->action = $this->getAction();
+            }            
+            if(array_key_exists('base_url', $route)) {
+                $this->base_url = App::$SUBDIR . $route['base_url'];
+            } else {
+                $this->base_url = $this->request_uri;
             }
         }
     }

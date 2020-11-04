@@ -13,7 +13,9 @@ use classes\BaseController;
 class IndexController extends BaseController 
 {    
     public function actionIndex(): string
-    {
+    { 
+        $this->tags['isIndexPage'] = true;        
+        $this->breadcrumbs = [];
         if(class_exists('\local\IndexController')) {
             $controller = new \local\IndexController();
             return $controller->actionIndex();

@@ -54,7 +54,7 @@ if (($input['view']) || ($input['adding'])) {
     }
     $tags['flags']="";
     $query="select * from users_flags order by title asc";
-    $result_flags=my_query($query, true);
+    $result_flags=my_query($query);
     while($row_flags=$result_flags->fetch_array()){
             $tags['flags'].="<input type=checkbox name=flags[] ".(in_array($row_flags['value'], $flags) ? "checked" : "")." value=\"{$row_flags['value']}\">{$row_flags['title']}<br>";
     }

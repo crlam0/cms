@@ -7,7 +7,6 @@
   ========================================================================= */
 
 namespace classes;
-use classes\App;
 
 class DB 
 {
@@ -47,68 +46,123 @@ class DB
      */    
     public function __construct(string $host, string $user, string $passwd, string $dbname) 
     {
-        $this->host=$host;
-        $this->user=$user;
-        $this->passwd=$passwd;
-        $this->dbname=$dbname;
+        $this->host = $host;
+        $this->user = $user;
+        $this->passwd = $passwd;
+        $this->dbname = $dbname;
         $this->mysqli = new \mysqli($this->host, $this->user, $this->passwd, $this->dbname);
-        if (mysqli_connect_error()) {
-            die('DB connect error ' . mysqli_connect_errno() . ': ' . mysqli_connect_error());
+
+        if ($this->mysqli->connect_error) {
+            App::$logger->error('DB connect error ' . $this->mysqli->connect_errno . ': ' . $this->mysqli->connect_error);
+            die('DB connect error ' . $this->mysqli->connect_errno . ': ' . $this->mysqli->connect_error);
         }
-        $this->query('SET character_set_client = utf8', true);
-        $this->query('SET character_set_results = utf8', true);
-        $this->query('SET character_set_connection = utf8', true);
+        $this->query('SET character_set_client = utf8');
+        $this->query('SET character_set_results = utf8');
+        $this->query('SET character_set_connection = utf8');
         empty($this->query_log_array);
         $this->query_log_array[] = 'Connected to ' . $host;
     }
-    
+
+    private function bindParams($stmt, $params) {
+        $types = '';
+        $values = [];
+        foreach ($params as $name => $value) {            
+            if($name == 'id') {
+                $types .= 'i';
+            } else {
+                $types .= 's';
+            }
+            $values[] = $value;
+        }
+        if(!$stmt->bind_param($types, ...$values)) {
+            throw new \InvalidArgumentException('SQL Cant bind params: ' . $stmt->error);
+        }
+        return $stmt;
+    }
+
+    public function prepareAndExecute(string $sql, array $params = []) {
+        if($this->debug){
+            $start_time = microtime(true);
+        }
+        $stmt = $this->mysqli->prepare($sql);
+        if(!$stmt) {
+            throw new \InvalidArgumentException('SQL Prepare error: ' . $this->mysqli->error . ' Query is: ' . $sql);
+        }
+        $this->bindParams($stmt, $params);
+        if (!$stmt->execute()) {
+            throw new \InvalidArgumentException('SQL Execute error: ' . $stmt->error . ' Query is: ' . $sql);
+        }        
+        if($this->debug){
+            $time = sprintf('%.4F', microtime(true) - $start_time);
+            $this->query_log_array[] = $time . "\t" . $sql;
+        }
+        $result = $stmt->get_result();
+        $stmt->free_result();
+        return $result;
+    }
     
     /**
      * Replace for mysql_query
      *
      * @param string $sql SQL Query
-     * @param boolean $dont_debug Dont echo debug info
+     * @param boolean $params Params for query prepare
      *
      * @return array mysqli result
      */
-    public function query(string $sql, bool $dont_debug=false) 
+    public function queryUnsafe(string $sql, array $params = []) 
     {
+        if(count($params)) {
+            return $this->prepareAndExecute($sql, $params);
+        }
         if($this->debug){
             $start_time = microtime(true);
         }
-        if($this->mysqli) {
-            $result = $this->mysqli->query($sql);
-        }
+        $result = $this->mysqli->query($sql);
         if($this->debug){
             $time = sprintf('%.4F', microtime(true) - $start_time);
             $this->query_log_array[] = $time . "\t" . $sql;
-            if(strlen($this->mysqli->info)) {
-                $this->query_log_array[] = $this->mysqli->info;
-            }
         }
-        if (!$result) {            
-            if($this->debug){
-                throw new \InvalidArgumentException('SQL Error: ' . $this->mysqli->error . ' Query is: ' . $sql);
-            }
-            die('SQL Error: '.$this->mysqli->error);
+        if (!$result) {
+            throw new \InvalidArgumentException('SQL Error: ' . $this->mysqli->error . ' Query is: ' . $sql);
         }
         return $result;
+    }
+    
+    /**
+     * Replace for mysql_query
+     *
+     * @param string $sql SQL Query
+     * @param boolean $params Params for query prepare
+     *
+     * @return array mysqli result
+     */
+    public function query(string $sql, array $params = [])             
+    {
+        try {
+            return $this->queryUnsafe($sql, $params);
+        } catch (\InvalidArgumentException $e) {
+            App::$logger->error($e->getMessage());
+            if($this->debug) {                
+                die($e->getMessage());
+            } else {
+                die('Sorry, internal server error. Try to retry later.');
+            }
+        }
     }
 
     /**
      * Return one row from query
      *
      * @param string $sql SQL Query
-     * @param boolean $dont_debug Dont echo debug info
+     * @param boolean $params Params for query prepare
      *
      * @return array One row
      */
-    public function getRow(string $sql, bool $dont_debug = false) 
+    public function getRow(string $sql, array $params = []) 
     {
-        $result = $this->query($sql, $dont_debug);    
+        $result = $this->query($sql, $params);    
         if ($result->num_rows) {
-            $row = $result->fetch_array();
-            return $row;
+            return $result->fetch_array();
         } else {
             return false;
         }
@@ -125,6 +179,16 @@ class DB
     }
     
     /**
+     * Return last insert ID.
+     *
+     * @return integer 
+     */
+    public function error(): int 
+    {
+        return $this->mysqli->error;
+    }
+    
+    /**
      * Test field parameter for deny SQL injections
      *
      * @param string $sql Input string
@@ -135,16 +199,17 @@ class DB
     {
         if (is_array($str)) {
             foreach ($str as $key => $value) {
-                $str[$key]=$this->test_param($value);
+                $str[$key] = $this->test_param($value);
             }
             return $str;
         }    
-        if(!strstr(App::$server['PHP_SELF'], 'admin/')) {
-            $str=htmlspecialchars($str);            
+        if(!strstr(App::$server['REQUEST_URI'], 'admin/')) {
+            $str = htmlspecialchars($str);
         }
-        $str=$this->escape_string($str);        
+        $str = $this->escapeString($str);
         foreach($this->DENIED_WORDS as $word) {
             if(stristr($str, $word)){
+                App::$logger->error('test_param denied word', ['URI'=>App::$server['REQUEST_URI']]);
                 header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
                 exit();
             }
@@ -159,20 +224,20 @@ class DB
      *
      * @return string
      */
-    public function escape_string(string $str) : string 
+    public function escapeString(string $str) : string 
     {
-        return $this->mysqli->escape_string($str);        
+        return $this->mysqli->real_escape_string($str);        
     }
 
     /**
      * Return htmlspecialchars() for $value if needed.
      *
-     * @param string $field Field name
      * @param string $value Field value
+     * @param string $field Field name
      *
      * @return string Complete string for query
      */
-    public function special_chars(string $value, string $field = '') : string 
+    public function specialChars(string $value, string $field = '') : string 
     {
         if($field == 'title' || $field == 'name') {
             $value = htmlspecialchars($value);
@@ -187,7 +252,7 @@ class DB
      *
      * @return string Complete string for query
      */
-    public function insert_fields(array $fields) : string 
+    public function insertFields(array $fields) : string 
     {
         $total = count($fields);
         $output = '';
@@ -195,7 +260,7 @@ class DB
         $str_values = '';
         if ($total > 0) {
             $a = 0;
-            while (list($key, $value) = each($fields)) {
+            foreach ($fields as $key => $value) {
                 $a++;
                 if (is_array($value)){ 
                     $value = implode(';', $value);
@@ -209,9 +274,9 @@ class DB
                 if(strstr($value,'date_format')){
                     $str_values.=stripcslashes($value) . $str;
                 }else{
-                    $value=$this->special_chars($value, $key);
-                    $value=$this->escape_string($value);
-                    $str_values.= ( $value == 'now()' ? $value . $str : "'$value'$str");
+                    $value=$this->specialChars($value, $key);
+                    // $value=$this->escapeString($value);
+                    $str_values.= ( $value == 'now()' ? $value . $str : "'{$value}'{$str}");
                 }    
             }
             $output = "({$str_fields}) VALUES({$str_values})";
@@ -228,12 +293,12 @@ class DB
      *
      * @return string Complete string for query
      */
-    public function update_fields(array $fields) : string 
+    public function updateFields(array $fields) : string 
     {
         $total = count($fields);
         $output = '';
         $a = 0;
-        while (list($key, $value) = each($fields)) {
+        foreach ($fields as $key => $value) {
             $a++;
             if (is_array($value)){
                 $value = implode(';', $value);
@@ -246,13 +311,150 @@ class DB
             if(strstr($value,'date_format')){
                 $output.="$key=".stripcslashes($value) . $str;
             }else{
-                $value=$this->special_chars($value, $key);
-                $value=$this->escape_string($value);
-                $output.= ( $value == 'now()' ? "$key=$value" . $str : "$key='$value'$str");
+                $value=$this->specialChars($value, $key);
+                // $value=$this->escapeString($value);
+                $output.= ( $value == 'now()' ? "{$key}={$value}" . $str : "{$key}='{$value}'{$str}");
             }    
         }
         return $output;
     }
+    
+    /**
+     * Insert row to table
+     *
+     * @param string $table Table name
+     * @param array $fields Fields and data for query
+     *
+     * @return string Complete string for query
+     */
+    public function insertTable(string $table, array $fields) : bool
+    {
+        $str_fields = '';
+        $str_values = '';
+        $params=[];
+        $total = count($fields);
+        $a=0;
+        foreach($fields as $field => $value) {
+            $a++;
+            $str_fields .= $field;
+            if(strstr($value, 'now()') || strstr($value, 'date_format')){
+                $str_values .= $value;
+            } else {
+                $str_values .= '?';
+                $params[$field] = stripcslashes($value);
+            }
+            if ($a != $total) {
+                $str_fields .= ',';
+                $str_values .= ',';
+            }            
+        }
+        $sql = "INSERT INTO {$table}({$str_fields}) VALUES({$str_values})";
+        return $this->query($sql, $params);        
+    }
+    
+    /**
+     * Update data in table
+     *
+     * @param string $table Table name
+     * @param array $fields Fields and data for query
+     * @param array $where Fields for where statement
+     *
+     * @return string Complete string for query
+     */
+    public function updateTable(string $table, array $fields, array $where) : bool
+    {
+        $sql = "UPDATE {$table} SET ";
+        $params=[];
+        $total = count($fields);
+        $a=0;
+        foreach($fields as $field => $value) {
+            $a++;
+            if(strstr($value, 'now()') || strstr($value, 'date_format')){
+                $sql .= $field . "='{$value}'";
+            } else {
+                $sql .= $field . '=?';
+                $params[$field] = stripcslashes($value);
+            }
+            if ($a != $total) {
+                $sql .= ',';
+            }            
+        }
+        if(count($where)) {
+            $sql .= ' WHERE ';
+            $total = count($where);
+            $a=0;
+            foreach($where as $field => $value) {
+                $a++;
+                $sql .= $field . ' = ?';    
+                if ($a != $total) {
+                    $sql .= ' AND ';
+                }            
+                $params['$field'] = $value;            
+            }
+        }
+        return $this->query($sql, $params);
+    }
+    
+    /**
+     * Select record from DB.
+     *
+     * @param string $table Table name
+     * @param integer $id
+     * 
+     * @return \mysqli_result.
+     */
+    public function findOne($table, $id) {
+        $query = "SELECT * FROM {$table} WHERE id=?";
+        return $this->query($query, ['id' => $id]);          
+    }
+    
+    /**
+     * Select records from DB.
+     *
+     * @param string $table Table name
+     * @param array $where Fields for where statement
+     * @param string $order_by Expression for ORDER BY
+     * 
+     * @return \mysqli_result.
+     */
+    public function findAll($table, $where = [], $order_by = 'id desc') {
+        if(!count($where)) {
+            return $this->query("SELECT * FROM {$table} ORDER BY {$order_by}");
+        }
+        $expr = '';
+        while (list($key) = each($where)) {
+            if(strlen($expr) == 0) {
+                $expr .= $key . '=?';                
+            } else {
+                $expr .= ' AND ' . $key . '=?';
+            }
+        }
+        $query = "SELECT * FROM {$table} WHERE {$expr} ORDER BY {$order_by}";
+        return $this->query($query , $where);          
+    }    
+    
+    /**
+     * Delete record from DB.
+     *
+     * @param string $table Table name
+     * @param array $where Fields for where statement
+     * 
+     * @return \mysqli_result.
+     */
+    public function deleteFromTable($table, $where)
+    {
+        
+        $expr = '';
+        while (list($key) = each($where)) {
+            if(strlen($expr) == 0) {
+                $expr .= $key . '=?';                
+            } else {
+                $expr .= ' AND ' . $key . '=?';
+            }
+        }
+        $query = "delete from {$table} where {$expr}";
+        return App::$db->query($query , $where);  
+    }        
     
 }
 

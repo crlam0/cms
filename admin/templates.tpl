@@ -1304,40 +1304,61 @@ $(document).ready(function(){
 <!--[/content]-->
 
 
-
-
 <!--[title]partners_edit_table[/title]-->
 <!--DESCRIPTION: Список партнеров -->
 <!--[content]-->
+<style type="text/css">
+    tr.active_Y { background: #ffffff; }
+    tr.active_N { background: #dddddd; }
+</style>
 <center><form action="[%PHP_SELF%]" method=get>
-	<input type="hidden" name=add_partner value=1>
-	<input class="btn btn-primary" type="submit" value="Добавить">
+    <input type="hidden" name=add_partner value=1>
+    <input class="btn btn-primary" type="submit" value="Добавить">
 </form></center>
 <br>
-<table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
-<tr class=header align="center">
-	<td width=10%>Номер</td>
-	<td width=30%>Название</td>
-	<td width=40%>Изображение</td>
-	<td width=5% align="center">&nbsp;</td>
-	<td width=5% align="center">&nbsp;</td>
+<table width=500  class="table table-responsive table-bordered normal-form" align="center">
+<tr class="header">
+    <td width=10%>Номер</td>
+    <td width=30%>Название</td>
+    <td width=30%>Изображение</td>
+    <td width=10%>Активен</td>
+    <td width=5% align="center">&nbsp;</td>
+    <td width=5% align="center">&nbsp;</td>
 </tr>
 [%loop_begin%]
-	<tr class="content" align="left">
-	<td>[%row(pos)%]</td>
-	<td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
-	<td align="center">[%func(show_img)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_partner=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_partner=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
-	</tr>
+    <tr class="active_[%row(active)%]" align="left" id="tr_[%row(id)%]">
+        <td>[%row(pos)%]</td>
+        <td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
+        <td align="center">[%func(show_img)%]</td>
+        <td align="center"><input class="" type="checkbox" class="sw_active" value='[%row(id)%]' [%row(active,if,checked)%]></td>
+        <td width=16><a href=[%PHP_SELF%]?edit_partner=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
+        <td width=16><a href=[%PHP_SELF%]?del_partner=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+    </tr>
 [%loop_end%]
 </table>
 <br>
 <center><form action="[%PHP_SELF%]" method=get>
-	<input type="hidden" name=add_partner value=1>
-	<input class="btn btn-primary" type="submit" value="Добавить">
+    <input type="hidden" name=add_partner value=1>
+    <input class="btn btn-primary" type="submit" value="Добавить">
 </form></center>
-<center><a href=[%PHP_SELF%]?list_gallery=1 class="btn btn-default"><<  Назад</a></center>
+
+<script type="text/javascript">
+$(document).ready(function(){  
+    $('input:checkbox').change(function(){
+	var id=$(this).val();
+	if( $(this).prop("checked") ){ var active='Y'; }else{ var active='N'; }
+	$.ajax({
+	   type: "GET", url: "[%PHP_SELF%]", data: "active="+active+"&id="+id,
+	   success: function(msg){
+	     var tr_id="#tr_"+id;
+	     if(msg == 'Y') $(tr_id).attr("class","active_Y");
+	     else if(msg == 'N') $(tr_id).attr("class","active_N");
+	     else alert(msg);
+	   }
+	});
+    });
+});
+</script>
 
 <!--[/content]-->
 
@@ -1554,7 +1575,6 @@ $(document).ready(function(){
 	<input type="hidden" name=add_image value=1>
 	<input class="btn btn-primary" type="submit" value="Добавить">
 </form></center>
-<center><a href=[%PHP_SELF%]?list_gallery=1 class="btn btn-default"><<  Назад</a></center>
 
 <!--[/content]-->
 

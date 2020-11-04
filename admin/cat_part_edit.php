@@ -7,10 +7,10 @@ use classes\App;
 
 /*
 $query = "select * from cat_part";
-$result = my_query($query, true);
+$result = my_query($query);
 while ($row = $result->fetch_array()) {
     $query="update cat_part set seo_alias='".encodestring($row["title"])."' where id='{$row["id"]}'";
-    my_query($query, true);
+    my_query($query);
 }
 */
 if (isset($input['part_id'])) {
@@ -29,7 +29,7 @@ if (isset($input['part_id'])) {
     }
     $json = json_encode($related_products);
     $query = "update cat_part set related_products='{$json}' where id='{$part_id}'";
-    $result = my_query($query, true);    
+    $result = my_query($query);    
     if($result) {
         echo 'OK';
     } else {
@@ -46,7 +46,7 @@ if($input['get_related_products_list']) {
         $related_products=[];
     }
     $query = "SELECT id,title from cat_part order by num,title asc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     while($row=$result->fetch_array()){
         $content .= '        
         <div class="panel-group">
@@ -59,7 +59,7 @@ if($input['get_related_products_list']) {
           <div id="collapse'.$row['id'].'" class="panel-collapse collapse">
             <ul class="list-group">';
             $query = "SELECT cat_item.* from cat_item where part_id='{$row['id']}' order by num,title asc";
-            $result_item = my_query($query, true);
+            $result_item = my_query($query);
             while($row_item=$result_item->fetch_array()){
                 $state = '';
                 if(array_key_exists($row_item['id'], $related_products)) {
@@ -86,7 +86,7 @@ function prev_part($prev_id, $deep, $arr) {
         return null;
     }
     $query = "SELECT id,title,prev_id from cat_part where id='{$prev_id}' order by num,title asc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     if(!$result->num_rows){
         return null;
     }
@@ -175,7 +175,7 @@ if ($input["added"]) {
     $input['form']['date_add']='now()';
     $input['form']['date_change']='now()';
     $query = "insert into cat_part " . db_insert_fields($input['form']);
-    my_query($query, true);
+    my_query($query);
     $insert_id=$mysqli->insert_id;
     if($seo_alias_duplicate){
         $input['form']['seo_alias'].='_'.$insert_id;
@@ -208,7 +208,7 @@ if ($input['edited']) {
     }
     $input['form']['date_change']='now()';
     $query = "update cat_part set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, true);
+    my_query($query);
     $content.=my_msg_to_str('',[],'Раздел успешно изменен.');
     if ($_FILES['img_file']['size'] > 100) {
 	list($img) = my_select_row("select image_name from cat_part where id='{$input['id']}'");
@@ -227,11 +227,12 @@ if ($input['edited']) {
     }
 }
 
+
 if (($input['edit']) || ($input['adding'])) {
     if ($input['edit']) {
 	$query = "select * from cat_part where id='{$input['id']}'";
-	$result = my_query($query, true);
-	$tags = $result->fetch_array();
+	$result = my_query($query);
+	$tags = array_merge($tags, $result->fetch_assoc());
 	$tags['form_title'] = 'Редактирование';
 	$tags['type'] = 'edited';
 	$tags['Header'] = 'Редактирование раздела';
@@ -244,8 +245,7 @@ if (($input['edit']) || ($input['adding'])) {
             $tags['items_props'] = App::$settings['catalog']['default_items_props'];
         }        
     }
-    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_MINI_INC . $EDITOR_HTML_INC;
-    
+    $tags['INCLUDE_HEAD'] = $EDITOR_MINI_INC . $EDITOR_HTML_INC;
     $prev_id_select = '';
     function sub_part_select($prev_id, $deep) {
         global $prev_id_select, $tags;
@@ -253,7 +253,7 @@ if (($input['edit']) || ($input['adding'])) {
             return null;
         }
         $query = "select * from cat_part where prev_id='{$prev_id}' order by num,title asc";
-        $result = my_query($query, true);
+        $result = my_query($query);
         $arr = null;
         while ($row = $result->fetch_array()) {
             $title='';
@@ -284,7 +284,7 @@ if (($input['edit']) || ($input['adding'])) {
 function sub_part($prev_id, $deep) {
     global $IMG_PATH, $tags, $IMG_URL;
     $query = "SELECT * from cat_part where prev_id={$prev_id} order by num,title+1 asc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     while ($row = $result->fetch_array()) {
 	$spaces = '';
         $spaces = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $deep);

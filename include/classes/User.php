@@ -70,7 +70,7 @@ class User
         $query = "select * from users where id='" . $id . "'";
         $result = App::$db->query($query);
         if ($result->num_rows) {
-            $this->data = $row = $result->fetch_array();
+            $this->data = $result->fetch_assoc();
             return true;
         }
         return false;

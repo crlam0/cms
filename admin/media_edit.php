@@ -42,7 +42,7 @@ if ($input["added_file"]) {
     $input['form']['list_id'] = $_SESSION["view_files"];
     if ($_FILES["uploaded_file"]["size"] > 100) {
       	$f_info = pathinfo($_FILES["uploaded_file"]["name"]);
-	$file_name = encodestring($f_info["filename"]) . "." . $f_info["extension"];
+	$file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
 
 //	$file_name = str_replace(" ", "_", encodestring($_FILES["uploaded_file"]["name"]));
 	if (move_uploaded_file($_FILES["uploaded_file"]["tmp_name"], $DIR . $settings["media_upload_path"] . $file_name)) {
@@ -65,8 +65,8 @@ if ($input["edited_file"]) {
                 $content.=my_msg_to_str('error', [],"Ошибка удаления файла");
             }
 	}
-      	$f_info = pathinfo($_FILES["uploaded_file"]["name"]);
-	$file_name = encodestring($f_info["filename"]) . "." . $f_info["extension"];
+      	$f_info = pathinfo($_FILES["uploaded_file"]["name"]);        
+	$file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
 //	$file_name = str_replace(" ", "_", encodestring($_FILES["uploaded_file"]["name"]));
 	if (move_uploaded_file($_FILES["uploaded_file"]["tmp_name"], $DIR . $settings["media_upload_path"] . $file_name)) {
 	    $input['form'][file_name] = $file_name;
@@ -100,7 +100,7 @@ if (($input["edit_file"]) || ($input["add_file"])) {
 
 if (isset($_SESSION["view_files"])) {
     $query = "SELECT * from media_files where list_id='" . $_SESSION["view_files"] . "' order by num asc, date_add desc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     $content.=get_tpl_by_name("media_files_edit_table", $tags, $result);
     echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
     exit();
@@ -160,7 +160,7 @@ $query = "SELECT media_list.*,count(media_files.id) as files
 from media_list 
 left join media_files on (media_files.list_id=media_list.id) 
 group by media_list.id order by media_list.date_add desc";
-$result = my_query($query, true);
+$result = my_query($query);
 $content.=get_tpl_by_name("media_list_edit_table", $tags, $result);
 echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
 

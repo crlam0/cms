@@ -49,7 +49,7 @@ class Blocks
             $where_add = "flag='' AND";
         }
         $query = "SELECT * FROM menu_item WHERE {$where_add} menu_id='{$menu_id}' AND active=1 ORDER BY position ASC";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         $output = '';
         if ($result->num_rows) {
             $output.="<ul {$attr_ul}>\n";
@@ -66,32 +66,32 @@ class Blocks
     
     protected function menu_main () : string 
     {
-        list($menu_id) = App::$db->getRow("SELECT id FROM menu_list WHERE root=1", true);
+        list($menu_id) = App::$db->getRow("SELECT id FROM menu_list WHERE root=1");
         return $this->get_menu_items($menu_id, 'id="menu-main" class="nav navbar-nav"', 'class="nav-item"');
     }
     
     protected function menu_top () : string 
     {
-        list($menu_id) = App::$db->getRow("SELECT id FROM menu_list WHERE top_menu=1", true);
+        list($menu_id) = App::$db->getRow("SELECT id FROM menu_list WHERE top_menu=1");
         return $this->get_menu_items($menu_id, 'id="menu-top" class="navbar-nav navbar-left"', 'class="nav-item"');
     }
     
     protected function menu_bottom () : string 
     {
-        list($menu_id) = App::$db->getRow("SELECT id FROM menu_list WHERE bottom_menu=1", true);
+        list($menu_id) = App::$db->getRow("SELECT id FROM menu_list WHERE bottom_menu=1");
         return $this->get_menu_items($menu_id, 'id="menu-footer" class="navbar-nav navbar-expand ml-auto"', 'class="nav-item"');
     }
     
     protected function vote () : string 
     {
         $query = "SELECT id,title,type FROM vote_list WHERE active=1 limit 1";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             list($vote_id, $title, $type) = $result->fetch_array();
             $tags['vote_title'] = $title;
             $tags['variants'] = '';
             $query = "SELECT * FROM vote_variants WHERE vote_id='{$vote_id}'";
-            $result = App::$db->query($query, true);
+            $result = App::$db->query($query);
             if (!$result->num_rows){
                 return null;
             }    
@@ -120,7 +120,7 @@ class Blocks
         }
         if ($URI == '/') {
             $query = "SELECT * FROM slider_images WHERE length(file_name)>0 ORDER BY pos,title ASC";
-            $result = App::$db->query($query, true);
+            $result = App::$db->query($query);
             return App::$template->parse('slider_items', [], $result);
         } else {
             return '';
@@ -147,7 +147,7 @@ class Blocks
     {
         $TABLE = 'blog_posts';
         $query = "SELECT {$TABLE}.*,date_format(date_add,'%d.%m.%Y') as date from {$TABLE} where active='Y' order by {$TABLE}.id desc limit". App::$settings['news_block_count'];
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             function get_news_short_content($tmp, $row) {
                 return cut_string($row['content'], 100);
@@ -167,14 +167,13 @@ class Blocks
      */
     public function content(string $block_name) : string
     {
-        global $settings, $DEBUG, $DIR, $SUBDIR;
         
         App::debug('Parse block ' . $block_name);        
         switch ($block_name) {
             
             case 'partners':
-                $query = "SELECT * FROM partners order by pos asc";
-                $result = App::$db->query($query, null);
+                $query = "SELECT * FROM partners WHERE active='Y' order by pos asc";
+                $result = App::$db->query($query);
                 return App::$template->parse('block_partners', [], $result);
 
             case 'banners':
@@ -200,9 +199,9 @@ class Blocks
                 return $content;
                 
             case 'debug':
-                if ($settings['debug']) {
+                if (App::$settings['debug']) {
                     ob_start();
-                    print_array(App::$DEBUG);
+                    print_array(App::$DEBUG_ARRAY);
                     print_array(App::$db->query_log_array);
                     $content = ob_get_clean();
                     return $content;

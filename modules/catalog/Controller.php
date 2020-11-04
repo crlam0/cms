@@ -89,7 +89,18 @@ class Controller extends BaseController
     
     public function actionPartList(string $uri): string
     {        
-        list($part_id, $page) = $this->parseURI($uri);
+        if(strlen($uri)) {
+            list($part_id, $page) = $this->parseURI($uri);
+            if (!$part_id) {
+                $tags['Header'] = 'Ошибка 404';
+                $tags['file_name'] = App::$server['REQUEST_URI'];
+                header(App::$server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
+                return  App::$message->get('notice', [], 'Раздел не найден');
+            }
+        } else {
+            $part_id = 0;
+            $page = 1;
+        }
         list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs($part_id);
         $this->tags['INCLUDE_JS'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/catalog/catalog.js"></script>' . "\n";
         
@@ -172,8 +183,8 @@ class Controller extends BaseController
             $related_products=[];
         }
         if(count($related_products)) {
-            $where_str=implode(',',array_keys($related_products));
-            $query ="select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
+            $where_str = implode(',', array_keys($related_products));
+            $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
                 left join cat_item_images on (cat_item_images.id=default_img)
                 where cat_item.id in (" . $where_str . ")
                 group by cat_item.num   
@@ -287,7 +298,7 @@ class Controller extends BaseController
     /*  ??? */
     public function getPropName($part_id,$name) {
         $query = "select items_props from cat_part where id='{$part_id}'";
-        list($items_props) = my_select_row($query, true);
+        list($items_props) = my_select_row($query);
         if($props_values = my_json_decode($items_props)) {
             return $props_values[$name]['name'];
         }
@@ -297,7 +308,7 @@ class Controller extends BaseController
     /*  ??? */
     public function getPropNamesArray($part_id) {
         $query = "select items_props from cat_part where id='{$part_id}'";
-        list($items_props) = my_select_row($query, true);
+        list($items_props) = my_select_row($query);
         if($props_values = my_json_decode($items_props)) {        
             $result=[];
             foreach($props_values as $name){

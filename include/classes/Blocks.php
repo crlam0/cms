@@ -1,13 +1,14 @@
 <?php
 
-namespace Classes;
-use Classes\App;
+namespace classes;
+use classes\App;
 
 /**
  * Implements work with simple blocks
  *
  */
-class Blocks {
+class Blocks 
+{
     
     /**
      * Return menu HREF
@@ -16,7 +17,8 @@ class Blocks {
      *
      * @return array HREF and TARGET
      */
-    protected function get_href($row) {
+    protected function get_href(array $row) : array
+    {
         $href = get_menu_href(null, $row);
         if (preg_match('/^http.?:\/\/.+$/', $href)) {
             $target_inc = ' target="_blank"';
@@ -36,7 +38,8 @@ class Blocks {
      *
      * @return string Menu content
      */
-    protected function get_menu_items($menu_id, $attr_ul = '', $attr_li = '') {
+    protected function get_menu_items($menu_id, string $attr_ul = '', string $attr_li = '') : string
+    {
         if (!$menu_id){
             return '';
         }
@@ -46,7 +49,7 @@ class Blocks {
             $where_add = "flag='' AND";
         }
         $query = "SELECT * FROM menu_item WHERE {$where_add} menu_id='{$menu_id}' AND active=1 ORDER BY position ASC";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         $output = '';
         if ($result->num_rows) {
             $output.="<ul {$attr_ul}>\n";
@@ -61,28 +64,34 @@ class Blocks {
         return $output;
     }
     
-    protected function menu_main () {
-        list($menu_id) = App::$db->select_row("SELECT id FROM menu_list WHERE root=1", true);
+    protected function menu_main () : string 
+    {
+        list($menu_id) = App::$db->getRow("SELECT id FROM menu_list WHERE root=1");
         return $this->get_menu_items($menu_id, 'id="menu-main" class="nav navbar-nav"', 'class="nav-item"');
     }
-    protected function menu_top () {
-        list($menu_id) = App::$db->select_row("SELECT id FROM menu_list WHERE top_menu=1", true);
+    
+    protected function menu_top () : string 
+    {
+        list($menu_id) = App::$db->getRow("SELECT id FROM menu_list WHERE top_menu=1");
         return $this->get_menu_items($menu_id, 'id="menu-top" class="navbar-nav navbar-left"', 'class="nav-item"');
     }
-    protected function menu_bottom () {
-        list($menu_id) = App::$db->select_row("SELECT id FROM menu_list WHERE bottom_menu=1", true);
+    
+    protected function menu_bottom () : string 
+    {
+        list($menu_id) = App::$db->getRow("SELECT id FROM menu_list WHERE bottom_menu=1");
         return $this->get_menu_items($menu_id, 'id="menu-footer" class="navbar-nav navbar-expand ml-auto"', 'class="nav-item"');
     }
     
-    protected function vote () {
+    protected function vote () : string 
+    {
         $query = "SELECT id,title,type FROM vote_list WHERE active=1 limit 1";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             list($vote_id, $title, $type) = $result->fetch_array();
             $tags['vote_title'] = $title;
             $tags['variants'] = '';
             $query = "SELECT * FROM vote_variants WHERE vote_id='{$vote_id}'";
-            $result = App::$db->query($query, true);
+            $result = App::$db->query($query);
             if (!$result->num_rows){
                 return null;
             }    
@@ -94,30 +103,25 @@ class Blocks {
                     </div>\n";
                 $i++;
             }
-            return get_tpl_by_name('block_vote', $tags);
+            return App::$template->parse('block_vote', $tags);
         }
         return null;
     
     }
     
-    protected function slider () {        
-        $URI = App::$server['REQUEST_URI'];
-        if (strlen(App::$SUBDIR) > 1){
-            $URI = str_replace(App::$SUBDIR, "/", $URI);
-        }
-        if(strstr($URI,'?')) {
-            $URI = substr($URI,0,strpos($URI,'?'));
-        }
-        if ($URI == '/') {
+    protected function slider () : string
+    {
+        if (App::$routing->isIndexPage()) {
             $query = "SELECT * FROM slider_images WHERE length(file_name)>0 ORDER BY pos,title ASC";
-            $result = App::$db->query($query, true);
-            return get_tpl_by_name('slider_items', [], $result);
+            $result = App::$db->query($query);
+            return App::$template->parse('slider_items', [], $result);
         } else {
             return '';
         }
     }
     
-    protected function news() {
+    protected function news() : string 
+    {
         
         $query = "select *,date_format(date,'%d.%m.%Y') as date from news order by id desc limit ". App::$settings['news_block_count'];
         $result = App::$db->query($query);
@@ -127,20 +131,21 @@ class Blocks {
                 return cut_string($row['content'], 100);
             }
 
-            return get_tpl_by_name('block_news', [], $result);
+            return App::$template->parse('block_news', [], $result);
         }
         return null;
     }
 
-    protected function last_posts () {
+    protected function last_posts () : string 
+    {
         $TABLE = 'blog_posts';
         $query = "SELECT {$TABLE}.*,date_format(date_add,'%d.%m.%Y') as date from {$TABLE} where active='Y' order by {$TABLE}.id desc limit". App::$settings['news_block_count'];
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             function get_news_short_content($tmp, $row) {
                 return cut_string($row['content'], 100);
             }
-            return get_tpl_by_name('block_last_posts', [], $result);
+            return App::$template->parse('block_last_posts', [], $result);
         }
         return null;
     }
@@ -153,21 +158,21 @@ class Blocks {
      *
      * @return string Block content
      */
-    public function content($block_name) {
-        global $settings, $DEBUG, $DIR, $SUBDIR;
+    public function content(string $block_name) : string
+    {
         
         App::debug('Parse block ' . $block_name);        
         switch ($block_name) {
             
             case 'partners':
-                $query = "SELECT * FROM partners order by pos asc";
-                $result = App::$db->query($query, null);
-                return get_tpl_by_name('block_partners', [], $result);
+                $query = "SELECT * FROM partners WHERE active='Y' order by pos asc";
+                $result = App::$db->query($query);
+                return App::$template->parse('block_partners', [], $result);
 
             case 'banners':
-                if(file_exists(App::$DIR . 'banners.local.php')) {
+                if(file_exists(App::$DIR . 'local/banners.php')) {
                     ob_start();
-                    include_once(App::$DIR . 'banners.local.php');
+                    include_once(App::$DIR . 'local/banners.php');
                     $content = ob_get_clean();
                     return $content;
                 } else {
@@ -187,9 +192,11 @@ class Blocks {
                 return $content;
                 
             case 'debug':
-                if ($settings['debug']) {
+                if (App::$settings['debug']) {
                     ob_start();
-                    print_array(App::$DEBUG);
+                    print_array(App::$DEBUG_ARRAY);
+                    echo 'Total time: <b>' . sprintf('%.4F', microtime(true) - App::$DEBUG_ARRAY[0]) . ' s.</b> ';
+                    echo 'Memory: <b>' . convert_bytes(memory_get_usage(true)) . '</b><br /><br />';
                     print_array(App::$db->query_log_array);
                     $content = ob_get_clean();
                     return $content;
@@ -201,7 +208,7 @@ class Blocks {
                    return $this->$block_name();
                 }                
                 $tags['title'] = $block_name;
-                return my_msg_to_str('block_not_found', $tags);
+                return App::$message->get('block_not_found', $tags);
             
         }
     

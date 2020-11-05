@@ -6,7 +6,7 @@
 
   ========================================================================= */
 
-use Classes\App;
+use classes\App;
 
 
 /**
@@ -18,7 +18,7 @@ use Classes\App;
  * @return array mysqli result
  */
 function my_query($sql, $dont_debug=false) {
-    return App::$db->query($sql, $dont_debug);
+    return App::$db->query($sql);
 }
 
 /**
@@ -30,7 +30,7 @@ function my_query($sql, $dont_debug=false) {
  * @return array One row
  */
 function my_select_row($sql, $dont_debug=false) {
-    return App::$db->select_row($sql, $dont_debug);    
+    return App::$db->getRow($sql);    
 }
 
 /**
@@ -42,7 +42,7 @@ function my_select_row($sql, $dont_debug=false) {
  */
 
 function db_insert_fields($fields) {
-    return App::$db->insert_fields($fields);
+    return App::$db->insertFields($fields);
 }
 
 /**
@@ -54,7 +54,7 @@ function db_insert_fields($fields) {
  */
 
 function db_update_fields($fields) {
-    return App::$db->update_fields($fields);
+    return App::$db->updateFields($fields);
 }
 
 

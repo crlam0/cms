@@ -1,10 +1,14 @@
 <?php
 
-require __DIR__.'/config/config.local.php';
+if(file_exists(__DIR__.'/../local/config.php')) {
+    require __DIR__.'/../local/config.php';
+} else {
+    die('Main config not found');
+}
 require __DIR__.'/config/misc.php';
 
-if(file_exists(__DIR__.'/config/misc.local.php')) {
-    require_once __DIR__.'/config/misc.local.php';
+if(file_exists(__DIR__.'/../local/misc.local.php')) {
+    require_once __DIR__.'/../local/misc.local.php';
 }    
 
 if(file_exists($DIR.'vendor/autoload.php')) {
@@ -13,37 +17,49 @@ if(file_exists($DIR.'vendor/autoload.php')) {
     die('Cant find autoloader');
 }
 
-use Classes\App;
-use Classes\Routing;
-use Classes\User;
-use Classes\Template;
-use Classes\Message;
+use classes\App;
+use classes\DB;
+use classes\Routing;
+use classes\User;
+use classes\Template;
+use classes\Message;
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+App::$logger = new Logger('main');
+App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/error.log', Logger::ERROR));
 
 $App = new App($DIR, $SUBDIR);
-$App->connectDB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
-$App->loadSettings(__DIR__.'/config/settings.local.php');
+$App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
+$App->loadSettings(__DIR__.'/../local/settings.php');
 $App->loadInputData($_GET, $_POST, $_SERVER);
 $App->addGlobals();
-$App->debug('App created, arrays loaded');
-unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
+App::$debug = App::$settings['debug'];
+App::$db->debug = App::$settings['debug'];
 
-App::$user = new User();
-App::$template = new Template();
-App::$message = new Message();
-App::$routing = new Routing (App::$server['REQUEST_URI']);
-
-if(App::$settings['debug']) {
+if(App::$debug) {
+    App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/debug.log', Logger::DEBUG));
     $whoops = new Run();
     $whoops->writeToOutput(true);
     $whoops->allowQuit(true);
     $PrettyPageHandler = new PrettyPageHandler();
-    $PrettyPageHandler->addDataTable('DEBUG Array',  App::$DEBUG);
+    $PrettyPageHandler->addDataTable('DEBUG Array',  App::$DEBUG_ARRAY);
     $whoops->pushHandler($PrettyPageHandler);
     $whoops->register();
     $App->debug('Added exception handler');
 }
+
+
+App::debug('App created, arrays loaded');
+unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
+
+App::$user = new User(App::$settings['default_flags']);
+App::$template = new Template();
+App::$message = new Message();
+App::$routing = new Routing (App::$server['REQUEST_URI']);
+
 
 require_once __DIR__.'/lib_sql.php';
 require_once __DIR__.'/lib_messages.php';
@@ -73,7 +89,7 @@ $App->set('tpl_default', $part['tpl_name']);
 if(!App::$user->checkAccess($part['user_flag'])) {
     if (App::$user->id) {
         $content = App::$message->get('error', [] ,'У вас нет соответствующих прав !');
-        echo get_tpl_default([], null, $content);
+        echo App::$template->parse(App::get('tpl_default'), [], null, $content);
     } else {
         $_SESSION['GO_TO_URI'] = App::$server['REQUEST_URI'];
         redirect(App::$SUBDIR . 'login/');

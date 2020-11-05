@@ -1,8 +1,9 @@
 <?php
 
-namespace Classes;
+namespace classes;
 
-class User {
+class User 
+{
     /**
     * @var integer User id
     */
@@ -17,21 +18,29 @@ class User {
     private $data;
     
     /**
+    * @const Use password hash to create token.
+    */
+    const TOKEN_PASSWORD_HASH = 0;
+
+    /**
     * @const Use salt to create token.
     */
     const TOKEN_SALT = 1;
+
     /**
     * @const Remove token.
     */
     const TOKEN_NULL = 2;
     
-    public function __construct() {
+    public function __construct($flags = '') 
+    {
         $this->id = 0;
-        $this->flags = '';
+        $this->flags = $flags;
         $this->data=null;
     }
     
-    public function __get($name){
+    public function __get(string $name)
+    {
         switch ($name) {
             case 'id':
                 return $this->id;
@@ -56,11 +65,12 @@ class User {
      *
      * @return boolean False if ID not found
      */
-    private function getData(int $id){
+    private function getData(int $id) : bool
+    {
         $query = "select * from users where id='" . $id . "'";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
-            $this->data = $row = $result->fetch_array();
+            $this->data = $result->fetch_assoc();
             return true;
         }
         return false;
@@ -73,7 +83,8 @@ class User {
      * @param string $flags User flags
      *
      */
-    public function authByIdFlags(int $id, string $flags) {
+    public function authByIdFlags(int $id, string $flags) : bool
+    {
         $this->id = $id;
         $this->flags = $flags;
         return true;
@@ -85,7 +96,8 @@ class User {
      * @param array $arr 
      *
      */
-    public function authByArray(array $arr) {
+    public function authByArray(array $arr) : bool
+    {
         return $this->authByIdFlags($arr['id'], $arr['flags']);
     }    
 
@@ -95,7 +107,8 @@ class User {
      * @param array $session
      *
      */
-    public function authBySession(array $session) {
+    public function authBySession(array $session) : bool
+    {
         if(array_key_exists('UID', $session)) {
             if(!(int)$session['UID']>0) {
                 return false;
@@ -121,9 +134,10 @@ class User {
      *
      * @return array|false False if auth failed
      */
-    public function authByLoginPassword(string $login, string $password) {
+    public function authByLoginPassword(string $login, string $password) 
+    {
         $query = "select id,flags,passwd,salt from users where login='" . $login . "' and flags like '%active%'";
-        $result = App::$db->query($query, true);
+        $result = App::$db->query($query);
         if ($result->num_rows) {
             $row = $result->fetch_array();        
             if(password_verify($password, $row['passwd'])) {
@@ -138,7 +152,8 @@ class User {
      * Clear user data
      *
      */
-    public function logout() {
+    public function logout() : void
+    {
         $this->id = 0;
         $this->flags = '';
     }
@@ -150,7 +165,8 @@ class User {
      *
      * @return boolean true if user have flag
      */
-    public function haveFlag($flag) {
+    public function haveFlag(string $flag) 
+    {
         if (!strlen($flag)) {
             return true;
         }
@@ -164,7 +180,8 @@ class User {
      *
      * @return boolean true if user have access
      */
-    public function checkAccess($flag) {
+    public function checkAccess(string $flag) : bool
+    {
         return (!strlen($flag)) || ($this->haveFlag($flag)) || ($this->haveFlag('global'));
     }
     
@@ -173,7 +190,8 @@ class User {
      *
      * @return string Generated salt
      */
-    public function generateSalt() {
+    public function generateSalt() : string 
+    {
         $salt = '';
         for ($i = 0; $i < 22; $i++) {
             do {
@@ -192,8 +210,9 @@ class User {
      *
      * @return string User's salt
      */
-    public function getSalt($uid) {
-        list($salt) = my_select_row("SELECT salt FROM users WHERE id='{$uid}'");
+    public function getSalt(int $uid) : string
+    {
+        list($salt) = App::$db->getRow("SELECT salt FROM users WHERE id='{$uid}'");
         return $salt;
     }
 
@@ -205,7 +224,8 @@ class User {
      *
      * @return string Generated hash
      */
-    public function encryptPassword($passwd, $salt) {
+    public function encryptPassword(string $passwd, string $salt) : string 
+    {
         if (mb_strlen($salt) === 22) {
             return crypt($passwd, '$2a$13$' . $salt);
         } else {
@@ -223,18 +243,19 @@ class User {
      *
      * @return string Generated token
      */
-    public function makeToken($user_id, $expire_days, $type = 'password_hash') {
+    public function makeToken(int $user_id, int $expire_days, int $type = 0) : string
+    {
         $expire=time() + $expire_days*24*3600;
         switch ($type) {
             case static::TOKEN_SALT:
-                $token=$this->generateSalt();
+                $token = $this->generateSalt();
                 break;
             case static::TOKEN_NULL:
-                $token='';
-                $expire=0;
+                $token = '';
+                $expire = 0;
                 break;
             default:
-                $token=$this->encryptPassword($this->generateSalt(), $this->generateSalt());
+                $token = $this->encryptPassword($this->generateSalt(), $this->generateSalt());
         }
         
         $query = "update users set token='" . $token . "', token_expire='.$expire.' where id='".$user_id."'";
@@ -249,13 +270,14 @@ class User {
      *
      * @return false|array User data or false
      */
-    public function checkToken($token) {
+    public function checkToken(string $token) 
+    {
         $query = "select id,flags,token_expire from users where token='" . $token . "'";
         $result = App::$db->query($query);
         if(!$result->num_rows) {
             return false;
         }
-        $data=$result->fetch_array();
+        $data = $result->fetch_array();
         if($data['token_expire'] > time()) {
             return $data;
         } else {
@@ -267,7 +289,8 @@ class User {
      * Generate RememberMe cookie and token.
      *
      */
-    public function setRememberme($user_id, $COOKIE_NAME) {
+    public function setRememberme(int $user_id, string $COOKIE_NAME) 
+    {
         if(!$user_id || !$COOKIE_NAME) {
             return false;        
         }
@@ -281,11 +304,12 @@ class User {
      *
      * @return mixed Array if complete, false if error.
      */
-    public function authByRememberme($COOKIE_NAME) {
+    public function authByRememberme(string $COOKIE_NAME) : bool
+    {
         if(!$value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME')) {
             return false;
         }
-        $token = App::$db->test_param($value);
+        $token = App::$db->testParam($value);
         if($data = $this->checkToken($token)){
             App::debug('Auth by Rememberme cookie');
             list($_SESSION['UID'],$_SESSION['FLAGS']) = $data;
@@ -298,7 +322,8 @@ class User {
      * Delete RememberMe cookie and token.
      *
      */
-    public function delRememberme($user_id, $COOKIE_NAME) {
+    public function delRememberme(int $user_id, string $COOKIE_NAME) : void
+    {
         $value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME');
         if(strlen($value)){
             setcookie($COOKIE_NAME.'_REMEMBERME', '', time(), App::$SUBDIR);

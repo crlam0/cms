@@ -1,8 +1,10 @@
 <?php 
 include "common.php";
 
+use classes\App;
+
 $query="select count(id),count(distinct remote_addr) from visitor_log";
-list($hits,$unique)=my_select_row($query,true);
+list($hits,$unique)=App::$db->getRow($query);
 while(strlen($hits)<=6){
     $hits="0".$hits;
 }

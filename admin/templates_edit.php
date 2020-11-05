@@ -4,9 +4,11 @@ $tags['Header'] = 'Шаблоны';
 include '../include/common.php';
 header('X-XSS-Protection:0');
 
+use classes\App;
+
 if ($input['del']) {
     $query = "delete from templates where id='{$input['id']}'";
-    my_query($query, true);
+    my_query($query);
 }
 
 function twig_tpl_load($filename){
@@ -45,23 +47,23 @@ if($input['revert']){
 if ($input['add']) {
     if($input['form']['template_type']==='twig' && strlen($input['form']['file_name'])) {
         if(!twig_tpl_save($input['form']['file_name'],$input['form']['content'])) {
-            $content.=my_msg_to_str('error', '', 'Ошибка сохранения файла шаблона.');
+            $content.=my_msg_to_str('error', [], 'Ошибка сохранения файла шаблона.');
         }
     }    
     $query = "insert into templates " . db_insert_fields($input['form']);
-    my_query($query, true);
+    my_query($query);
     $input['view'] = true;
-    $input['id'] = $mysqli->insert_id;    
+    $input['id'] = App::$db->insert_id();    
 }
 
 if ($input['edit']) {    
     if($input['form']['template_type']==='twig' && strlen($input['form']['file_name'])) {
         if(!twig_tpl_save($input['form']['file_name'],$input['form']['content'])) {
-            $content.=my_msg_to_str('error', '', 'Ошибка сохранения файла шаблона.');
+            $content.=my_msg_to_str('error', [], 'Ошибка сохранения файла шаблона.');
         }
     }    
     $query = "update templates set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, true);
+    my_query($query);
     if($input['update']){
         $input['view']=1;
     }

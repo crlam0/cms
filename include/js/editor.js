@@ -6,9 +6,8 @@ $(document).ready(function(){
                 language : 'ru',
                 width : 900,
                 height : 400,
-		filebrowserBrowseUrl : '../include/filemanager/index.html'
+		filebrowserBrowseUrl : '../include/filemanager/index.html',
+		contentsCss : 'body{background-color:#333333;}'
 	});
 });
-
-
 

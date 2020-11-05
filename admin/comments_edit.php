@@ -7,7 +7,7 @@ $TABLE = "comments";
 
 if ($input["active"]) {
     $query = "update $TABLE set active='" . $input["active"] . "' where id=" . $input["id"];
-    if (my_query($query, true)) {
+    if (my_query($query)) {
         print $input["active"];
     } else {
         print mysql_error();
@@ -17,15 +17,15 @@ if ($input["active"]) {
 
 if ($input["del_comment"]) {
     $query = "delete from $TABLE where id={$input["id"]}";
-    $result = my_query($query, true);
+    $result = my_query($query);
     $list = 1;
-    $content.=my_msg_to_str("", "", "Комментарий успешно удален.");
+    $content.=my_msg_to_str('', [], "Комментарий успешно удален.");
 }
 
 if ($input["edited_comment"]) {
     $query = "update $TABLE set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, true);
-    $content.=my_msg_to_str("", "", "Комментарий успешно изменен.");
+    my_query($query);
+    $content.=my_msg_to_str('', [], "Комментарий успешно изменен.");
 }
 
 if (($input["edit_comment"]) || ($input["add_comment"])) {
@@ -47,7 +47,7 @@ if (($input["edit_comment"]) || ($input["add_comment"])) {
 }
 
 $query = "SELECT * from $TABLE order by id desc";
-$result = my_query($query, true);
+$result = my_query($query);
 
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 

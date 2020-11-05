@@ -1,3 +1,8 @@
+=== 2020-06-09
+
+UPDATE `templates` SET `file_name`='admin.html.twig', `template_type`='twig' WHERE  `id`=30;
+
+
 === 2019-11-08
 
 ALTER TABLE `users`
@@ -14,19 +19,19 @@ ALTER TABLE `templates`
 
 === 2019-10-25
 
-ALTER TABLE `article_list` ADD KEY (`seo_alias`);
+ALTER TABLE `article_list` ADD UNIQUE KEY (`seo_alias`);
 
-ALTER TABLE `article_item` ADD KEY (`seo_alias`);
+ALTER TABLE `article_item` ADD UNIQUE KEY (`seo_alias`);
 
-ALTER TABLE `blog_posts` ADD KEY (`seo_alias`);
+ALTER TABLE `blog_posts` ADD UNIQUE KEY (`seo_alias`);
 
-ALTER TABLE `cat_part` ADD KEY (`seo_alias`);
+ALTER TABLE `cat_part` ADD UNIQUE KEY (`seo_alias`);
 
-ALTER TABLE `cat_item` ADD KEY (`seo_alias`);
+ALTER TABLE `cat_item` ADD UNIQUE KEY (`seo_alias`);
 
-ALTER TABLE `gallery_list` ADD KEY (`seo_alias`);
+ALTER TABLE `gallery_list` ADD UNIQUE KEY (`seo_alias`);
 
-ALTER TABLE `media_list` ADD KEY (`seo_alias`);
+ALTER TABLE `media_list` ADD UNIQUE KEY (`seo_alias`);
 
 ALTER TABLE `media_files` ADD KEY (`list_id`);
 
@@ -94,10 +99,10 @@ ALTER TABLE `cat_part`
 === 2019-03-07
 
 ALTER TABLE `cat_part`
-	ADD COLUMN `items_props` TEXT NULL DEFAULT NULL AFTER `price3_title`;
+	ADD COLUMN `items_props` TEXT NULL DEFAULT NULL;
 
 ALTER TABLE `cat_item`
-	ADD COLUMN `props` TEXT NULL DEFAULT NULL AFTER `used_balance`;
+	ADD COLUMN `props` TEXT NULL DEFAULT NULL;
 
 CREATE TABLE `offers` (
 	`id` INT(255) NOT NULL AUTO_INCREMENT,
@@ -243,10 +248,12 @@ COLLATE='utf8_general_ci';
 
 === 2017-09-12
 
-ALTER TABLE `news` ADD COLUMN `seo_alias` VARCHAR(255) NULL AFTER `date`;
-ALTER TABLE `cat_part` ADD COLUMN `seo_alias` VARCHAR(255) NULL AFTER `num`;
-ALTER TABLE `news` ADD COLUMN `css_class` VARCHAR(50) NULL AFTER `seo_alias`;
-ALTER TABLE `cat_item` ADD COLUMN `css_class` VARCHAR(50) NOT NULL DEFAULT '' AFTER `descr`;
+ALTER TABLE `news` ADD COLUMN `seo_alias` VARCHAR(255) NULL;
+ALTER TABLE `cat_part` ADD COLUMN `seo_alias` VARCHAR(255) NULL;
+ALTER TABLE `cat_item` ADD COLUMN `seo_alias` VARCHAR(255) NULL;
+ALTER TABLE `cat_item` ADD COLUMN `descr_full` text NULL;
+ALTER TABLE `news` ADD COLUMN `css_class` VARCHAR(50) NULL;
+ALTER TABLE `cat_item` ADD COLUMN `css_class` VARCHAR(50) NOT NULL DEFAULT '';
 
 
 === 2016-04-13

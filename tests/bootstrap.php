@@ -1,14 +1,21 @@
 <?PHP
 
-use Classes\App;
-use Classes\Message;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
-require_once dirname(__FILE__) . '/../include/config/config.local.php';
+use classes\App;
+use classes\Message;
+use classes\DB;
+
+require_once dirname(__FILE__) . '/../local/config.php';
 
 $DIR=dirname(dirname(__FILE__)) . '/';
 
 $App = new App($DIR, $SUBDIR);
-$App->connectDB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
+$App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
+
+App::$logger = new Logger('main');
+App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/test.log', Logger::ERROR));
 
 require_once $DIR.'vendor/autoload.php';
 

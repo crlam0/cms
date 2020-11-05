@@ -1,12 +1,16 @@
 <?php
 
-namespace Classes;
-use Classes\MyArray;
-use Classes\SQLHelper;
+namespace classes;
+use classes\MyArray;
 
-final class App {
+class App 
+{
     /**
-    * @var SQLHelper Database object
+    * @var debug Use or not debug routines
+    */
+    public static $debug = false;
+    /**
+    * @var DB Database object
     */
     public static $db;
     /**
@@ -47,17 +51,21 @@ final class App {
     */
     public static $settings;
     /**
-    * @var Array Full path to App
+    * @var String Full path to App
     */
     public static $DIR;
     /**
-    * @var Array Subdir of App
+    * @var String Subdir of App
     */
     public static $SUBDIR;
     /**
     * @var Array Debug array
     */
-    public static $DEBUG;
+    public static $DEBUG_ARRAY;
+    /**
+    * @var Monolog\Logger Object of logger
+    */    
+    public static $logger;
     
 
     /**
@@ -76,12 +84,24 @@ final class App {
      * @param array $subdir Subdir of App
      *
     */   
-    public function __construct(string $dir, string $subdir = '/') {
+    public function __construct(string $dir, string $subdir = '/')
+    {
         static::$DIR = $dir;
         static::$SUBDIR = $subdir;
         static::set('DIR', $dir);
         static::set('SUBDIR', $subdir);
-        static::$DEBUG[0] = microtime(true);
+        static::$DEBUG_ARRAY[0] = microtime(true);
+    }
+    
+    /**
+     * Set Database object
+     *
+     * @param object $db
+     *
+    */    
+    public function setDB($db)
+    {
+        static::$db = $db;
     }
 
     /**
@@ -92,7 +112,8 @@ final class App {
      * @param array $server _SERVER array
      *
     */    
-    public function loadInputData(array $get, array $post, array $server) {
+    public function loadInputData(array $get, array $post, array $server) : void
+    {
         static::$server = new MyArray;
         if(is_array($server)){
             foreach ($server as $key => $value){
@@ -103,13 +124,13 @@ final class App {
         if(is_array($get)){
             static::$get = $get;
             foreach ($get as $key => $value){
-                static::$input[$key]=static::$db->test_param($value,$key);
+                static::$input[$key]=static::$db->testParam($value,$key);
             }
         }
         if(is_array($post)){
             static::$post = $post;
             foreach ($post as $key => $value){
-                static::$input[$key]=static::$db->test_param($value,$key);
+                static::$input[$key]=static::$db->testParam($value,$key);
             }
         }
     }
@@ -120,7 +141,8 @@ final class App {
      * @param string $filename Config filename
      *
     */    
-    private function loadSettingsFromFile($filename){        
+    private function loadSettingsFromFile(string $filename) : void
+    {        
         $settings_local=(require $filename);
         if(is_array($settings_local)) {
             foreach ($settings_local as $key => $value){
@@ -135,42 +157,29 @@ final class App {
      * @param string $filename Config filename
      *
     */
-    public function loadSettings($filename) {
+    public function loadSettings(string $filename) : void
+    {
         static::$settings = new MyArray;
         if(file_exists($filename)) {
             $this->loadSettingsFromFile($filename);
         }
         $query='SELECT name,value FROM settings';
-        $result=static::$db->query($query,true);
+        $result=static::$db->query($query);
         while ($row = $result->fetch_array()) {
             static::$settings[$row['name']] = $row['value'];
         }        
     }    
     
     /**
-     * Test field parameter for deny SQL injections
-     *
-     * @param string $host Host
-     * @param string $user Username
-     * @param string $passwd Password
-     * @param string $dbname DB
-     *
-     * @return string Output string
-     */
-    public function connectDB($host, $user, $passwd, $dbname) {
-        static::$db = new SQLHelper($host, $user, $passwd, $dbname);
-    }
-
-    /**
      * Put data to global arrays
      *
      */
-    public function addGlobals() {
+    public function addGlobals() : void
+    {
         global $input, $server, $settings, $mysqli;
         $input = static::$input;
         $server = static::$server;
         $settings = static::$settings;
-        $mysqli = static::$db->mysqli;
     }    
     
     /**
@@ -180,7 +189,8 @@ final class App {
      *
      * @return string Output value
      */
-    public static function get($key) {
+    public static function get(string $key) 
+    {
         return (isset(static::$data[$key]) ? static::$data[$key] : null);
     }
 
@@ -191,7 +201,8 @@ final class App {
      * @param string $value Key value
      *
      */
-    public static function set($key, $value) {
+    public static function set(string $key, $value) : void 
+    {
         static::$data[$key] = $value;
     }
 
@@ -202,7 +213,8 @@ final class App {
      *
      * @return boolean True if found
      */
-    public static function has($key) {
+    public static function has(string $key) : bool
+    {
         return isset(static::$data[$key]);
     }
     
@@ -212,10 +224,72 @@ final class App {
      * @param string $message Message
      *
      */
-    public static function debug ($message) {
-        $time = microtime(true) - static::$DEBUG[0];
+    public static function debug (string $message) : void 
+    {
+        $time = microtime(true) - static::$DEBUG_ARRAY[0];
         $time = sprintf('%.4F', $time);
-        static::$DEBUG[] = $time . "\t " . $message;
+        static::$DEBUG_ARRAY[] = $time . "\t " . $message;
+        static::$logger->debug($message);
+    }
+    
+    private function failedAuth() {
+        if (static::$user->id) {
+            static::debug('Failed auth, user ID: ' . static::$user->id . ' URL: ' . static::$routing->request_uri);
+            return static::$message->get('error', [] ,'У вас нет соответствующих прав !');
+        } else {
+            $_SESSION['GO_TO_URI'] = static::$server['REQUEST_URI'];
+            redirect(static::$SUBDIR . 'login/');
+        }
+        exit;
+    }
+    
+    private function runController($controller_name, $action, $tags)
+    {
+        static::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
+        $controller = new $controller_name;
+        try {            
+            $controller->base_url = static::$routing->getBaseUrl();
+            if(static::$user->checkAccess($controller->user_flag)) {
+                $content = $controller->run($action, static::$routing->params);
+                $tags['Header'] = $controller->title;
+                header(App::$server['SERVER_PROTOCOL'] . ' 200 Ok', true, 200);
+            } else {
+                $content = $this->failedAuth();
+                $tags['Header'] = 'Ошибка авторизации';
+                header(App::$server['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
+            }           
+            /* Fill tags for default template */
+            $tags['nav_array'] = array_merge($tags['nav_array'], $controller->breadcrumbs);
+            $tags = array_merge($tags, $controller->tags);
+            echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
+            exit;
+        } catch (\Throwable $e) {
+            static::debug('Exception: ' . $e->getMessage());
+            static::debug('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
+            static::debug($e->getTraceAsString());
+        }
+    }
+    
+    public function run ($tags) : void 
+    {
+        $file = static::$routing->file;
+        if($file && is_file(static::$DIR . $file)) {
+            $server['PHP_SELF'] = static::$SUBDIR.$file;
+            $server['PHP_SELF_DIR'] = static::$SUBDIR.dirname($file) . '/';
+            require static::$DIR . $file;
+            exit;
+        } 
+        
+        $controller_name = static::$routing->controller;
+        if(strlen($controller_name)) {
+            if(class_exists($controller_name)) {
+                $this->runController($controller_name, static::$routing->action, $tags);
+            } else {
+                static::debug('Controller "' . $controller_name . '" not exists !"');
+            }
+        } else {
+            static::debug('ERROR: empty controller name in routing.');
+        }       
     }
     
 }

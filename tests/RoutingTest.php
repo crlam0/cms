@@ -1,8 +1,8 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\Routing;
-use Classes\App;
+use classes\Routing;
+use classes\App;
 
 class RoutingTest extends TestCase
 {

@@ -1,7 +1,7 @@
 <?php
 
-namespace Classes;
-use Classes\App;
+namespace classes;
+use classes\App;
 
 class Image 
 {
@@ -13,9 +13,33 @@ class Image
     private $dst_image;
     private $file_type;
     
-    private $validImageTypes = array('image/pjpeg', 'image/jpeg', 'image/gif', 'image/png', 'image/x-png');
+    public static $validImageTypes = ['image/pjpeg', 'image/jpeg', 'image/gif', 'image/png', 'image/x-png'];
     
-    private function getFileType($file_name, $file_type) {
+    public function __construct(string $file_name, $file_type = '') 
+    {
+        if (!is_file($file_name)) {
+            App::$message->error('Файл отсутствует !');
+            return false;
+        }
+        $this->file_name = $file_name;
+        $this->file_type = $this->getFileType($file_name, $file_type);
+        if (!in_array($this->file_type, static::$validImageTypes)) {
+            App::$message->error('Неверный тип файла !');
+            return false;
+        }
+        if ($this->file_type == 'image/jpeg' ) {
+            $this->src_image = imagecreatefromjpeg($file_name);
+        } elseif ($file_type == 'image/png'){
+            $this->src_image = imagecreatefrompng($file_name);
+        }
+        if (!$this->src_image) {
+            return false;
+        }
+        list($this->width, $this->height) = getimagesize($file_name);
+    }
+
+    public static function getFileType(string $file_name, $file_type) : string 
+    {
         if(!$file_type) {
             if((preg_match("/^.*\.jpg$/i", $file_name)) || (preg_match("/^.*\.jpeg$/i", $file_name))) {
                 return 'image/jpeg';
@@ -32,30 +56,9 @@ class Image
             return false;
         }
     }
-
-    public function __construct($file_name, $file_type = null) {
-        if (!is_file($file_name)) {
-            App::$message->error('Файл отсутствует !');
-            return false;
-        }
-        $this->file_name = $file_name;
-        $this->file_type = $this->getFileType($file_name, $file_type);
-        if (!in_array($this->file_type, $this->validImageTypes)) {
-            App::$message->error('Неверный тип файла !');
-            return false;
-        }
-        if ($this->file_type == 'image/jpeg' ) {
-            $this->src_image = imagecreatefromjpeg($file_name);
-        } elseif ($file_type == 'image/png'){
-            $this->src_image = imagecreatefrompng($file_name);
-        }
-        if (!$this->src_image) {
-            return false;
-        }
-        list($this->width, $this->height) = getimagesize($file_name);
-    }
     
-    private function checkAlpha() {
+    private function checkAlpha() : void 
+    {
         if ($this->file_type == 'image/png') {
             $alpha = imagecolorallocatealpha($this->src_image, 255, 255, 255, 127);
             if ($alpha) {
@@ -65,7 +68,8 @@ class Image
         }        
     }
     
-    public function crop ($width = 0, $height = 0) {
+    public function crop (int $width = 0, int $height = 0) : bool
+    {
         if(!$this->src_image) {
             return false;
         }
@@ -87,7 +91,8 @@ class Image
         return imagecopyresampled($this->dst_image, $this->src_image, 0, 0, $src_x, $src_y, $width, $height, $src_w, $src_h);            
     }
     
-    public function resize ($max_width = 0, $max_height = 0, $fix_width = 0, $fix_height = 0) {
+    public function resize ($max_width = 0, $max_height = 0, int $fix_width = 0, int $fix_height = 0) : bool
+    {
         if(!$this->src_image) {
             return false;
         }
@@ -130,7 +135,8 @@ class Image
         }
     }
     
-    public function save ($dst_file) {
+    public function save (string $dst_file) : bool 
+    {
         if(!file_exists(dirname($dst_file))) {
             if (!mkdir(dirname($dst_file), 0755, true)) {
                 die('Не удалось создать директории...');
@@ -144,25 +150,40 @@ class Image
         return is_file($dst_file);        
     }
     
-    public function getFileExtension() {
-        $arr = explode('/', $this->file_type);
-        return $arr[1];
+    public static function getFileExt($file_type) : string 
+    {
+        if(strlen($file_type)) {
+            $arr = explode('/', $file_type);
+            if($arr[1] == 'pjpeg') {
+                return 'jpeg';
+            }
+            return $arr[1];
+        } else {
+            return 'none';
+        }        
+    }
+
+    public function getFileExtension() : string
+    {
+        return $this->getFileExt($this->file_type);
     }
     
-    public function getUrl($row, string $cache_path, string $script_url, $max_width = 1024) {
+    public function getUrl(array $row, string $cache_path, string $script_url, int $max_width = 1024) 
+    {
         $cache_file_name = $cache_path . md5($this->file_name.$max_width) . '.' . $this->getFileExtension();
         if (is_file($this->file_name)) {        
             if(is_file(App::$DIR . $cache_file_name)) {
                 return $cache_file_name;
             } else {
-                return $script_url . $row['id'];
+                return $script_url;
             }
         } else {
             return false;
         }
     }
 
-    public function getHTML($row, string $cache_path, string $css_class, string $script_url, $max_width = 1024) {
+    public function getHTML(array $row, string $cache_path, string $css_class, string $script_url, $max_width = 1024) : string 
+    {
         if($URL = $this->getUrl($row, $cache_path, $script_url, $max_width)) {
             $content = '<img src="' . App::$SUBDIR . $URL . '" border="0" item_id="'.$row['id'].'" class="'.$css_class.'" alt="'.$row['title'].'">';
         } else {

@@ -1,14 +1,14 @@
 <?php
 
-use Classes\App;
-use Classes\Blocks;
-use Classes\BlocksLocal;
+use classes\App;
+use classes\Blocks;
 
-if(file_exists(__DIR__.'/classes/BlocksLocal.php')) {
-    $BlocksObject = new BlocksLocal();    
+if(class_exists('\local\Blocks')) {
+    $BlocksObject = new \local\Blocks();    
 } else {
     $BlocksObject = new Blocks();
 }
+
 App::set('Blocks', $BlocksObject);
 
 /**

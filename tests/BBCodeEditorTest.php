@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\BBCodeEditor;
+use classes\BBCodeEditor;
 
 class BBCodeEditorTest extends TestCase
 {

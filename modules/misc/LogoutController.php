@@ -2,12 +2,12 @@
 
 namespace modules\misc;
 
-use Classes\BaseController;
-use Classes\App;
+use classes\BaseController;
+use classes\App;
 
 class LogoutController extends BaseController
 {    
-    public function actionIndex()
+    public function actionIndex(): void
     {
         global $_SESSION, $COOKIE_NAME;
         App::$user->delRememberme(App::$user->id,$COOKIE_NAME);

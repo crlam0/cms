@@ -2,19 +2,19 @@
 $tags['Header']="Пользователи сервера";
 include "../include/common.php";
 
-use Classes\App;
+use classes\App;
 
 if ($input['del']) {
     $query = "delete from users where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str("", "", "Пользователь успешно удален !");
+    $content.=my_msg_to_str('', [], "Пользователь успешно удален !");
 }
 
 if ($input['add']) {
     $query="select id from users where login='".$input['form']['login']."'";
     $result=my_query($query);
     if($result->num_rows){
-            $content.=my_msg_to_str('error','','Такой пользователь уже существует ! ('.$input['form']['login'].')');
+            $content.=my_msg_to_str('error', [],'Такой пользователь уже существует ! ('.$input['form']['login'].')');
     }else{
         $input['form']['flags'] = implode(";", $input['flags']);
         $input['form']['salt'] = App::$user->generateSalt();
@@ -22,7 +22,7 @@ if ($input['add']) {
         $input['form']['regdate'] = 'now()';
         $query = "insert into users " . db_insert_fields($input['form']);
         my_query($query);
-        $content.=my_msg_to_str('', '', 'Пользователь успешно добавлен !');
+        $content.=my_msg_to_str('', [], 'Пользователь успешно добавлен !');
     }
 }
 
@@ -30,13 +30,13 @@ if ($input['edit']) {
     $input['form']['flags']=implode(";", $input['flags']);
     if(strlen($input['form']['passwd'])){
         $input['form']['salt'] = App::$user->generateSalt();
-        $input['form']['passwd']= App::$user->encryptPassword($input['form']['passwd'] , $input['form']['salt'] );
+        $input['form']['passwd']= App::$user->encryptPassword($input['form']['passwd'] , $input['form']['salt']);
     }else{
         unset($input['form']['passwd']);
     }
     $query = "update users set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str('', '', 'Редактирование успешно завершено !');
+    $content.=my_msg_to_str('', [], 'Редактирование успешно завершено !');
 }
 
 if (($input['view']) || ($input['adding'])) {
@@ -54,7 +54,7 @@ if (($input['view']) || ($input['adding'])) {
     }
     $tags['flags']="";
     $query="select * from users_flags order by title asc";
-    $result_flags=my_query($query, true);
+    $result_flags=my_query($query);
     while($row_flags=$result_flags->fetch_array()){
             $tags['flags'].="<input type=checkbox name=flags[] ".(in_array($row_flags['value'], $flags) ? "checked" : "")." value=\"{$row_flags['value']}\">{$row_flags['title']}<br>";
     }

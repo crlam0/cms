@@ -3,12 +3,14 @@
 $tags['Header'] = 'Каталог';
 include '../include/common.php';
 
+use classes\App;
+
 /*
 $query = "select * from cat_part";
-$result = my_query($query, true);
+$result = my_query($query);
 while ($row = $result->fetch_array()) {
     $query="update cat_part set seo_alias='".encodestring($row["title"])."' where id='{$row["id"]}'";
-    my_query($query, true);
+    my_query($query);
 }
 */
 if (isset($input['part_id'])) {
@@ -27,7 +29,7 @@ if (isset($input['part_id'])) {
     }
     $json = json_encode($related_products);
     $query = "update cat_part set related_products='{$json}' where id='{$part_id}'";
-    $result = my_query($query, true);    
+    $result = my_query($query);    
     if($result) {
         echo 'OK';
     } else {
@@ -44,7 +46,7 @@ if($input['get_related_products_list']) {
         $related_products=[];
     }
     $query = "SELECT id,title from cat_part order by num,title asc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     while($row=$result->fetch_array()){
         $content .= '        
         <div class="panel-group">
@@ -57,7 +59,7 @@ if($input['get_related_products_list']) {
           <div id="collapse'.$row['id'].'" class="panel-collapse collapse">
             <ul class="list-group">';
             $query = "SELECT cat_item.* from cat_item where part_id='{$row['id']}' order by num,title asc";
-            $result_item = my_query($query, true);
+            $result_item = my_query($query);
             while($row_item=$result_item->fetch_array()){
                 $state = '';
                 if(array_key_exists($row_item['id'], $related_products)) {
@@ -84,7 +86,7 @@ function prev_part($prev_id, $deep, $arr) {
         return null;
     }
     $query = "SELECT id,title,prev_id from cat_part where id='{$prev_id}' order by num,title asc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     if(!$result->num_rows){
         return null;
     }
@@ -103,11 +105,11 @@ if ($input['del']) {
 	union select count(id) as cnt from cat_item where part_id='" . $input['id'] . "' having cnt>0";
     $result = my_query($query);
     if ($result->num_rows) {
-        $content.=my_msg_to_str('error','','Этот раздел не пустой !');
+        $content.=my_msg_to_str('error', [],'Этот раздел не пустой !');
     } else {
         list($img) = my_select_row("select image_name from cat_part where id='{$input['id']}'");
 	if (is_file($IMG_PATH . $img)) {
-	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
+	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error', [], 'Ошибка удаления файла !');
 	}
 	$query = "delete from cat_part where id=" . $input['id'];
 	my_query($query);
@@ -118,13 +120,13 @@ if ($input['del_img']) {
     list($img) = my_select_row("select image_name from cat_part where id='{$input['id']}'");
     if (is_file($IMG_PATH . $img)) {
 	if (!unlink($IMG_PATH . $img)){
-            $content.=my_msg_to_str('error','','Ошибка удаления файла !');
+            $content.=my_msg_to_str('error', [],'Ошибка удаления файла !');
         }    
     }
     $query = "update cat_part set image_name='-' where id=" . $input['id'];
     my_query($query);
     $input["edit"] = 1;
-    $content.=my_msg_to_str('','','Изображение удалено');
+    $content.=my_msg_to_str('',[],'Изображение удалено');
 }
 
 if ($input["copy"]) {
@@ -137,7 +139,7 @@ if ($input["copy"]) {
         $row_part['prev_id']=$input['to_part_id'];
         $query = "insert into cat_part " . db_insert_fields($row_part);
         my_query($query, null, false);
-        $part_id=$mysqli->insert_id;        
+        $part_id=App::$db->insert_id();        
         $seo_alias=encodestring($row_part['title']).'_'.$part_id;        
         my_query("update cat_part set seo_alias='{$seo_alias}' where id='{$part_id}'");
         
@@ -148,12 +150,12 @@ if ($input["copy"]) {
             $row_item['part_id'] = $part_id;
             $query = "insert into cat_item " . db_insert_fields($row_item);
             my_query($query, null, false);
-            $insert_id=$mysqli->insert_id;        
+            $insert_id=App::$db->insert_id();        
             $seo_alias=encodestring($row_item['title']).'_'.$insert_id;
             my_query("update cat_item set seo_alias='{$seo_alias}' where id='{$insert_id}'");
         }
     }
-    $content.=my_msg_to_str('','','Раздел успешно скопирован.');
+    $content.=my_msg_to_str('',[],'Раздел успешно скопирован.');
 }
 
 
@@ -173,13 +175,13 @@ if ($input["added"]) {
     $input['form']['date_add']='now()';
     $input['form']['date_change']='now()';
     $query = "insert into cat_part " . db_insert_fields($input['form']);
-    my_query($query, true);
-    $insert_id=$mysqli->insert_id;
+    my_query($query);
+    $insert_id=App::$db->insert_id();
     if($seo_alias_duplicate){
         $input['form']['seo_alias'].='_'.$insert_id;
         my_query("update cat_part set seo_alias='{$input['form']['seo_alias']}' where id='{$insert_id}'");
     }
-    $content.=my_msg_to_str('','','Раздел успешно добавлен.');
+    $content.=my_msg_to_str('',[],'Раздел успешно добавлен.');
     if ($_FILES['img_file']['size']) {
 	$part_id = $insert_id;
 	$f_info = pathinfo($_FILES['img_file']['name']);
@@ -188,7 +190,7 @@ if ($input["added"]) {
 	    $query = "update cat_part set image_name='{$img}',image_type='{$_FILES['img_file']['type']}' where id='{$part_id}'";
 	    my_query($query);
 	} else {
-            $content.=my_msg_to_str('error','','Ошибка копирования файла !');
+            $content.=my_msg_to_str('error', [],'Ошибка копирования файла !');
 	}
     }
 }
@@ -206,12 +208,12 @@ if ($input['edited']) {
     }
     $input['form']['date_change']='now()';
     $query = "update cat_part set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query, true);
-    $content.=my_msg_to_str('','','Раздел успешно изменен.');
+    my_query($query);
+    $content.=my_msg_to_str('',[],'Раздел успешно изменен.');
     if ($_FILES['img_file']['size'] > 100) {
 	list($img) = my_select_row("select image_name from cat_part where id='{$input['id']}'");
 	if (is_file($IMG_PATH . $img)) {
-	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
+	    if (!unlink($IMG_PATH . $img))$content.=my_msg_to_str('error', [],'Ошибка удаления файла !');
 	}
 	$f_info = pathinfo($_FILES['img_file']['name']);
 	$img = $input['id'] . "." . $f_info['extension'];
@@ -220,16 +222,17 @@ if ($input['edited']) {
 	    $query = "update cat_part set image_name='{$img}',image_type='{$_FILES['img_file']['type']}' where id='{$input['id']}'";
 	    my_query($query);
 	} else {
-	   $content.=my_msg_to_str('error','','Ошибка копирования файла !');
+	   $content.=my_msg_to_str('error', [],'Ошибка копирования файла !');
 	}
     }
 }
 
+
 if (($input['edit']) || ($input['adding'])) {
     if ($input['edit']) {
 	$query = "select * from cat_part where id='{$input['id']}'";
-	$result = my_query($query, true);
-	$tags = $result->fetch_array();
+	$result = my_query($query);
+	$tags = array_merge($tags, $result->fetch_assoc());
 	$tags['form_title'] = 'Редактирование';
 	$tags['type'] = 'edited';
 	$tags['Header'] = 'Редактирование раздела';
@@ -238,9 +241,11 @@ if (($input['edit']) || ($input['adding'])) {
 	$tags['form_title'] = "Добавление";
 	$tags['type'] = "added";
 	$tags['Header'] = "Добавление раздела";
+        if(isset(App::$settings['catalog']['default_items_props'])){
+            $tags['items_props'] = App::$settings['catalog']['default_items_props'];
+        }        
     }
-    $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_MINI_INC . $EDITOR_HTML_INC;
-    
+    $tags['INCLUDE_HEAD'] = $EDITOR_MINI_INC . $EDITOR_HTML_INC;
     $prev_id_select = '';
     function sub_part_select($prev_id, $deep) {
         global $prev_id_select, $tags;
@@ -248,7 +253,7 @@ if (($input['edit']) || ($input['adding'])) {
             return null;
         }
         $query = "select * from cat_part where prev_id='{$prev_id}' order by num,title asc";
-        $result = my_query($query, true);
+        $result = my_query($query);
         $arr = null;
         while ($row = $result->fetch_array()) {
             $title='';
@@ -279,7 +284,7 @@ if (($input['edit']) || ($input['adding'])) {
 function sub_part($prev_id, $deep) {
     global $IMG_PATH, $tags, $IMG_URL;
     $query = "SELECT * from cat_part where prev_id={$prev_id} order by num,title+1 asc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     while ($row = $result->fetch_array()) {
 	$spaces = '';
         $spaces = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $deep);

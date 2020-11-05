@@ -3,6 +3,8 @@
 $tags['Header'] = 'Каталог';
 include '../include/common.php';
 
+use classes\App;
+
 if (isset($input['part_id'])) {
     $_SESSION['ADMIN_PART_ID'] = $input['part_id'];
 }
@@ -42,7 +44,6 @@ function get_image_list($item_id) {
 		</tr>";
     }
     $content.="</table>";
-//    $content = iconv('windows-1251', 'UTF-8', $content);
     return $content;
 }
 
@@ -72,20 +73,20 @@ if ($input['del']) {
     $query = 'select * from cat_item_images where item_id=' . $input['id'];
     $result = my_query($query);
     while ($row = $result->fetch_array()) {
-        if (!unlink($IMG_PATH . $row['fname']))$content.=my_msg_to_str('error','','Ошибка удаления файла !');
+        if (!unlink($IMG_PATH . $row['fname']))$content.=my_msg_to_str('error', [],'Ошибка удаления файла !');
     }
     $query = 'delete from cat_item_images where item_id=' . $input['id'];
     my_query($query);
     $query = 'delete from cat_item where id=' . $input['id'];
     my_query($query);
-    $content.=my_msg_to_str('','','Наименование удалено');
+    $content.=my_msg_to_str('',[],'Наименование удалено');
 }
 
 if ($input['add_image']) {
     if ($_FILES['img_file']['size']) {
         $query = "insert into cat_item_images(date_add,item_id,descr) values(now(),'{$input["id"]}','{$input["descr"]}')";
         my_query($query);
-        $image_id = $mysqli->insert_id;
+        $image_id = App::$db->insert_id();
         $f_info = pathinfo($_FILES['img_file']['name']);
         $img = $input['id'] . '_' . $image_id . '.' . $f_info['extension'];
         
@@ -113,7 +114,7 @@ if ($input['add_image']) {
         } else {
             $query = "delete from cat_item_images where id='{$image_id}'";
             my_query($query);
-            $content.=my_msg_to_str('error','','Ошибка копирования файла !');
+            $content.=my_msg_to_str('error', [],'Ошибка копирования файла !');
         }
         $input['edit']=1;
         $input['id']=$input['id'];
@@ -151,7 +152,7 @@ if ($input['added']) {
         if(json_last_error() == JSON_ERROR_NONE) {
             $input['form']['props'] = $json;
         } else {
-            $content.=my_msg_to_str('','',json_last_error_msg());            
+            $content.=my_msg_to_str('',[],json_last_error_msg());            
         }        
     }
 
@@ -159,12 +160,12 @@ if ($input['added']) {
     $input['form']['date_change']='now()';
     $query = "insert into cat_item " . db_insert_fields($input['form']);
     my_query($query);
-    $insert_id=$mysqli->insert_id;
+    $insert_id=App::$db->insert_id();
     if($seo_alias_duplicate){
         $input['form']['seo_alias'].='_'.$insert_id;
         my_query("update cat_item set seo_alias='{$input['form']['seo_alias']}' where id='{$insert_id}'");
     }
-    $content.=my_msg_to_str('','','Наменование добавлено !');
+    $content.=my_msg_to_str('',[],'Наменование добавлено !');
     $input['id']=$insert_id;
     $input['edit']=1;
 }
@@ -181,7 +182,7 @@ if ($input['edited']) {
         if(json_last_error() == JSON_ERROR_NONE) {
             $input['form']['props'] = $json;
         } else {
-            $content.=my_msg_to_str('','',json_last_error_msg());            
+            $content.=my_msg_to_str('',[],json_last_error_msg());            
         }        
     }
     
@@ -197,7 +198,7 @@ if ($input['edited']) {
     $input['form']['date_change']='now()';
     $query = "update cat_item set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
-    $content.=my_msg_to_str('','','Изменения сохранены');
+    $content.=my_msg_to_str('',[],'Изменения сохранены');
     $input['edit']=1;
 }
 
@@ -222,7 +223,7 @@ if (($input['edit']) || ($input['add'])) {
     if(strlen($row_part['items_props'])) {
         $props_array = my_json_decode($row_part['items_props']);
         if(!is_array($props_array)) {
-            $content.=my_msg_to_str('','','Массив свойств неверен');
+            $content.=my_msg_to_str('',[],'Массив свойств неверен');
         } else {
             $props_values=my_json_decode($tags['props']);
             if(is_array($props_values)){

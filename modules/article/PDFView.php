@@ -7,7 +7,7 @@
  */
 
 namespace modules\article;
-use Classes\App;
+use classes\App;
 
 if(file_exists(__DIR__ . '/dompdf/autoload.inc.php')) {
     include_once __DIR__ . '/dompdf/autoload.inc.php';
@@ -19,9 +19,11 @@ use Dompdf\Dompdf;
  *
  * @author BooT
  */
-class PDFView {
+class PDFView 
+{
     
-    private function getHTML($row) {
+    private function getHTML(array $row): string 
+    {
         $content = '<html><head><style>body { font-family: arial; }</style></head>'.
         '<body>'; 
         $content .= '<h1>' . $row['title'] . '</h1><br />';
@@ -31,7 +33,8 @@ class PDFView {
         return $content;
     }
     
-    public function get($row, $stream = false) {
+    public function get(array $row, bool $stream = false): void 
+    {
         $row['content'] = replace_base_href($row['content']);
         $content = $this->getHTML($row);
 

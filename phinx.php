@@ -1,6 +1,6 @@
 ﻿<?php
 
-require 'include/config/config.local.php';
+require 'local/config.php';
 
 return [
     'paths' => [
@@ -10,7 +10,7 @@ return [
         'default_database' => 'development',
         'development' => [
             'adapter' => 'mysql',
-            'host' => 'localhost',
+            'host' => $DBHOST,
             'name' => $DBNAME,
             'user' => $DBUSER,
             'pass' => $DBPASSWD,

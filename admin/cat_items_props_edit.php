@@ -17,10 +17,10 @@ if (isset($input['attr_name'])) {
     // $input['value'] = intval($input['value']);
     if($input['attr_type'] == "simple") {
         $query = "update cat_item set {$input['attr_name']}='{$input['value']}' where id='{$input['id']}'";
-        $result = my_query($query, true);
+        $result = my_query($query);
     } else if($input['attr_type'] == "json" || $input['attr_type'] == "boolean") {
         $query = "select props from cat_item where id='{$input['id']}'";
-        $row = my_select_row($query, true);
+        $row = my_select_row($query);
         if($row){
             if(!$props_values = my_json_decode($row['props'])) {
                 $props_values=[];
@@ -28,7 +28,7 @@ if (isset($input['attr_name'])) {
             $props_values[$input['attr_name']] = $input['value'];
             $props_json = json_encode($props_values);
             $query = "update cat_item set props='{$props_json}' where id='{$input['id']}'";
-            $result = my_query($query, true);
+            $result = my_query($query);
         }
     }
     if($result) {
@@ -47,7 +47,7 @@ function part_items($part_id) {
     where part_id='{$part_id}'
     group by cat_item.id
     order by num,title asc";
-    $result = my_query($query, true);
+    $result = my_query($query);
     $content = '<table class="table table-striped table-responsive table-bordered">';
     if ($result->num_rows) {
         $content .= '<tr>';
@@ -57,7 +57,7 @@ function part_items($part_id) {
             $props_array = json_decode($tags['items_props'], true);
             // print_array($props_array);
             if(!is_array($props_array)) {
-                $content.=my_msg_to_str('','','Массив свойств неверен');
+                $content.=my_msg_to_str('',[],'Массив свойств неверен');
             } else {
                 $props_values=json_decode($tags['props'], true);
                 // print_array($props_values);
@@ -67,21 +67,21 @@ function part_items($part_id) {
                     }
                 }
                 foreach ($props_array as $input_name => $params) {
-                    $content .= '<td>'.$params['name'].'</td>' . PHP_EOL;
+                    $content .= '<td align="center">'.$params['name'].'</td>' . PHP_EOL;
                 }
             }
         }
         $result->data_seek(0);
         $content .= '</tr>' . PHP_EOL;
         while ($tags = $result->fetch_array()) {
-            $content .= '<tr><td>'.$tags['title'].'</td>';
+            $content .= '<tr><td width="300">'.$tags['title'].'</td>';
             $content .= '<td><input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="simple" attr_name="price" value="'.$tags['price'].'"></td>';
             // echo $tags['items_props'];
             if(strlen($tags['items_props'])) {
                 $props_array = json_decode($tags['items_props'], true);
                 // print_array($props_array);
                 if(!is_array($props_array)) {
-                    $content.=my_msg_to_str('','','Массив свойств неверен');
+                    $content.=my_msg_to_str('',[],'Массив свойств неверен');
                 } else {
                     $props_values=json_decode($tags['props'], true);
                     // print_array($props_values);
@@ -117,7 +117,7 @@ if (true) {
             $subparts++;
         }
         $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='$prev_id' group by cat_part.id order by cat_part.num,cat_part.title asc";
-        $result = my_query($query, true);
+        $result = my_query($query);
         while ($row = $result->fetch_array()) {
 //          $subparts++;
             if ((!$deep) && (!$prev_id)) {

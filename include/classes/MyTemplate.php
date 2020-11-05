@@ -23,11 +23,12 @@
 
  */
 
-namespace Classes;
+namespace classes;
 
-use Classes\App;
+use classes\App;
 
-class MyTemplate {    
+class MyTemplate 
+{    
 
     /**
      * Parse one string from template
@@ -40,7 +41,8 @@ class MyTemplate {
      *
      * @return string Output string
      */
-    private function parse_string($content, $tags = array(), $sql_row = array(), $sql_row_summ = array(), $inner_content = '') {
+    private function parseString(string $content, array $tags = [], $sql_row = [], $sql_row_summ = [], string $inner_content = '') : string 
+    {
         preg_match_all("@\[\%(.*?)\%\]@", $content, $temp, PREG_SET_ORDER);
         $total = count($temp);
         $a = 0;
@@ -127,7 +129,7 @@ class MyTemplate {
                         return '';
                     }
                 } elseif ($tagclass == 'template') {
-                    $replace_str = get_tpl_by_name($tagparam,$tags, null, $inner_content);
+                    $replace_str = App::$template->parse($tagparam, $tags, null, $inner_content);
                     if (!$replace_str) {
                         App::$message->get('tpl_not_found', ['name' => $tagparam]);
                         return '';
@@ -161,7 +163,7 @@ class MyTemplate {
      *
      * @return string Output content
      */
-    public function parse($content, $tags = array(), $sql_result = array(), $inner_content = '') {
+    public function parse(string $content, array $tags = [], $sql_result = [], $inner_content = '') {
         $tags['PHP_SELF'] = App::$server['PHP_SELF'];
         $tags['PHP_SELF_DIR'] = App::$server['PHP_SELF_DIR'];
         $tags['BASE_HREF'] = App::$SUBDIR;
@@ -179,7 +181,7 @@ class MyTemplate {
                 unset($mysql_row_summ);
                 if ($sql_result){
                     while ($row = $sql_result->fetch_array()) {
-                        $result.=$this->parse_string($loop_content, $tags, $row, $inner_content) . "\n";
+                        $result.=$this->parseString($loop_content, $tags, $row, $inner_content) . "\n";
                         foreach ($row as $key => $value)
                             if ((is_double($value))or ( is_numeric($value))){
                                 $mysql_row_summ[$key] = +$value;
@@ -190,9 +192,9 @@ class MyTemplate {
             } elseif ($loop_start) {
                 $loop_content.=$value;
             } elseif (isset($mysql_row_summ)) {
-                $result.=$this->parse_string($value, $tags, $sql_result, $mysql_row_summ, $inner_content) . "\n";
+                $result.=$this->parseString($value, $tags, $sql_result, $mysql_row_summ, $inner_content) . "\n";
             } else {
-                $result.=$this->parse_string($value, $tags, $sql_result, [], $inner_content) . "\n";
+                $result.=$this->parseString($value, $tags, $sql_result, [], $inner_content) . "\n";
             }
         }
         return $result;
@@ -206,7 +208,7 @@ class MyTemplate {
      *
      * @return string Output template
      */
-    public function load_from_file($file_name, $title) {
+    public function loadFromFile($file_name, $title) {
         $tpl_file = @file($file_name);
         if ($tpl_file == false) {
             echo 'Error open ' . $file_name;

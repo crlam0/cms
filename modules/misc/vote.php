@@ -12,19 +12,19 @@ if ($input['vote']) {
         $dont_vote = 1;
     }
     $query = "select id from vote_log where ip='" . $server["REMOTE_ADDR"] . "' and unix_timestamp(date)>unix_timestamp()-24*60*60";
-    $result = my_query($query, true);
+    $result = App::$db->query($query);
     if ($result->num_rows > 5) {
         $dont_vote = 1;
     }
 //	$dont_vote=0;
     if ($dont_vote) {
-        $content = my_msg_to_str("vote_deny");
+        $content = App::$message->get("vote_deny");
     } else {
         foreach ($input['vote'] as $key => $value) {
             $query = "insert into vote_log(date,variant_id,ip) values(now(),'{$value}','" . $server["REMOTE_ADDR"] . "')";
-            my_query($query, true);
+            App::$db->query($query);
         }
-        $content = my_msg_to_str("vote_success");
+        $content = App::$message->get("vote_success");
     }
 }
 
@@ -34,7 +34,7 @@ $tags['vote_title'] = $vote_title;
 $query = "select title,count(vote_log.id) as hits from vote_variants 
 left join vote_log on (vote_log.variant_id=vote_variants.id)
 where vote_id='{$vote_id}' group by vote_variants.id order by num";
-$result = my_query($query);
+$result = App::$db->query($query);
 
 $total = 0;
 while ($row = $result->fetch_array()) {

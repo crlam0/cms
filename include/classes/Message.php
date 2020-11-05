@@ -1,13 +1,14 @@
 <?php
 
-namespace Classes;
-use Classes\App;
+namespace classes;
+use classes\App;
 use Swift;
 
 class Message 
 {    
-    private function getClass($message) {
-        if(!array_key_exists('type',$message)) {
+    private function getClass(array $message) : string 
+    {
+        if(!array_key_exists('type', $message)) {
             return 'success';
         }
         switch ($message['type']) {
@@ -26,7 +27,7 @@ class Message
         return $class;
     }
     
-    private function parseTags($message, $tags) {
+    private function parseTags(array $message, array $tags) : array {
         if (is_array($tags)){
             if(array_key_exists('type',$tags)) {
                 $message['type'] = $tags['type'];            
@@ -49,10 +50,11 @@ class Message
      *
      * @return string Output string
      */
-    public function get($name, $tags = array(), $content = '') {
+    public function get(string $name, array $tags = [], string $content = '') : string 
+    {
         if (strlen($name)) {
             $sql = "select * from messages where name='{$name}'";
-            $message = App::$db->select_row($sql, 1);
+            $message = App::$db->getRow($sql);
         }
         if (strlen($content)){
             $message['content'] = $content;
@@ -67,23 +69,64 @@ class Message
         }
     }
     
+    
+    
+    /**
+     * Return error message
+     *
+     * @param string $string Message content
+     *
+     */
+    function getError(string $string) : string 
+    {
+        return $this->get('error', [], $string);
+    }    
+    
     /**
      * Print error message
      *
      * @param string $string Message content
      *
      */
-    function error($string) {
-        echo $this->get('error', [], $string);
+    function error(string $string) : void 
+    {
+        echo $this->getError($string);
     }    
     
+    /**
+     * Return error messages from array
+     *
+     * @param string $string Message content
+     *
+     */
+    function getErrorsFromArray(array $errors) : string
+    {
+        $content = '';
+        foreach($errors as $error) {
+            $content .= $this->getError($error);
+        }
+        return $content;
+    }    
+    
+    /**
+     * Print error messages from array
+     *
+     * @param string $string Message content
+     *
+     */
+    function errorsFromArray(array $errors) : void 
+    {
+        echo $this->getErrorsFromArray($errors);
+    }    
+
     /**
      * Add message to admin_log table
      *
      * @param string $message Message content
      *
      */
-    function adminLog($message) {
+    function adminLog(string $message) : void
+    {
         $query = "insert into admin_log(user_id,date,msg) values('" . App::$user->id . "',now(),'{$message}')";
         App::$db->query($query);
     }
@@ -96,7 +139,8 @@ class Message
      * @param string $content Message content
      *
      */
-    function mail($message_to, $subject, $content, $content_type = 'text/plain') {
+    function mail(string $message_to, string $subject, string $content, string $content_type = 'text/plain') 
+    {
         $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
         $mailer = new \Swift_Mailer($transport);
         $message = (new \Swift_Message($subject))

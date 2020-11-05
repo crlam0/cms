@@ -5,7 +5,7 @@ if(!isset($input)) {
 }
 
 
-if(file_exists('request.local.php')) {
-    require('request.local.php');
+if(file_exists('../../local/request.php')) {
+    require('../../local/request.php');
 }
 

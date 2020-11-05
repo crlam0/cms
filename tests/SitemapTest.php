@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Classes\Sitemap;
+use classes\Sitemap;
 
 require_once 'include/lib_url.php';
 

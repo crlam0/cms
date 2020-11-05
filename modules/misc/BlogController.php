@@ -45,7 +45,6 @@ class BlogController extends BaseController
 
     public function actionIndex(int $page = 1): string 
     {
-        $this->title = $this->root_title;
         $this->breadcrumbs[] = ['title'=>$this->title];
         
         $this->comments = new Comments ('blog', 0);
@@ -79,9 +78,9 @@ class BlogController extends BaseController
         $row = $result->fetch_array();
         $result->data_seek(0);
 
+        $this->breadcrumbs[] = ['title' => $this->title, 'url'=>'blog/'];        
+        $this->breadcrumbs[] = ['title' => $row['title']];
         $this->title = $row['title'];
-        $this->breadcrumbs[] = ['title' => 'Блог', 'url'=>'blog/'];        
-        $this->breadcrumbs[] = ['title' => $this->title];        
         
         $this->comments = new Comments ('blog', $post_id);
         

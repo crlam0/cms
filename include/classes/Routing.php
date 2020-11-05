@@ -29,7 +29,7 @@ final class Routing
     /**
     * @var string Base URL for controller's views
     */
-    public $base_url;
+    private $controller_base_url = null;
     /**
     * @var array Controller param's
     */
@@ -52,18 +52,18 @@ final class Routing
         if(App::$SUBDIR !== '/') {
             $this->request_uri = str_replace(App::$SUBDIR, '', $this->request_uri);
         }
-        if(substr($this->request_uri,0,1) === '/') {
+        if(substr($this->request_uri, 0, 1) === '/') {
             $this->request_uri = substr($this->request_uri, 1);
         }
-        if(strpos($this->request_uri,'?')!==false) {
-            $this->request_uri = substr($this->request_uri,0,strpos($this->request_uri,'?'));
+        if(strpos($this->request_uri, '?') !== false) {
+            $this->request_uri = substr($this->request_uri, 0, strpos($this->request_uri, '?'));
         }        
-        if(strstr($this->request_uri,'modules/')) {
+        if(strstr($this->request_uri, 'modules/')) {
             $this->request_uri = str_replace('modules/', '', $this->request_uri);
         }
         $this->matchRoutes();
     }
-
+    
     /**
      * Add routes from file
      *
@@ -99,7 +99,7 @@ final class Routing
         global $input;
         foreach($matches as $key => $value){
             if (array_key_exists('params', $route)) {
-                $value = App::$db->test_param($value);
+                $value = App::$db->testParam($value);
                 $input[$route['params'][$key]] = $value;
                 App::$input[$route['params'][$key]] = $value;
             }
@@ -117,7 +117,7 @@ final class Routing
     {
         if (array_key_exists('params', $route)) {
             foreach($matches as $key => $value){
-                $this->params[$route['params'][$key]] = App::$db->test_param($value);
+                $this->params[$route['params'][$key]] = App::$db->testParam($value);
             }
         }
         if(count(App::$get)) {
@@ -148,10 +148,10 @@ final class Routing
                 $this->action = $this->getAction();
             }            
             if(array_key_exists('base_url', $route)) {
-                $this->base_url = App::$SUBDIR . $route['base_url'];
-            } else {
-                $this->base_url = $this->request_uri;
+                $this->controller_base_url = App::$SUBDIR . $route['base_url'];
             }
+        } else {
+            App::debug('Unknown route type: not file or controller.');
         }
     }
     
@@ -172,6 +172,20 @@ final class Routing
         }
     }
     
+    /**
+     * Return URL without action name.
+     *
+     */
+    public function getBaseUrl() {
+        if($this->controller_base_url !== null) {
+            return $this->controller_base_url;
+        }
+        if(substr($this->request_uri, strlen($this->request_uri) - 1, 1) !== '/') {
+            return App::$SUBDIR . substr($this->request_uri, 0, strrpos($this->request_uri, '/') + 1);
+        }
+        return App::$SUBDIR . $this->request_uri;
+    }
+
     /**
      * Return action from URI
      *

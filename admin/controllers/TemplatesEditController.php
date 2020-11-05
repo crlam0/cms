@@ -17,6 +17,7 @@ class TemplatesEditController extends BaseController
         $this->TABLE = 'templates';     
         $this->title = 'Шаблоны';
         $this->breadcrumbs[] = ['title'=>$this->title];
+        $this->user_flag = 'global';
     }
 
     public function actionIndex(): string
@@ -35,6 +36,7 @@ class TemplatesEditController extends BaseController
         
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/edit_area/edit_area_full.js"></script>' . "\n";
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor_html.js"></script>' . "\n";
+        header('X-XSS-Protection:0');
         
         $errors = App::$message->getErrorsFromArray($model->getErrors());
         return $errors . App::$template->parse('templates_form.html.twig', [
@@ -64,6 +66,7 @@ class TemplatesEditController extends BaseController
 
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/edit_area/edit_area_full.js"></script>' . "\n";
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor_html.js"></script>' . "\n";
+        header('X-XSS-Protection:0');
         
         $errors = App::$message->getErrorsFromArray($model->getErrors());
         return $errors . App::$template->parse('templates_form.html.twig', [

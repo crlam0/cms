@@ -139,7 +139,7 @@ if ($input["copy"]) {
         $row_part['prev_id']=$input['to_part_id'];
         $query = "insert into cat_part " . db_insert_fields($row_part);
         my_query($query, null, false);
-        $part_id=$mysqli->insert_id;        
+        $part_id=App::$db->insert_id();        
         $seo_alias=encodestring($row_part['title']).'_'.$part_id;        
         my_query("update cat_part set seo_alias='{$seo_alias}' where id='{$part_id}'");
         
@@ -150,7 +150,7 @@ if ($input["copy"]) {
             $row_item['part_id'] = $part_id;
             $query = "insert into cat_item " . db_insert_fields($row_item);
             my_query($query, null, false);
-            $insert_id=$mysqli->insert_id;        
+            $insert_id=App::$db->insert_id();        
             $seo_alias=encodestring($row_item['title']).'_'.$insert_id;
             my_query("update cat_item set seo_alias='{$seo_alias}' where id='{$insert_id}'");
         }
@@ -176,7 +176,7 @@ if ($input["added"]) {
     $input['form']['date_change']='now()';
     $query = "insert into cat_part " . db_insert_fields($input['form']);
     my_query($query);
-    $insert_id=$mysqli->insert_id;
+    $insert_id=App::$db->insert_id();
     if($seo_alias_duplicate){
         $input['form']['seo_alias'].='_'.$insert_id;
         my_query("update cat_part set seo_alias='{$input['form']['seo_alias']}' where id='{$insert_id}'");

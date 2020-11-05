@@ -29,7 +29,7 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 App::$logger = new Logger('main');
-App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/error.log', Logger::ERROR));
+App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/error.log', Logger::ERROR));
 
 $App = new App($DIR, $SUBDIR);
 $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
@@ -40,7 +40,7 @@ App::$debug = App::$settings['debug'];
 App::$db->debug = App::$settings['debug'];
 
 if(App::$debug) {
-    App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/debug.log', Logger::DEBUG));
+    App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/debug.log', Logger::DEBUG));
     $whoops = new Run();
     $whoops->writeToOutput(true);
     $whoops->allowQuit(true);

@@ -3,6 +3,8 @@
 $tags['Header'] = 'Галерея';
 include '../include/common.php';
 
+use classes\App;
+
 $IMG_PATH = $DIR.$settings['gallery_list_img_path'];
 
 if ($input['view_gallery']) {
@@ -81,7 +83,7 @@ if ($input['add_multiple']){
                 if (!in_array($file["type"], $validImageTypes)) {
                     $content.=my_msg_to_str('error', [],'Неверный тип файла !');
                 } else {
-                    $image_id = $mysqli->insert_id;
+                    $image_id = App::$db->insert_id();
                     $f_info = pathinfo($file['name']);
                     $file_name = $f_info['basename'];
                     $file_name = encodestring($file_name) . "." . $f_info["extension"];
@@ -121,7 +123,7 @@ if ($input['added_image']) {
 	if (!in_array($_FILES['img_file']['type'], $validImageTypes)) {
 	    $content.=my_msg_to_str('error', [],'Неверный тип файла !');
 	} else {
-            $image_id=$mysqli->insert_id;
+            $image_id=App::$db->insert_id();
 	    $f_info = pathinfo($_FILES['img_file']['name']);
 	    $file_name = encodestring($input['form']['title']) . "." . $f_info['extension'];
 	    if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['gallery_upload_path'] . $file_name, 1024)) {
@@ -219,7 +221,7 @@ if ($input["added_gallery"]) {
     $query = "insert into gallery_list " . db_insert_fields($input['form']);
     my_query($query);
     if (isset($_FILES["img_file"]) && $_FILES["img_file"]["size"]) {
-        $part_id = $mysqli->insert_id;
+        $part_id = App::$db->insert_id();
         $f_info = pathinfo($_FILES["img_file"]["name"]);
         $img = encodestring($input["form"]["title"]) . "." . $f_info["extension"];
         if (move_uploaded_image($_FILES["img_file"], $IMG_PATH . $img, $settings['gallery_list_img_max_width'])) {

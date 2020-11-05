@@ -4,6 +4,8 @@ $tags['Header'] = 'Шаблоны';
 include '../include/common.php';
 header('X-XSS-Protection:0');
 
+use classes\App;
+
 if ($input['del']) {
     $query = "delete from templates where id='{$input['id']}'";
     my_query($query);
@@ -51,7 +53,7 @@ if ($input['add']) {
     $query = "insert into templates " . db_insert_fields($input['form']);
     my_query($query);
     $input['view'] = true;
-    $input['id'] = $mysqli->insert_id;    
+    $input['id'] = App::$db->insert_id();    
 }
 
 if ($input['edit']) {    

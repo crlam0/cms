@@ -3,7 +3,7 @@
 $tags['Header'] = "Отзывы";
 include "../include/common.php";
 
-// print_array($settings);
+use classes\App;
 
 $image_path = $settings['reviews']['upload_path'];
 
@@ -28,8 +28,6 @@ if ($input["del_reviews"]) {
     $content.=my_msg_to_str('', [], "Изображение успешно удалено.");
 }
 
-// ($_FILES["img_file"]);
-
 if ($input["added_reviews"]) {
     $input['form']['content'] = replace_base_href($input['form']['content'], true);
     $query = "insert into reviews " . db_insert_fields($input['form']);
@@ -38,7 +36,7 @@ if ($input["added_reviews"]) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
             $content.=my_msg_to_str('error', [], "Неверный тип файла !");
         } else {
-            $image_id = $mysqli->insert_id;
+            $image_id = App::$db->insert_id();
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = $image_id . "." . $f_info["extension"];
             if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, $settings['reviews']['image_width'], $settings['reviews']['image_height'])) {

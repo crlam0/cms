@@ -309,7 +309,7 @@ class User
         if(!$value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME')) {
             return false;
         }
-        $token = App::$db->test_param($value);
+        $token = App::$db->testParam($value);
         if($data = $this->checkToken($token)){
             App::debug('Auth by Rememberme cookie');
             list($_SESSION['UID'],$_SESSION['FLAGS']) = $data;

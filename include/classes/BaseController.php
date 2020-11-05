@@ -24,6 +24,11 @@ class BaseController
     * @var string Base URL for controller's views
     */
     public $base_url = '';
+
+    /**
+    * @var array Needed user flag
+    */
+    public $user_flag = '';
     
     /**
      * Set empty values for HTML blocks.
@@ -99,7 +104,7 @@ class BaseController
                 }
                 $url .= urlencode($param) . '=' . urlencode($value);
             }
-        }        
+        }
         return $this->base_url . $url;
     }
     

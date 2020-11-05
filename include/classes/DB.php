@@ -11,7 +11,7 @@ namespace classes;
 class DB 
 {
     /**
-     * @var mysqli Use mysqli object
+     * @var mysqli Used mysqli object
      */
     public $mysqli;
     /**
@@ -53,8 +53,9 @@ class DB
         $this->mysqli = new \mysqli($this->host, $this->user, $this->passwd, $this->dbname);
 
         if ($this->mysqli->connect_error) {
-            App::$logger->error('DB connect error ' . $this->mysqli->connect_errno . ': ' . $this->mysqli->connect_error);
-            die('DB connect error ' . $this->mysqli->connect_errno . ': ' . $this->mysqli->connect_error);
+            $error_str = 'DB connect error ' . $this->mysqli->connect_errno . ': ' . $this->mysqli->connect_error;
+            App::$logger->error($error_str);
+            die($error_str);
         }
         $this->query('SET character_set_client = utf8');
         $this->query('SET character_set_results = utf8');
@@ -84,11 +85,11 @@ class DB
 
         $stmt = $this->mysqli->prepare($sql);
         if(!$stmt) {
-            throw new \InvalidArgumentException('SQL Prepare error: ' . $this->mysqli->error . ' Query is: ' . $sql);
+            throw new \InvalidArgumentException('SQL Prepare error: ' . $this->mysqli->error . ' Query was: ' . $sql);
         }
         $this->bindParams($stmt, $params);
         if (!$stmt->execute()) {
-            throw new \InvalidArgumentException('SQL Execute error: ' . $stmt->error . ' Query is: ' . $sql);
+            throw new \InvalidArgumentException('SQL Execute error: ' . $stmt->error . ' Query was: ' . $sql);
         }
         $result = $stmt->get_result();
         $stmt->free_result();
@@ -110,7 +111,7 @@ class DB
         }
         $result = $this->mysqli->query($sql);
         if (!$result) {
-            throw new \InvalidArgumentException('SQL Error: ' . $this->mysqli->error . ' Query is: ' . $sql);
+            throw new \InvalidArgumentException('SQL Error: ' . $this->mysqli->error . ' Query was: ' . $sql);
         }
         return $result;
     }
@@ -174,7 +175,7 @@ class DB
     }
     
     /**
-     * Return last insert ID.
+     * Return last error ID.
      *
      * @return integer 
      */
@@ -190,11 +191,11 @@ class DB
      *
      * @return string Output string
      */
-    public function test_param($str, $param='') 
+    public function testParam($str, $param='') 
     {
         if (is_array($str)) {
             foreach ($str as $key => $value) {
-                $str[$key] = $this->test_param($value);
+                $str[$key] = $this->testParam($value);
             }
             return $str;
         }    
@@ -204,7 +205,7 @@ class DB
         $str = $this->escapeString($str);
         foreach($this->DENIED_WORDS as $word) {
             if(stristr($str, $word)){
-                App::$logger->error('test_param denied word', ['URI'=>App::$server['REQUEST_URI']]);
+                App::$logger->error('testParam denied word', ['URI'=>App::$server['REQUEST_URI']]);
                 header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
                 exit();
             }
@@ -448,7 +449,7 @@ class DB
             }
         }
         $query = "delete from {$table} where {$expr}";
-        return App::$db->query($query , $where);  
+        return $this->query($query , $where);  
     }        
     
 }

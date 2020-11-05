@@ -3,7 +3,7 @@
 $tags['Header'] = "Новости";
 include "../include/common.php";
 
-// print_array($settings);
+use classes\App;
 
 $image_path = $settings['news']['upload_path'];
 
@@ -28,8 +28,6 @@ if ($input["del_news"]) {
     $content.=my_msg_to_str('', [], "Изображение успешно удалено.");
 }
 
-// ($_FILES["img_file"]);
-
 if ($input["added_news"]) {
     if (!strlen($input['form']['seo_alias'])){
         $input['form']['seo_alias'] = encodestring($input['form']['title']);
@@ -42,7 +40,7 @@ if ($input["added_news"]) {
         if (!in_array($_FILES["img_file"]["type"], $validImageTypes)) {
             $content.=my_msg_to_str('error', [], "Неверный тип файла !");
         } else {
-            $image_id = $mysqli->insert_id;
+            $image_id = App::$db->insert_id();
             $f_info = pathinfo($_FILES["img_file"]["name"]);
             $file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
             if (move_uploaded_image($_FILES["img_file"], $DIR . $image_path . $file_name, null, null, $settings['news']['image_width'], $settings['news']['image_height'])) {

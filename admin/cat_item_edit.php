@@ -3,6 +3,8 @@
 $tags['Header'] = 'Каталог';
 include '../include/common.php';
 
+use classes\App;
+
 if (isset($input['part_id'])) {
     $_SESSION['ADMIN_PART_ID'] = $input['part_id'];
 }
@@ -42,7 +44,6 @@ function get_image_list($item_id) {
 		</tr>";
     }
     $content.="</table>";
-//    $content = iconv('windows-1251', 'UTF-8', $content);
     return $content;
 }
 
@@ -85,7 +86,7 @@ if ($input['add_image']) {
     if ($_FILES['img_file']['size']) {
         $query = "insert into cat_item_images(date_add,item_id,descr) values(now(),'{$input["id"]}','{$input["descr"]}')";
         my_query($query);
-        $image_id = $mysqli->insert_id;
+        $image_id = App::$db->insert_id();
         $f_info = pathinfo($_FILES['img_file']['name']);
         $img = $input['id'] . '_' . $image_id . '.' . $f_info['extension'];
         
@@ -159,7 +160,7 @@ if ($input['added']) {
     $input['form']['date_change']='now()';
     $query = "insert into cat_item " . db_insert_fields($input['form']);
     my_query($query);
-    $insert_id=$mysqli->insert_id;
+    $insert_id=App::$db->insert_id();
     if($seo_alias_duplicate){
         $input['form']['seo_alias'].='_'.$insert_id;
         my_query("update cat_item set seo_alias='{$input['form']['seo_alias']}' where id='{$insert_id}'");

@@ -2,7 +2,6 @@
 
 namespace classes;
 use classes\MyArray;
-use classes\SQLHelper;
 
 class App 
 {
@@ -125,13 +124,13 @@ class App
         if(is_array($get)){
             static::$get = $get;
             foreach ($get as $key => $value){
-                static::$input[$key]=static::$db->test_param($value,$key);
+                static::$input[$key]=static::$db->testParam($value,$key);
             }
         }
         if(is_array($post)){
             static::$post = $post;
             foreach ($post as $key => $value){
-                static::$input[$key]=static::$db->test_param($value,$key);
+                static::$input[$key]=static::$db->testParam($value,$key);
             }
         }
     }
@@ -181,7 +180,6 @@ class App
         $input = static::$input;
         $server = static::$server;
         $settings = static::$settings;
-        $mysqli = static::$db->mysqli;
     }    
     
     /**
@@ -234,18 +232,35 @@ class App
         static::$logger->debug($message);
     }
     
+    private function failedAuth() {
+        if (static::$user->id) {
+            static::debug('Failed auth, user ID: ' . static::$user->id . ' URL: ' . static::$routing->request_uri);
+            return static::$message->get('error', [] ,'У вас нет соответствующих прав !');
+        } else {
+            $_SESSION['GO_TO_URI'] = static::$server['REQUEST_URI'];
+            redirect(static::$SUBDIR . 'login/');
+        }
+        exit;
+    }
+    
     private function runController($controller_name, $action, $tags)
     {
         static::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
         $controller = new $controller_name;
-        try {
-            $controller->base_url = static::$routing->base_url;
-            $content = $controller->run($action, static::$routing->params);
+        try {            
+            $controller->base_url = static::$routing->getBaseUrl();
+            if(static::$user->checkAccess($controller->user_flag)) {
+                $content = $controller->run($action, static::$routing->params);
+                $tags['Header'] = $controller->title;
+                header(App::$server['SERVER_PROTOCOL'] . ' 200 Ok', true, 200);
+            } else {
+                $content = $this->failedAuth();
+                $tags['Header'] = 'Ошибка авторизации';
+                header(App::$server['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
+            }           
             /* Fill tags for default template */
-            $tags['Header'] = $controller->title;
             $tags['nav_array'] = array_merge($tags['nav_array'], $controller->breadcrumbs);
             $tags = array_merge($tags, $controller->tags);
-            header(App::$server['SERVER_PROTOCOL'] . ' 200 Ok', true, 200);
             echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
             exit;
         } catch (\Throwable $e) {
@@ -272,7 +287,9 @@ class App
             } else {
                 static::debug('Controller "' . $controller_name . '" not exists !"');
             }
-        }        
+        } else {
+            static::debug('ERROR: empty controller name in routing.');
+        }       
     }
     
 }

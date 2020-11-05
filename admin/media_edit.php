@@ -42,7 +42,7 @@ if ($input["added_file"]) {
     $input['form']['list_id'] = $_SESSION["view_files"];
     if ($_FILES["uploaded_file"]["size"] > 100) {
       	$f_info = pathinfo($_FILES["uploaded_file"]["name"]);
-	$file_name = encodestring($f_info["filename"]) . "." . $f_info["extension"];
+	$file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
 
 //	$file_name = str_replace(" ", "_", encodestring($_FILES["uploaded_file"]["name"]));
 	if (move_uploaded_file($_FILES["uploaded_file"]["tmp_name"], $DIR . $settings["media_upload_path"] . $file_name)) {

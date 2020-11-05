@@ -1,0 +1,6 @@
+<?xml version="1.0" standalone="yes"?>
+<svg width="16" height="16">
+<path style="fill:#ffffff; stroke:none;" d="M0 0L0 5L1 5L5 1L0 0z"/>
+<path style="fill:#4a5391; stroke:none;" d="M5.04398 0.756945C-4.21688 4.26867 1.72582 18.8793 10.956 15.2539C20.3492 11.5644 14.4272 -2.80118 5.04398 0.756945z"/>
+<path style="fill:#ffffff; stroke:none;" d="M10 0L10 1L15 5L16 5L16 0L10 0M7.43287 3.04707C2.77796 6.00342 6.50584 16.1354 11.6829 12.338C15.9646 9.19724 12.9334 -0.446354 7.43287 3.04707M0 10L0 16L5 16L5 15L0 10M15 11L11 15L11 16L16 16L15 11z"/>
+</svg>

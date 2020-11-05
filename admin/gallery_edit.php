@@ -78,20 +78,16 @@ if ($input['add_multiple']){
             $query = "insert into gallery_images " . db_insert_fields($data);
             my_query($query);    
             if ($file["size"] > 100) {
-                if (!in_array($file["type"], $validImageTypes)) {
-                    $content.=my_msg_to_str('error','','Неверный тип файла !');
+                $image_id = $mysqli->insert_id;
+                $f_info = pathinfo($file['name']);
+                $file_name = $f_info['basename'];
+                $file_name = encodestring($file_name) . "." . $f_info["extension"];
+                if (move_uploaded_image($file, $DIR . $settings["gallery_upload_path"] . $file_name, 1024)) {
+                    $query = "update gallery_images set file_name='{$file_name}',file_type='{$file['type']}' where id='{$image_id}'";
+                    my_query($query);
+                    $content.=my_msg_to_str('', '', 'Фотография успешно добавлена.');
                 } else {
-                    $image_id = $mysqli->insert_id;
-                    $f_info = pathinfo($file['name']);
-                    $file_name = $f_info['basename'];
-                    $file_name = encodestring($file_name) . "." . $f_info["extension"];
-                    if (move_uploaded_image($file, $DIR . $settings["gallery_upload_path"] . $file_name, 1024)) {
-                        $query = "update gallery_images set file_name='{$file_name}',file_type='{$file['type']}' where id='{$image_id}'";
-                        my_query($query);
-                        $content.=my_msg_to_str('', '', 'Фотография успешно добавлена.');
-                    } else {
-                        $content.=my_msg_to_str('error','','Ошибка копирования файла !');
-                    }
+                    $content.=my_msg_to_str('error','','Ошибка копирования файла !');
                 }
             }
         }
@@ -117,21 +113,17 @@ if ($input['added_image']) {
     $input['form']['gallery_id'] = $_SESSION['view_gallery'];
     $query = "insert into gallery_images " . db_insert_fields($input['form']);
     my_query($query);    
-    if ($_FILES['img_file']["size"] > 100) {
-	if (!in_array($_FILES['img_file']['type'], $validImageTypes)) {
-	    $content.=my_msg_to_str('error','','Неверный тип файла !');
-	} else {
-            $image_id=$mysqli->insert_id;
-	    $f_info = pathinfo($_FILES['img_file']['name']);
-	    $file_name = encodestring($input['form']['title']) . "." . $f_info['extension'];
-	    if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['gallery_upload_path'] . $file_name, 1024)) {
-		$query = "update gallery_images set file_name='{$file_name}',file_type='" . $_FILES['img_file']['type'] . "' where id='{$image_id}'";
-		my_query($query);
-		$content.=my_msg_to_str('', '', 'Фотография успешно добавлена.');
-	    } else {
-		$content.=my_msg_to_str('error','','Ошибка копирования файла !');
-	    }
-	}
+    if ($_FILES['img_file']["size"] > 100) {	
+        $image_id=$mysqli->insert_id;
+        $f_info = pathinfo($_FILES['img_file']['name']);
+        $file_name = encodestring($input['form']['title']) . "." . $f_info['extension'];
+        if (move_uploaded_image($_FILES["img_file"], $DIR . $settings['gallery_upload_path'] . $file_name, 1024)) {
+            $query = "update gallery_images set file_name='{$file_name}',file_type='" . $_FILES['img_file']['type'] . "' where id='{$image_id}'";
+            my_query($query);
+            $content.=my_msg_to_str('', '', 'Фотография успешно добавлена.');
+        } else {
+            $content.=my_msg_to_str('error','','Ошибка копирования файла !');
+        }
     }
 }
 

@@ -247,11 +247,11 @@ function get_menu_href($tmp, $row) {
  * @return string Output string
  */
 function replace_base_href($content, $direction = false) {
-    global $server, $SUBDIR;
     if ($direction) {
-        return str_replace($server['REQUEST_SCHEME'] . '://' . $server["HTTP_HOST"] . $SUBDIR, "[%SUBDIR%]", $content);
+        return str_replace(App::$server['REQUEST_SCHEME'] . '://' . App::$server["HTTP_HOST"] . App::$SUBDIR, "[%SUBDIR%]", $content);
     } else {
-        return str_replace("[%SUBDIR%]", $server['REQUEST_SCHEME'] . '://' . $server["HTTP_HOST"] . $SUBDIR, $content);
+        // return str_replace("[%SUBDIR%]", $server['REQUEST_SCHEME'] . '://' . $server["HTTP_HOST"] . $SUBDIR, $content);
+        return str_replace("[%SUBDIR%]", App::$SUBDIR, $content);
     }
 }
 
@@ -264,13 +264,12 @@ function replace_base_href($content, $direction = false) {
  * @return string Output string
  */
 function path($route,$params=[]){
-    global $SUBDIR;
     if(count($params)){        
         foreach ($params as $item => $value) {
             $route = str_replace('{$'.$item.'}', $value, $route);
         }
     }
-    return $SUBDIR.$route;
+    return App::$SUBDIR.$route;
 }
 
 

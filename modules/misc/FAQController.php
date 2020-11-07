@@ -113,7 +113,7 @@ class FAQController extends BaseController
                 'txt' => '',                
             ];
         }
-        $tags['editor'] = $this->editor->GetContol(400, 200, '../images/bbcode_editor');
+        $tags['editor'] = $this->editor->GetContol(400, 200, '../theme/bbcode_editor');
         $tags['functions'] = ['get_csrf_token'];
         $_SESSION['IMG_CODE'] = rand(111111, 999999);
         $content .= App::$template->parse('faq_form', $tags);

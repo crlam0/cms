@@ -32,6 +32,8 @@
                 </td>
                 <td width=100% align=center>
                     <center><h1>{{ Header }}</h1></center>
+                    
+                    {% include 'errors.html.twig' with { 'errors': errors } %}
 
                     {{ inner_content }}
                     

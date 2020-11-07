@@ -46,8 +46,8 @@ final class Routing
         $this->routes = [];
         $this->request_uri = $request_uri;
         
-        $this->addRoutesFromConfig('/../config/routes.php');
         $this->addRoutesFromConfig('/../../local/routes.php');       
+        $this->addRoutesFromConfig('/../config/routes.php');
         
         if(App::$SUBDIR !== '/') {
             $this->request_uri = str_replace(App::$SUBDIR, '', $this->request_uri);

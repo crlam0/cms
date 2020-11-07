@@ -23,6 +23,7 @@ class BlogController extends BaseController
         if(isset(App::$settings['blog_msg_per_page'])) {
             $this->MSG_PER_PAGE = App::$settings['blog_msg_per_page'];
         }
+        $this->title = isset(App::$settings['blog_header']) ? App::$settings['blog_header'] : 'Блог';
     }
     
     public function getPostContent (array $row): string 
@@ -44,7 +45,6 @@ class BlogController extends BaseController
 
     public function actionIndex(int $page = 1): string 
     {
-        $this->title = 'Блог';
         $this->breadcrumbs[] = ['title'=>$this->title];
         
         $this->comments = new Comments ('blog', 0);
@@ -78,9 +78,9 @@ class BlogController extends BaseController
         $row = $result->fetch_array();
         $result->data_seek(0);
 
+        $this->breadcrumbs[] = ['title' => $this->title, 'url'=>'blog/'];        
+        $this->breadcrumbs[] = ['title' => $row['title']];
         $this->title = $row['title'];
-        $this->breadcrumbs[] = ['title' => 'Блог', 'url'=>'blog/'];        
-        $this->breadcrumbs[] = ['title' => $this->title];        
         
         $this->comments = new Comments ('blog', $post_id);
         

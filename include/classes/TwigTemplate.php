@@ -144,6 +144,7 @@ class TwigTemplate
         if ($this->template_type === $this::TYPE_FILE && !strstr($name,'.html.twig') ) {
             $name .= '.html.twig';
         }
+        $this->twig->addGlobal('errors', App::getErrors());
         return $this->twig->render($name, $params);
     }
 

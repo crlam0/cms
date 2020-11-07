@@ -218,6 +218,7 @@ class BaseModel implements \ArrayAccess
     {
         if($check_rules) {
             if(!$this->checkRules()) {
+                App::setErrors($this->errors);
                 return false;
             }
         }
@@ -227,6 +228,7 @@ class BaseModel implements \ArrayAccess
             App::$db->insertTable(static::tableName(), $this->data);
             $this->data['id'] = App::$db->insert_id();
         }
+        App::$errors = [];
         return true;
     }
     

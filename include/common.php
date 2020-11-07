@@ -11,8 +11,8 @@ if(file_exists(__DIR__.'/../local/misc.local.php')) {
     require_once __DIR__.'/../local/misc.local.php';
 }    
 
-if(file_exists($DIR.'vendor/autoload.php')) {
-    require_once $DIR.'vendor/autoload.php';
+if(file_exists(__DIR__.'/../vendor/autoload.php')) {
+    require_once __DIR__.'/../vendor/autoload.php';
 } else {
     die('Cant find autoloader');
 }

@@ -28,12 +28,11 @@ class SettingsEditController extends BaseController
         if($model->load(App::$input['form']) && $model->save()) {
             $this->redirect('index');
         }
-        $errors = App::$message->getErrorsFromArray($model->getErrors());
-        return $errors . App::$template->parse('settings_form.html.twig', [
+        return App::$template->parse('settings_form.html.twig', [
             'this' => $this,
             'model' => $model,
             'action' => 'create',
-            'form_title' => 'Добавление',            
+            'form_title' => 'Добавление',
         ]);
     }
 
@@ -43,12 +42,11 @@ class SettingsEditController extends BaseController
         if($model->load(App::$input['form']) && $model->save()) {
             $this->redirect('index');
         } 
-        $errors = App::$message->getErrorsFromArray($model->getErrors());        
-        return $errors . App::$template->parse('settings_form.html.twig', [
+        return App::$template->parse('settings_form.html.twig', [
             'this' => $this,
             'model' => $model,
             'action' => $this->getUrl('update', ['id' => $id]),
-            'form_title' => 'Изменение',            
+            'form_title' => 'Изменение',
         ]);
     }
     

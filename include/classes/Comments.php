@@ -83,7 +83,7 @@ class Comments
             $tags = array_merge($tags, $data);            
         }
         
-        $tags['editor'] = $this->__editor->GetContol(400, 200, App::$SUBDIR . 'images/bbcode_editor');
+        $tags['editor'] = $this->__editor->GetContol(400, 200, App::$SUBDIR . 'theme/bbcode_editor');
         if(!isset($tags['action'])){
             $tags['action'] = App::$server['PHP_SELF'];        
         }

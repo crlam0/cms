@@ -66,16 +66,19 @@ class App
     * @var Monolog\Logger Object of logger
     */    
     public static $logger;
-    
-
+    /**
+    * @var Array Errors from validation etc.
+    */    
+    private static $errors = [];
     /**
     * @var Array Debug array
     */
-    private static $data = array();
+    private static $data = [];
+    
     /**
     * @var Array Array of denied words for input strings
     */
-    private $DENIED_WORDS=array('union','insert','update ','delete ','alter ','drop ','\$_[','<?php','<script','javascript');
+    private $DENIED_WORDS=['union','insert','update ','delete ','alter ','drop ','\$_[','<?php','<script','javascript'];
     
     /**
      * Load settings to App
@@ -230,6 +233,21 @@ class App
         $time = sprintf('%.4F', $time);
         static::$DEBUG_ARRAY[] = $time . "\t " . $message;
         static::$logger->debug($message);
+    }
+    
+    public static function getErrors () : array
+    {
+        return static::$errors;
+    }
+
+    public static function setErrors (array $errors) : void
+    {
+        static::$errors = $errors;
+    }
+    
+    public static function addToErrors (string $error) : void
+    {
+        static::$errors[] = $error;
     }
     
     private function failedAuth() {

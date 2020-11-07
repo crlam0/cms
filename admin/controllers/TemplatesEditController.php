@@ -38,12 +38,11 @@ class TemplatesEditController extends BaseController
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor_html.js"></script>' . "\n";
         header('X-XSS-Protection:0');
         
-        $errors = App::$message->getErrorsFromArray($model->getErrors());
         return $errors . App::$template->parse('templates_form.html.twig', [
             'this' => $this,
             'model' => $model,
             'action' => $this->getUrl('create'),
-            'form_title' => 'Добавление',            
+            'form_title' => 'Добавление',
         ]);
     }
 
@@ -68,12 +67,11 @@ class TemplatesEditController extends BaseController
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor_html.js"></script>' . "\n";
         header('X-XSS-Protection:0');
         
-        $errors = App::$message->getErrorsFromArray($model->getErrors());
-        return $errors . App::$template->parse('templates_form.html.twig', [
+        return App::$template->parse('templates_form.html.twig', [
             'this' => $this,
             'model' => $model,
             'action' => $this->getUrl('update', ['id' => $id]),
-            'form_title' => 'Изменение',            
+            'form_title' => 'Изменение',
         ]);        
     }
     

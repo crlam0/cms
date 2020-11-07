@@ -7,7 +7,7 @@ $(document).ready(function(){
                 width : 900,
                 height : 400,
 		filebrowserBrowseUrl : '../include/filemanager/index.html',
-		contentsCss : 'body{background-color:#333333;}'
+//		contentsCss : 'body{background-color:#333333;}'
 	});
 });
 

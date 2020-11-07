@@ -298,8 +298,8 @@ function check_csrf_token() {
  *
  * @return string Output string
  */
-function get_block($name) {
-    return App::get('Blocks')->content($name);
+function get_block($name, $allow_cache = false) {
+    return App::get('Blocks')->content($name, $allow_cache);
 }
 
 /**

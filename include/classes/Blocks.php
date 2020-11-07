@@ -158,9 +158,8 @@ class Blocks
      *
      * @return string Block content
      */
-    public function content(string $block_name) : string
+    public function rawContent(string $block_name) : string
     {
-        
         App::debug('Parse block ' . $block_name);        
         switch ($block_name) {
             
@@ -212,6 +211,27 @@ class Blocks
             
         }
     
+    }
+    /**
+     * Return block content
+     *
+     * @param string $block_name Block name
+     *
+     * @return string Block content
+     */
+    public function content(string $block_name, $allow_cache = false) : string
+    {
+        if($allow_cache) {
+            $cache_key = $block_name . App::$user->id;
+            if(App::$cache->has($cache_key)) {
+                return App::$cache->get($cache_key);
+            }
+        }
+        $content = $this->rawContent($block_name);
+        if($allow_cache) {
+            App::$cache->set($cache_key, $content);
+        }
+        return $content;
     }
     
 }

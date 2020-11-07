@@ -175,11 +175,11 @@ class DB
     }
     
     /**
-     * Return last error ID.
+     * Return last error.
      *
-     * @return integer 
+     * @return string
      */
-    public function error(): int 
+    public function error(): string 
     {
         return $this->mysqli->error;
     }
@@ -426,7 +426,7 @@ class DB
             }
         }
         $query = "SELECT * FROM {$table} WHERE {$expr} ORDER BY {$order_by}";
-        return $this->query($query , $where);          
+        return $this->query($query, $where);          
     }    
     
     /**

@@ -1,0 +1,15 @@
+<input type="hidden" id="post_id" value="{{ post_id }}">
+<div class="panel panel-default tags-panel">
+    <ul class="list-group">
+    {% for row in rows %}
+        <li class="list-group-item" id="li_tag_{{ row.id }}">
+            <input type="checkbox" class="tag_input" tag_id="{{ row.id }}" {% if row.id in post_tags %} checked{% endif %}/> 
+            {{ row.name }}
+            <button class="btn btn-default btn_del_tag" tag_id="{{ row.id }}" onClick="return test();">X</button>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+<input class="form-control" style="width: auto; display: inline-block;" type="edit" id="new_tag_name" maxlength="64">
+<button class="btn btn-default" id="new_tag_button">Добавить метку</button>
+        

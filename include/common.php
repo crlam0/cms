@@ -23,6 +23,7 @@ use classes\Routing;
 use classes\User;
 use classes\Template;
 use classes\Message;
+use classes\FileCache;
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
 use Monolog\Logger;
@@ -59,6 +60,7 @@ App::$user = new User(App::$settings['default_flags']);
 App::$template = new Template();
 App::$message = new Message();
 App::$routing = new Routing (App::$server['REQUEST_URI']);
+App::$cache = new FileCache('var/cache/misc/');
 
 
 require_once __DIR__.'/lib_sql.php';

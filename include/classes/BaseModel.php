@@ -228,7 +228,7 @@ class BaseModel implements \ArrayAccess
             App::$db->insertTable(static::tableName(), $this->data);
             $this->data['id'] = App::$db->insert_id();
         }
-        App::$errors = [];
+        App::setErrors([]);
         return true;
     }
     

@@ -24,6 +24,7 @@ $console = [
         'twig' => 'var/cache/twig',
         'catalog' => 'var/cache/catalog',
         'gallery' => 'var/cache/gallery',
+        'misc' => 'var/cache/misc',
     ],
 ];
     

@@ -29,6 +29,10 @@ class App
     * @var Message Message object
     */
     public static $message;
+    /**
+    * @var FileCache Cache object
+    */
+    public static $cache;
     
     /**
     * @var Array Raw data from _GET

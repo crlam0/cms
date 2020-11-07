@@ -107,6 +107,14 @@ return [
             '0' => 'alias',
         ]
     ],    
+    'blog-by-tag' => [
+        'pattern' => '^blog\/by\-tag\/([\w_\-]+)\/?$',
+        'controller' => 'modules\misc\BlogController',
+        'action' => 'by-tag',
+        'params' => [
+            '0' => 'alias',
+        ]
+    ],    
     
     'faq-index' => [
         'pattern' => '^faq\/?[\w\-]*$',
@@ -266,18 +274,21 @@ return [
         'pattern' => '^admin\/?$',
         'controller' => 'admin\controllers\IndexController'
     ],      
-    'slider-edit' => [
-        'pattern' => '^admin\/slider\-edit\/[\w\-]*$',
-        'controller' => 'admin\controllers\SliderEditController',
-    ],
-    'templates-edit' => [
-        'pattern' => '^admin\/templates\-edit\/[\w\-]*$',
-        'controller' => 'admin\controllers\TemplatesEditController',
+    'blog-edit' => [
+        'pattern' => '^admin\/blog\-edit\/[\w\-]*$',
+        'controller' => 'admin\controllers\BlogEditController',
     ],
     'settings-edit' => [
         'pattern' => '^admin\/settings\-edit\/[\w\-]*$',
         'controller' => 'admin\controllers\SettingsEditController',
     ],
-    
+    'templates-edit' => [
+        'pattern' => '^admin\/templates\-edit\/[\w\-]*$',
+        'controller' => 'admin\controllers\TemplatesEditController',
+    ],    
+    'slider-edit' => [
+        'pattern' => '^admin\/slider\-edit\/[\w\-]*$',
+        'controller' => 'admin\controllers\SliderEditController',
+    ],
 ];
 

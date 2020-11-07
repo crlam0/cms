@@ -43,6 +43,13 @@ class BlogController extends BaseController
         return $this->comments->show_count($row['id']);
     }
 
+    public function getTags (array $row): array 
+    {
+        $result = App::$db->query('SELECT `name`,`seo_alias` FROM blog_posts_tags left join blog_tags ON (blog_tags.id = blog_posts_tags.tag_id) WHERE post_id=? ORDER BY name ASC',['post_id' => $row['id']]);
+        $tags = $result->fetch_all(MYSQLI_ASSOC);
+        return $tags;
+    }
+    
     public function actionIndex(int $page = 1): string 
     {
         $this->breadcrumbs[] = ['title'=>$this->title];
@@ -92,6 +99,35 @@ class BlogController extends BaseController
         $content .= $this->comments->show_list();
         $tags['action'] = App::$SUBDIR.get_post_href(null,$row) . '#comments';
         $content .= $this->comments->show_form($tags);        
+        return $content;
+    }
+    
+    public function actionByTag(string $alias):string 
+    {
+        
+        $tag_id = get_id_by_alias('blog_tags', $alias, true);
+        [$tag_name] = App::$db->getRow('select name from blog_tags where id = ?', ['id' => $tag_id]);
+        $this->breadcrumbs[] = ['title' => $this->title, 'url'=>'blog/'];
+        $this->title = 'Публикации по метке ' . $tag_name;
+        $this->breadcrumbs[] = ['title' => $this->title];
+        
+        
+        $this->comments = new Comments ('blog', 0);
+
+        $query = "SELECT {$this->TABLE}.*,users.fullname as author,date_format(date_add,'%Y-%m-%dT%H:%i+06:00') as timestamp
+            from blog_posts_tags
+            left join blog_posts {$this->TABLE} on ({$this->TABLE}.id = blog_posts_tags.post_id)
+            left join users on (users.id=uid)
+            where {$this->TABLE}.active='Y' and blog_posts_tags.tag_id = '{$tag_id}'
+            group by {$this->TABLE}.id  order by {$this->TABLE}.id desc";
+        $result = App::$db->query($query);
+
+        if (!$result->num_rows) {
+             $content = App::$message->get('list_empty', [], '');
+        } else {    
+            $tags['this'] = $this;
+            $content = App::$template->parse('blog_posts', $tags, $result);            
+        }
         return $content;
     }
     

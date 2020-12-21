@@ -22,6 +22,7 @@
 *Local*
 /favicon.*
 /sitemap.xml
+/.phpunit.result.cache
 
 
 /node_modules/

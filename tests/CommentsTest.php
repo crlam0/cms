@@ -34,12 +34,16 @@ function check_csrf_token() {
 
 class CommentsTest extends TestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
+        global $_SESSION;
+        
         App::$user = new User;
         App::$template = new Template();
         App::$message = new Message();
+        $_SESSION['CSRF_Token'] = '';
     }
+    
     public function testCommentsForm()
     {
         $Comments = new Comments('test');
@@ -49,33 +53,36 @@ class CommentsTest extends TestCase
 
     public function testCommentsFormValidationName()
     {
+        global $_SESSION;
         $Comments = new Comments('test');
 
-        $input['CSRF_Token'] = $_SESSION['CSRF_Token'];
+        App::$input['CSRF_Token'] = $_SESSION['CSRF_Token'];
         $Comments->get_form_data(['add_comment'=>'1']);
         $content = $Comments->show_form();
-        self::assertContains('Вы неверно ввели свое имя !', $content);
+        self::assertStringContainsString('Вы неверно ввели свое имя !', $content);
 
     }
 
     public function testCommentsFormValidationEMail()
     {
+        global $_SESSION;
         $Comments = new Comments('test');
 
-        $input['CSRF_Token'] = $_SESSION['CSRF_Token'];
+        App::$input['CSRF_Token'] = $_SESSION['CSRF_Token'];
         $Comments->get_form_data(['add_comment'=>'1','author'=>'test']);
         $content = $Comments->show_form();
-        self::assertContains('Вы неверно ввели E-Mail адрес !', $content);
+        self::assertStringContainsString('Вы неверно ввели E-Mail адрес !', $content);
     }
 
     public function testCommentsFormValidationMessage()
     {
+        global $_SESSION;
         $Comments = new Comments('test');
 
-        $input['CSRF_Token'] = $_SESSION['CSRF_Token'];
+        App::$input['CSRF_Token'] = $_SESSION['CSRF_Token'];
         $Comments->get_form_data(['add_comment'=>'1','author'=>'test', 'email'=>'test@test.com']);
         $content = $Comments->show_form();
-        self::assertContains('Вы не ввели сообщение, или оно слишком короткое !', $content);
+        self::assertStringContainsString('Вы не ввели сообщение, или оно слишком короткое !', $content);
     }
 
     

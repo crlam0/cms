@@ -145,7 +145,7 @@ function cat_prev_part($prev_id, $deep, $array) {
  *
  * @return string Output string
  */
-function get_cat_part_href($part_id, $row = array()) {
+function get_cat_part_href($part_id, $row = []) {
     if (array_key_exists('id',$row)){
         $part_id = $row['id'];
     }
@@ -154,7 +154,10 @@ function get_cat_part_href($part_id, $row = array()) {
         $array = [];
         $array = cat_prev_part($part_id, 0, $array);
         $array = array_reverse($array);
-        while (list ($n, $row) = @each($array)) {
+//        while (list ($n, $row) = @each($array)) {
+//            $uri.=$row['seo_alias'] . '/';
+//        }
+        foreach ($array as $row) {
             $uri.=$row['seo_alias'] . '/';
         }
     }

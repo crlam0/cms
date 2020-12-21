@@ -93,7 +93,7 @@ class BlogController extends BaseController
         
         $tags['this'] = $this;
         $tags['post_view'] = true;
-        $content .= App::$template->parse('blog_posts', $tags, $result);
+        $content = App::$template->parse('blog_posts', $tags, $result);
 
         $this->comments->get_form_data(App::$input['form']);
         $content .= $this->comments->show_list();

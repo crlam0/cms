@@ -43,7 +43,7 @@ class BlogPost extends BaseModel {
             [['title'], 'required'],
             [['title'], 'string', ['min' => 1, 'max' => 255]],
             [['content'], 'text'],
-            [['uid', 'target_id'], 'integer'],
+            [['uid'], 'integer'],
         ];
     }
 

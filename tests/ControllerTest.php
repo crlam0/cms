@@ -6,13 +6,14 @@ class ControllerTest extends TestCase
 {
     private $Controller;
     
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->Controller = new tests\TestController;
     }
 
-    public function testRun() {        
+    public function testRun() 
+    {        
         $result=$this->Controller->run('index', ['arg1'=>'test1', 'arg2'=>'test2']);
         self::assertEquals('test1<br />test2', $result);
         self::assertEquals('Test', $this->Controller->title);

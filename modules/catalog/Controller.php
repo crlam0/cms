@@ -54,8 +54,9 @@ class Controller extends BaseController
             $arr = array_reverse($arr);
             $max_size = sizeof($arr) - 1;
             $current_part_deep = 0;
-            // print_array($arr);
-            while (list ($n, $row) = @each($arr)) {
+            // print_array($arr);exit;
+            // while (list ($n, $row) = @each($arr)) {
+            foreach ($arr as $n => $row) {            
                 $current_part_deep++;
                 if (($n < $max_size) || (strlen($item_title))) {
                     // add_nav_item($row['title'], get_cat_part_href($row['id']));
@@ -108,6 +109,7 @@ class Controller extends BaseController
         $result =App::$db->query($query);
 
         $show_empty_message = true;
+        $content = '';
         if ($result->num_rows) {
             $tags['functions'] = [];
             $tags['cat_part_href'] = get_cat_part_href($part_id);
@@ -262,7 +264,7 @@ class Controller extends BaseController
 
         $URL = $this->getImageUrl($input['file_name'], '', App::$settings['catalog_item_img_max_width'], 0);
 
-        $content .= '<center><img src="' . APP::$SUBDIR . $URL .'" border="0" alt="' . $title . '"></center>';
+        $content = '<center><img src="' . APP::$SUBDIR . $URL .'" border="0" alt="' . $title . '"></center>';
         if(strlen($nav_ins)){
             $content.="<br /><center>{$nav_ins}</center>";
         }
@@ -353,7 +355,8 @@ class Controller extends BaseController
     public function getListImage($row) {
         App::$input['preview']=true;
         $file_name = App::$DIR . App::$settings['catalog_item_img_path'] . $row['fname'];
-        $image = new Image($file_name, $row['file_type']);
+        // $image = new Image($file_name, $row['file_type']);
+        $image = new Image($file_name);
         $cript_name = 'modules/catalog/image.php?preview='.App::$settings['catalog_item_img_preview'].'&crop=1&id=' . $row['image_id'];
         return $image->getHTML($row, static::$cache_path, 'catalog_popup', $cript_name, App::$settings['catalog_item_img_preview']);
     }

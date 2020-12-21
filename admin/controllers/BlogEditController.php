@@ -40,6 +40,9 @@ class BlogEditController extends BaseController
     public function actionCreate(): string 
     {
         $model = new BlogPost();
+        if(!empty(App::$input['form'])){
+            $input['form']['content'] = replace_base_href(App::$input['form']['content'], true);
+        }
         if($model->load(App::$input['form']) && $model->save()) {
             $this->saveImage($_FILES['image_file'], $model->id, $model->title);
             $this->redirect('update', ['id' =>$model->id]);
@@ -58,6 +61,9 @@ class BlogEditController extends BaseController
     public function actionUpdate(int $id): string 
     {
         $model = new BlogPost($id);        
+        if(!empty(App::$input['form'])){
+            $input['form']['content'] = replace_base_href(App::$input['form']['content'], true);
+        }
         if($model->load(App::$input['form']) && $model->save()) {
             $this->saveImage($_FILES['image_file'], $model->id, $model->title);
             $this->redirect('update', ['id' =>$model->id]);
@@ -65,6 +71,7 @@ class BlogEditController extends BaseController
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/ckeditor/ckeditor.js"></script>' . "\n";
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor.js"></script>' . "\n";
         header('X-XSS-Protection:0');
+        $model->content = replace_base_href($model->content, false);
         return App::$template->parse('blog_post_form.html.twig', [
             'this' => $this,
             'model' => $model,

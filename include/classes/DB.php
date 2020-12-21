@@ -399,7 +399,8 @@ class DB
      * 
      * @return \mysqli_result.
      */
-    public function findOne($table, $id) {
+    public function findOne(string $table, string $id) 
+    {
         $query = "SELECT * FROM {$table} WHERE id=?";
         return $this->query($query, ['id' => $id]);          
     }
@@ -413,12 +414,13 @@ class DB
      * 
      * @return \mysqli_result.
      */
-    public function findAll($table, $where = [], $order_by = 'id desc') {
+    public function findAll(string $table, array $where = [], string $order_by = 'id desc') 
+    {
         if(!count($where)) {
             return $this->query("SELECT * FROM {$table} ORDER BY {$order_by}");
         }
         $expr = '';
-        while (list($key) = each($where)) {
+        foreach($where as $key => $value) {
             if(strlen($expr) == 0) {
                 $expr .= $key . '=?';                
             } else {
@@ -437,11 +439,11 @@ class DB
      * 
      * @return \mysqli_result.
      */
-    public function deleteFromTable($table, $where)
+    public function deleteFromTable(string $table, array $where)
     {
         
         $expr = '';
-        while (list($key) = each($where)) {
+        foreach($where as $key => $value) {
             if(strlen($expr) == 0) {
                 $expr .= $key . '=?';                
             } else {

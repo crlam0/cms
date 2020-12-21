@@ -125,9 +125,9 @@ class Comments
      */
     public function get_form_data($input)
     {
-        if(!$input['add_comment']) {
+        if(!isset($input) || !$input['add_comment']) {
             return false;
-        }
+        };
         list($err, $output) = $this->checkInput($input);
         if ( $err ) {
             $this->__new_form = false;

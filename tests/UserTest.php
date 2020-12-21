@@ -8,12 +8,14 @@ class UserTest extends TestCase
     
     private $User;
     
-    public function setUp() {
+    public function setUp() : void 
+    {
         parent::setUp();
         $this->User = new User;
     }
     
-    public function tearDown() {
+    public function tearDown() : void
+    {
         unset($this->User);
     }            
 

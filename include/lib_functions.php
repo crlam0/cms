@@ -303,6 +303,22 @@ function get_block($name, $allow_cache = false) {
 }
 
 /**
+ * Return widget content (for Twig templates)
+ *
+ * @param string $class_name Class name
+ *
+ * @return string Output string
+ */
+function widget($class_name, $allow_cache = false): string {
+    $class_name = str_replace('/', '\\', $class_name);
+    if(class_exists($class_name)) {
+        $object = new $class_name;
+        return $object->run();
+    }
+    return 'Widget ' . $class_name . ' not found';
+}
+
+/**
  * Return result of php script
  *
  * @param string $file_name File name

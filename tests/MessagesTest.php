@@ -6,7 +6,7 @@ use classes\Message;
 class MessagesTest extends TestCase
 {
 
-    public function test_message_get()
+    public function testMessageGet()
     {
         $Message = new Message;
         $msg = $Message->get('debug',[],'test');

@@ -154,7 +154,7 @@ class BaseModel implements \ArrayAccess
         if(strlen($value) != strlen(intval($value))) {
             return false;
         }        
-        if(is_array($rule[2])) {
+        if(isset($rule[2]) && is_array($rule[2])) {
             return $this->checkInteger($value, $rule[2]);
         }        
         if($rule['min'] && $value < $rule['min']) {
@@ -171,7 +171,7 @@ class BaseModel implements \ArrayAccess
         if(!is_string($value)) {
             return false;
         }        
-        if(is_array($rule[2])) {
+        if(isset($rule[2]) && is_array($rule[2])) {
             return $this->checkString($value, $rule[2]);
         }        
         if($rule['min'] && strlen($value) < $rule['min']) {

@@ -8,7 +8,7 @@ class MyTemplateTest extends TestCase
     private $Blocks;
     private $MyTemplate;
     
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->MyTemplate = new MyTemplate;

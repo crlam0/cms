@@ -19,7 +19,7 @@ class FileCache {
     
     private function getFileName($key) {
         $hash = hash('sha256', $key);
-        return $this->cache_path . $this->directory.$hash[0].$hash[1].'/'.$hash;
+        return $this->cache_path . $hash[0].$hash[1].'/'.$hash;
     }
     
     public function get($key) : string

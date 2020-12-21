@@ -7,7 +7,7 @@ class TemplateTest extends TestCase
 {
     private $Template;
     
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->Template = new Template();

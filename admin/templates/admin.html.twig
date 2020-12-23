@@ -1,15 +1,19 @@
-<html>
+<!DOCTYPE html>
+<html lang="RU_ru">
     <head>
-        <title>[{{ settings.site_title }} > Адм. раздел > {{ Header }}</title>
-        <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="keywords" content="">
         <meta name="description" content="">
+        <title>[{{ settings.site_title }} > Адм. раздел > {{ Header }}</title>
         <!-- Bootstrap core CSS -->
         <link href="{{ SUBDIR }}admin/bootstrap.min.css" rel="stylesheet" />
         <link href="{{ SUBDIR }}admin/admin.css" rel="stylesheet" />
         <link rel="icon" type="image/png" href="{{ SUBDIR }}favicon.png" />
         <script type="text/javascript" src="{{ SUBDIR }}include/js/jquery.min.js"></script>        
-        {{ INCLUDE_HEAD }}
+	{% if INCLUDE_HEAD is defined %}
+            {{ INCLUDE_HEAD }}
+        {% endif %}
 
     </head>
     <body bgcolor="#fff">
@@ -43,8 +47,11 @@
         </table>
         <script src="{{ SUBDIR }}include/js/bootstrap.min.js"></script>
         <script src="{{ SUBDIR }}include/js/misc.js"></script>
-        {{ INCLUDE_JS }}
-
+        
+        {% if INCLUDE_JS is defined %}
+            {{ INCLUDE_JS }}
+        {% endif %}
+        
         {{ get_block('debug') }}
 
 </body>

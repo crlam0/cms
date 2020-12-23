@@ -141,6 +141,10 @@ class Message
      */
     function mail(string $message_to, string $subject, string $content, string $content_type = 'text/plain') 
     {
+        if(App::$debug) {
+            echo "Send E-Mail:<br />To: {$message_to}<br />Subject: {$subject}<br />Content: {$content}<br />";
+            return true;
+        }
         $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
         $mailer = new \Swift_Mailer($transport);
         $message = (new \Swift_Message($subject))

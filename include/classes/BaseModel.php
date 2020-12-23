@@ -9,8 +9,6 @@ namespace classes;
  */
 class BaseModel implements \ArrayAccess 
 {   
-    public static $fields = [];
-    
     private $data;
     private $errors;
     
@@ -22,23 +20,45 @@ class BaseModel implements \ArrayAccess
         return '';
     }
     
-    public function __construct($id = null) 
+    /**
+     * @return array Fields
+     */
+    public static function fields()
     {
-        $this->errors = [];
-        if($id !== null) {
-            return $this->loadFromDb($id);
-        }
-        foreach(static::$fields as $key) {
-            $this->data[$key] = '';
-        }
-        return $this;
+        return [];
     }
     
+    /**
+     * @return array Rules array
+     */
+    public function rules()
+    {
+        return [];
+    }
+    
+    /**
+     * @return array Labaels for fields.
+     */
     public function attributeLabels()
     {
         return [];
     }
     
+    public function __construct($id = null) 
+    {
+        $this->errors = [];
+        if($id !== null && $id>0) {
+            return $this->loadFromDb($id);
+        }
+        foreach(static::fields() as $key) {
+            $this->data[$key] = '';
+        }
+        return $this;
+    }
+    
+    /**
+     * @return string Label for field
+     */
     public function label($name)
     {
         $labels = $this->attributeLabels();
@@ -48,6 +68,11 @@ class BaseModel implements \ArrayAccess
         return $name;
     }
     
+    /**
+     * Load data to model from Database
+     * 
+     * @return BaseModel|null 
+     */
     public function loadFromDb($id = null) 
     {
         $result = static::findOne($id);
@@ -71,13 +96,21 @@ class BaseModel implements \ArrayAccess
     
     public function __set(string $name, $value) 
     {
-        if(array_key_exists($name, $this->data)) {
+        if(isset($this->data) && array_key_exists($name, $this->data)) {
             return $this->data[$name] = $value;
         }
         throw new \InvalidArgumentException('Unknown property: ' . $name);        
     }
     
-    public function load($input) {
+    /**
+     * Load data to model from $input
+     * 
+     * @param array $input Input data from POST/GET
+     * 
+     * @return BaseModel|null 
+     */
+    public function load($input) : bool
+    {
         if(!$input || !is_array($input) || !count($input)) {
             return false;
         }
@@ -89,17 +122,9 @@ class BaseModel implements \ArrayAccess
     
     
     /**
-     * @return array Rules array
-     */
-    public function rules()
-    {
-        return [];
-    }
-    
-    /**
      * @return boolean True if no rules or all rules checked.
      */
-    public function checkRules() 
+    public function validate() : bool
     {
         $rules = $this->rules();
         if(!count($rules)) {
@@ -110,11 +135,25 @@ class BaseModel implements \ArrayAccess
             foreach($rule[0] as $field) {
                 $this->checkRule($field, $this->data[$field], $rule);
             }
-        }        
-        return count($this->errors) == 0;
+        }
+        $have_errors = (count($this->errors) > 0);
+        if($have_errors) {
+            App::setErrors($this->errors);
+        }
+        return !$have_errors;
     }
     
-    private function checkRule(string $field, $value, array $rule) {
+    /**
+     * Check $value by $rule.
+     * 
+     * @param string $field Field name
+     * @param mixed $value Field value
+     * @param array $rule Rule
+     * 
+     * @return bool
+     */
+    private function checkRule(string $field, $value, array $rule) : bool
+    {
         switch ($rule[1]) {
             case 'required':
                 if(isset($value)) {
@@ -149,7 +188,15 @@ class BaseModel implements \ArrayAccess
         return false;
     }
     
-    private function checkInteger($value, $rule)
+    /**
+     * Check $value by $rule.
+     * 
+     * @param mixed $value Field value
+     * @param array $rule Rule
+     * 
+     * @return bool
+     */
+    private function checkInteger($value, $rule) : bool
     {
         if(strlen($value) != strlen(intval($value))) {
             return false;
@@ -157,16 +204,24 @@ class BaseModel implements \ArrayAccess
         if(isset($rule[2]) && is_array($rule[2])) {
             return $this->checkInteger($value, $rule[2]);
         }        
-        if($rule['min'] && $value < $rule['min']) {
+        if(isset($rule['min']) && $value < $rule['min']) {
             return false;
         }        
-        if($rule['max'] && $value > $rule['max']) {
+        if(isset($rule['max']) && $value > $rule['max']) {
             return false;
         }
         return true;
     }
     
-    private function checkString($value, $rule)
+    /**
+     * Check $value by $rule.
+     * 
+     * @param mixed $value Field value
+     * @param array $rule Rule
+     * 
+     * @return bool
+     */
+    private function checkString($value, $rule) : bool
     {
         if(!is_string($value)) {
             return false;
@@ -214,13 +269,10 @@ class BaseModel implements \ArrayAccess
      * 
      * @return boolean TRUE if complete.
      */
-    public function save($check_rules = true)             
+    public function save($need_validate = true)             
     {
-        if($check_rules) {
-            if(!$this->checkRules()) {
-                App::setErrors($this->errors);
-                return false;
-            }
+        if($need_validate && !$this->validate()) {
+            return false;
         }
         if($this->data['id']) {
             App::$db->updateTable(static::tableName(), $this->data, ['id' => $this->data['id']]);

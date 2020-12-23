@@ -6,13 +6,13 @@ class CreateTableBlogTags extends AbstractMigration
 {
     public function change()
     {
-        $blog_tags = $this->table('blog_tags');
+        $blog_tags = $this->table('blog_tags', ['engine' => 'MyISAM']);
         $blog_tags
               ->addColumn('name', 'string', ['limit' => 64])
               ->addColumn('seo_alias', 'string', ['limit' => 64])
               ->create();
         
-        $blog_posts_tags = $this->table('blog_posts_tags');
+        $blog_posts_tags = $this->table('blog_posts_tags', ['engine' => 'MyISAM']);
         $blog_posts_tags
               ->addColumn('post_id', 'integer', ['limit' => 11])
               ->addColumn('tag_id', 'integer', ['limit' => 11])

@@ -25,7 +25,9 @@
                 {% endif %}
             </td>
         </tr>
+        {% if action != 'create' %}
         <tr class="content" align="left"><td>Метки:</td><td><button class="btn btn-default" post_id="{{ model.id }}" id="select_tags">Показать список</button></td></tr>
+        {% endif %}
         <tr class="content"><td align="left" colspan="2">
             <textarea class="form-control" id="editor" name="form[content]" rows="25" cols="120" maxlength="64000">{{ model.content }}</textarea>
         </td></tr>

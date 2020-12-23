@@ -1,0 +1,15 @@
+<input type="hidden" id="user_id" value="{{ user_id }}">
+<div class="panel panel-default flags-panel">
+    <ul class="list-group">
+    {% for row in rows %}
+        <li class="list-group-item" id="li_flag_{{ row.id }}">
+            <input type="checkbox" class="flag_input" flag_value="{{ row.value }}" {% if row.value in flags %} checked{% endif %}/> 
+            {{ row.title }}
+            <button class="btn btn-default btn_del_flag" flag_id="{{ row.id }}" onClick="return test();">X</button>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+<input class="form-control" style="width: auto; display: inline-block;" type="edit" id="new_flag_name" maxlength="64">
+<button class="btn btn-default" id="new_flag_button">Добавить флаг</button>
+        

@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\misc;
+namespace modules\blog\controllers;
 
 use classes\BaseController;
 use classes\App;
@@ -12,7 +12,7 @@ use classes\Comments;
  *
  * @author BooT
  */
-class BlogController extends BaseController 
+class Controller extends BaseController 
 {
     private $MSG_PER_PAGE = 20;
     private $TABLE = 'blog_posts';
@@ -31,10 +31,6 @@ class BlogController extends BaseController
         $content = replace_base_href($row['content'], false);
         $content = preg_replace('/height: \d+px;/', 'max-width: 100%;', $content);
 
-        if(strlen($row['target_type'])){
-            $href=(strlen($row['target_type'] == 'link') ? $row['href'] : App::$SUBDIR . get_menu_href([], $row) );
-            $content.="<br><a href=\"{$href}\">Перейти >></a>";
-        }
         return $content;
     }
 
@@ -62,7 +58,7 @@ class BlogController extends BaseController
         $pager = new Pagination($total, $page, $this->MSG_PER_PAGE);
         $tags['pager'] = $pager;        
 
-        $query = "SELECT {$this->TABLE}.*,users.fullname as author,date_format(date_add,'%Y-%m-%dT%H:%i+06:00') as timestamp
+        $query = "SELECT {$this->TABLE}.*,users.fullname as author,users.avatar,date_format(date_add,'%Y-%m-%dT%H:%i+06:00') as timestamp
             from {$this->TABLE} left join users on (users.id=uid)
             where {$this->TABLE}.active='Y'
             group by {$this->TABLE}.id  order by {$this->TABLE}.id desc limit {$pager->getOffset()},{$pager->getLimit()}";
@@ -80,7 +76,7 @@ class BlogController extends BaseController
     public function actionPostView(string $alias):string 
     {        
         $post_id = get_id_by_alias($this->TABLE, $alias, true);
-        $query = "select {$this->TABLE}.*,users.fullname as author from {$this->TABLE} left join users on (users.id=uid) where {$this->TABLE}.id='{$post_id}'";
+        $query = "select {$this->TABLE}.*,users.avatar, users.fullname as author from {$this->TABLE} left join users on (users.id=uid) where  {$this->TABLE}.active='Y' and {$this->TABLE}.id='{$post_id}'";
         $result = App::$db->query($query);
         $row = $result->fetch_array();
         $result->data_seek(0);

@@ -56,7 +56,7 @@ if(App::$debug) {
 App::debug('App created, arrays loaded');
 unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
-App::$user = new User(App::$settings['default_flags']);
+App::$user = new User(null, App::$settings['default_flags']);
 App::$template = new Template();
 App::$message = new Message();
 App::$routing = new Routing (App::$server['REQUEST_URI']);
@@ -91,7 +91,7 @@ $App->set('tpl_default', $part['tpl_name']);
 if(!App::$user->checkAccess($part['user_flag'])) {
     if (App::$user->id) {
         $content = App::$message->get('error', [] ,'У вас нет соответствующих прав !');
-        echo App::$template->parse(App::get('tpl_default'), [], null, $content);
+        echo App::$template->parse(App::get('tpl_default'), ['Header'=>''], null, $content);
     } else {
         $_SESSION['GO_TO_URI'] = App::$server['REQUEST_URI'];
         redirect(App::$SUBDIR . 'login/');

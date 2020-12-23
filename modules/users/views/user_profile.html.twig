@@ -1,0 +1,30 @@
+<form action="{{ action }}" method="POST" enctype="multipart/form-data">
+    <div class="col-sm-12 col-lg-6">
+        <input type="hidden" name="MAX_FILE_SIZE" value="3000000">
+        <input type="hidden" name="id" value="{{ model.id }}">
+
+        <div class="form-group">
+            <label>{{ model.label('email') }}:</label>
+            <input class="form-control" type="edit" name="form[email]" value="{{ model.email }}" placeholder="{{ model.label('email') }}" required autofocus>
+        </div>
+        
+        <div class="form-group">
+            <label>{{ model.label('fullname') }}:</label>
+            <input class="form-control" type="edit" name="form[fullname]" value="{{ model.fullname }}" placeholder="{{ model.label('fullname') }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>{{ model.label('avatar') }}:</label>
+            <div class="custom-file">
+                <input class="custom-file-input" type="file" name="image_file" id="customFile">
+                <label class="custom-file-label" for="customFile" data-browse="Ok">Выберите файл</label>
+            </div>
+            {{ this.showImage(model.avatar) }}
+            {% if model.avatar|length>0 %}
+                <a class="btn btn-default" href="{{ this.base_url }}delete-image-file?user_id={{ model.id }}">Удалить</a>
+            {% endif %}
+        </div>
+        
+        <input class="btn btn-primary" type="submit" name="update" value="Обновить"> 
+    </div>
+</form>

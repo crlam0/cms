@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\misc;
+namespace modules\users\controllers;
 
 use classes\BaseController;
 use classes\App;
@@ -48,8 +48,7 @@ class SignupController extends BaseController
             return App::$message->get('error', [], 'Неверный код.');
         }
         $data['flags'] = implode(";", ['active', 'passwd']);
-        $query="update users set ". db_update_fields($data) ." where id='".$user['id']."'";
-        App::$db->query($query);
+        App::$db->updateTable('users', $data, ['id' => $user['id']]);
         App::$user->makeToken($user['id'], 0, User::TOKEN_NULL);
         App::$user->authByIdFlags($user['id'], $data['flags']);
         $_SESSION['UID'] = $user['id'];
@@ -70,8 +69,9 @@ class SignupController extends BaseController
             $form['regdate'] = 'now()';
             unset($form['new_passwd1']);
             unset($form['new_passwd2']);
-            $query = "insert into users " . db_insert_fields($form);
-            App::$db->query($query);
+            // $query = "insert into users " . db_insert_fields($form);
+            // App::$db->query($query);
+            App::$db->insertTable('users', $form);
             $user_id = App::$db->insert_id();
             $token = App::$user->makeToken($user_id, 1, User::TOKEN_SALT);
             $URL = App::$server['REQUEST_SCHEME'] . '://' . App::$server['HTTP_HOST'] . App::$SUBDIR . 'signup/step2?token=' . $token;

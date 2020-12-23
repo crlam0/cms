@@ -1,14 +1,14 @@
 <?php
 
-namespace admin\controllers;
+namespace modules\blog\controllers;
 
 use classes\App;
 use classes\BaseController;
 use classes\Image;
 
-use admin\models\BlogPost;
+use modules\blog\models\BlogPost;
 
-class BlogEditController extends BaseController
+class EditController extends BaseController
 {
     private $image_path;
     private $image_width;
@@ -19,6 +19,7 @@ class BlogEditController extends BaseController
         $this->breadcrumbs[] = ['title'=>$this->title];
         $this->image_path = App::$settings['blog_img_path'];
         $this->image_width = App::$settings['blog_img_max_width'];
+        $this->user_flag = 'admin';
     }
 
     public function actionIndex(): string
@@ -40,32 +41,41 @@ class BlogEditController extends BaseController
     public function actionCreate(): string 
     {
         $model = new BlogPost();
-        if(!empty(App::$input['form'])){
-            $input['form']['content'] = replace_base_href(App::$input['form']['content'], true);
-        }
-        if($model->load(App::$input['form']) && $model->save()) {
-            $this->saveImage($_FILES['image_file'], $model->id, $model->title);
+        if($model->load(App::$input['form']) && $model->validate()) {
+            if (!$model->seo_alias){
+                $model->seo_alias = encodestring($model->title);
+            }
+            $model->content = replace_base_href($model->content, true);
+            $model->active = 'Y';
+            $model->date_add = 'now()';
+            $model->uid = App::$user->id;
+            $this->saveImage($model, $_FILES['image_file']);
+            $model->save(false);
             $this->redirect('update', ['id' =>$model->id]);
         }
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/ckeditor/ckeditor.js"></script>' . "\n";
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor.js"></script>' . "\n";
         header('X-XSS-Protection:0');
+        $model->content = replace_base_href($model->content, false);
         return App::$template->parse('blog_post_form.html.twig', [
             'this' => $this,
             'model' => $model,
             'action' => 'create',
             'form_title' => 'Добавление',
+            'target_types' => $this->target_types,
         ]);
     }
 
     public function actionUpdate(int $id): string 
     {
-        $model = new BlogPost($id);        
-        if(!empty(App::$input['form'])){
-            $input['form']['content'] = replace_base_href(App::$input['form']['content'], true);
-        }
-        if($model->load(App::$input['form']) && $model->save()) {
-            $this->saveImage($_FILES['image_file'], $model->id, $model->title);
+        $model = new BlogPost($id); 
+        if($model->load(App::$input['form']) && $model->validate()) {
+            if (!$model->seo_alias){
+                $model->seo_alias = encodestring($model->title);
+            }
+            $model->content = replace_base_href($model->content, true);
+            $this->saveImage($model, $_FILES['image_file']);
+            $model->save(false);
             $this->redirect('update', ['id' =>$model->id]);
         } 
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/ckeditor/ckeditor.js"></script>' . "\n";
@@ -84,6 +94,7 @@ class BlogEditController extends BaseController
     public function actionDelete(int $id): string 
     {
         $model = new BlogPost($id);
+        $this->deleteImageFile($model);
         $model->delete();
         $this->redirect('index');
     }    
@@ -96,7 +107,7 @@ class BlogEditController extends BaseController
         }        
     }
     
-    private function saveImage($file, $post_id, $title) 
+    private function saveImage($model, $file) 
     {        
         $content = '';        
         if ($file['size'] < 100) {
@@ -105,14 +116,12 @@ class BlogEditController extends BaseController
         if (!in_array($file['type'], Image::$validImageTypes)) {
             return App::$message->get('error', [], 'Неверный тип файла !');
         }         
-        $this->deleteImageFile($post_id);
+        $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
-        $file_name = encodestring($title) . '.' . $f_info['extension'];
+        $file_name = encodestring($model->title) . '.' . $f_info['extension'];
         if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, null, null, $this->image_width)) {
-            $model = new BlogPost($post_id);
             $model->image_name = $file_name;
             $model->image_type = $file['type'];
-            $model->save(false);            
             $content .= App::$message->get('', [], 'Изображение успешно добавлено.');
         } else {
             $content .= App::$message->get('error', [], 'Ошибка копирования файла !');
@@ -122,20 +131,21 @@ class BlogEditController extends BaseController
     
     public function actionDeleteImageFile($post_id) 
     {
-        $this->deleteImageFile($post_id);
+        $model = new BlogPost($post_id);
+        $this->deleteImageFile($model);
+        $model->save(false);
         $this->redirect('update', ['id' =>$post_id]);
     }
     
-    private function deleteImageFile($post_id) 
+    private function deleteImageFile($model) 
     {
-        $model = new BlogPost($post_id);
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {
                 return App::$message->get('error', [], 'Ошибка удаления файла');
             }
         }
         $model->image_name = '';
-        $model->save(false);        
+        $model->image_type = '';
     }
     
     public $target_types = [
@@ -181,6 +191,7 @@ class BlogEditController extends BaseController
             $output.="</select></td>";
             return $output;
         }
+        $output = '';
 
         switch ($target_type) {
             case 'link':

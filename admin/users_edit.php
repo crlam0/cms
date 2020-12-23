@@ -44,11 +44,11 @@ if (($input['view']) || ($input['adding'])) {
         $query = "select * from users where id='{$input['id']}'";
         $result = my_query($query);
         $tags = array_merge($tags, $result->fetch_array());
-        $flags=@explode(";",$tags[flags]);
+        $flags=explode(";",$tags['flags']);
         $tags['type'] = 'edit';
         $tags['form_title'] = 'Редактирование';
     } else {
-        $flags=@explode(";","active;passwd;");
+        $flags=explode(";","active;passwd;");
         $tags['type'] = 'add';
         $tags['form_title'] = 'Добавление';
     }

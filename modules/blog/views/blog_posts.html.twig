@@ -1,0 +1,91 @@
+<style>
+    .badge {
+        font-size: 100%;
+        background-color: #ccc;
+        font-weight: normal;
+    }
+    .btn-next {
+        margin-bottom: 10px;
+    }
+    .avatar-div {
+        float: left;
+        width: 36px;
+        height: 36px;        
+    }
+    .avatar-img {
+        width: 32px;
+        height: 32px;
+    }
+    .score {
+        float: right;
+    }
+</style>
+
+<div id="blog">
+
+    {% for row in rows %}
+        <div class="card card-default">
+            <div class="post_title card-heading">
+                    <a href="{{ SUBDIR }}{{ get_post_href(null,row) }}" title="{{ row.title }}">{{ row.title }}</a>
+                <div class="post_author">
+                    <div class="avatar-div">
+                        {% if row.avatar|length > 0 %}
+                            <img src="{{ SUBDIR }}{{ settings.users.avatar_upload_path }}{{ row.avatar }}" alt="{{ row.author }}" class="avatar-img">
+                        {% else %}
+                            <img src="{{ SUBDIR }}{{ settings.users.avatar_upload_path }}default.png" alt="" class="avatar">
+                        {% endif %}
+                    </div>
+                    {{ row.author }}
+                    <div class="post_date">{{ row.date_add }}</div>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if row.image_name|length > 0 %}
+                    <img src="{{ SUBDIR }}{{ settings.blog_img_path }}{{ row.image_name }}" alt="{{ row.title }}" style="max-width: 100%">
+                {% endif %}
+                {{ this.getPostContent(row)|raw }}
+                {% if row.target_type|length %}
+                    {% if row.target_type == 'link' %}
+                        {% set href = row.href %}
+                    {% else %}
+                        {% set href = SUBDIR ~ get_menu_href([], row) %}
+                    {% endif %}
+                    <a href="{{ href }}" class="btn btn-default btn-next">Перейти >></a><br />
+                {% endif %}                
+                {% set tags = this.getTags(row) %}
+                {% if count(tags)>0 %}
+                    <div class="blog-tags">
+                        {% for tag in tags %}
+                            <a href="{{ SUBDIR }}blog/by-tag/{{ tag.seo_alias }}" class="badge badge-success" title="{{ tag.name }}">{{ tag.name }}</a>
+                        {% endfor %}
+                    </div>
+                {% endif %}                
+            </div>
+            <div class="card-footer">
+                [ <a href="{{ SUBDIR }}{{ get_post_href(null,row) }}#comment_form" title="{{ row.title }}">Добавить комментарий</a> ]
+                [ <a href="{{ SUBDIR }}{{ get_post_href(null,row) }}#comments" title="{{ row.title }}">
+                    Комментариев: {{ this.getPostCommentsCount(row) }}</a> ]
+                <div class="score">
+                    0 <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                </div>    
+                    
+            </div>
+        </div>
+        <br />
+    {% endfor %}
+
+    {% if pager is defined %}
+        {% 
+        include 'pager.html.twig' with {
+            'pager': pager,
+            'main_route': 'blog/',
+            'route': 'blog/page{$page}/',
+        }
+        %}
+    {% endif %}
+
+    {% if post_view is defined %}
+        <center><a href="{{ SUBDIR }}blog/" class="btn btn-default"> << Назад</a></center>
+    {% endif %}
+
+</div>

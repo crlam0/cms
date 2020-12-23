@@ -21,7 +21,7 @@ class TwigTemplate
 
     private $template_type;
 
-    private $config = [
+    public $config = [
         'debug' => false,
         'template_dirs' => [
             'templates',

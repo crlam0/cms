@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\misc;
+namespace modules\users\controllers;
 
 use classes\BaseController;
 use classes\App;
@@ -8,9 +8,16 @@ use classes\App;
 class PasswdChangeController extends BaseController
 {    
     
-    private function checkInput($input, $row)
+    public function __construct() {
+        parent::__construct();
+        $this->title = 'Смена пароля';
+        $this->breadcrumbs[] = ['title'=>$this->title];
+        $this->user_flag = 'passwd';
+    }
+
+    private function checkInput($input)
     {
-        if(strcmp(App::$user->encryptPassword(App::$input['old_passwd'], $row['salt']),$row['passwd'])!=0){
+        if(!password_verify(App::$input['old_passwd'], App::$user->passwd)) {
             return App::$message->get('error', [], 'Вы неверно ввели старый пароль');
         }elseif( strlen($input['new_passwd1'])<8 ){
             return App::$message->get('error', [], 'Новый пароль не может быть короче восьми символов');
@@ -26,22 +33,10 @@ class PasswdChangeController extends BaseController
 
     private function passwdChange(): string 
     {
-        $query = "select passwd,salt from users where id='".App::$user->id."'";
-        $result = App::$db->query($query);
-        $content = '';
-        if (!$result->num_rows) {
-            return false;
-        }
-        $row = $result->fetch_array();
-        if(($content = $this->checkInput(App::$input, $row)) === true) {
-            $data=[];
-            $data['salt']=$row['salt'];
-            if (mb_strlen($data['salt']) !== 22) {
-                $data['salt']=App::$user->generateSalt();
-            }
-            $data['passwd']=App::$user->encryptPassword(App::$input['new_passwd1'], $data['salt']);
-            $query="update users set ". db_update_fields($data) ." where id='".App::$user->id."'";
-            App::$db->query($query);
+        if(($content = $this->checkInput(App::$input)) === true) {
+            App::$user->salt = App::$user->generateSalt();            
+            App::$user->passwd = App::$user->encryptPassword(App::$input['new_passwd1'], App::$user->salt);
+            App::$user->save();
             $content = App::$message->get('info',[],'Пароль успешно изменен !');            
         }
         return $content;

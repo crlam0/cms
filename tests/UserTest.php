@@ -21,42 +21,42 @@ class UserTest extends TestCase
 
     public function testAuthByIdFlags()
     {
-        $this->User->authByIdFlags(1,'test');
-        self::assertEquals(1, $this->User->id);
-        self::assertEquals('test', $this->User->flags);
+        $this->User->authByIdFlags(10,'active');
+        self::assertEquals(10, $this->User->id);
+        self::assertStringContainsString('active', $this->User->flags);
     }
     
     public function testAuthByArray()
     {
-        $this->User->authByArray(['id'=>1,'flags'=>'test']);
-        self::assertEquals('1', $this->User->id);
-        self::assertEquals('test', $this->User->flags);
+        $this->User->authByArray(['id'=>10, 'flags'=>'active']);
+        self::assertEquals('10', $this->User->id);
+        self::assertStringContainsString('active', $this->User->flags);
     }
     
     public function testAuthBySession()
     {
-        $this->User->authBySession(['UID'=>1,'FLAGS'=>'test']);
-        self::assertEquals('1', $this->User->id);
-        self::assertEquals('test', $this->User->flags);
+        $this->User->authBySession(['UID'=>10, 'FLAGS'=>'active']);
+        self::assertEquals('10', $this->User->id);
+        self::assertStringContainsString('active', $this->User->flags);
     }
     
     public function testLogout()
     {
-        $this->User->authByIdFlags(1,'test');
+        $this->User->authByIdFlags(10, 'active');
         $this->User->logout();
-        self::assertEquals(0, $this->User->id);
+        self::assertEquals(00, $this->User->id);
         self::assertEquals('', $this->User->flags);
     }
     
     public function testHaveFlag()
     {
-        $this->User->authByIdFlags(1,'test');        
+        $this->User->authByIdFlags(10,'test');        
         self::assertTrue($this->User->haveFlag('test'));
     }
     
     public function testCheckAccess()
     {
-        $this->User->authByIdFlags(1,'global');        
+        $this->User->authByIdFlags(10,'global');        
         self::assertTrue($this->User->checkAccess('admin'));
     }
     

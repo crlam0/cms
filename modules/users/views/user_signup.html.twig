@@ -1,0 +1,22 @@
+<div class="center-block" align="center">
+    <div align="center" style="max-width: 400px;margin-top:30px;">
+        <form action="{{ SUBDIR }}signup/step1" method="post" name="signup_form">
+
+            <input type="hidden" name="signup" value="1">
+            <input type="hidden" name="CSRF_Token" value="{{ get_csrf_token() }}">
+
+            <input type="edit" name="form[login]" class="form-control" placeholder="Введите логин" value="{{ login }}" required>
+            <br />
+            <input type="edit" name="form[email]" class="form-control" placeholder="Введите E-Mail" value="{{ email }}" required>
+            <br />
+            <input type="edit" name="form[fullname]" class="form-control" placeholder="Введите полное имя" value="{{ fullname }}" required>
+            <br />
+            <input type="password" name="form[new_passwd1]" class="form-control" placeholder="Введите пароль" required>
+            <br />
+            <input type="password" name="form[new_passwd2]" class="form-control" placeholder="Повтор пароля" required>
+            <br />
+            <input type="submit" class="btn btn-primary" value="   Зарегистрироваться   ">
+
+        </form>
+    </div>
+</div>

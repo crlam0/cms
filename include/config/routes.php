@@ -12,23 +12,27 @@ return [
     ],    
     'login' => [
         'pattern' => '^login\/?$',
-        'controller' => 'modules\misc\LoginController'
+        'controller' => 'modules\users\controllers\LoginController'
     ],    
     'logout' => [
         'pattern' => '^logout\/?$',
-        'controller' => 'modules\misc\LogoutController'
+        'controller' => 'modules\users\controllers\LogoutController'
     ],    
     'passwd-change' => [
         'pattern' => '^passwd_change\/?$',
-        'controller' => 'modules\misc\PasswdChangeController'
+        'controller' => 'modules\users\controllers\PasswdChangeController'
     ],    
     'passwd-recovery' => [
         'pattern' => '^passwd_recovery\/?[\w\-]*$',
-        'controller' => 'modules\misc\PasswdRecoveryController'
+        'controller' => 'modules\users\controllers\PasswdRecoveryController'
     ],    
     'signup' => [
         'pattern' => '^signup\/?[\w\-]*$',
-        'controller' => 'modules\misc\SignupController'
+        'controller' => 'modules\users\controllers\SignupController'
+    ],    
+    'profile' => [
+        'pattern' => '^profile\/?[\w\-]*$',
+        'controller' => 'modules\users\controllers\ProfileController'
     ],    
     'search' => [
         'pattern' => '^search\/?$',
@@ -88,12 +92,12 @@ return [
 
     'blog-index' => [
         'pattern' => '^blog\/?$',
-        'controller' => 'modules\misc\BlogController',
+        'controller' => 'modules\blog\controllers\Controller',
         'action' => 'index',
     ],    
     'blog-index-with-page' => [
         'pattern' => '^blog\/page(\d+)\/?$',
-        'controller' => 'modules\misc\BlogController',
+        'controller' => 'modules\blog\controllers\Controller',
         'action' => 'index',
         'params' => [
             '0' => 'page',
@@ -101,7 +105,7 @@ return [
     ],    
     'blog-post-view' => [
         'pattern' => '^blog\/([\w_\-]+)\/?$',
-        'controller' => 'modules\misc\BlogController',
+        'controller' => 'modules\blog\controllers\Controller',
         'action' => 'post-view',
         'params' => [
             '0' => 'alias',
@@ -109,7 +113,7 @@ return [
     ],    
     'blog-by-tag' => [
         'pattern' => '^blog\/by\-tag\/([\w_\-]+)\/?$',
-        'controller' => 'modules\misc\BlogController',
+        'controller' => 'modules\blog\controllers\Controller',
         'action' => 'by-tag',
         'params' => [
             '0' => 'alias',
@@ -276,7 +280,7 @@ return [
     ],      
     'blog-edit' => [
         'pattern' => '^admin\/blog\-edit\/[\w\-]*$',
-        'controller' => 'admin\controllers\BlogEditController',
+        'controller' => 'modules\blog\controllers\EditController',
     ],
     'settings-edit' => [
         'pattern' => '^admin\/settings\-edit\/[\w\-]*$',
@@ -290,5 +294,11 @@ return [
         'pattern' => '^admin\/slider\-edit\/[\w\-]*$',
         'controller' => 'admin\controllers\SliderEditController',
     ],
+    'users-edit' => [
+        'pattern' => '^admin\/users\-edit\/[\w\-]*$',
+        'controller' => 'modules\users\controllers\EditController',
+    ],
+    
+    
 ];
 

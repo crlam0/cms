@@ -2,20 +2,8 @@
 
 namespace classes;
 
-class User 
+class User extends BaseModel
 {
-    /**
-    * @var integer User id
-    */
-    private $id;
-    /**
-    * @var string User flags
-    */
-    private $flags;
-    /**
-    * @var array User data
-    */
-    private $data;
     
     /**
     * @const Use password hash to create token.
@@ -32,51 +20,94 @@ class User
     */
     const TOKEN_NULL = 2;
     
-    public function __construct($flags = '') 
+    private $data_loaded;
+    
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
     {
-        $this->id = 0;
-        $this->flags = $flags;
-        $this->data=null;
+        return 'users';
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public static function fields()
+    {
+        return [
+            'id',
+            'login',
+            'passwd',
+            'salt',
+            'email',
+            'fullname',
+            'regdate',
+            'flags',
+            'token',
+            'token_expire',
+            'avatar',
+        ];
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['login', 'passwd'], 'required'],
+            [['login'], 'string', ['min' => 1, 'max' => 64]],
+            [['salt', 'email'], 'string', ['min' => 0, 'max' => 32]],
+            [['passwd'], 'string', ['min' => 8, 'max' => 64]],
+            [['fullname', 'flags', 'token'], 'string', ['min' => 0, 'max' => 255]],
+            [['id', 'token_expire'], 'integer'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'login' => 'Логин',
+            'passwd' => 'Пароль',
+            'email' => 'E-Mail',
+            'fullname' => 'Полное имя',
+        ];
+    }
+    
+    public function __construct($id = null, $flags = '') 
+    {
+        if($id !== null) {
+            parent::__construct($id);
+            $this->data_loaded = true;
+        } else {
+            parent::__construct();
+            $this->id = 0;
+            $this->flags = $flags;
+            $this->data_loaded = false;
+        }
     }
     
     public function __get(string $name)
     {
         switch ($name) {
             case 'id':
-                return $this->id;
+                return parent::__get('id');
             case 'flags':
-                return $this->flags;
+                return parent::__get('flags');
             default:
-                if(!$this->data) {
-                    $this->getData($this->id);
+                if(!$this->data_loaded) {
+                    $this->loadFromDb($this->id);
+                    $this->data_loaded = true;
                 }
-                if(array_key_exists($name, $this->data)) {
-                    return $this->data[$name];
-                }
-                throw new \InvalidArgumentException('Unknown property: ' . $name);
+                return parent::__get($name);
         }
     }
-
-
-    /**
-     * Get user's data
-     *
-     * @param integer $id User ID
-     *
-     * @return boolean False if ID not found
-     */
-    private function getData(int $id) : bool
-    {
-        $query = "select * from users where id='" . $id . "'";
-        $result = App::$db->query($query);
-        if ($result->num_rows) {
-            $this->data = $result->fetch_assoc();
-            return true;
-        }
-        return false;
-    }
-    
-    /**
+/**
      * Load data from variables.
      *
      * @param int $id User ID
@@ -136,10 +167,8 @@ class User
      */
     public function authByLoginPassword(string $login, string $password) 
     {
-        $query = "select id,flags,passwd,salt from users where login='" . $login . "' and flags like '%active%'";
-        $result = App::$db->query($query);
-        if ($result->num_rows) {
-            $row = $result->fetch_array();        
+        $row = App::$db->getRow("select id,flags,passwd,salt from users where login=? and flags like '%active%'", ['login' => $login]);
+        if ($row) {
             if(password_verify($password, $row['passwd'])) {
                 $this->authByArray($row);
                 return $row;
@@ -172,7 +201,21 @@ class User
         }
         return strpos($this->flags, $flag) > -1;
     }    
-    
+
+    /**
+     * Return user's flags as array
+     *
+     * @return array
+     */
+    public function getFlagsAsArray() 
+    {
+        if(strlen($this->flags) > 0) {
+            return explode(';', $this->flags);            
+        } else {
+            return [];
+        }
+    }    
+
     /**
      * Check user access
      *
@@ -184,6 +227,7 @@ class User
     {
         return (!strlen($flag)) || ($this->haveFlag($flag)) || ($this->haveFlag('global'));
     }
+    
     
     /**
      * Generate salt for user account
@@ -200,6 +244,7 @@ class User
 
             $salt .= chr($chr);
         }
+        // echo $salt;
         return $salt;
     }
 
@@ -212,8 +257,9 @@ class User
      */
     public function getSalt(int $uid) : string
     {
-        list($salt) = App::$db->getRow("SELECT salt FROM users WHERE id='{$uid}'");
-        return $salt;
+        // list($salt) = App::$db->getRow("SELECT salt FROM users WHERE id='{$uid}'");
+        // return $salt;
+        return $this->salt;
     }
 
     /**
@@ -232,35 +278,35 @@ class User
             return md5($passwd);
         }
     }
-    
-    
+
     /**
      * Generate token and put it to DB
      *
-     * @param integer $user_id
      * @param integer $expire_days
      * @param string $type password_hash, salt or null
      *
      * @return string Generated token
      */
-    public function makeToken(int $user_id, int $expire_days, int $type = 0) : string
+    public function makeToken(int $expire_days, int $type = 0) : string
     {
-        $expire=time() + $expire_days*24*3600;
+        if(!$this->id){
+            return null;
+        }
+        $token_expire = time() + $expire_days*24*3600;
         switch ($type) {
             case static::TOKEN_SALT:
                 $token = $this->generateSalt();
                 break;
             case static::TOKEN_NULL:
                 $token = '';
-                $expire = 0;
+                $token_expire = 0;
                 break;
             default:
                 $token = $this->encryptPassword($this->generateSalt(), $this->generateSalt());
         }
-        
-        $query = "update users set token='" . $token . "', token_expire='.$expire.' where id='".$user_id."'";
-        App::$db->query($query);
-        return $token;
+        echo $token_expire;
+        App::$db->updateTable($this::tableName(), ['token'=>$token, 'token_expire'=>$token_expire], ['id'=>$this->id]);
+        return $this->token;
     }
     
     /**
@@ -272,12 +318,10 @@ class User
      */
     public function checkToken(string $token) 
     {
-        $query = "select id,flags,token_expire from users where token='" . $token . "'";
-        $result = App::$db->query($query);
-        if(!$result->num_rows) {
+        $data = App::$db->getRow('select id,flags,token_expire from users where token=?', ['token' => $token]);
+        if(!$data) {
             return false;
         }
-        $data = $result->fetch_array();
         if($data['token_expire'] > time()) {
             return $data;
         } else {
@@ -289,13 +333,13 @@ class User
      * Generate RememberMe cookie and token.
      *
      */
-    public function setRememberme(int $user_id, string $COOKIE_NAME) 
+    public function setRememberme(string $COOKIE_NAME) 
     {
-        if(!$user_id || !$COOKIE_NAME) {
+        if(!$this->id || !$COOKIE_NAME) {
             return false;        
         }
-        $expire=time()+31*24*3600;
-        $token= $this->makeToken($user_id, 31);
+        $expire = time()+31*24*3600;
+        $token = $this->makeToken(31);
         setcookie($COOKIE_NAME.'_REMEMBERME', $token, $expire, App::$SUBDIR);
     }
 
@@ -322,12 +366,12 @@ class User
      * Delete RememberMe cookie and token.
      *
      */
-    public function delRememberme(int $user_id, string $COOKIE_NAME) : void
+    public function delRememberme(string $COOKIE_NAME) : void
     {
         $value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME');
         if(strlen($value)){
             setcookie($COOKIE_NAME.'_REMEMBERME', '', time(), App::$SUBDIR);
-            $this->makeToken($user_id, 0, static::TOKEN_NULL);
+            $this->makeToken(0, static::TOKEN_NULL);
         }
     }
     

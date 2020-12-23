@@ -8,7 +8,7 @@ class AddReviewsTable extends AbstractMigration
 
     function change()
     {
-        $test = $this->table('reviews');
+        $test = $this->table('reviews', ['engine' => 'MyISAM']);
         $test
               ->addColumn('date', 'datetime')
               ->addColumn('author', 'string', ['limit' => 255])

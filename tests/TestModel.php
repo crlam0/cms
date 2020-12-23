@@ -11,12 +11,18 @@ use classes\BaseModel;
  */
 class TestModel extends BaseModel {
     
-    public static $fields = [
-        'id',
-        'name',
-        'value',
-        'comment'        
-    ];
+    /**
+     * @inheritdoc
+     */
+    public static function fields()
+    {
+        return [
+            'id',
+            'name',
+            'value',
+            'comment'        
+        ];
+    }    
     
     /**
      * @inheritdoc

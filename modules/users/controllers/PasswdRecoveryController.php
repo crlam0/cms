@@ -1,10 +1,10 @@
 <?php
 
-namespace modules\misc;
+namespace modules\users\controllers;
 
 use classes\BaseController;
 use classes\App;
-use classes\User;
+use modules\users\models\User;
 
 class PasswdRecoveryController extends BaseController
 {    
@@ -22,17 +22,12 @@ class PasswdRecoveryController extends BaseController
         }
     }
     
-    private function passwdChange(array $user): string 
+    private function passwdChange($user): string 
     {
-        $data = [];
-        $data['salt']=$user['salt'];
-        if (mb_strlen($data['salt']) !== 22) {
-            $data['salt']=App::$user->generateSalt();
-        }
-        $data['passwd']=App::$user->encryptPassword(App::$input['new_passwd1'], $data['salt']);
-        $query="update users set ". db_update_fields($data) ." where id='".$user['id']."'";
-        App::$db->query($query);
-        App::$user->makeToken($user['id'], 0, User::TOKEN_NULL);
+        $user->salt = $user->generateSalt();
+        $user->passwd = $user->encryptPassword(App::$input['new_passwd1'], $user->salt);
+        $user->save();
+        $user->makeToken(0, User::TOKEN_NULL);
         return App::$message->get('info',[],'Пароль успешно изменен !');          
     }
 
@@ -40,9 +35,10 @@ class PasswdRecoveryController extends BaseController
     {
         $this->title = 'Восстановление пароля';
         $this->breadcrumbs[] = ['title'=>$this->title];
-        $content = '';        
-        $user = App::$user->checkToken(App::$input['token']);
-        if(!$user) {
+        $content = '';
+        $user = new User();
+        $user->findByToken(App::$input['token']);
+        if(!$user->id) {
             return App::$message->get('error',[],'Неверный код.');
         }
         if(App::$input['passwd_change'] && ($content = $this->checkInput()) === true && check_csrf_token()) {
@@ -58,12 +54,11 @@ class PasswdRecoveryController extends BaseController
         $this->title = 'Восстановление пароля';
         $this->breadcrumbs[] = ['title'=>$this->title];
         
-        if (App::$input['passwd_recovery'] && check_csrf_token()) {    
-            $query = "select id from users where email='".App::$input['email']."'";
-            $result = App::$db->query($query);
-            if ($result->num_rows) {
-                list($user_id) = $result->fetch_array();
-                $token = App::$user->makeToken($user_id, 1, User::TOKEN_SALT);
+        if (App::$input['passwd_recovery'] && check_csrf_token()) {
+            $user = new User();
+            $user->findByEmail(App::$input['email']);
+            if ($user->id) {
+                $token = $user->makeToken(1, User::TOKEN_SALT);
                 $URL = App::$server['REQUEST_SCHEME'] . '://' . App::$server['HTTP_HOST'] . App::$SUBDIR . 'passwd_recovery/step2?token=' . $token;
                 $message = 'Перейдите по ссылке ' . $URL . ' чтобы задать новый пароль';
                 App::$message->mail(App::$input['email'], 'Восстановление пароля на сайте ' . App::$server['HTTP_HOST'], $message);

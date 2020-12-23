@@ -11,22 +11,28 @@ use classes\BaseModel;
  */
 class Template extends BaseModel {
     
-    public static $fields = [
-        'id',
-        'name',
-        'content',
-        'comment',
-        'uri',
-        'file_name',
-        'template_type',
-    ];
-    
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return 'templates';
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public static function fields()
+    {
+        return [
+            'id',
+            'name',
+            'content',
+            'comment',
+            'uri',
+            'file_name',
+            'template_type',
+        ];
     }
     
     /**

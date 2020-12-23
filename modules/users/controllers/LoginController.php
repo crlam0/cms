@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\misc;
+namespace modules\users\controllers;
 
 use classes\BaseController;
 use classes\App;
@@ -10,17 +10,17 @@ class LoginController extends BaseController
     private function auth(): string 
     {
         global $_SESSION, $COOKIE_NAME;
-        if($row = App::$user->authByLoginPassword(App::$input['login'],App::$input['passwd'])) {
+        if($row = App::$user->authByLoginPassword(App::$input['login'], App::$input['passwd'])) {
             $_SESSION['UID']=App::$user->id;
             $_SESSION['FLAGS']=App::$user->flags;
             if(App::$input['rememberme']) {
-                App::$user->setRememberme(App::$user->id,$COOKIE_NAME);
+                App::$user->setRememberme($COOKIE_NAME);
             }            
             if (mb_strlen($row['salt']) !== 22) {
-                return App::$message->get('notice','','Ваш пароль устарел. Пожалуйста, поменяйте его на другой <a href="'.App::$SUBDIR.'passwd_change/" />по этой ссылке</a> ');
+                return App::$message->get('notice', '', 'Ваш пароль устарел. Пожалуйста, поменяйте его на другой <a href="' . App::$SUBDIR . 'passwd_change/" />по этой ссылке</a> ');
             }
-            if (strlen($_SESSION['GO_TO_URI'])) {
-                $uri=$_SESSION['GO_TO_URI'];
+            if (isset($_SESSION['GO_TO_URI'])) {
+                $uri = $_SESSION['GO_TO_URI'];
                 unset($_SESSION['GO_TO_URI']);
                 redirect($uri);
             } else {

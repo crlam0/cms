@@ -48,7 +48,7 @@
                     {% if row.target_type == 'link' %}
                         {% set href = row.href %}
                     {% else %}
-                        {% set href = SUBDIR ~ get_menu_href([], row) %}
+                        {% set href = SUBDIR ~ get_menu_href(row) %}
                     {% endif %}
                     <a href="{{ href }}" class="btn btn-default btn-next">Перейти >></a><br />
                 {% endif %}                

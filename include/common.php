@@ -106,4 +106,21 @@ $tags['INCLUDE_HEAD']='';
 $tags['INCLUDE_CSS']='';
 $tags['INCLUDE_JS']='';
 
+
+if(isset(App::$settings['modules'])) {
+    foreach(App::$settings['modules'] as $name => $data) {
+        if(isset($data['bootstrap'])) {
+            if(class_exists($data['bootstrap'])) {    
+                $bootstrap = new $data['bootstrap'];
+                App::debug('Run boostrap for module "' . $name .'"');
+                $bootstrap->bootstrap();
+            } else {
+                App::debug('Boostrap class for module "' . $name .'" decalred but not exists: "' . $data['bootstrap'] . '"');
+            }
+        }        
+    }    
+}
+
+App::$routing->matchRoutes();
+
 $App->debug('common.php complete');

@@ -51,21 +51,15 @@ function redirect($url) {
  *
  * @return string Output string
  */
-function get_article_list_href($list_id, $row = array()) {
+function get_article_list_href($list_id, $row = []) {
     if (array_key_exists('id',$row)){
         $list_id = $row['id'];
     }
     if (array_key_exists('seo_alias',$row) && strlen($row['seo_alias'])){
         return 'article/' . $row['seo_alias'] . '/';
     }    
-    $query = "SELECT seo_alias FROM article_list WHERE id='{$list_id}'";
-    $result = App::$db->query($query);
-    list($seo_alias) = $result->fetch_array();
-    if (strlen($seo_alias)) {
-        return 'article/' . $seo_alias . '/';
-    } else {
-        return 'article/?view_items=' . $list_id;
-    }
+    list($seo_alias) = App::$db->getRow("SELECT seo_alias FROM article_list WHERE id='{$list_id}'");
+    return 'article/' . $seo_alias . '/';
 }
 
 /**
@@ -76,21 +70,15 @@ function get_article_list_href($list_id, $row = array()) {
  *
  * @return string Output string
  */
-function get_article_href($article_id, $row = array()) {
+function get_article_href($article_id, $row = []) {
     if (array_key_exists('id',$row)){
         $article_id = $row['id'];
     }
     if (array_key_exists('seo_alias',$row) && strlen($row['seo_alias'])){
         return get_article_list_href($row['list_id']) . $row['seo_alias'] . '/';
     }
-    $query = "SELECT seo_alias,list_id FROM article_item WHERE id='{$article_id}'";
-    $result = App::$db->query($query);
-    list($seo_alias, $list_id) = $result->fetch_array();
-    if (strlen($seo_alias)) {
-        return get_article_list_href($list_id) . $seo_alias . '/';
-    } else {
-        return 'article/?view=' . $article_id;
-    }
+    list($seo_alias, $list_id) = App::$db->getRow("SELECT seo_alias,list_id FROM article_item WHERE id='{$article_id}'");
+    return get_article_list_href($list_id) . $seo_alias . '/';
 }
 
 /**
@@ -108,14 +96,8 @@ function get_media_list_href($list_id, $row = array()) {
     if (array_key_exists('seo_alias',$row) && strlen($row['seo_alias'])){
         return 'media/' . $row['seo_alias'] . '/';
     }    
-    $query = "SELECT seo_alias FROM media_list WHERE id='{$list_id}'";
-    $result = App::$db->query($query);
-    list($seo_alias) = $result->fetch_array();
-    if (strlen($seo_alias)) {
-        return 'media/' . $seo_alias . "/";
-    } else {
-        return 'media/index.php?view_files=1&id=' . $list_id;
-    }
+    list($seo_alias) = App::$db->getRow("SELECT seo_alias FROM media_list WHERE id='{$list_id}'");
+    return 'media/' . $seo_alias . "/";
 }
 
 /**
@@ -179,14 +161,8 @@ function get_gallery_list_href($list_id, $row = array()) {
     if (array_key_exists('seo_alias',$row) && strlen($row['seo_alias'])){
         return 'gallery/' . $row['seo_alias'] . '/';
     }    
-    $query = "SELECT seo_alias FROM gallery_list WHERE id='{$list_id}'";
-    $result = App::$db->query($query);
-    list($seo_alias) = $result->fetch_array();
-    if (strlen($seo_alias)) {
-        return 'gallery/' . $seo_alias . '/';
-    } else {
-        return 'gallery/index.php?view_gallery=1&id=' . $list_id;
-    }
+    list($seo_alias) = App::$db->getRow("SELECT seo_alias FROM gallery_list WHERE id='{$list_id}'");
+    return 'gallery/' . $seo_alias . '/';
 }
 
 /**
@@ -198,11 +174,7 @@ function get_gallery_list_href($list_id, $row = array()) {
  * @return string Output string
  */
 function get_post_href($tmp, $row) {
-    if (check_key('seo_alias',$row)) {
-        return "blog/" . $row['seo_alias'] . "/";
-    } else {
-        return "blog/" . "?view_post=" . check_key('id', $row);
-    }
+    return "blog/" . $row['seo_alias'] . "/";
 }
 
 /**
@@ -213,7 +185,7 @@ function get_post_href($tmp, $row) {
  *
  * @return string Output string
  */
-function get_menu_href($tmp, $row) {
+function get_menu_href($row) {
     switch ($row['target_type']) {
         case "":
             return $row['href'];

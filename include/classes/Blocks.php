@@ -19,7 +19,7 @@ class Blocks
      */
     protected function get_href(array $row) : array
     {
-        $href = get_menu_href(null, $row);
+        $href = get_menu_href($row);
         if (preg_match('/^http.?:\/\/.+$/', $href)) {
             $target_inc = ' target="_blank"';
         } else {
@@ -203,6 +203,15 @@ class Blocks
                 return '';
                 
             default:
+                if(strstr($block_name, '/')){
+                    $class_name = str_replace('/', '\\', $block_name);
+                    if(class_exists($class_name)) {
+                        $object = new $class_name;
+                        return $object->run();
+                    }
+                    return 'Block class ' . $class_name . ' not found';
+                }
+
                 if(\is_callable([$this,$block_name])) {
                    return $this->$block_name();
                 }                

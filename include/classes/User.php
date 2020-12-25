@@ -107,7 +107,7 @@ class User extends BaseModel
                 return parent::__get($name);
         }
     }
-/**
+    /**
      * Load data from variables.
      *
      * @param int $id User ID

@@ -38,8 +38,8 @@ class Template
                 $template['file_name'].='.html.twig';
             }
             $file_name = '';            
-            foreach ($this->TwigTemplate->config['template_dirs'] as $path) {
-                if (file_exists(App::$DIR . $path . '/' . $template['file_name'])) {
+            foreach ($this->TwigTemplate->getPaths() as $path) {
+                if (file_exists($path . '/' . $template['file_name'])) {
                     $file_name = $template['file_name'];
                 }
             }            
@@ -75,6 +75,18 @@ class Template
         }
         return $twig->render($template['name'], $tags);
     }
+    
+    /**
+     * Add path for search Twig templates.
+     *
+     * @param string $path Function name
+     *
+     * @return null
+     */
+    public function addPath(string $path)
+    {
+        $loader = $this->TwigTemplate->addPath($path);
+    }    
 
     /**
      * Parse my template by array

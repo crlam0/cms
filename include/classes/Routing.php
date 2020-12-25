@@ -61,7 +61,6 @@ final class Routing
         if(strstr($this->request_uri, 'modules/')) {
             $this->request_uri = str_replace('modules/', '', $this->request_uri);
         }
-        $this->matchRoutes();
     }
     
     /**
@@ -75,6 +74,17 @@ final class Routing
         if(file_exists(__DIR__ . $file)) {
             $this->routes = array_merge($this->routes, require __DIR__ . $file);
         }
+    }
+    
+    /**
+     * Add routes from file
+     *
+     * @param string $file
+     *
+     */
+    public function addRoutes(array $routes) : void
+    {
+        $this->routes = array_merge($this->routes, $routes);
     }
     
     /**
@@ -159,7 +169,7 @@ final class Routing
      * Try to find route.
      *
      */
-    private function matchRoutes () 
+    public function matchRoutes () 
     {
         foreach($this->routes as $title => $route) {
             $matches = [];

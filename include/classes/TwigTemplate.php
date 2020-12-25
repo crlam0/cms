@@ -1,6 +1,7 @@
 <?php
 
 namespace classes;
+
 use Twig\Environment;
 use Twig\TwigFunction;
 use Twig\Loader\ArrayLoader;
@@ -13,7 +14,6 @@ use classes\App;
 class TwigTemplate 
 {
     private $twig;
-    private $environment;
     
     const TYPE_STRING = 0;
     const TYPE_ARRAY = 1;
@@ -21,7 +21,7 @@ class TwigTemplate
 
     private $template_type;
 
-    public $config = [
+    private $config = [
         'debug' => false,
         'template_dirs' => [
             'templates',
@@ -116,6 +116,29 @@ class TwigTemplate
         });    
     }
 
+    /**
+     * Add path for search
+     *
+     * @param string $path Function name
+     *
+     * @return null
+     */
+    public function addPath(string $path)
+    {
+        $loader = $this->twig->getLoader();
+        $loader->addPath(App::$DIR . $path);
+    }
+
+    /**
+     * Get path for search
+     *
+     * @return array
+     */
+    public function getPaths()
+    {
+        $loader = $this->twig->getLoader();
+        return $loader->getPaths();
+    }
     /**
      * Create template from string
      *

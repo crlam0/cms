@@ -12,6 +12,7 @@ class RoutingTest extends TestCase
     {
         parent::setUp();
         $this->Routing = new Routing('/article/item/?test=test');
+        $this->Routing->matchRoutes();
     }
     
     public function testIsIndexPage() 
@@ -22,7 +23,7 @@ class RoutingTest extends TestCase
     
     public function testController() 
     {        
-        $result=$this->Routing->controller;
+        $result = $this->Routing->controller;
         self::assertEquals('modules\article\Controller', $result);
         self::assertEquals(['alias'=>'item'], $this->Routing->params);
     }

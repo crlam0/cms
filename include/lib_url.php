@@ -289,15 +289,13 @@ function add_nav_item($title, $url = null, $skip_duplicates = false) {
  */
 function get_id_by_alias ($table, $seo_alias, $exit_with_404 = false) {
     global $tags;
-    $query="select id from {$table} where seo_alias = '{$seo_alias}'";
-    $result=App::$db->query($query);
-    list($id)=$result->fetch_array();
+    list($id) = App::$db->getRow("select id from {$table} where seo_alias = ?", ['seo_alias' => $seo_alias]);
     if ((int)$id > 0) {
         return $id;
     } elseif ($exit_with_404) {
         header(App::$server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
         $tags['Header'] = 'Страница "' . $seo_alias . '" не найдена.';
-        $content = App::$db->getRow('error', [], $tags['Header']);
+        $content = App::$message->get('error', [], $tags['Header']);
         echo App::$template->parse(App::get('tpl_default'),$tags, null, $content);
         exit;
     } else {

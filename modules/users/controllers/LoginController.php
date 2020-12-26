@@ -17,7 +17,7 @@ class LoginController extends BaseController
                 App::$user->setRememberme($COOKIE_NAME);
             }            
             if (mb_strlen($row['salt']) !== 22) {
-                return App::$message->get('notice', '', 'Ваш пароль устарел. Пожалуйста, поменяйте его на другой <a href="' . App::$SUBDIR . 'passwd_change/" />по этой ссылке</a> ');
+                return App::$message->get('notice', [], 'Ваш пароль устарел. Пожалуйста, поменяйте его на другой <a href="' . App::$SUBDIR . 'passwd_change/" />по этой ссылке</a> ');
             }
             if (isset($_SESSION['GO_TO_URI'])) {
                 $uri = $_SESSION['GO_TO_URI'];
@@ -47,10 +47,10 @@ class LoginController extends BaseController
                 $tags['login'] = App::$input['login'];
             }
             $content .= App::$template->parse('user_login_promt.html.twig', $tags);
-            return $content;
         } else {
-            return App::$message->get('user_already_logged_on');
+            $content .= App::$message->get('user_already_logged_on');
         }        
+        return $content;
     }
 }
 

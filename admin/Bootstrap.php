@@ -12,7 +12,7 @@ class Bootstrap
             
         App::$routing->addRoutes([
             'admin-index' => [
-                'pattern' => '^admin\/?$',
+                'pattern' => '^admin\/?[\w\-]*$',
                 'controller' => 'admin\controllers\IndexController'
             ],      
             'blog-edit' => [

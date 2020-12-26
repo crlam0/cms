@@ -22,6 +22,8 @@ class IndexController extends BaseController
         $this->breadcrumbs[] = ['title'=>$this->title];
 
         $content = '';
+
+        $time_diff = 0;
         
         if(file_exists($this->sitemap)){
             $time_diff=time()-filemtime($this->sitemap);
@@ -65,6 +67,14 @@ class IndexController extends BaseController
 
     }
     
+    public function actionCacheClear(): string
+    {
+        if(clear_cache_dir('misc') && clear_cache_dir('twig')){
+            return App::$message->get('success',[],'Директория кэша очищена');
+        } else {
+            return App::$message->getError('Директория кэша не очищена !');
+        }        
+    }    
     
 }
 

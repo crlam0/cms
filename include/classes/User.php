@@ -304,7 +304,6 @@ class User extends BaseModel
             default:
                 $token = $this->encryptPassword($this->generateSalt(), $this->generateSalt());
         }
-        echo $token_expire;
         App::$db->updateTable($this::tableName(), ['token'=>$token, 'token_expire'=>$token_expire], ['id'=>$this->id]);
         return $this->token;
     }

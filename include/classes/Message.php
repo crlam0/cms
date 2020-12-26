@@ -59,8 +59,8 @@ class Message
         }
         if (strlen($content)){
             $message['content'] = $content;
-        }    
-        if (!strlen($message['content'])) {
+        }
+        if (!isset($message['content'])) {
             $message['content'] = $name;
         }
         $message = $this->parseTags($message, $tags);

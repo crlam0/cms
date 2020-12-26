@@ -77,7 +77,6 @@ if(App::$server['SERVER_PROTOCOL']) {
     }
     require_once __DIR__.'/lib_stats.php';
     $content='';
-    $tags['Header']='';
     $tags['INCLUDE_HEAD']='';
     $tags['INCLUDE_CSS']='';
     $tags['INCLUDE_JS']='';

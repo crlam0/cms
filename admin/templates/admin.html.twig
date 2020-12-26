@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="keywords" content="">
         <meta name="description" content="">
-        <title>[{{ settings.site_title }} > Адм. раздел > {{ Header }}</title>
+        <title>[{{ settings.site_title }} > Адм. раздел >{% if INCLUDE_HEAD is defined %} {{ Header }} {% endif %}</title>
         <!-- Bootstrap core CSS -->
         <link href="{{ SUBDIR }}admin/bootstrap.min.css" rel="stylesheet" />
         <link href="{{ SUBDIR }}admin/admin.css" rel="stylesheet" />
@@ -35,12 +35,11 @@
                     {{ get_block('menu_admin') }}
                 </td>
                 <td width=100% align=center>
-                    <center><h1>{{ Header }}</h1></center>
-                    
-                    {% include 'flash_errors.html.twig' with { 'errors': errors } %}
-
-                    {{ inner_content }}
-                    
+                    <center><h1>{{ Header }}</h1></center>                    
+                    {% if flash is defined and errors is defined %}                    
+                        {% include 'flash_errors.html.twig' with { 'flash': flash, 'errors': errors } %}
+                    {% endif %}
+                    {{ inner_content }}                    
                     <br />
                 </td>
             </tr>

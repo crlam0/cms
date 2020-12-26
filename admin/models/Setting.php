@@ -11,13 +11,6 @@ use classes\BaseModel;
  */
 class Setting extends BaseModel {
     
-    public static $fields = [
-        'id',
-        'name',
-        'value',
-        'comment'        
-    ];
-    
     /**
      * @inheritdoc
      */
@@ -25,6 +18,19 @@ class Setting extends BaseModel {
     {
         return 'settings';
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public static function fields()
+    {
+        return [
+            'id',
+            'name',
+            'value',
+            'comment'
+        ];
+    }    
     
     /**
      * @inheritdoc

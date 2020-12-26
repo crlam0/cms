@@ -32,7 +32,7 @@ class Controller extends BaseController
             GROUP BY gallery_list.id ORDER BY last_images_date_add DESC,gallery_list.date_add DESC";
         $result = App::$db->query($query);
         if ($result->num_rows) {
-            return App::$template->parse('gallery_part_list', ['this'=>$this], $result);
+            return $this->render('gallery_part_list', [], $result);
         } else {
             return App::$message->get('list_empty');
         }
@@ -58,8 +58,7 @@ class Controller extends BaseController
         if (!$result->num_rows) {
             $content = App::$message->get('list_empty');
         } else {
-            $tags['this'] = $this;
-            $content = App::$template->parse('gallery_images_list', $tags, $result);
+            $content = $this->render('gallery_images_list', $tags, $result);
         }
 
         if(App::$settings['gallery_use_comments']) {
@@ -72,7 +71,7 @@ class Controller extends BaseController
         return $content;
     }
     
-    public function actionLoad(): void
+    public function actionLoad(): array
     {
         $query = "SELECT * from gallery_images where id='".App::$input['id']."'";
         $tags = App::$db->getRow($query);
@@ -85,10 +84,9 @@ class Controller extends BaseController
         $image = new Image($file_name, $tags['file_type']);
         $tags['IMAGE'] = $image->getHTML($tags, 'var/cache/gallery/','','modules/gallery/image.php?clientHeight='.App::$input['clientHeight'].'&id=' . $tags['id'], $this->getMaxWidth());
 
-        $json=$tags;
-        $json['content'] = App::$template->parse('gallery_image_view', $tags);
-        echo json_encode($json);
-        exit();
+        $json = $tags;
+        $json['content'] = $this->render('gallery_image_view', $tags);
+        return $json;
     }
     
     public static function getMaxWidth() {

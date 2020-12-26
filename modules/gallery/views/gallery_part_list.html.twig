@@ -1,0 +1,21 @@
+<div id="gallery"> 
+    {% for row in rows %}
+        <div class="row">
+            <div class="image-icon col-xs-12 col-sm-3 col-lg-2">
+                <a href="{{ SUBDIR }}{{ routing.getUrl('gallery_list', null, row) }}" class="title" title="{{ row.title }}">
+                    {{ this.getListImage(row) }}
+                </a>
+            </div>
+            <div class="list_descr col-xs-12 col-sm-8 col-lg-10">
+                <div class="title">
+                    <a href="{{ SUBDIR }}{{ routing.getUrl('gallery_list', null, row) }}" class="title" title="{{ row.title }}">
+                        {{ row.title }}
+                    </a>
+                </div>
+                <div class="descr">{{ row.descr }}</div>
+                <div class="img_count">Добавлен: {{ row.date_add }}, Фотографий в разделе: {{ row.images }}</div>
+            </div>
+        </div>
+
+    {% endfor %}
+</div>

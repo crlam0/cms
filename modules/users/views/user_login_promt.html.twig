@@ -1,0 +1,20 @@
+<div class="center-block" align="center">
+    <div align="center" style="max-width: 400px;margin-top:30px;">
+        <form action="{{ SUBDIR }}login/" method="post" name="login_form">
+            <input type="hidden" name="logon" value="1">
+            <input type="hidden" name="CSRF_Token" value="{{ get_csrf_token() }}">
+            <input type="edit" name="login" maxlength="32" size="16" class="form-control" placeholder="Имя пользователя" required autofocus>
+            <br />
+            <input type="password" name="passwd" maxlength="32" size="16" class="form-control" placeholder="Пароль" required>
+            <br />
+            <input type="checkbox" name="rememberme" maxlength="32" size="16" class="form-check-input">
+            <label class="form-check-label" for="rememberme">Запомнить меня</label>
+            <br />
+            <br />
+            <input type="submit" class="btn btn-primary" value="   Войти   ">
+            <br />
+            <br />
+            <a href="{{ SUBDIR }}passwd_recovery/">Восстановить пароль</a>
+        </form>
+    </div>
+</div>

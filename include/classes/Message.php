@@ -18,9 +18,11 @@ class Message
             case 'notice':
                 $class='warning';
                 break;
+            case 'danger':
             case 'error':
                 $class='danger';
                 break;           
+            case 'success':
             default:
                 $class='success';                                
         }
@@ -53,8 +55,7 @@ class Message
     public function get(string $name, array $tags = [], string $content = '') : string 
     {
         if (strlen($name)) {
-            $sql = "select * from messages where name='{$name}'";
-            $message = App::$db->getRow($sql);
+            $message = App::$db->getRow("select * from messages where name=?" , ['name' => $name]);
         }
         if (strlen($content)){
             $message['content'] = $content;
@@ -141,6 +142,10 @@ class Message
      */
     function mail(string $message_to, string $subject, string $content, string $content_type = 'text/plain') 
     {
+        if(App::$debug) {
+            echo "Send E-Mail:<br />To: {$message_to}<br />Subject: {$subject}<br />Content: {$content}<br />";
+            return true;
+        }
         $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
         $mailer = new \Swift_Mailer($transport);
         $message = (new \Swift_Message($subject))

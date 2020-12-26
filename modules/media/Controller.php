@@ -45,19 +45,16 @@ class Controller extends BaseController
         $pager = new Pagination($total, $page, App::$settings['media_files_per_page']);
         $tags['pager'] = $pager;
         $tags['media_list_href'] = 'media/'.$media_seo_alias.'/';
-        
-        $tags['self'] = $this;
 
         $query = "SELECT * from media_files where list_id='" . $view_media . "' order by num asc, id asc limit {$pager->getOffset()},{$pager->getLimit()}";
         $result = App::$db->query($query);
         if (!$result->num_rows) {
             $content = App::$message->get('list_empty');
         } else {
-            $tags['this'] = $this;
             $this->tags['INCLUDE_HEAD'].='<link rel="stylesheet" href="'.App::$SUBDIR.'modules/media/player/mediaelementplayer.min.css" />';
             $this->tags['INCLUDE_JS'].='<script src="'.App::$SUBDIR.'modules/media/player/mediaelement-and-player.min.js"></script>';
             $this->tags['INCLUDE_JS'].="<script>$('audio,video').mediaelementplayer();</script>";
-            $content = App::$template->parse('media_files_list', $tags, $result);
+            $content = $this->render('media_files_list', $tags, $result);
         }
         return $content;
     }

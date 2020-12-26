@@ -76,8 +76,7 @@ class BasketController extends Controller
             $tags['summ'] = add_zero($summ);
             $tags['discount'] = $this->getDiscount($summ);
             $tags['summ_with_discount'] = add_zero($this->calcDiscount($summ, $tags['discount']));
-            $tags['this'] = $this;
-            $content = App::$template->parse('basket_summary.html.twig', $tags, $result);
+            $content = $this->render('basket_summary.html.twig', $tags, $result);
             echo $content;
         } else {
             echo App::$message->get('notice',[],"Корзина пуста !");
@@ -114,8 +113,7 @@ class BasketController extends Controller
         $tags['discount'] = $this->getDiscount($summ);
         $tags['summ_with_discount'] = add_zero($this->calcDiscount($summ, $tags['discount']));
         $tags['form'] = $form;
-        $tags['this'] = $this;
-        $content = App::$template->parse('basket_mail.html.twig', $tags, $result);
+        $content = $this->render('basket_mail.html.twig', $tags, $result);
         if(!App::$debug){
             App::$message->mail(App::$settings['email_to_addr'], 'Запрос с сайта ' . $BASE_HREF, $content, 'text/html');
         }
@@ -227,9 +225,8 @@ class BasketController extends Controller
         $tags['discount'] = $this->getDiscount($summ);
         $tags['summ_with_discount'] = add_zero($this->calcDiscount($summ, $tags['discount']));
         $tags['summ_with_discount_str'] = SummToStr::get($this->calcDiscount($summ, $tags['discount']));
-        $tags['this'] = $this;
         
-        $content = App::$template->parse('basket_index.html.twig', $tags, $result);
+        $content = $this->render('basket_index.html.twig', $tags, $result);
         return $content;
     }
     

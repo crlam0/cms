@@ -60,8 +60,8 @@
 	<td><b><a href=[%PHP_SELF%]?view_article=1&id=[%row(id)%]>[%row(title)%]</a></b></td>
 	<td align="center">[%row(seo_alias)%]</td>
 	<td align="center">[%row(files)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_list=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_list=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_list=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_list=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -114,8 +114,8 @@
 	<td>[%row(date_add)%]</td>
 	<td><b>[%row(title)%]</b></td>
 	<td align="center">[%row(seo_alias)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_article=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_article=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_article=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_article=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -236,8 +236,8 @@ tr.active_N { background: #dddddd; }
 	<td>[%row(seo_alias)%]</td>
 	<td>[%row(title)%]</td>
 	<td align="center"><input class="" type=checkbox class=sw_active value='[%row(id)%]' [%row(active,if,checked)%]></td>
-	<td width=16><a href="[%PHP_SELF%]?edit_post=1&id=[%row(id)%]"><img src="../images/open.gif" alt="Редактировать" border="0"></a></td>
-	<td width=16><a href="[%PHP_SELF%]?del_post=1&id=[%row(id)%]"><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href="[%PHP_SELF%]?edit_post=1&id=[%row(id)%]"><img src="images/open.gif" alt="Редактировать" border="0"></a></td>
+	<td width=16><a href="[%PHP_SELF%]?del_post=1&id=[%row(id)%]"><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -463,8 +463,8 @@ $(document).ready(function () {
 	<td align="left">[%row(descr)%]</td>
 	<td align="center">[%row(price)%]</td>
 	<td align="center">[%func(show_img)%]</td>
-	<td><a href=[%PHP_SELF%]?edit=1&id=[%row(id)%]><img src="../images/open.gif" alt="Редактировать" border="0"></a></td>
-	<td><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td><a href=[%PHP_SELF%]?edit=1&id=[%row(id)%]><img src="images/open.gif" alt="Редактировать" border="0"></a></td>
+	<td><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -638,8 +638,8 @@ tr.active_N { background: #dddddd; }
 	<td align="center"><b>[%row(author)%]</b><br />[%row(email)%]<br />[%row(ip)%]</td>
 	<td>[%row(content,nl2br)%]</td>
 	<td align="center"><input class="" type=checkbox class=sw_active value='[%row(id)%]' [%row(active,if,checked)%]></td>
-	<td width=16><a href="[%PHP_SELF%]?edit_comment=1&id=[%row(id)%]"><img src="../images/open.gif" alt="Редактировать" border="0"></a></td>
-	<td width=16><a href="[%PHP_SELF%]?del_comment=1&id=[%row(id)%]"><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href="[%PHP_SELF%]?edit_comment=1&id=[%row(id)%]"><img src="images/open.gif" alt="Редактировать" border="0"></a></td>
+	<td width=16><a href="[%PHP_SELF%]?del_comment=1&id=[%row(id)%]"><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -703,8 +703,8 @@ $(document).ready(function(){
         <tr class="content" align="left">
         <td>[%row(summ)%]</td>
         <td><b>[%row(discount)%]%</b></td>
-        <td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" width=16 height=16 alt="Редактировать" border="0"></a></td>
-        <td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+        <td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="images/open.gif" width=16 height=16 alt="Редактировать" border="0"></a></td>
+        <td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
         </tr>
         [%loop_end%]
 </table>
@@ -760,8 +760,8 @@ tr.active_N { background: #dddddd; }
 	</td>
 	<td align="center"><b>[%row(author)%]</b><br>[ [%row(ip)%] ]</td>
 	<td align="center"><input class="" type=checkbox class=sw_active value='[%row(id)%]' [%row(active,if,checked)%]></td>
-	<td width=16><a href="[%PHP_SELF%]?edit=1&id=[%row(id)%]"><img src="../images/open.gif" alt="Редактировать" border="0"></a></td>
-	<td width=16><a href="[%PHP_SELF%]?del=1&id=[%row(id)%]"><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href="[%PHP_SELF%]?edit=1&id=[%row(id)%]"><img src="images/open.gif" alt="Редактировать" border="0"></a></td>
+	<td width=16><a href="[%PHP_SELF%]?del=1&id=[%row(id)%]"><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -831,8 +831,8 @@ tr.active_N { background: #dddddd; }
 	<td align="center">[%row(seo_alias)%]</td>
 	<td align="center">[%row(images)%]</td>
 	<td align="center"><input class="" type=checkbox class=sw_active value='[%row(id)%]' [%row(active,if,checked)%]></td>
-	<td width=16><a href=[%PHP_SELF%]?edit_gallery=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_gallery=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_gallery=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_gallery=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -905,8 +905,8 @@ $(document).ready(function(){
 	<td align="center"><input type=radio name=ch_default class=default_image image_id=[%row(id)%][%func(is_default_image)%]></td>
 	<td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
 	<td align="center">[%func(show_img)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_image=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_image=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_image=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_image=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -984,8 +984,8 @@ $(document).ready(function(){
 	<td><b><a href=[%PHP_SELF%]?view_list=1&id=[%row(id)%]>[%row(title)%]</a></b></td>
 	<td align="center">[%row(seo_alias)%]</td>
 	<td align="center">[%row(files)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_list=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_list=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_list=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_list=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1044,8 +1044,8 @@ $(document).ready(function(){
 	<td align="center">[%row(date_add)%]</td>
 	<td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
 	<td align="center"><b>[%row(file_name%]</b><br>[%func(show_size)%]</td>
-	<td width="16"><a href="[%PHP_SELF%]?edit_file=1&id=[%row(id)%]"><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width="16"><a href="[%PHP_SELF%]?del_file=1&id=[%row(id)%]"><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width="16"><a href="[%PHP_SELF%]?edit_file=1&id=[%row(id)%]"><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width="16"><a href="[%PHP_SELF%]?del_file=1&id=[%row(id)%]"><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1094,8 +1094,8 @@ $(document).ready(function(){
 	<tr class="content" align="left">
 	<td><b><a href=[%PHP_SELF%]?view_menu=1&id=[%row(id)%]>[%row(title)%]</a></b></td>
 	<td align="center">[%row(root,yes_no)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_menu=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_menu=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_menu=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_menu=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1146,8 +1146,8 @@ $(document).ready(function(){
 	<td align="center">[%row(active,yes_no)%]</td>
 	<td><b>[%row(title)%]</b></td>
 	<td>[%func(get_menu_href)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_menu_item=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_menu_item=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_menu_item=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_menu_item=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1218,8 +1218,8 @@ $(document).ready(function(){
 	<td><b>[%row(name)%]</b></td>
 	<td>[%row(type)%]</td>
 	<td>[%row(content)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1270,8 +1270,8 @@ $(document).ready(function(){
 	<tr class="content" align="left">
 	<td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
 	<td align="center">[%func(show_img)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_news=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_news=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_news=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_news=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1328,8 +1328,8 @@ $(document).ready(function(){
 	<tr class="content" align="left">
 	<td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
 	<td align="center">[%func(show_img)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_offers=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_offers=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_offers=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_offers=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1391,8 +1391,8 @@ $(document).ready(function(){
         <td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
         <td align="center">[%func(show_img)%]</td>
         <td align="center"><input class="" type="checkbox" class="sw_active" value='[%row(id)%]' [%row(active,if,checked)%]></td>
-        <td width=16><a href=[%PHP_SELF%]?edit_partner=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-        <td width=16><a href=[%PHP_SELF%]?del_partner=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+        <td width=16><a href=[%PHP_SELF%]?edit_partner=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+        <td width=16><a href=[%PHP_SELF%]?del_partner=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
     </tr>
 [%loop_end%]
 </table>
@@ -1460,8 +1460,8 @@ $(document).ready(function(){
 	<tr class="content" align="left">
 	<td><b>[%row(title)%]</b></td>
 	<td>[%row(uri)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1512,8 +1512,8 @@ $(document).ready(function(){
 	<tr class="content" align="left">
 	<td><b>[%row(author)%]</b><br>[%row(content)%]</td>
 	<td align="center">[%func(show_img)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_reviews=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_reviews=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_reviews=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_reviews=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1572,8 +1572,8 @@ $(document).ready(function(){
 	<td><b>[%row(name)%]</b></td>
 	<td>[%row(value)%]</td>
 	<td>[%row(comment)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1625,8 +1625,8 @@ $(document).ready(function(){
 	<td>[%row(pos)%]</td>
 	<td><b>[%row(title)%]</b><br>[%row(descr)%]</td>
 	<td align="center">[%func(show_img)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_image=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_image=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_image=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_image=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1806,8 +1806,8 @@ $(document).ready(function(){
 	<td><b>[%row(name)%]</b></td>
 	<td>[%row(comment)%]</td>
 	<td>[%row(template_type)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1868,8 +1868,8 @@ $(document).ready(function(){
 	<tr class="content" align="left">
 	<td><b>[%row(login)%]</b></td>
 	<td>[%row(fullname)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1920,8 +1920,8 @@ $(document).ready(function(){
 	<td><b>[%row(title)%]</b></td>
 	<td>[%row(value)%]</td>
 	<td>[%row(comment)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?view=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -1967,8 +1967,8 @@ $(document).ready(function(){
 	<td><b><a href=[%PHP_SELF%]?view_vote=1&id=[%row(id)%]>[%row(title)%]</a></b></td>
 	<td align="center">[%row(variants)%]</td>
 	<td align="center">[%row(active,yes_no)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_vote=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_vote=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_vote=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_vote=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -2014,8 +2014,8 @@ $(document).ready(function(){
 	<td align="center">[%row(num)%]</td>
 	<td><b>[%row(title)%]</b></td>
 	<td align="center">[%row(hits)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_variant=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_variant=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_variant=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_variant=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>
@@ -2066,8 +2066,8 @@ $(document).ready(function(){
         <td align="center"><b>[%row(date)%]</b></td>
         <td>[%row(item_list,nl2br)%][%row(comment,nl2br)%][%func(file_info)%]</td>
         <td>[%row(contact_info,nl2br)%]</td>
-        <td width=16><a href="[%PHP_SELF%]?active=Y&id=[%row(id)%]"><img src="../images/add.gif" alt="Активно" border="0" onClick="return test()"></a></td>
-        <td width=16><a href="[%PHP_SELF%]?active=N&id=[%row(id)%]"><img src="../images/sub.gif" alt="Неактивно" border="0" onClick="return test()"></a></td>
+        <td width=16><a href="[%PHP_SELF%]?active=Y&id=[%row(id)%]"><img src="images/add.gif" alt="Активно" border="0" onClick="return test()"></a></td>
+        <td width=16><a href="[%PHP_SELF%]?active=N&id=[%row(id)%]"><img src="images/sub.gif" alt="Неактивно" border="0" onClick="return test()"></a></td>
         </tr>
 [%loop_end%]
 </table>

@@ -19,7 +19,7 @@ class Blocks
      */
     protected function get_href(array $row) : array
     {
-        $href = get_menu_href(null, $row);
+        $href = App::$routing->getUrl($row['target_type'], $row['target_id'], $row);
         if (preg_match('/^http.?:\/\/.+$/', $href)) {
             $target_inc = ' target="_blank"';
         } else {
@@ -158,9 +158,8 @@ class Blocks
      *
      * @return string Block content
      */
-    public function content(string $block_name) : string
+    public function rawContent(string $block_name) : string
     {
-        
         App::debug('Parse block ' . $block_name);        
         switch ($block_name) {
             
@@ -204,6 +203,15 @@ class Blocks
                 return '';
                 
             default:
+                if(strstr($block_name, '/')){
+                    $class_name = str_replace('/', '\\', $block_name);
+                    if(class_exists($class_name)) {
+                        $object = new $class_name;
+                        return $object->run();
+                    }
+                    return 'Block class ' . $class_name . ' not found';
+                }
+
                 if(\is_callable([$this,$block_name])) {
                    return $this->$block_name();
                 }                
@@ -212,6 +220,27 @@ class Blocks
             
         }
     
+    }
+    /**
+     * Return block content
+     *
+     * @param string $block_name Block name
+     *
+     * @return string Block content
+     */
+    public function content(string $block_name, $allow_cache = false) : string
+    {
+        if($allow_cache) {
+            $cache_key = $block_name . App::$user->id;
+            if(App::$cache->has($cache_key)) {
+                return App::$cache->get($cache_key);
+            }
+        }
+        $content = $this->rawContent($block_name);
+        if($allow_cache) {
+            App::$cache->set($cache_key, $content);
+        }
+        return $content;
     }
     
 }

@@ -8,12 +8,14 @@ class AppTest extends TestCase
     
     private $App;
     
-    public function setUp() {
+    public function setUp() : void 
+    {
         parent::setUp();
         $this->App = new App('test1','test2');
     }
     
-    public function tearDown() {
+    public function tearDown() : void 
+    {
         global $DIR, $SUBDIR;
         $this->App = new App($DIR, $SUBDIR);
     }            

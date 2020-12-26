@@ -17,8 +17,8 @@
 	<td><b>{{ row.name }}</b></td>
 	<td>{{ row.value }}</td>
 	<td>{{ row.comment }}</td>
-	<td width=16><a href="{{ this.base_url }}update?id={{ row.id }}"><img src="{{ SUBDIR }}images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href="{{ this.base_url }}delete?id={{ row.id }}"><img src="{{ SUBDIR }}images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href="{{ this.base_url }}update?id={{ row.id }}"><img src="{{ SUBDIR }}admin/images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href="{{ this.base_url }}delete?id={{ row.id }}"><img src="{{ SUBDIR }}admin/images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
     </tr>
 {% endfor %}
 </table>

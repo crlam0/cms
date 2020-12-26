@@ -1,0 +1,8 @@
+<div id="articles_list">
+    <div class="separator"></div>
+    {% for row in rows %}
+        <div class="item_title"><a href="{{ SUBDIR }}{{ routing.getUrl('article_list', null, row) }}">{{ row.title }}</a></div>
+        <div class="item_descr">{{ row.descr }}</div>
+        <div class="separator"></div>
+    {% endfor %}
+</div>

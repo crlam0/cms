@@ -1,0 +1,62 @@
+{% if part_descr is defined %}
+    <div class="part_descr">{{ part_descr }}</div>
+{% endif %}
+
+{% if cat_part_href is not defined %}
+    {% set various_cat_part_href = true %}
+{% endif %}
+
+
+<div id="cat_items">
+    {% for row in rows %}
+        {% set props = this.getPropsArray(row.props) %}
+        {% if various_cat_part_href is defined %}
+            {% set cat_part_href = routing.getUrl('cat_part', row.part_id) %}
+        {% endif %}
+        
+        <div class="cat_item">
+            <div class="cat_item_image_border">
+                <div class="cat_item_image_table">
+                    <div class="cat_item_image" item_id="{{ row.item_id }}">
+                        <a href="{{ SUBDIR }}{{ cat_part_href }}{{ row.seo_alias }}" title="{{ row.title }}">
+                            {{ this.getListImage(row) }}
+                        </a>
+                    </div>
+                </div>
+                {% if props.special_offer is defined %}
+                    <div class="cat_item_special_offer">Хит</div>
+                {% endif %}
+                {% if props.novelty is defined %}
+                    <div class="cat_item_novelty">Новинка</div>
+                {% endif %}
+            </div>
+            <div class="cat_item_title">
+                <a href="{{ SUBDIR }}{{ cat_part_href }}{{ row.seo_alias }}" title="{{ row.title }}">{{ row.title }}</a>
+            </div>
+            <div class="cat_item_descr"><i>{{ row.descr }}</i></div>
+            <div class="cat_item_price">
+                {% if row.price %}
+                    Цена: {{ row.price }}
+                {% endif %}
+            </div>
+            <div class="cat_item_buy">
+                <input type=hidden class="cnt_{{ row.id }}" size="1" maxlength="2" value="1">
+                <a class="buy_button btn btn-default" item_id="{{ row.item_id }}">В корзину</a>
+            </div>
+        </div>
+
+    {% endfor %}
+
+    {% if pager is defined %}
+        {% 
+        include 'pager.html.twig' with {
+            'pager': pager,
+            'main_route': cat_part_href,
+            'route': cat_part_href ~ 'page{$page}/'
+        }
+        %}
+    {% endif %}
+
+</div>
+    
+    

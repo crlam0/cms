@@ -1,8 +1,6 @@
 <?php
 
 $tags['Header'] = "Голосование";
-$tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
-add_nav_item($tags['Header']);
 
 if ($input['vote']) {
     if (!check_key($COOKIE_NAME . "_VOTE", $_COOKIE)) {

@@ -1,0 +1,14 @@
+<div id="media">
+    {% for row in rows %}
+        <div class="title">
+            <a href="{{ SUBDIR }}{{ routing.getUrl('media_list', row.id) }}" title="{{ row.title }}">
+                {{ row.title }}
+            </a>
+        </div>
+        <div class="date">Раздел добавлен: {{ row.date_add }}</div>
+        <div class="descr">{{ row.descr }}</div>
+        <div class="img_count">Файлов в разделе: {{ row.files }}</div>
+
+    {% endfor %}
+</div>
+

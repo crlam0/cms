@@ -187,7 +187,7 @@ class Image
         if($URL = $this->getUrl($row, $cache_path, $script_url, $max_width)) {
             $content = '<img src="' . App::$SUBDIR . $URL . '" border="0" item_id="'.$row['id'].'" class="'.$css_class.'" alt="'.$row['title'].'">';
         } else {
-            $content = '<div class="empty_img">Изображение отсутствует: '.$row['file_name'].'</div>';
+            $content = '<div class="empty_img">Изображение отсутствует: '.$row['fname'].'</div>';
         }
         return $content;
     }

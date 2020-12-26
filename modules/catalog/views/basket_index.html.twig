@@ -1,0 +1,36 @@
+<center id="basket-content">
+    <form action="{{ SUBDIR }}basket/" method="post" name="request_form" id="request_form">
+    <table width="500" class="table table-responsive normal-form" align="center">
+    {% for row in rows %}
+    <tr valign="middle">
+        <td align="center" width="200">
+            {% set image = this.getImageFilename(row.fname,row.file_type,190,true) %}
+            {% if image %}
+                <img src="{{SUBDIR}}{{image}}" alt="{{ row.title }}" file_name="{{ row.fname }}" item_id="{{ row.id }}" image_id="{{ row.cat_item_images_id}}" border="0" align="left" class="cat_item_image_popup">
+            {% else %}
+                Изображение отсутствует
+            {% endif %}
+        </td>
+        <td class=price><b>{{ row.title }}</b> &nbsp;&nbsp;(Кол-во: {{ this.getItemsCount(row.id) }})<br>
+            Цена: <b>{{ add_zero(row.price) }} руб.</b>
+            <br /><br />
+            <input type="edit" name="buy_cnt[{{ row.id }}]" class="form-control catalog-form-control" value="{{ this.getItemsCount(row.id) }}">
+            &nbsp;
+            <a href="{{ SUBDIR }}basket/del?item_id={{ row.id }}" class="btn btn-default" style="color: #f00;" title="Удалить из заказа"> X </a>
+        </td>
+    </tr>
+    {% endfor %}
+    </table>
+    <center>
+        Итого на сумму <b> {{ summ }} руб.</b>
+        {% if discount %}
+            С учетом скидки <b>{{ discount }}%</b> сумма составлет: <b> {{ summ_with_discount }} </b>
+        {% endif %}
+    </center>
+    <center>Итого к оплате: <b>{{ summ_with_discount_str }}</b></center>
+    <br />
+    <button type="submit" name="button" value="calc" class="btn btn-default"> Посчитать </button>
+    <button type="submit" name="button" value="request" class="btn btn-default"> Оформить заказ </button>
+    <a href="{{ SUBDIR }}basket/clear" class="btn btn-default"> Очистить список </a>
+    </form>
+</center>

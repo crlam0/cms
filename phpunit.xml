@@ -15,10 +15,5 @@
         <whitelist>
             <directory suffix=".php">./include/</directory>
         </whitelist>
-    <filter>
-        <blacklist>
-            <directory suffix=".php">./vendor/</directory>
-        </blacklist>
-    </filter>
     </filter>
 </phpunit>

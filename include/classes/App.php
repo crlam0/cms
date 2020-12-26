@@ -29,6 +29,10 @@ class App
     * @var Message Message object
     */
     public static $message;
+    /**
+    * @var FileCache Cache object
+    */
+    public static $cache;
     
     /**
     * @var Array Raw data from _GET
@@ -66,16 +70,19 @@ class App
     * @var Monolog\Logger Object of logger
     */    
     public static $logger;
-    
-
+    /**
+    * @var Array Errors from validation etc.
+    */    
+    private static $errors = [];
     /**
     * @var Array Debug array
     */
-    private static $data = array();
+    private static $data = [];
+    
     /**
     * @var Array Array of denied words for input strings
     */
-    private $DENIED_WORDS=array('union','insert','update ','delete ','alter ','drop ','\$_[','<?php','<script','javascript');
+    private $DENIED_WORDS=['union','insert','update ','delete ','alter ','drop ','\$_[','<?php','<script','javascript'];
     
     /**
      * Load settings to App
@@ -176,7 +183,7 @@ class App
      */
     public function addGlobals() : void
     {
-        global $input, $server, $settings, $mysqli;
+        global $input, $server, $settings;
         $input = static::$input;
         $server = static::$server;
         $settings = static::$settings;
@@ -232,10 +239,72 @@ class App
         static::$logger->debug($message);
     }
     
+    /**
+     * Add message to session
+     *
+     * @param string $type
+     * @param string $message
+     *
+     */
+    public static function setFlash(string $type, string $message) {
+        global $_SESSION;
+        $_SESSION['flash_type'] = $type;
+        $_SESSION['flash_message'] = $message;
+    }
+    
+    /**
+     * Get message from session
+     *
+     * @return array
+     */
+    public static function getFlash() {
+        global $_SESSION;
+        if(!isset($_SESSION['flash_type'])) {
+            return [];
+        }
+        $result = [
+            'type' => $_SESSION['flash_type'],
+            'message' => $_SESSION['flash_message'],
+        ];
+        unset($_SESSION['flash_type']);
+        unset($_SESSION['flash_message']);
+        return $result;
+    }
+    
+    /**
+     * Set errors[]
+     *
+     * @param string $error
+     */
+    public static function setErrors (array $errors) : void
+    {
+        static::$errors = $errors;
+    }
+    
+    /**
+     * Add message to errors[]
+     *
+     * @param string $error
+     */
+    public static function addToErrors (string $error) : void
+    {
+        static::$errors[] = $error;
+    }
+    
+    /**
+     * Get errors[]
+     *
+     * @return array 
+     */
+    public static function getErrors () : array
+    {
+        return static::$errors;
+    }
+
     private function failedAuth() {
         if (static::$user->id) {
             static::debug('Failed auth, user ID: ' . static::$user->id . ' URL: ' . static::$routing->request_uri);
-            return static::$message->get('error', [] ,'У вас нет соответствующих прав !');
+            return static::$message->getError('У вас нет соответствующих прав !');
         } else {
             $_SESSION['GO_TO_URI'] = static::$server['REQUEST_URI'];
             redirect(static::$SUBDIR . 'login/');
@@ -243,34 +312,82 @@ class App
         exit;
     }
     
+    public static function sendResult($content, array $tags = [], int $code = 200) 
+    {
+        switch ($code) {
+            case 200:
+                $http_message = ' 200 Ok';
+                break;
+            case 301:
+                $http_message = ' 301 Moved Permanently';
+                break;
+            case 403:
+                $http_message = ' 403 Forbidden';
+                break;
+            case 500:
+                $http_message = ' 500 Internal server error';
+                break;
+            default:
+                $http_message = ' 404 Not found';
+                break;
+        }
+        header(static::$server['SERVER_PROTOCOL'] . $http_message, true, $code);
+        $tags['flash'] = static::getFlash();
+        $tags['errors'] = static::getErrors();
+        echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
+        exit;
+    }
+    
+    private function getContent($controller, $content, $tags) 
+    {
+        if(is_array($content)) {
+            echo json_encode($content);
+            exit();
+        }        
+        $tags['Header'] = $controller->title;
+        $tags['breadcrumbs'] = array_merge($tags['breadcrumbs'], $controller->breadcrumbs);
+        $tags = array_merge($tags, $controller->tags);
+        static::sendResult($content, $tags, 200);
+    }
+    
+    /**
+     * Run cotroller found in routing
+     *
+     * @param string $controller_name
+     * @param string $action
+     * @param array $tags
+     * 
+     */
     private function runController($controller_name, $action, $tags)
     {
         static::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
         $controller = new $controller_name;
         try {            
             $controller->base_url = static::$routing->getBaseUrl();
-            if(static::$user->checkAccess($controller->user_flag)) {
-                $content = $controller->run($action, static::$routing->params);
-                $tags['Header'] = $controller->title;
-                header(App::$server['SERVER_PROTOCOL'] . ' 200 Ok', true, 200);
+            if(static::$user->checkAccess($controller->user_flag)) {                
+                $content = $controller->run($action, static::$routing->params);                
             } else {
                 $content = $this->failedAuth();
                 $tags['Header'] = 'Ошибка авторизации';
-                header(App::$server['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
-            }           
-            /* Fill tags for default template */
-            $tags['nav_array'] = array_merge($tags['nav_array'], $controller->breadcrumbs);
-            $tags = array_merge($tags, $controller->tags);
-            echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
-            exit;
+                $this->sendResult($content, $tags, 403);                
+            }
+            return $this->getContent($controller, $content, $tags);
+
         } catch (\Throwable $e) {
             static::debug('Exception: ' . $e->getMessage());
             static::debug('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
             static::debug($e->getTraceAsString());
+            $tags['Header']='';
+            static::sendResult(static::$message->getError('Внутренние неполадки, приносим свои извинения.'), $tags, 500);
         }
     }
     
-    public function run ($tags) : void 
+    /**
+     * Run cotroller or include file found in routing
+     *
+     * @param array $tags
+     */
+    public function run ($tags)
     {
         $file = static::$routing->file;
         if($file && is_file(static::$DIR . $file)) {
@@ -285,7 +402,7 @@ class App
             if(class_exists($controller_name)) {
                 $this->runController($controller_name, static::$routing->action, $tags);
             } else {
-                static::debug('Controller "' . $controller_name . '" not exists !"');
+                static::debug('ERROR: Controller "' . $controller_name . '" not exists !"');
             }
         } else {
             static::debug('ERROR: empty controller name in routing.');

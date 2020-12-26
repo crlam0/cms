@@ -11,8 +11,8 @@ if(file_exists(__DIR__.'/../local/misc.local.php')) {
     require_once __DIR__.'/../local/misc.local.php';
 }    
 
-if(file_exists($DIR.'vendor/autoload.php')) {
-    require_once $DIR.'vendor/autoload.php';
+if(file_exists(__DIR__.'/../vendor/autoload.php')) {
+    require_once __DIR__.'/../vendor/autoload.php';
 } else {
     die('Cant find autoloader');
 }
@@ -23,6 +23,7 @@ use classes\Routing;
 use classes\User;
 use classes\Template;
 use classes\Message;
+use classes\FileCache;
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
 use Monolog\Logger;
@@ -33,7 +34,7 @@ App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/error.log', Logger::
 
 $App = new App($DIR, $SUBDIR);
 $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
-$App->loadSettings(__DIR__.'/../local/settings.php');
+$App->loadSettings(__DIR__ . '/../local/settings.php');
 $App->loadInputData($_GET, $_POST, $_SERVER);
 $App->addGlobals();
 App::$debug = App::$settings['debug'];
@@ -51,21 +52,20 @@ if(App::$debug) {
     $App->debug('Added exception handler');
 }
 
-
 App::debug('App created, arrays loaded');
 unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
-App::$user = new User(App::$settings['default_flags']);
-App::$template = new Template();
-App::$message = new Message();
+App::$user = new User(null, App::$settings['default_flags']);
 App::$routing = new Routing (App::$server['REQUEST_URI']);
-
+App::$message = new Message();
+App::$template = new Template();
+App::$cache = new FileCache('var/cache/misc/');
 
 require_once __DIR__.'/lib_sql.php';
 require_once __DIR__.'/lib_messages.php';
 require_once __DIR__.'/lib_templates.php';
 require_once __DIR__.'/lib_functions.php';
-require_once __DIR__.'/lib_url.php';
+
 $App->debug('Library loaded');
 
 if(App::$server['SERVER_PROTOCOL']) {
@@ -76,8 +76,12 @@ if(App::$server['SERVER_PROTOCOL']) {
         App::$user->authByRememberme($COOKIE_NAME);
     }
     require_once __DIR__.'/lib_stats.php';
+    $content='';
+    $tags['INCLUDE_HEAD']='';
+    $tags['INCLUDE_CSS']='';
+    $tags['INCLUDE_JS']='';
+    $server['PHP_SELF_DIR']=dirname(App::$server['PHP_SELF']).'/';
 }
-
 
 $part = App::$routing->getPartArray();
 if (!$part['id']) {
@@ -88,8 +92,7 @@ $App->set('tpl_default', $part['tpl_name']);
 
 if(!App::$user->checkAccess($part['user_flag'])) {
     if (App::$user->id) {
-        $content = App::$message->get('error', [] ,'У вас нет соответствующих прав !');
-        echo App::$template->parse(App::get('tpl_default'), [], null, $content);
+        App::sendResult(App::$message->getError('У вас нет соответствующих прав !'), $tags, 403);
     } else {
         $_SESSION['GO_TO_URI'] = App::$server['REQUEST_URI'];
         redirect(App::$SUBDIR . 'login/');
@@ -97,11 +100,21 @@ if(!App::$user->checkAccess($part['user_flag'])) {
     exit;
 }
 
-$server['PHP_SELF_DIR']=dirname(App::$server['PHP_SELF']).'/';
 
-$content='';
-$tags['INCLUDE_HEAD']='';
-$tags['INCLUDE_CSS']='';
-$tags['INCLUDE_JS']='';
+if(isset(App::$settings['modules'])) {
+    foreach(App::$settings['modules'] as $name => $data) {
+        if(isset($data['bootstrap'])) {
+            if(class_exists($data['bootstrap'])) {    
+                $bootstrap = new $data['bootstrap'];
+                App::debug('Run boostrap for module "' . $name .'"');
+                $bootstrap->bootstrap();
+            } else {
+                App::debug('Boostrap class for module "' . $name .'" decalred but not exists: "' . $data['bootstrap'] . '"');
+            }
+        }        
+    }    
+}
+
+App::$routing->matchRoutes();
 
 $App->debug('common.php complete');

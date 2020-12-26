@@ -4,7 +4,7 @@ namespace classes;
 
 class MyArray implements \ArrayAccess 
 {
-    private $container = array();
+    private $container = [];
 
     public function __construct() 
     {
@@ -54,5 +54,9 @@ class MyArray implements \ArrayAccess
         return array_merge($this->container, $array);
     }
 
+    public function keyExists(string $key) : bool 
+    {
+        return array_key_exists($key, $this->container);
+    }
 }
 

@@ -6,56 +6,61 @@ class ModelTest extends TestCase
 {
     private $model;
     
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->model = new tests\TestModel;
     }
 
-    public function testGetterAndSetter() {
+    public function testGetterAndSetter() 
+    {
         $this->model->name = 'Test 1';
         self::assertEquals('Test 1', $this->model->name);
         self::assertEquals('Test 1', $this->model['name']);
     }
 
-    public function testLoad() {
+    public function testLoad() 
+    {
         $this->model->load(['name' => 'Test 1']);
         self::assertEquals('Test 1', $this->model->name);
         self::assertEquals('Test 1', $this->model['name']);
     }
     
-    public function testCheckRulesString() {
+    public function testCheckRulesString() 
+    {
         $this->model->value = 5;
 
         $this->model->name = '';
-        self::assertFalse($this->model->checkRules());
+        self::assertFalse($this->model->validate());
         $this->model->name = '0123456789';
-        self::assertFalse($this->model->checkRules());
+        self::assertFalse($this->model->validate());
         $this->model->name = 'Test 1';
-        self::assertTrue($this->model->checkRules());
+        self::assertTrue($this->model->validate());
     }
     
-    public function testCheckRulesInteger() {
+    public function testCheckRulesInteger() 
+    {
         $this->model->name = 'Test 1';
 
         $this->model->value = 0;
-        self::assertFalse($this->model->checkRules());
+        self::assertFalse($this->model->validate());
         $this->model->value = 10;
-        self::assertFalse($this->model->checkRules());
+        self::assertFalse($this->model->validate());
         $this->model->value = 5;
-        self::assertTrue($this->model->checkRules());
+        self::assertTrue($this->model->validate());
     }
     
-    public function testCheckRequired() {
+    public function testCheckRequired() 
+    {
         $this->model->value = 5;
         $this->model->name = '';
-        self::assertFalse($this->model->checkRules());
+        self::assertFalse($this->model->validate());
         $this->model->value = 0;
         $this->model->name = 'Test 1';
-        self::assertFalse($this->model->checkRules());
+        self::assertFalse($this->model->validate());
         $this->model->value = 5;
         $this->model->name = 'Test 1';
-        self::assertTrue($this->model->checkRules());
+        self::assertTrue($this->model->validate());
     }
     
 }

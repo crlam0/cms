@@ -155,7 +155,7 @@ class DB
      * @return array One row
      */
     public function getRow(string $sql, array $params = []) 
-    {
+    {        
         $result = $this->query($sql, $params);    
         if ($result->num_rows) {
             return $result->fetch_array();
@@ -175,11 +175,11 @@ class DB
     }
     
     /**
-     * Return last error ID.
+     * Return last error.
      *
-     * @return integer 
+     * @return string
      */
-    public function error(): int 
+    public function error(): string 
     {
         return $this->mysqli->error;
     }
@@ -399,7 +399,8 @@ class DB
      * 
      * @return \mysqli_result.
      */
-    public function findOne($table, $id) {
+    public function findOne(string $table, string $id) 
+    {
         $query = "SELECT * FROM {$table} WHERE id=?";
         return $this->query($query, ['id' => $id]);          
     }
@@ -413,12 +414,13 @@ class DB
      * 
      * @return \mysqli_result.
      */
-    public function findAll($table, $where = [], $order_by = 'id desc') {
+    public function findAll(string $table, array $where = [], string $order_by = 'id desc') 
+    {
         if(!count($where)) {
             return $this->query("SELECT * FROM {$table} ORDER BY {$order_by}");
         }
         $expr = '';
-        while (list($key) = each($where)) {
+        foreach($where as $key => $value) {
             if(strlen($expr) == 0) {
                 $expr .= $key . '=?';                
             } else {
@@ -426,7 +428,7 @@ class DB
             }
         }
         $query = "SELECT * FROM {$table} WHERE {$expr} ORDER BY {$order_by}";
-        return $this->query($query , $where);          
+        return $this->query($query, $where);          
     }    
     
     /**
@@ -437,11 +439,11 @@ class DB
      * 
      * @return \mysqli_result.
      */
-    public function deleteFromTable($table, $where)
+    public function deleteFromTable(string $table, array $where)
     {
         
         $expr = '';
-        while (list($key) = each($where)) {
+        foreach($where as $key => $value) {
             if(strlen($expr) == 0) {
                 $expr .= $key . '=?';                
             } else {

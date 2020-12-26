@@ -7,7 +7,7 @@ class TemplateTest extends TestCase
 {
     private $Template;
     
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->Template = new Template();
@@ -21,8 +21,8 @@ class TemplateTest extends TestCase
     
     public function testSQLParse()            
     {
-        $content=$this->Template->parse('article_items');
-        self::assertStringStartsWith('<div id="articles_list">', $content);
+        $content=$this->Template->parse('faq_list');
+        self::assertStringStartsWith('<div id="faq">', $content);
     }
     
 }

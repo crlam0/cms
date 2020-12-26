@@ -1,0 +1,40 @@
+<div id="media">
+    {% if list_descr|length > 0 %}
+        <div class="list_descr">{{ list_descr }}</div>
+    {% endif %}
+    
+    {% for row in rows %}
+        <div class="title">
+            {{ row.title }}
+        </div>
+	<div class="item_descr">
+		<div class="preview">
+                    {% if this.fileExists(row) %}
+                        <a href="{{ this.getHREF(row) }}" class="btn btn-default"> 
+                            <b>Скачать файл</b> 
+                            ( размер: {{ this.getFileSize(row) }}, загрузок {{ row.download_count }})
+                        </a>
+                        {{ this.getPlayerTag(row)}}
+                    {% else %}
+                        Файл отсутствует
+                    {% endif %}
+                </div>
+		<div class="right_descr">
+			<div class="descr">{{ row.descr }}</div>
+			<div class="date">Добавлен: {{ row.date_add }}</div>
+		</div>
+	</div>
+    {% endfor %}
+    
+    {% if pager is defined %}
+        {% 
+        include 'pager.html.twig' with {
+            'pager': pager,
+            'main_route': media_list_href,
+            'route': media_list_href ~ '{$page}/'
+        }
+        %}
+    {% endif %}
+
+    <center><a href={{ SUBDIR }}media/ class="btn btn-default"><<  Назад</a></center>
+</div>

@@ -1,0 +1,152 @@
+<form action="{{ action }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="MAX_FILE_SIZE" value="3000000">
+    <input type="hidden" name="id" value="{{ model.id }}">
+    <table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
+        <tr class=header><td colspan="2">{{ form_title }}</td></tr>
+        <tr class="content" align="left"><td>{{ model.label('title') }}:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[title]" value="{{ model.title }}"></td></tr>
+        <tr class="content" align="left"><td>{{ model.label('seo_alias') }}:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[seo_alias]" value="{{ model.seo_alias }}"></td></tr>
+        <tr class="content" align="left"><td>Ссылается на:</td><td>
+            <select name="form[target_type]" id="target_type" class="form-control">
+                <option {% if model.target_type == '' %}selected{% endif %} value="">-</option>
+                {% for row in target_types %}
+                    <option {% if model.target_type == row.type %}selected{% endif %} value="{{ row.type }}">{{ row.name }}</option>
+                {% endfor %}
+            </select>
+        </td></tr>
+        <tr class="content" align="left" id="target_select"></tr>
+	<tr class="content" align="left">
+            <td>Изображение:</td>
+            <td>
+                <input class="form-control" name="image_file" type="file" size="40"><br />
+                {{ this.showImage(model.image_name) }}
+                {% if model.image_name|length>0 %}
+                    <br>
+                    <a class="btn btn-default" href="{{ this.base_url }}delete-image-file?post_id={{ model.id }}">Удалить</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% if action != 'create' %}
+        <tr class="content" align="left"><td>Метки:</td><td><button class="btn btn-default" post_id="{{ model.id }}" id="select_tags">Показать список</button></td></tr>
+        {% endif %}
+        <tr class="content"><td align="left" colspan="2">
+            <textarea class="form-control" id="editor" name="form[content]" rows="25" cols="120" maxlength="64000">{{ model.content }}</textarea>
+        </td></tr>
+        <tr class=header align="left"><td align="center" colspan="2">                
+            <input class="btn btn-primary" type="submit" name="update" value="{% if action == 'create' %}Добавить{% else %}Обновить{% endif %}"> 
+        </td></tr>
+    </table>
+</form>
+<br>
+<center>
+    <a href="{{ this.base_url }}" class="btn btn-default"><< Назад</a>
+</center>
+
+<style>
+    .btn_del_tag {
+        display: inline-block;float: right;padding: 1px 6px;
+    }
+</style>
+
+<script type="text/javascript">    
+function get_target_select () {
+    var target_type = "";
+    $("#target_type option:selected").each(function () {
+        target_type = $(this).attr("value");
+    });
+    $('#target_select').load("{{ this.base_url }}get-target-select?post_id={{ model.id }}&target_type="+target_type);
+}
+
+function get_tags_data(post_id) {
+    $.ajax({
+        type: "GET", url:  "{{ this.base_url }}get-tags-popup", dataType: "json", data: "post_id=" + post_id,
+        success: function (msg) {
+            if (msg.result !== 'OK') {
+                console.log(msg.result);
+            } else {
+                $(".tags-panel").fadeIn("slow");
+                $('#popupHeader').html('<h4>Метки</h4>');
+                $('#popupContent').html(msg.content);
+                $('#myModal').modal();
+            }
+        },
+        error: function (jqXHR, error, errorThrown) {
+            $('#popupContent').html(jqXHR.responseText);
+            $('#myModal').modal();
+        }
+    });
+}
+
+$(document).ready(function(){
+    get_target_select ();
+    
+    $('#target_type').change(function(){
+        get_target_select ();
+    });
+    
+    $('body').on('click', '#select_tags', function () {
+        var post_id = $(this).attr("post_id");
+        get_tags_data(post_id);
+        return false;
+    });
+    
+    $('body').on('click', '#new_tag_button', function () {
+        var new_tag_name = $("#new_tag_name").val();
+        var post_id = $("#post_id").val();
+        $.ajax({
+            type: "GET", url:  "{{ this.base_url }}add-new-tag", data: "new_tag_name=" + new_tag_name + "&post_id=" + post_id,
+            success: function (msg) {
+                if (msg !== 'OK') {
+                    console.log(msg);
+                } else {
+                    $(".tags-panel").fadeOut("slow", function () {
+                        get_tags_data(post_id);                        
+                    });
+                    $('#popupHeader').html('<h4>Метки</h4>');
+                    $('#popupContent').html(msg.content);
+                    $('#myModal').modal();
+                }
+            },
+            error: function (jqXHR, error, errorThrown) {
+                $('#popupContent').html(jqXHR.responseText);
+            }
+        });
+        return false;
+    });
+    
+    $('body').on('change', ".tag_input", function(){
+        var post_id = $("#post_id").val();
+        var tag_id = $(this).attr("tag_id");
+        var value = $(this).prop("checked");
+        if (!value) {
+            value = "";
+        }
+        var data = "post_id=" + post_id + "&tag_id=" + tag_id + "&value=" + value;
+
+        $.ajax({
+           type: "GET", url: "{{ this.base_url }}tag-change", data: data,
+           success: function(msg){
+            if(msg !== "OK") {
+                console.log(msg);
+            }
+           }
+        });
+    });
+    
+    $('body').on('click', '.btn_del_tag', function () {
+        var tag_id = $(this).attr("tag_id");
+        $.ajax({
+           type: "GET", url: "{{ this.base_url }}tag-delete", data: "tag_id=" + tag_id,
+           success: function(msg){
+            if(msg !== "OK") {
+                console.log(msg);
+            } else {
+                var li="#li_tag_" + tag_id;
+                $(li).fadeOut("slow");
+            }
+           }
+        });
+    });
+    
+});
+
+</script>

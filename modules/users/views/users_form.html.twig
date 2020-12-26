@@ -1,0 +1,129 @@
+<form action="{{ action }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="MAX_FILE_SIZE" value="3000000">
+    <input type="hidden" name="id" value="{{ model.id }}">
+    <table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
+        <tr class=header><td colspan="2">{{ form_title }}</td></tr>
+        <tr class="content" align="left"><td>{{ model.label('login') }}:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[login]" value="{{ model.login }}"></td></tr>
+        <tr class="content" align="left"><td>{{ model.label('passwd') }}:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[passwd]" value=""></td></tr>
+        <tr class="content" align="left"><td>{{ model.label('email') }}:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[email]" value="{{ model.email }}"></td></tr>
+        <tr class="content" align="left"><td>{{ model.label('fullname') }}:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[fullname]" value="{{ model.fullname }}"></td></tr>
+        <tr class="content" align="left" id="target_select"></tr>
+	<tr class="content" align="left">
+            <td>Изображение:</td>
+            <td>
+                <input class="form-control" name="image_file" type="file" size="40"><br />
+                {{ this.showImage(model.avatar) }}
+                {% if model.avatar|length>0 %}
+                    <a class="btn btn-default" href="{{ this.base_url }}delete-image-file?user_id={{ model.id }}">Удалить</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% if action != 'create' %}
+            <tr class="content" align="left"><td>Флаги:</td><td><button class="btn btn-default" user_id="{{ model.id }}" id="select_flags">Показать список</button></td></tr>
+        {% endif %}
+        <tr class=header align="left"><td align="center" colspan="2">                
+            <input class="btn btn-primary" type="submit" name="update" value="{% if action == 'create' %}Добавить{% else %}Обновить{% endif %}"> 
+        </td></tr>
+    </table>
+</form>
+<br>
+<center>
+    <a href="{{ this.base_url }}" class="btn btn-default"><< Назад</a>
+</center>
+
+<style>
+    .btn_del_flag {
+        display: inline-block;float: right;padding: 1px 6px;
+    }
+</style>
+
+<script type="text/javascript">    
+function get_flags_data(user_id) {
+    $.ajax({
+        type: "GET", url:  "{{ this.base_url }}get-flags-popup", dataType: "json", data: "user_id=" + user_id,
+        success: function (msg) {
+            if (msg.result !== 'OK') {
+                console.log(msg.result);
+            } else {
+                $(".flags-panel").fadeIn("slow");
+                $('#popupHeader').html('<h4>Метки</h4>');
+                $('#popupContent').html(msg.content);
+                $('#myModal').modal();
+            }
+        },
+        error: function (jqXHR, error, errorThrown) {
+            $('#popupContent').html(jqXHR.responseText);
+            $('#myModal').modal();
+        }
+    });
+}
+
+$(document).ready(function(){
+    
+    $('body').on('click', '#select_flags', function () {
+        var user_id = $(this).attr("user_id");
+        get_flags_data(user_id);
+        return false;
+    });
+    
+    $('body').on('click', '#new_flag_button', function () {
+        var new_flag_name = $("#new_flag_name").val();
+        var user_id = $("#user_id").val();
+        $.ajax({
+            type: "GET", url:  "{{ this.base_url }}add-new-flag", data: "new_flag_name=" + new_flag_name + "&user_id=" + user_id,
+            success: function (msg) {
+                if (msg !== 'OK') {
+                    console.log(msg);
+                } else {
+                    $(".flags-panel").fadeOut("slow", function () {
+                        get_flags_data(post_id);                        
+                    });
+                    $('#popupHeader').html('<h4>Флаги</h4>');
+                    $('#popupContent').html(msg.content);
+                    $('#myModal').modal();
+                }
+            },
+            error: function (jqXHR, error, errorThrown) {
+                $('#popupContent').html(jqXHR.responseText);
+            }
+        });
+        return false;
+    });
+    
+    $('body').on('change', ".flag_input", function(){
+        var user_id = $("#user_id").val();
+        var flag_value = $(this).attr("flag_value");
+        var value = $(this).prop("checked");
+        if (!value) {
+            value = "";
+        }
+        var data = "user_id=" + user_id + "&flag_value=" + flag_value + "&value=" + value;
+
+        $.ajax({
+           type: "GET", url: "{{ this.base_url }}flag-change", data: data,
+           success: function(msg){
+            if(msg !== "OK") {
+                console.log(msg);
+            }
+           }
+        });
+    });
+    
+    $('body').on('click', '.btn_del_flag', function () {
+        var flag_id = $(this).attr("flag_id");
+        $.ajax({
+           type: "GET", url: "{{ this.base_url }}flag-delete", data: "id=" + flag_id,
+           success: function(msg){
+            if(msg !== "OK") {
+                console.log(msg);
+            } else {
+                var li="#li_flag_" + flag_id;
+                $(li).fadeOut("slow");
+            }
+           }
+        });
+    });
+    
+});
+
+</script>

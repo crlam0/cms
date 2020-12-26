@@ -13,7 +13,7 @@ foreach($deny_urls as $url){
     }
 }
 foreach($deny_remote_hosts as $host){
-    if(array_key_exists('REMOTE_HOST', $server) && stristr($server['REMOTE_HOST'],$host)){
+    if($server->keyExists('REMOTE_HOST') && stristr($server['REMOTE_HOST'],$host)){
         $deny = true;
     }
 }
@@ -36,7 +36,7 @@ if (!$deny) {
     $uid = 0;
     $data['uid'] = App::$user->id;
     $data['remote_addr']=$server['REMOTE_ADDR'];
-    $data['remote_host']=(array_key_exists('REMOTE_HOST', $server) && $server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
+    $data['remote_host']=($server->keyExists('REMOTE_HOST') && $server['REMOTE_HOST'] ? $server['REMOTE_HOST'] : gethostbyaddr($server['REMOTE_ADDR']) );
     $data['script_name']=$server['SCRIPT_NAME'];
     $data['request_uri'] = $server['REQUEST_URI'];
     if (strlen($SUBDIR) > 1){

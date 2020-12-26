@@ -2,10 +2,9 @@
 
 namespace classes;
 
-
+use classes\App;
 use classes\MyTemplate;
 use classes\TwigTemplate;
-use classes\App;
 
 class Template 
 {
@@ -15,7 +14,11 @@ class Template
     public function __construct () 
     {
         $this->MyTemplate = new MyTemplate();
-        $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, ['debug' => App::$debug]);
+        $config['debug'] = App::$debug;
+        if(isset(App::$settings['twig']) && is_array(App::$settings['twig'])) {
+            $config = array_merge($config, App::$settings['twig']);
+        }
+        $this->TwigTemplate = new TwigTemplate(TwigTemplate::TYPE_FILE, $config);
     }
     
     /**
@@ -34,13 +37,12 @@ class Template
             if(!strstr($template['file_name'],'.html.twig')) {
                 $template['file_name'].='.html.twig';
             }
-            $file_name = '';
-            if (file_exists(App::$DIR . 'templates/' . $template['file_name'])) {
-                $file_name = $template['file_name'];
-            }    
-            if (file_exists(App::$DIR . 'admin/templates/' . $template['file_name'])) {
-                $file_name = $template['file_name'];
-            }    
+            $file_name = '';            
+            foreach ($this->TwigTemplate->getPaths() as $path) {
+                if (file_exists($path . '/' . $template['file_name'])) {
+                    $file_name = $template['file_name'];
+                }
+            }            
             if ($file_name) {
                 $twig = $this->TwigTemplate;
                 $template['name'] = $file_name;
@@ -61,7 +63,8 @@ class Template
             $tags['inner_content'] = '';
         }
         
-        $twig->addFunction('add_block');
+        $twig->addFunction('get_block');
+        $twig->addFunction('widget');
         $twig->addFunction('include_php');
         $twig->addFunction('path');
         if(array_key_exists('functions',$tags) && is_array($tags['functions'])) {
@@ -72,6 +75,18 @@ class Template
         }
         return $twig->render($template['name'], $tags);
     }
+    
+    /**
+     * Add path for search Twig templates.
+     *
+     * @param string $path Function name
+     *
+     * @return null
+     */
+    public function addPath(string $path)
+    {
+        $loader = $this->TwigTemplate->addPath($path);
+    }    
 
     /**
      * Parse my template by array

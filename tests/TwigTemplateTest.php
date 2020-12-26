@@ -5,7 +5,7 @@ use classes\TwigTemplate;
 
 class TwigTemplateTest extends TestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
     }

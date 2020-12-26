@@ -1,0 +1,26 @@
+<div class="buy_summary">
+    
+    {% for row in rows %}
+        <b>{{ row.title }}</b> Кол-во: {{ this.getItemsCount(row.id) }} Цена: {{ row.price }}<br>
+    {% endfor %}
+
+    <br />
+    Итого на сумму <b> {{ summ }} руб.</b>
+    <br />
+    {% if discount %}
+        С учетом скидки <b>{{ discount }}%</b> сумма составлет: <b> {{ summ_with_discount }} </b>
+    {% endif %}
+    <br />
+    Имя: <b>{{ form.lastname }} {{ form.firstname }}</b>
+    <br />
+    E-Mail: <b>{{ form.email }}</b>
+    <br />
+    Телефон: <b>{{ form.phone }}</b>
+    <br />
+    Коментарий: <b>{{ form.comment }}</b>
+    <br />
+    IP адрес: <b>{{ server.REMOTE_ADDR }}</b>
+
+</div>
+
+

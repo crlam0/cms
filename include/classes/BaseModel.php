@@ -229,10 +229,10 @@ class BaseModel implements \ArrayAccess
         if(isset($rule[2]) && is_array($rule[2])) {
             return $this->checkString($value, $rule[2]);
         }        
-        if($rule['min'] && strlen($value) < $rule['min']) {
+        if(isset($rule['min']) && strlen($value) < $rule['min']) {
             return false;
         }        
-        if($rule['max'] && strlen($value) > $rule['max']) {
+        if(isset($rule['max']) && strlen($value) > $rule['max']) {
             return false;
         }
         return true;

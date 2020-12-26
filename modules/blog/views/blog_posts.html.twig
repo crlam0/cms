@@ -47,7 +47,7 @@
                     {% if row.target_type == 'link' %}
                         {% set href = row.href %}
                     {% else %}
-                        {% set href = SUBDIR ~ get_menu_href(row) %}
+                        {% set href = SUBDIR ~ routing.getUrl(row.target_type, row.target_id) %}
                     {% endif %}
                     <a href="{{ href }}" class="btn btn-default btn-next">Перейти >></a><br />
                 {% endif %}                
@@ -61,8 +61,8 @@
                 {% endif %}                
             </div>
             <div class="card-footer">
-                [ <a href="{{ SUBDIR }}{{ get_post_href(null,row) }}#comment_form" title="{{ row.title }}">Добавить комментарий</a> ]
-                [ <a href="{{ SUBDIR }}{{ get_post_href(null,row) }}#comments" title="{{ row.title }}">
+                [ <a href="{{ SUBDIR }}{{ routing.getUrl('blog_post', null, row) }}#comment_form" title="{{ row.title }}">Добавить комментарий</a> ]
+                [ <a href="{{ SUBDIR }}{{ routing.getUrl('blog_post', null, row) }}#comments" title="{{ row.title }}">
                     Комментариев: {{ this.getPostCommentsCount(row) }}</a> ]
                 <div class="score">
                     0 <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>

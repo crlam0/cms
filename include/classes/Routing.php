@@ -273,12 +273,9 @@ final class Routing
                 return $row['href'];
             case 'link':
                 return $row['href'];
-            case 'catalog':
-                return 'Все разделы каталога';
             default:
                 App::debug('Unknown target type in getUrl: ' . $target_type);
                 return '';
-        }
-       
+        }       
     }
 }

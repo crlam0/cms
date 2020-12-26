@@ -12,8 +12,7 @@ $EDITOR_MINI_INC= ' <script type="text/javascript" src="'.$SUBDIR.'include/ckedi
 $EDITOR_HTML_INC='<script type="text/javascript" src="'.$SUBDIR.'include/edit_area/edit_area_full.js" charset="utf-8">></script>'."\n".
 '<script type="text/javascript" src="'.$SUBDIR.'include/js/editor_html.js" charset="utf-8"></script>'."\n";
 
-$tags['nav_str']='<a href='.$SUBDIR.' class="nav_home">Главная</a>';
-$tags['nav_array'][] = [
+$tags['breadcrumbs'][] = [
     'url' => '',
     'title' => 'Главная'
 ];

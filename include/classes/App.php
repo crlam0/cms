@@ -281,7 +281,7 @@ class App
                 header(App::$server['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
             }           
             /* Fill tags for default template */
-            $tags['nav_array'] = array_merge($tags['nav_array'], $controller->breadcrumbs);
+            $tags['breadcrumbs'] = array_merge($tags['breadcrumbs'], $controller->breadcrumbs);
             $tags = array_merge($tags, $controller->tags);
             echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
             exit;

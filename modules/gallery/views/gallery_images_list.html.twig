@@ -1,0 +1,33 @@
+{% if pager is defined %}
+    {% 
+    include 'pager.html.twig' with {
+        'pager': pager,
+        'main_route': gallery_list_href,
+        'route': gallery_list_href ~ '{$page}/'
+    }
+    %}
+{% endif %}
+<div id="gallery"> 
+    <center>
+        {% for row in rows %}
+            <div class="item col-xs-12 col-sm-6 col-lg-4">
+                <div class="img_box_wrapper">
+                    <div class="img_box">
+                        <div class=img_content>{{ this.getImage(row) }}</div>
+                    </div>
+                </div>
+                <div class="title">{{ row.title }}</div>
+            </div>
+        {% endfor %}
+    </center>
+</div>
+{% if pager is defined %}
+    {% 
+        include 'pager.html.twig' with {
+            'pager': pager,
+            'main_route': gallery_list_href,
+            'route': gallery_list_href ~ '{$page}/'
+        }
+    %}
+{% endif %}
+<center><a href="{{ SUBDIR }}gallery/" class="btn btn-default"><<  Назад</a></center>

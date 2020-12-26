@@ -54,16 +54,12 @@ class Controller extends BaseController
             $arr = array_reverse($arr);
             $max_size = sizeof($arr) - 1;
             $current_part_deep = 0;
-            // print_array($arr);exit;
-            // while (list ($n, $row) = @each($arr)) {
             foreach ($arr as $n => $row) {            
                 $current_part_deep++;
                 if (($n < $max_size) || (strlen($item_title))) {
-                    // add_nav_item($row['title'], get_cat_part_href($row['id']));
-                    $breadcrumbs[] = ['title' => $row['title'], 'url' => get_cat_part_href($row['id'])];
+                    $breadcrumbs[] = ['title' => $row['title'], 'url' => App::$routing->getUrl('cat_part', $row['id'])];
                     $title = $root_title . " - {$row['title']}";
                 } else {
-                    // add_nav_item($row['title']);
                     $breadcrumbs[] = ['title' => $row['title']];
                     $title = $root_title . " - {$row['title']}";
                 }
@@ -80,7 +76,7 @@ class Controller extends BaseController
             list($href_id) = App::$db->getRow("select prev_id from cat_part where id='{$part_id}'");
             return '
             <div class="cat_back">
-                <center><a href="' . App::$SUBDIR . get_cat_part_href($href_id) . '" class="btn btn-default"> << Назад</a></center>
+                <center><a href="' . App::$SUBDIR . App::$routing->getUrl('cat_part', $href_id) . '" class="btn btn-default"> << Назад</a></center>
             </div>
             ';
         } else {
@@ -112,7 +108,7 @@ class Controller extends BaseController
         $content = '';
         if ($result->num_rows) {
             $tags['functions'] = [];
-            $tags['cat_part_href'] = get_cat_part_href($part_id);
+            $tags['cat_part_href'] = App::$routing->getUrl('cat_part', $part_id);
             $tags['this'] = $this;
             $content .= App::$template->parse('cat_part_list', $tags, $result);
             $show_empty_message = false;
@@ -157,7 +153,7 @@ class Controller extends BaseController
                 order by cat_item.num,b_code,title asc limit {$pager->getOffset()},{$pager->getLimit()}";
         $result = App::$db->query($query);
         if ($result->num_rows) {
-            $tags['cat_part_href'] = get_cat_part_href($part_id);
+            $tags['cat_part_href'] = App::$routing->getUrl('cat_part', $part_id);
             $tags['functions'] = [];
             $tags['this'] = $this;
             $content .= App::$template->parse('cat_item_list', $tags, $result);

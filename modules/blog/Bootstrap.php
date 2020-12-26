@@ -43,12 +43,11 @@ class Bootstrap
         ]);
         
         App::$routing->addGetUrlFunction('blog_post',  function ($id, $row) {
-                if(isset($row['seo_alias'])) {
-                    return 'blog/' . $row['seo_alias'] . '/';
-                } else {
-                    return 'blog/' . $id . '/';                    
-                }
+            if(isset($row['seo_alias'])) {
+                return 'blog/' . $row['seo_alias'] . '/';
+            } else {
+                return 'blog/' . $id . '/';                    
             }
-        );
+        });
     }
 }

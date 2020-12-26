@@ -19,7 +19,7 @@ class Blocks
      */
     protected function get_href(array $row) : array
     {
-        $href = get_menu_href($row);
+        $href = App::$routing->getUrl($row['target_type'], $row['target_id'], $row);
         if (preg_match('/^http.?:\/\/.+$/', $href)) {
             $target_inc = ' target="_blank"';
         } else {

@@ -3,14 +3,8 @@ if(!isset($input)) {
     require '../include/common.php';
 }
 
-
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
-
 $tags['Header'] = 'Прайс-лист';
-
-$tags['INCLUDE_CSS'] .= '<link href="' . $SUBDIR . 'css/price.css" type="text/css" rel=stylesheet />' . "\n";
-$tags['nav_str'] .= "<span class=nav_next>{$tags['Header']}</span>";
-
 
 if (isset($input['attr_name'])) {
     $input['id'] = intval($input['id']);

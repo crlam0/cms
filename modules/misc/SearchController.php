@@ -39,7 +39,7 @@ class SearchController extends BaseController{
                 while ($row = $result->fetch_array()) {
                     switch ($row['type']){
                         case "article":
-                            $href=App::$SUBDIR . get_article_href($row['id']);
+                            $href=App::$SUBDIR . App::$routing->getUrl('article', $row['id']);
                             break;
                         case "news":
                             $href=App::$SUBDIR . App::$routing->getUrl('blog_post', null, $row);

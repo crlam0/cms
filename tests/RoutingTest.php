@@ -11,7 +11,7 @@ class RoutingTest extends TestCase
     public function setUp() : void
     {
         parent::setUp();
-        $this->Routing = new Routing('/article/item/?test=test');
+        $this->Routing = new Routing('/faq/page1/?test=test');
         $this->Routing->matchRoutes();
     }
     
@@ -24,8 +24,8 @@ class RoutingTest extends TestCase
     public function testController() 
     {        
         $result = $this->Routing->controller;
-        self::assertEquals('modules\article\Controller', $result);
-        self::assertEquals(['alias'=>'item'], $this->Routing->params);
+        self::assertEquals('modules\misc\FAQController', $result);
+        self::assertEquals(['page'=>'1'], $this->Routing->params);
     }
     
     public function testGetPartArray() 

@@ -1,0 +1,10 @@
+<div class="buy_summary">
+    
+{% for row in rows %}
+    <b>{{ row.title }}</b> Кол-во: {{ this.getItemsCount(row.id) }} Цена: {{ row.price }}<br>
+{% endfor %}
+
+<br />
+Итого на сумму <b> {{ summ }} руб.</b>
+<br />
+</div>

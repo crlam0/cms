@@ -62,12 +62,12 @@ class Sitemap {
             $query = 'SELECT * from article_list order by date_add asc';
             $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
-                $this->add_page(get_article_list_href($row['id']), 'monthly', '0.80');
+                $this->add_page(App::$routing->getUrl('article_list', $row['id']), 'monthly', '0.80');
             }
             $query = 'SELECT * from article_item order by date_add asc';
             $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
-                $this->add_page(get_article_href($row['id']), 'monthly', '0.80');
+                $this->add_page(App::$routing->getUrl('article', $row['id']), 'monthly', '0.80');
             }
         }    
         if(in_array('blog', $types)){
@@ -83,7 +83,7 @@ class Sitemap {
             $query = 'SELECT * from gallery_list order by title asc';
             $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
-                $this->add_page(get_gallery_list_href($row['id']), 'monthly', '0.80');
+                $this->add_page(App::$routing->getUrl('gallery_list', $row['id']), 'monthly', '0.80');
             }
         }
         if(in_array('catalog', $types)){
@@ -91,12 +91,12 @@ class Sitemap {
             $query = 'SELECT id from cat_part order by num,title asc';
             $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
-                $this->add_page(get_cat_part_href($row['id']), 'monthly', '0.40');
+                $this->add_page(App::$routing->getUrl('cat_part', $row['id']), 'monthly', '0.40');
             }
             $query = 'SELECT part_id,seo_alias from cat_item order by num,title asc';
             $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
-                $url = get_cat_part_href($row['part_id']) . $row['seo_alias'];
+                $url = App::$routing->getUrl('cat_part', $row['part_id']) . $row['seo_alias'];
                 $this->add_page($url, 'monthly', '0.30');
             }
         }

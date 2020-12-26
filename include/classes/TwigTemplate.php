@@ -95,6 +95,7 @@ class TwigTemplate
         $environment->addGlobal('PHP_SELF_DIR', App::$server['PHP_SELF_DIR']);
         $environment->addGlobal('settings', App::$settings);
         $environment->addGlobal('server', App::$server);
+        $environment->addGlobal('routing', App::$routing);
 
         $this->twig = $environment;
     }

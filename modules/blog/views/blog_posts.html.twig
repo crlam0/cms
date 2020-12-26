@@ -22,11 +22,10 @@
 </style>
 
 <div id="blog">
-
     {% for row in rows %}
         <div class="card card-default">
             <div class="post_title card-heading">
-                    <a href="{{ SUBDIR }}{{ get_post_href(null,row) }}" title="{{ row.title }}">{{ row.title }}</a>
+                    <a href="{{ SUBDIR }}{{ routing.getUrl('blog_post', null, row) }}" title="{{ row.title }}">{{ row.title }}</a>
                 <div class="post_author">
                     <div class="avatar-div">
                         {% if row.avatar|length > 0 %}

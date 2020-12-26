@@ -63,7 +63,7 @@ class Template
             $tags['inner_content'] = '';
         }
         
-        $twig->addFunction('add_block');
+        $twig->addFunction('get_block');
         $twig->addFunction('widget');
         $twig->addFunction('include_php');
         $twig->addFunction('path');

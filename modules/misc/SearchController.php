@@ -42,7 +42,7 @@ class SearchController extends BaseController{
                             $href=App::$SUBDIR . get_article_href($row['id']);
                             break;
                         case "news":
-                            $href=App::$SUBDIR . get_post_href(null, $row);
+                            $href=App::$SUBDIR . App::$routing->getUrl('blog_post', null, $row);
                             break;
                     }
                     $content.="<a class=search_result href=\"{$href}\" title=\"{$row["title"]}\">{$row["title"]}</a><br />";

@@ -93,7 +93,7 @@ class Controller extends BaseController
 
         $this->comments->get_form_data(App::$input['form']);
         $content .= $this->comments->show_list();
-        $tags['action'] = App::$SUBDIR.get_post_href(null,$row) . '#comments';
+        $tags['action'] = App::$SUBDIR . App::$routing->getUrl('blog_post', null, $row) . '#comments';
         $content .= $this->comments->show_form($tags);        
         return $content;
     }

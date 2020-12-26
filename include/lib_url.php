@@ -89,7 +89,7 @@ function get_article_href($article_id, $row = []) {
  *
  * @return string Output string
  */
-function get_media_list_href($list_id, $row = array()) {
+function get_media_list_href($list_id, $row = []) {
     if (array_key_exists('id',$row)){
         $list_id = $row['id'];
     }
@@ -154,7 +154,7 @@ function get_cat_part_href($part_id, $row = []) {
  *
  * @return string Output string
  */
-function get_gallery_list_href($list_id, $row = array()) {
+function get_gallery_list_href($list_id, $row = []) {
     if (array_key_exists('id',$row)){
         $list_id = $row['id'];
     }
@@ -163,18 +163,6 @@ function get_gallery_list_href($list_id, $row = array()) {
     }    
     list($seo_alias) = App::$db->getRow("SELECT seo_alias FROM gallery_list WHERE id='{$list_id}'");
     return 'gallery/' . $seo_alias . '/';
-}
-
-/**
- * Get HREF for blog post
- *
- * @param integer $tmp Unused
- * @param array $row Row from SQL query
- *
- * @return string Output string
- */
-function get_post_href($tmp, $row) {
-    return "blog/" . $row['seo_alias'] . "/";
 }
 
 /**
@@ -187,21 +175,21 @@ function get_post_href($tmp, $row) {
  */
 function get_menu_href($row) {
     switch ($row['target_type']) {
-        case "":
+        case '':
             return $row['href'];
-        case "link":
+        case 'link':
             return $row['href'];
-        case "article_list":
+        case 'article_list':
             return get_article_list_href($row['target_id']);
-        case "article":
+        case 'article':
             return get_article_href($row['target_id']);
-        case "media_list":
+        case 'media_list':
             return get_media_list_href($row['target_id']);
-        case "catalog":
+        case 'catalog':
             return 'Все разделы каталога';
-        case "cat_part":
+        case 'cat_part':
             return get_cat_part_href($row['target_id']);
-        case "gallery_list":
+        case 'gallery_list':
             return get_gallery_list_href($row['target_id']);
     }
 }
@@ -238,7 +226,7 @@ function replace_base_href($content, $direction = false) {
  *
  * @return string Output string
  */
-function path($route,$params=[]){
+function path($route, $params=[]){
     if(count($params)){        
         foreach ($params as $item => $value) {
             $route = str_replace('{$'.$item.'}', $value, $route);

@@ -75,7 +75,7 @@ class Sitemap {
             $query = "SELECT * from blog_posts where active='Y' order by date_add asc";
             $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
-                $this->add_page(get_post_href(NULL,$row), 'monthly', '0.80');
+                $this->add_page(App::$routing->getUrl('blog_post', null, $row), 'monthly', '0.80');
             }    
         }
         if(in_array('gallery', $types)){

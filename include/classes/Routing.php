@@ -34,6 +34,10 @@ final class Routing
     * @var array Controller param's
     */
     public $params = [];
+    /**
+    * @var array Functions for URL generate
+    */
+    private $get_url_functions = [];
     
     /**
      * Constructor
@@ -225,8 +229,8 @@ final class Routing
      */
     public function getPartArray () 
     {
-        $query = "SELECT * FROM parts WHERE '" . $this->request_uri . "' LIKE concat(uri,'%') AND title<>'default'";
-        $part = App::$db->getRow($query);
+        $query = "SELECT * FROM parts WHERE ? LIKE concat(uri,'%') AND title<>'default'";
+        $part = App::$db->getRow($query, ['request_uri'=>$this->request_uri]);
         if (!$part) {
             $query = "SELECT * FROM parts WHERE title='default'";
             $part = App::$db->getRow($query);
@@ -234,4 +238,47 @@ final class Routing
         return $part;        
     }
     
+    
+    
+    /**
+     * Add function for getUrl
+     *
+     * @param string $target_type 
+     * @param callable $function
+     *
+     * @return void
+     */
+    public function addGetUrlFunction (string $target_type, callable $function) : void
+    {
+        $this->get_url_functions[$target_type] = $function;
+    }
+    
+    /**
+     * Get HREF for some item
+     *
+     * @param string $target_type 
+     * @param integer $id 
+     * @param array $row Row from SQL query
+     *
+     * @return string Result string
+     */
+    public function getUrl (string $target_type, int $id = null, array $row = []) : string
+    {
+        if(isset($this->get_url_functions[$target_type])) {
+            $function = $this->get_url_functions[$target_type];
+            return $function($id, $row);
+        }
+        switch ($target_type) {
+            case '':
+                return $row['href'];
+            case 'link':
+                return $row['href'];
+            case 'catalog':
+                return 'Все разделы каталога';
+            default:
+                App::debug('Unknown target type in getUrl: ' . $target_type);
+                return '';
+        }
+       
+    }
 }

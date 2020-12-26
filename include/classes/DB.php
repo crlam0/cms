@@ -155,7 +155,7 @@ class DB
      * @return array One row
      */
     public function getRow(string $sql, array $params = []) 
-    {
+    {        
         $result = $this->query($sql, $params);    
         if ($result->num_rows) {
             return $result->fetch_array();

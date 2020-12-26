@@ -33,8 +33,7 @@ class ProfileController extends BaseController
             App::setFlash('success', 'Профиль успешно сохранён');
             $this->redirect('');
         } 
-        return App::$template->parse('user_profile.html.twig', [
-            'this' => $this,
+        return $this->render('user_profile.html.twig', [
             'model' => $model,
             'action' => $this->getUrl(''),
             'form_title' => 'Изменение',

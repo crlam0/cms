@@ -19,17 +19,17 @@ class SettingsEditController extends BaseController
     {
         $model = new Setting;
         $result = $model->findAll([], 'name ASC');        
-        return App::$template->parse('settings_table.html.twig', ['this' => $this], $result);        
+        return $this->render('settings_table.html.twig', [], $result);        
     }
     
     public function actionCreate(): string 
     {
         $model = new Setting();
         if($model->load(App::$input['form']) && $model->save()) {
+            App::setFlash('success', 'Настройка добавлена');
             $this->redirect('index');
         }
-        return App::$template->parse('settings_form.html.twig', [
-            'this' => $this,
+        return $this->render('settings_form.html.twig', [
             'model' => $model,
             'action' => 'create',
             'form_title' => 'Добавление',
@@ -40,10 +40,10 @@ class SettingsEditController extends BaseController
     {
         $model = new Setting($id);        
         if($model->load(App::$input['form']) && $model->save()) {
+            App::setFlash('success', 'Настройка сохранена');
             $this->redirect('index');
         } 
-        return App::$template->parse('settings_form.html.twig', [
-            'this' => $this,
+        return $this->render('settings_form.html.twig', [
             'model' => $model,
             'action' => $this->getUrl('update', ['id' => $id]),
             'form_title' => 'Изменение',

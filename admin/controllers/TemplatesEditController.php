@@ -24,7 +24,7 @@ class TemplatesEditController extends BaseController
     {
         $model = new Template;
         $result = $model->findAll([], 'name ASC');        
-        return App::$template->parse('templates_table.html.twig', ['this' => $this], $result);    
+        return $this->render('templates_table.html.twig', [], $result);    
     }
     
     public function actionCreate(): string 
@@ -38,8 +38,7 @@ class TemplatesEditController extends BaseController
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor_html.js"></script>' . "\n";
         header('X-XSS-Protection:0');
         
-        return $errors . App::$template->parse('templates_form.html.twig', [
-            'this' => $this,
+        return $this->render('templates_form.html.twig', [
             'model' => $model,
             'action' => $this->getUrl('create'),
             'form_title' => 'Добавление',
@@ -67,8 +66,7 @@ class TemplatesEditController extends BaseController
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor_html.js"></script>' . "\n";
         header('X-XSS-Protection:0');
         
-        return App::$template->parse('templates_form.html.twig', [
-            'this' => $this,
+        return $this->render('templates_form.html.twig', [
             'model' => $model,
             'action' => $this->getUrl('update', ['id' => $id]),
             'form_title' => 'Изменение',

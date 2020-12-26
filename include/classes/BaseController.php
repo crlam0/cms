@@ -56,7 +56,7 @@ class BaseController
             if ($method->isPublic() && $method->getName() === $methodName) {
                 return $method->invokeArgs($this, $params);
             }
-        }
+        }        
         throw new \InvalidArgumentException('Method ' . $methodName . ' not found.');
     }
     
@@ -70,7 +70,7 @@ class BaseController
      */
     public function run(string $action, array $params = []) 
     {
-        $method = 'action' . str_replace(' ', '', ucwords(implode(' ', explode('-', $action))));
+        $method = 'action' . str_replace(' ', '', ucwords(implode(' ', explode('-', $action))));        
         return $this->runMethod($method, $params);
     }
     
@@ -81,7 +81,8 @@ class BaseController
      * @param array $params Additioanal params
      *
      */
-    public function redirect($url = '', $params = []) {   
+    public function redirect($url = '', $params = []) 
+    {   
         redirect($this->getUrl($url, $params));
     }
 
@@ -92,7 +93,8 @@ class BaseController
      * @param array $params Additioanal params
      *
      */
-    public function getUrl($url = '', $params = []) {        
+    public function getUrl($url = '', $params = []) 
+    {        
         if(count($params)) {
             $url .= '?';
             $first = true;
@@ -106,6 +108,18 @@ class BaseController
             }
         }
         return $this->base_url . $url;
+    }
+    
+    /**
+     * Render selected template
+     *
+     * @param string $template
+     * @param array $tags
+     *
+     */
+    public function render($template, $tags = [], $result = null) 
+    {        
+        return App::$template->parse($template, array_merge($tags, ['this' => $this]), $result);
     }
     
     

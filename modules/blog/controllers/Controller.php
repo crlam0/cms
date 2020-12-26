@@ -66,9 +66,8 @@ class Controller extends BaseController
 
         if (!$result->num_rows) {
              $content = App::$message->get('list_empty', [], '');
-        } else {    
-            $tags['this'] = $this;
-            $content = App::$template->parse('blog_posts', $tags, $result);            
+        } else {
+            $content =$this->render('blog_posts', $tags, $result);            
         }
         return $content;
     }
@@ -87,9 +86,8 @@ class Controller extends BaseController
         
         $this->comments = new Comments ('blog', $post_id);
         
-        $tags['this'] = $this;
         $tags['post_view'] = true;
-        $content = App::$template->parse('blog_posts', $tags, $result);
+        $content = $this->render('blog_posts', $tags, $result);
 
         $this->comments->get_form_data(App::$input['form']);
         $content .= $this->comments->show_list();
@@ -120,9 +118,8 @@ class Controller extends BaseController
 
         if (!$result->num_rows) {
              $content = App::$message->get('list_empty', [], '');
-        } else {    
-            $tags['this'] = $this;
-            $content = App::$template->parse('blog_posts', $tags, $result);            
+        } else {
+            $content = $this->render('blog_posts', $tags, $result);            
         }
         return $content;
     }

@@ -26,7 +26,7 @@ class EditController extends BaseController
     {
         $model = new BlogPost;
         $result = $model->findAll([], 'date_add DESC');        
-        return App::$template->parse('blog_post_table.html.twig', ['this' => $this], $result);        
+        return $this->render('blog_post_table.html.twig', [], $result);        
     }
 
     public function actionActive(int $id, string $active): string 
@@ -57,8 +57,7 @@ class EditController extends BaseController
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor.js"></script>' . "\n";
         header('X-XSS-Protection:0');
         $model->content = replace_base_href($model->content, false);
-        return App::$template->parse('blog_post_form.html.twig', [
-            'this' => $this,
+        return $this->render('blog_post_form.html.twig', [
             'model' => $model,
             'action' => 'create',
             'form_title' => 'Добавление',
@@ -82,8 +81,7 @@ class EditController extends BaseController
         $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor.js"></script>' . "\n";
         header('X-XSS-Protection:0');
         $model->content = replace_base_href($model->content, false);
-        return App::$template->parse('blog_post_form.html.twig', [
-            'this' => $this,
+        return $this->render('blog_post_form.html.twig', [
             'model' => $model,
             'action' => $this->getUrl('update', ['id' => $id]),
             'form_title' => 'Изменение',

@@ -18,9 +18,11 @@ class Message
             case 'notice':
                 $class='warning';
                 break;
+            case 'danger':
             case 'error':
                 $class='danger';
                 break;           
+            case 'success':
             default:
                 $class='success';                                
         }
@@ -53,8 +55,7 @@ class Message
     public function get(string $name, array $tags = [], string $content = '') : string 
     {
         if (strlen($name)) {
-            $sql = "select * from messages where name='{$name}'";
-            $message = App::$db->getRow($sql);
+            $message = App::$db->getRow("select * from messages where name=?" , ['name' => $name]);
         }
         if (strlen($content)){
             $message['content'] = $content;

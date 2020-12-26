@@ -6,8 +6,6 @@ use classes\App;
 use classes\Routing;
 use classes\Sitemap;
 
-require_once 'include/lib_url.php';
-
 class SitemapTest extends TestCase
 {
 

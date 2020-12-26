@@ -28,7 +28,7 @@ class EditController extends BaseController
     {
         $model = new User();
         $result = $model->findAll([], 'id ASC');        
-        return App::$template->parse('users_table.html.twig', ['this' => $this], $result);        
+        return $this->render('users_table.html.twig', [], $result);        
     }
 
 
@@ -63,8 +63,7 @@ class EditController extends BaseController
             $model->save(false);
             $this->redirect('update', ['id' => $model->id]);
         }
-        return App::$template->parse('users_form.html.twig', [
-            'this' => $this,
+        return $this->render('users_form.html.twig', [
             'model' => $model,
             'action' => 'create',
             'form_title' => 'Добавление',
@@ -81,8 +80,7 @@ class EditController extends BaseController
             $model->save(false);
             $this->redirect('update', ['id' => $model->id]);
         } 
-        return App::$template->parse('users_form.html.twig', [
-            'this' => $this,
+        return $this->render('users_form.html.twig', [
             'model' => $model,
             'action' => $this->getUrl('update', ['id' => $id]),
             'form_title' => 'Изменение',

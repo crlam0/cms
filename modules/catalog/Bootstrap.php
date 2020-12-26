@@ -38,7 +38,6 @@ class Bootstrap
                 'controller' => 'modules\catalog\Controller',
                 'action' => 'load-image'
             ],
-
             'basket' => [
                 'pattern' => '^basket\/[\w\-]*$',
                 'controller' => 'modules\catalog\BasketController',

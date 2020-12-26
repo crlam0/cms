@@ -34,7 +34,7 @@ App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/error.log', Logger::
 
 $App = new App($DIR, $SUBDIR);
 $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
-$App->loadSettings(__DIR__.'/../local/settings.php');
+$App->loadSettings(__DIR__ . '/../local/settings.php');
 $App->loadInputData($_GET, $_POST, $_SERVER);
 $App->addGlobals();
 App::$debug = App::$settings['debug'];
@@ -52,7 +52,6 @@ if(App::$debug) {
     $App->debug('Added exception handler');
 }
 
-
 App::debug('App created, arrays loaded');
 unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
@@ -62,12 +61,11 @@ App::$message = new Message();
 App::$template = new Template();
 App::$cache = new FileCache('var/cache/misc/');
 
-
 require_once __DIR__.'/lib_sql.php';
 require_once __DIR__.'/lib_messages.php';
 require_once __DIR__.'/lib_templates.php';
 require_once __DIR__.'/lib_functions.php';
-require_once __DIR__.'/lib_url.php';
+
 $App->debug('Library loaded');
 
 if(App::$server['SERVER_PROTOCOL']) {
@@ -78,8 +76,13 @@ if(App::$server['SERVER_PROTOCOL']) {
         App::$user->authByRememberme($COOKIE_NAME);
     }
     require_once __DIR__.'/lib_stats.php';
+    $content='';
+    $tags['Header']='';
+    $tags['INCLUDE_HEAD']='';
+    $tags['INCLUDE_CSS']='';
+    $tags['INCLUDE_JS']='';
+    $server['PHP_SELF_DIR']=dirname(App::$server['PHP_SELF']).'/';
 }
-
 
 $part = App::$routing->getPartArray();
 if (!$part['id']) {
@@ -90,21 +93,13 @@ $App->set('tpl_default', $part['tpl_name']);
 
 if(!App::$user->checkAccess($part['user_flag'])) {
     if (App::$user->id) {
-        $content = App::$message->get('error', [] ,'У вас нет соответствующих прав !');
-        echo App::$template->parse(App::get('tpl_default'), ['Header'=>''], null, $content);
+        App::sendResult(App::$message->getError('У вас нет соответствующих прав !'), $tags, 403);
     } else {
         $_SESSION['GO_TO_URI'] = App::$server['REQUEST_URI'];
         redirect(App::$SUBDIR . 'login/');
     }
     exit;
 }
-
-$server['PHP_SELF_DIR']=dirname(App::$server['PHP_SELF']).'/';
-
-$content='';
-$tags['INCLUDE_HEAD']='';
-$tags['INCLUDE_CSS']='';
-$tags['INCLUDE_JS']='';
 
 
 if(isset(App::$settings['modules'])) {

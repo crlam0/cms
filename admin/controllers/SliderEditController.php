@@ -30,7 +30,7 @@ class SliderEditController extends BaseController
         $query = "SELECT * from {$this->TABLE} order by pos,title asc";
         $result = App::$db->query($query);
         
-        return App::$template->parse('slider_images_table.html.twig', ['this' => $this], $result);        
+        return $this->render('slider_images_table.html.twig', [], $result);        
     }
     
     public function actionCreate(): string 
@@ -44,7 +44,6 @@ class SliderEditController extends BaseController
             $content .= $this->saveImage($file, $image_id, $image_id);
         }
         $tags = [
-            'this' => $this,
             'action' => 'create',
             'id' => '',
             'form_title' => 'Добавление',
@@ -54,7 +53,7 @@ class SliderEditController extends BaseController
             'url' => '',
             'file_name' => null,
         ];
-        $content .= App::$template->parse('slider_images_form.html.twig', $tags);
+        $content .= $this->render('slider_images_form.html.twig', $tags);
         return $content;
     }
 
@@ -68,11 +67,10 @@ class SliderEditController extends BaseController
             $content .= $this->saveImage($file, $id, $id);
         }
         $tags = App::$db->getRow("select * from {$this->TABLE} where id=?", ['id' => $id]);
-        $tags['this'] = $this;
         $tags['action'] = $this->getUrl('update', ['id' => $id]);
         $tags['form_title'] = 'Изменение';
       
-        $content .= App::$template->parse('slider_images_form.html.twig', $tags);
+        $content .= $this->render('slider_images_form.html.twig', $tags);
         return $content;        
     }
     

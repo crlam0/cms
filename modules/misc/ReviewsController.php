@@ -21,7 +21,7 @@ class ReviewsController extends BaseController
         $query = "select * from {$this->TABLE} order by date desc";
         $result = App::$db->query($query);
         $this->tags['content-cut'] = 'cut';
-        return App::$template->parse('reviews_table', ['this' => $this], $result);        
+        return $this->render('reviews_table', [], $result);        
     }
     
     public function actionItemView(string $alias): string
@@ -31,7 +31,7 @@ class ReviewsController extends BaseController
         $this->breadcrumbs[] = ['title'=>$this->title];
         $query = "select * from {$this->TABLE} where id='{$item_id}' order by date desc";
         $result = App::$db->query($query);
-        return App::$template->parse($this->TABLE.'reviews_table', ['this' => $this], $result);        
+        return $this->render($this->TABLE.'reviews_table', [], $result);        
     }    
     
     public function getFullContent(array $row): string 

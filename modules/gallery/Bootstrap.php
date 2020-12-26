@@ -47,7 +47,7 @@ class Bootstrap
             if (array_key_exists('seo_alias',$row) && strlen($row['seo_alias'])){
                 return 'gallery/' . $row['seo_alias'] . '/';
             }    
-            list($seo_alias) = App::$db->getRow("SELECT seo_alias FROM gallery_list WHERE id=?", ['id => $list_id']);
+            list($seo_alias) = App::$db->getRow("SELECT seo_alias FROM gallery_list WHERE id=?", ['id' => $list_id]);
             return 'gallery/' . $seo_alias . '/';
         }); 
     }

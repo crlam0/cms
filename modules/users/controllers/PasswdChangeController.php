@@ -37,7 +37,7 @@ class PasswdChangeController extends BaseController
             App::$user->salt = App::$user->generateSalt();            
             App::$user->passwd = App::$user->encryptPassword(App::$input['new_passwd1'], App::$user->salt);
             App::$user->save();
-            $content = App::$message->get('info',[],'Пароль успешно изменен !');            
+            $content = App::$message->get('info',[],'Пароль успешно изменен !');
         }
         return $content;
     }

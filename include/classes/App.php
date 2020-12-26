@@ -239,21 +239,68 @@ class App
         static::$logger->debug($message);
     }
     
-    public static function getErrors () : array
-    {
-        return static::$errors;
+    /**
+     * Add message to session
+     *
+     * @param string $type
+     * @param string $message
+     *
+     */
+    public static function setFlash(string $type, string $message) {
+        global $_SESSION;
+        $_SESSION['flash_type'] = $type;
+        $_SESSION['flash_message'] = $message;
     }
-
+    
+    /**
+     * Get message from session
+     *
+     * @return array
+     */
+    public static function getFlash() {
+        global $_SESSION;
+        if(!isset($_SESSION['flash_type'])) {
+            return [];
+        }
+        $result = [
+            'type' => $_SESSION['flash_type'],
+            'message' => $_SESSION['flash_message'],
+        ];
+        unset($_SESSION['flash_type']);
+        unset($_SESSION['flash_message']);
+        return $result;
+    }
+    
+    /**
+     * Set errors[]
+     *
+     * @param string $error
+     */
     public static function setErrors (array $errors) : void
     {
         static::$errors = $errors;
     }
     
+    /**
+     * Add message to errors[]
+     *
+     * @param string $error
+     */
     public static function addToErrors (string $error) : void
     {
         static::$errors[] = $error;
     }
     
+    /**
+     * Get errors[]
+     *
+     * @return array 
+     */
+    public static function getErrors () : array
+    {
+        return static::$errors;
+    }
+
     private function failedAuth() {
         if (static::$user->id) {
             static::debug('Failed auth, user ID: ' . static::$user->id . ' URL: ' . static::$routing->request_uri);
@@ -265,6 +312,14 @@ class App
         exit;
     }
     
+    /**
+     * Run cotroller found in routing
+     *
+     * @param string $controller_name
+     * @param string $action
+     * @param array $tags
+     * 
+     */
     private function runController($controller_name, $action, $tags)
     {
         static::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
@@ -282,6 +337,8 @@ class App
             }           
             /* Fill tags for default template */
             $tags['breadcrumbs'] = array_merge($tags['breadcrumbs'], $controller->breadcrumbs);
+            $tags['flash'] = static::getFlash();
+            $tags['errors'] = static::getErrors();
             $tags = array_merge($tags, $controller->tags);
             echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
             exit;
@@ -292,6 +349,11 @@ class App
         }
     }
     
+    /**
+     * Run cotroller or include file found in routing
+     *
+     * @param array $tags
+     */
     public function run ($tags) : void 
     {
         $file = static::$routing->file;

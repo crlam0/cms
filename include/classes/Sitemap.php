@@ -80,7 +80,7 @@ class Sitemap {
         }
         if(in_array('gallery', $types)){
             $this->add_page('gallery/', 'monthly', '0.50');
-            $query = 'SELECT * from gallery_list order by title asc';
+            $query = "SELECT * from gallery_list where active='Y' order by title asc";
             $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
                 $this->add_page(App::$routing->getUrl('gallery_list', $row['id']), 'monthly', '0.80');

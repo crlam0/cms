@@ -30,7 +30,8 @@ class ProfileController extends BaseController
         if($model->load(App::$input['form']) && $model->validate()){ 
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
-            // $this->redirect('');
+            App::setFlash('success', 'Профиль успешно сохранён');
+            $this->redirect('');
         } 
         return App::$template->parse('user_profile.html.twig', [
             'this' => $this,

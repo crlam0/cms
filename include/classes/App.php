@@ -240,6 +240,22 @@ class App
     }
     
     /**
+     * Put message to DEBUG array
+     *
+     * @param string $message Message
+     *
+     */
+    public static function error (string $message) : void 
+    {
+        $time = microtime(true) - static::$DEBUG_ARRAY[0];
+        $time = sprintf('%.4F', $time);
+        static::$DEBUG_ARRAY[] = $time . "\t " . $message;
+        App::$logger->error($message);
+    }
+    
+    
+    
+    /**
      * Add message to session
      *
      * @param string $type
@@ -374,9 +390,9 @@ class App
             return $this->getContent($controller, $content, $tags);
 
         } catch (\Throwable $e) {
-            static::debug('Exception: ' . $e->getMessage());
-            static::debug('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
-            static::debug($e->getTraceAsString());
+            static::error('Exception: ' . $e->getMessage());
+            static::error('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
+            static::error($e->getTraceAsString());
             $tags['Header']='';
             static::sendResult(static::$message->getError('Внутренние неполадки, приносим свои извинения.'), $tags, 500);
         }
@@ -402,7 +418,7 @@ class App
             if(class_exists($controller_name)) {
                 $this->runController($controller_name, static::$routing->action, $tags);
             } else {
-                static::debug('ERROR: Controller "' . $controller_name . '" not exists !"');
+                static::error('ERROR: Controller "' . $controller_name . '" not exists !"');
             }
         } else {
             static::debug('ERROR: empty controller name in routing.');

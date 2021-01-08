@@ -27,45 +27,10 @@ class Controller extends BaseController
         $this->title = isset(App::$settings['blog_header']) ? App::$settings['blog_header'] : 'Блог';
     }
     
-    public function getPostContent (array $row): string 
-    {
-        $content = replace_base_href($row['content'], false);
-        $content = preg_replace('/height: \d+px;/', 'max-width: 100%;', $content);
-
-        return $content;
-    }
-
-    public function getPostCommentsCount (array $row): string 
-    {
-        return $this->comments->show_count($row['id']);
-    }
-
-    public function getScore (array $row): string 
-    {
-        return $this->score->getCount($row['id']);
-    }
-
-    public function actionAddScore (int $post_id): array 
-    {
-        $this->score = new Score ('blog');
-        $this->score->add($post_id, 1);
-        return ['result' => 'OK', 'score' => $this->score->getCount($post_id)];
-    }
-    
-    public function getTags (array $row): array 
-    {
-        $result = App::$db->query('SELECT `name`,`seo_alias` FROM blog_posts_tags left join blog_tags ON (blog_tags.id = blog_posts_tags.tag_id) WHERE post_id=? ORDER BY name ASC',['post_id' => $row['id']]);
-        $tags = $result->fetch_all(MYSQLI_ASSOC);
-        return $tags;
-    }
-    
     public function actionIndex(int $page = 1): string 
     {
         $this->breadcrumbs[] = ['title'=>$this->title];
         
-        $this->comments = new Comments ('blog', 0);
-        $this->score = new Score ('blog');
-
         $query = "SELECT count(id) from {$this->TABLE} where active='Y'";
         list($total) = App::$db->getRow($query);
 
@@ -73,8 +38,12 @@ class Controller extends BaseController
         $tags['pager'] = $pager;
         $this->tags['INCLUDE_JS'] = '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/blog/blog.js"></script>' . "\n";
 
-        $query = "SELECT {$this->TABLE}.*,users.fullname as author,users.avatar,date_format(date_add,'%Y-%m-%dT%H:%i+06:00') as timestamp
-            from {$this->TABLE} left join users on (users.id=uid)
+        $query = "SELECT {$this->TABLE}.*,users.fullname as author,users.avatar,
+            (SELECT COUNT(id) FROM blog_posts_tags WHERE post_id = blog_posts.id) as tags_count,
+            (SELECT COUNT(id) FROM comments WHERE active='Y' and comments.target_type='blog' and target_id = blog_posts.id) as comments_count,
+            (SELECT COUNT(id) FROM score_log WHERE target_type='blog' and target_id = blog_posts.id) as score_count
+            from {$this->TABLE} 
+            left join users on (users.id=uid)
             where {$this->TABLE}.active='Y'
             group by {$this->TABLE}.id  order by {$this->TABLE}.id desc limit {$pager->getOffset()},{$pager->getLimit()}";
         $result = App::$db->query($query);
@@ -90,8 +59,14 @@ class Controller extends BaseController
     public function actionPostView(string $alias):string 
     {        
         $post_id = get_id_by_alias($this->TABLE, $alias, true);
-        $query = "select {$this->TABLE}.*,users.avatar, users.fullname as author from {$this->TABLE} left join users on (users.id=uid) where  {$this->TABLE}.active='Y' and {$this->TABLE}.id='{$post_id}'";
-        $result = App::$db->query($query);
+        $query = "SELECT {$this->TABLE}.*,users.fullname as author,users.avatar,
+            (SELECT COUNT(id) FROM blog_posts_tags WHERE post_id = blog_posts.id) as tags_count,
+            (SELECT COUNT(id) FROM comments WHERE active='Y' and comments.target_type='blog' and target_id = blog_posts.id) as comments_count,
+            (SELECT COUNT(id) FROM score_log WHERE target_type='blog' and target_id = blog_posts.id) as score_count
+            from {$this->TABLE} 
+            left join users on (users.id=uid)
+            where {$this->TABLE}.active='Y' and {$this->TABLE}.id=?";
+        $result = App::$db->query($query,['id' => $post_id]);
         $row = $result->fetch_array();
         $result->data_seek(0);
 
@@ -100,7 +75,6 @@ class Controller extends BaseController
         $this->title = $row['title'];
         
         $this->comments = new Comments ('blog', $post_id);
-        $this->score = new Score ('blog');
         
         $tags['post_view'] = true;
         $this->tags['INCLUDE_JS'] = '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/blog/blog.js"></script>' . "\n";
@@ -120,19 +94,22 @@ class Controller extends BaseController
         $tag_id = get_id_by_alias('blog_tags', $alias, true);
         [$tag_name] = App::$db->getRow('select name from blog_tags where id = ?', ['id' => $tag_id]);
         $this->breadcrumbs[] = ['title' => $this->title, 'url'=>'blog/'];
-        $this->title = 'Публикации по метке ' . $tag_name;
-        $this->breadcrumbs[] = ['title' => $this->title];
+        $this->title = 'Публикации по метке &quot;' . $tag_name . '&quot;';
+        $this->breadcrumbs[] = ['title' => $this->title];        
         
-        
-        $this->comments = new Comments ('blog', 0);
-
-        $query = "SELECT {$this->TABLE}.*,users.fullname as author,date_format(date_add,'%Y-%m-%dT%H:%i+06:00') as timestamp
+        $query = "SELECT {$this->TABLE}.*,users.fullname as author,users.avatar,
+            (SELECT COUNT(id) FROM blog_posts_tags WHERE post_id = blog_posts.id) as tags_count,
+            (SELECT COUNT(id) FROM comments WHERE active='Y' and comments.target_type='blog' and target_id = blog_posts.id) as comments_count,
+            (SELECT COUNT(id) FROM score_log WHERE target_type='blog' and target_id = blog_posts.id) as score_count
             from blog_posts_tags
             left join blog_posts {$this->TABLE} on ({$this->TABLE}.id = blog_posts_tags.post_id)
             left join users on (users.id=uid)
             where {$this->TABLE}.active='Y' and blog_posts_tags.tag_id = '{$tag_id}'
             group by {$this->TABLE}.id  order by {$this->TABLE}.id desc";
         $result = App::$db->query($query);
+        
+        $tags['post_view'] = true;
+        $this->tags['INCLUDE_JS'] = '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/blog/blog.js"></script>' . "\n";        
 
         if (!$result->num_rows) {
              $content = App::$message->get('list_empty', [], '');
@@ -142,4 +119,34 @@ class Controller extends BaseController
         return $content;
     }
     
+    public function actionAddScore (int $post_id): array 
+    {
+        $this->score = new Score ('blog');
+        $this->score->add($post_id, 1);
+        return ['result' => 'OK', 'score' => $this->score->getCount($post_id)];
+    }
+    
+    public function getPostContent (array $row): string 
+    {
+        $content = replace_base_href($row['content'], false);
+        return preg_replace('/height: \d+px;/', 'max-width: 100%;', $content);
+    }
+
+    public function getTags (array $row): array 
+    {
+        $result = App::$db->query('SELECT `name`,`seo_alias` FROM blog_posts_tags left join blog_tags ON (blog_tags.id = blog_posts_tags.tag_id) WHERE post_id=? ORDER BY name ASC',['post_id' => $row['id']]);
+        $tags = $result->fetch_all(MYSQLI_ASSOC);
+        return $tags;
+    }
+    
+    public function getPostCommentsCount (array $row): string 
+    {
+        return $this->comments->show_count($row['id']);
+    }
+
+    public function getScore (array $row): string 
+    {
+        return $this->score->getCount($row['id']);
+    }
+
 }

@@ -28,8 +28,8 @@
                     {% endif %}
                     <a href="{{ href }}" class="btn btn-default btn-next">Перейти >></a><br />
                 {% endif %}                
-                {% set tags = this.getTags(row) %}
-                {% if count(tags)>0 %}
+                {% if row.tags_count>0 %}
+                    {% set tags = this.getTags(row) %}
                     <div class="blog-tags">
                         {% for tag in tags %}
                             <a href="{{ SUBDIR }}blog/by-tag/{{ tag.seo_alias }}" class="badge badge-success" title="{{ tag.name }}">{{ tag.name }}</a>
@@ -40,10 +40,10 @@
             <div class="card-footer">
                 [ <a href="{{ SUBDIR }}{{ routing.getUrl('blog_post', null, row) }}#comment_form" title="{{ row.title }}">Добавить комментарий</a> ]
                 [ <a href="{{ SUBDIR }}{{ routing.getUrl('blog_post', null, row) }}#comments" title="{{ row.title }}">
-                    Комментариев: {{ this.getPostCommentsCount(row) }}</a> ]
+                    Комментариев: {{ row.comments_count }}</a> ]
                 <div class="score">
                     <span class="score_value_{{ row.id }}">
-                        {{ this.getScore(row) }}
+                        {{ row.score_count }}
                     </span>
                     <a href="" post_id="{{ row.id }}" class="score_button"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></a>
                 </div>    

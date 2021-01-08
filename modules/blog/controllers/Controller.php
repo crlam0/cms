@@ -6,6 +6,7 @@ use classes\BaseController;
 use classes\App;
 use classes\Pagination;
 use classes\Comments;
+use classes\Score;
 
 /**
  * Description of Controller
@@ -39,6 +40,18 @@ class Controller extends BaseController
         return $this->comments->show_count($row['id']);
     }
 
+    public function getScore (array $row): string 
+    {
+        return $this->score->getCount($row['id']);
+    }
+
+    public function actionAddScore (int $post_id): array 
+    {
+        $this->score = new Score ('blog');
+        $this->score->add($post_id, 1);
+        return ['result' => 'OK', 'score' => $this->score->getCount($post_id)];
+    }
+    
     public function getTags (array $row): array 
     {
         $result = App::$db->query('SELECT `name`,`seo_alias` FROM blog_posts_tags left join blog_tags ON (blog_tags.id = blog_posts_tags.tag_id) WHERE post_id=? ORDER BY name ASC',['post_id' => $row['id']]);
@@ -51,12 +64,14 @@ class Controller extends BaseController
         $this->breadcrumbs[] = ['title'=>$this->title];
         
         $this->comments = new Comments ('blog', 0);
+        $this->score = new Score ('blog');
 
         $query = "SELECT count(id) from {$this->TABLE} where active='Y'";
         list($total) = App::$db->getRow($query);
 
         $pager = new Pagination($total, $page, $this->MSG_PER_PAGE);
-        $tags['pager'] = $pager;        
+        $tags['pager'] = $pager;
+        $this->tags['INCLUDE_JS'] = '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/blog/blog.js"></script>' . "\n";
 
         $query = "SELECT {$this->TABLE}.*,users.fullname as author,users.avatar,date_format(date_add,'%Y-%m-%dT%H:%i+06:00') as timestamp
             from {$this->TABLE} left join users on (users.id=uid)
@@ -65,7 +80,7 @@ class Controller extends BaseController
         $result = App::$db->query($query);
 
         if (!$result->num_rows) {
-             $content = App::$message->get('list_empty', [], '');
+            $content = App::$message->get('list_empty', [], '');
         } else {
             $content =$this->render('blog_posts', $tags, $result);            
         }
@@ -85,8 +100,11 @@ class Controller extends BaseController
         $this->title = $row['title'];
         
         $this->comments = new Comments ('blog', $post_id);
+        $this->score = new Score ('blog');
         
         $tags['post_view'] = true;
+        $this->tags['INCLUDE_JS'] = '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/blog/blog.js"></script>' . "\n";
+        
         $content = $this->render('blog_posts', $tags, $result);
 
         $this->comments->get_form_data(App::$input['form']);

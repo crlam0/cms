@@ -18,7 +18,10 @@ class IndexController extends BaseController
         $this->breadcrumbs = [];
         if(class_exists('\local\IndexController')) {
             $controller = new \local\IndexController();
-            return $controller->actionIndex();
+            $content = $controller->actionIndex();
+            $this->title = $controller->title;
+            $this->tags = $controller->tags;
+            return $content;
         }
         
         $query="select title,content from article_item where seo_alias='main'";

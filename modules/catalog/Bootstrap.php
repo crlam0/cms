@@ -42,6 +42,10 @@ class Bootstrap
                 'pattern' => '^basket\/[\w\-]*$',
                 'controller' => 'modules\catalog\BasketController',
             ],     
+            'price' => [
+                'pattern' => '^price\/[\w\-]*$',
+                'controller' => 'modules\catalog\PriceController',
+            ],    
         ]);
         
         function cat_prev_part($prev_id, $deep, $array) {

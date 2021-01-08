@@ -1,26 +1,3 @@
-<style>
-    .badge {
-        font-size: 100%;
-        background-color: #ccc;
-        font-weight: normal;
-    }
-    .btn-next {
-        margin-bottom: 10px;
-    }
-    .avatar-div {
-        float: left;
-        width: 36px;
-        height: 36px;        
-    }
-    .avatar-img {
-        width: 32px;
-        height: 32px;
-    }
-    .score {
-        float: right;
-    }
-</style>
-
 <div id="blog">
     {% for row in rows %}
         <div class="card card-default">
@@ -31,7 +8,7 @@
                         {% if row.avatar|length > 0 %}
                             <img src="{{ SUBDIR }}{{ settings.users.avatar_upload_path }}{{ row.avatar }}" alt="{{ row.author }}" class="avatar-img">
                         {% else %}
-                            <img src="{{ SUBDIR }}{{ settings.users.avatar_upload_path }}default.png" alt="" class="avatar">
+                            <img src="{{ SUBDIR }}{{ settings.users.avatar_upload_path }}default.png" alt="" class="avatar-img">
                         {% endif %}
                     </div>
                     {{ row.author }}
@@ -65,7 +42,10 @@
                 [ <a href="{{ SUBDIR }}{{ routing.getUrl('blog_post', null, row) }}#comments" title="{{ row.title }}">
                     Комментариев: {{ this.getPostCommentsCount(row) }}</a> ]
                 <div class="score">
-                    0 <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                    <span class="score_value_{{ row.id }}">
+                        {{ this.getScore(row) }}
+                    </span>
+                    <a href="" post_id="{{ row.id }}" class="score_button"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></a>
                 </div>    
                     
             </div>

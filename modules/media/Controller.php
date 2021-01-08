@@ -18,8 +18,7 @@ class Controller extends BaseController
     {
         $this->title = 'Файлы';
         $this->breadcrumbs[] = ['title'=>$this->title];        
-        $query = "SELECT 
-                media_list.*,count(files.id) AS files,max(files.date_add) AS last_files_date_add
+        $query = "SELECT media_list.*,count(files.id) AS files,max(files.date_add) AS last_files_date_add
             FROM media_list
             LEFT JOIN media_files AS files ON (files.list_id=media_list.id)
             GROUP BY media_list.id ORDER BY last_files_date_add DESC,media_list.date_add DESC";
@@ -34,7 +33,7 @@ class Controller extends BaseController
     public function actionFilesList(string $alias, int $page = 1): string
     {
         $view_media = get_id_by_alias('media_list', $alias, true);            
-        list($media_title, $media_seo_alias, $media_descr) = App::$db->getRow("SELECT title, seo_alias, descr from media_list where id='{$view_media}'");
+        list($media_title, $media_seo_alias, $media_descr) = App::$db->getRow("SELECT title, seo_alias, descr from media_list where id=?", ['id' => $view_media]);
         $tags['list_descr'] = $media_descr;
         
         $this->title = $media_title;
@@ -46,8 +45,8 @@ class Controller extends BaseController
         $tags['pager'] = $pager;
         $tags['media_list_href'] = 'media/'.$media_seo_alias.'/';
 
-        $query = "SELECT * from media_files where list_id='" . $view_media . "' order by num asc, id asc limit {$pager->getOffset()},{$pager->getLimit()}";
-        $result = App::$db->query($query);
+        $query = "SELECT * from media_files where list_id=? order by num asc, id asc limit {$pager->getOffset()},{$pager->getLimit()}";
+        $result = App::$db->query($query, ['list_id' => $view_media]);
         if (!$result->num_rows) {
             $content = App::$message->get('list_empty');
         } else {
@@ -59,19 +58,20 @@ class Controller extends BaseController
         return $content;
     }
     
-    public function actionDownload(): string 
+    public function actionDownload(): void 
     {
         $file_id = App::$input['media_file_id'];
         
         if(is_numeric($file_id)) {
-            list($file_name) = App::$db->getRow("select file_name from media_files where id='{$file_id}'");
+            list($file_name, $title) = App::$db->getRow("select file_name,title from media_files where id=?", ['id' => $file_id]);
+            $f_info = pathinfo($file_name);
+            $download_file_name = $title . "." . $f_info['extension']; 
             $file_name = App::$DIR . App::$settings['media_upload_path'] . $file_name;
-            echo $file_name;
             if(file_exists($file_name)) {
                 $mime_type=mime_content_type($file_name);
                 header('Content-Description: File Transfer');
                 header('Content-Type: ' . $mime_type);
-                header('Content-Disposition: attachment; filename=' . App::$input['download_file_name']);
+                header('Content-Disposition: attachment; filename=' . $download_file_name);
                 header('Content-Transfer-Encoding: binary');
                 header('Expires: 0');
                 header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -80,16 +80,15 @@ class Controller extends BaseController
                 ob_clean();
                 flush();
                 readfile($file_name);
-                $query="update media_files set download_count=download_count+1 where id='{$file_id}'";
-                App::$db->query($query);
+                $query="update media_files set download_count=download_count+1 where id=?";
+                App::$db->query($query, ['id' => $file_id]);
                 exit;
             }
         }
         $tags['Header'] = 'Ошибка 404';
         $tags['file_name'] = App::$input['download_file_name'];
         $content = App::$message->get('file_not_found',$tags);
-        header(App::$server['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
-        return $content;
+        App::sendResult($content, $tags, 404);
     }    
     
     public function isFileExists(array $row): bool 
@@ -100,8 +99,7 @@ class Controller extends BaseController
 
     public function getHREF(array $row): string 
     {
-        $f_info = pathinfo($row['file_name']);
-        return App::$SUBDIR . "media/download?media_file_id={$row['id']}&download_file_name=" . urlencode($row['title']) . "." . $f_info["extension"];        
+        return App::$SUBDIR . "media/download?media_file_id={$row['id']}";        
     }
 
     public function getFileSize(array $row): string 

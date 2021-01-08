@@ -24,6 +24,14 @@ class Bootstrap
                     '0' => 'page',
                 ]
             ],    
+            'add-score' => [
+                'pattern' => '^blog\/add\-score$',
+                'controller' => 'modules\blog\controllers\Controller',
+                'action' => 'add-score',
+                'params' => [
+                    '0' => 'target_id',
+                ]
+            ],    
             'blog-post-view' => [
                 'pattern' => '^blog\/([\w_\-]+)\/?$',
                 'controller' => 'modules\blog\controllers\Controller',

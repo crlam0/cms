@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\price;
+namespace modules\catalog;
 
 use classes\BaseController;
 use classes\App;

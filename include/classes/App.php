@@ -358,7 +358,7 @@ class App
      * @param array $tags
      * 
      */
-    private function runController($controller_name, $action, $tags)
+    private function runController(string $controller_name, string $action, array $tags = [])
     {
         static::debug('Create controller "' . $controller_name . '" and run action "' . $action . '"');
         $controller = new $controller_name;
@@ -387,7 +387,7 @@ class App
      *
      * @param array $tags
      */
-    public function run ($tags)
+    public function run (array $tags = [])
     {
         $file = static::$routing->file;
         if($file && is_file(static::$DIR . $file)) {

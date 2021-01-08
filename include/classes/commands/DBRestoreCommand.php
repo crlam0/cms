@@ -30,6 +30,7 @@ class DBRestoreCommand extends Command
     {
         global $DBHOST, $DBUSER, $DBPASSWD, $DBNAME;        
         $last = $input->getArgument('last');
+        $table = '';
         $this->paths = glob('dump-*.sql');
         if (empty($last)) {
             $helper = $this->getHelper('question');

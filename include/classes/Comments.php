@@ -14,13 +14,13 @@ use classes\BBCodeEditor;
 
 class Comments
 {
-    private $__target_type;
-    private $__target_id;
-    private $__editor;
-    private $__code_ok;
-    private $__new_form;
-    private $__table = 'comments';
-    private $__get_form_data_result = '';
+    private $target_type;
+    private $target_id;
+    private $editor;
+    private $code_ok;
+    private $new_form;
+    private $table = 'comments';
+    private $get_form_data_result = '';
     
     /**
      * Set object params
@@ -32,10 +32,10 @@ class Comments
      */
     public function __construct(string $target_type, int $target_id = 0, string $action_href = '')
     {
-        $this->__target_type=$target_type;
-        $this->__target_id=$target_id;
-        $this->__editor = new BBCodeEditor ();
-        $this->__new_form = true;
+        $this->target_type=$target_type;
+        $this->target_id=$target_id;
+        $this->editor = new BBCodeEditor ();
+        $this->new_form = true;
     }
 
     /**
@@ -47,8 +47,8 @@ class Comments
      */
     public function show_count(int $target_id) : string
     {        
-        $query="select count(id) from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id='{$target_id}'";
-        list($count) = App::$db->getRow($query);
+        $query="select count(id) from {$this->table} where active='Y' and target_type=? and target_id=?";
+        list($count) = App::$db->getRow($query, ['target_type' => $this->target_type, 'target_id' => $target_id]);
         return $count;
     }
     
@@ -61,9 +61,12 @@ class Comments
      */
     public function show_list(array $tags = []) : string 
     {        
-        $query="select * from {$this->__table} where active='Y' and target_type='{$this->__target_type}' and target_id='{$this->__target_id}' order by id asc";
+        $query="select {$this->table}.*, users.fullname, users.avatar from {$this->table}
+            left join users on (users.id = uid)
+            where active='Y' and target_type='{$this->target_type}' and target_id='{$this->target_id}'
+            order by id asc";
         $result = App::$db->query($query);
-        return App::$template->parse('comments_list',$tags,$result);        
+        return App::$template->parse('comments_list', $tags, $result);        
     }
     
     /**
@@ -76,19 +79,21 @@ class Comments
     public function show_form(array $tags = []) : string 
     {
         global $_SESSION;
-        if ( $this->__new_form ) {
-            $this->__editor->SetValue('');
+        if ( $this->new_form ) {
+            $this->editor->SetValue('');
+            $tags['author'] = '';
+            $tags['email'] = '';
         } elseif (is_array(App::$input['form'])) {
             $data = App::$input['form'];
             $tags = array_merge($tags, $data);            
-        }
-        
-        $tags['editor'] = $this->__editor->GetContol(400, 200, App::$SUBDIR . 'theme/bbcode_editor');
+        }        
+        $tags['editor'] = $this->editor->GetContol(400, 200, App::$SUBDIR . 'theme/bbcode_editor');
+        $tags['authorized'] = (App::$user->id > 0);
         if(!isset($tags['action'])){
-            $tags['action'] = App::$server['PHP_SELF'];        
+            $tags['action'] = dirname(App::$server['PHP_SELF']);
         }
         $_SESSION['IMG_CODE'] = rand(111111, 999999);        
-        return $this->__get_form_data_result . App::$template->parse('comment_add_form', $tags);
+        return $this->get_form_data_result . App::$template->parse('comment_add_form', $tags);
     }
     
     private function checkInput(array $input) : array 
@@ -104,13 +109,13 @@ class Comments
         } elseif (!isset($input['email']) || !preg_match('/^[A-Za-z0-9-_]+@[A-Za-z0-9-\.]+\.[A-Za-z0-9-\.]{2,3}$/', $input['email'])) {
             $output.=App::$message->get('form_error_email');
             $err = true;
-        } elseif (strlen($this->__editor->GetValue()) < 10) {
+        } elseif (strlen($this->editor->GetValue()) < 10) {
             $output.=App::$message->get('form_error_msg_too_short');
             $err = true;
-        } elseif (strlen($this->__editor->GetValue()) > 512) {
+        } elseif (strlen($this->editor->GetValue()) > 512) {
             $output.=App::$message->get('form_error_msg_too_long');
             $err = true;
-        } elseif ( ($input['img_code'] != $_SESSION['IMG_CODE']) && (!$settings['debug']) ) {
+        } elseif ( ($input['img_code'] != $_SESSION['IMG_CODE']) && (!App::$settings['debug']) ) {
             $output.=App::$message->get('form_error_code');
             $err = true;
         }
@@ -129,18 +134,24 @@ class Comments
             return false;
         };
         list($err, $output) = $this->checkInput($input);
-        if ( $err ) {
-            $this->__new_form = false;
+        if ( $err && !App::$user->id ) {
+            $this->new_form = false;
         } else {
             $input['ip'] = App::$server['REMOTE_ADDR'];
             $input['date_add'] = 'now()';
             $input['uid'] = App::$user->id;
-            $input['target_type']=$this->__target_type;
-            $input['target_id']=$this->__target_id;
-            $input['content']=$this->__editor->GetHTML();
+            $input['target_type']=$this->target_type;
+            $input['target_id']=$this->target_id;
+            $input['content']=$this->editor->GetHTML();
+            
+            if(App::$user->id) {
+                $input['author'] = App::$user->fullname;
+                $input['email'] = App::$user->email;
+            }
+            
             unset($input['add_comment']);
             unset($input['img_code']);
-            $query = "insert into {$this->__table} " . db_insert_fields($input);
+            $query = "insert into {$this->table} " . db_insert_fields($input);
             App::$db->query($query);
             $output.=App::$message->get('',[],'Комментарий успешно добавлен');
 
@@ -153,9 +164,9 @@ class Comments
                 App::$message->mail(App::$settings['email_to_addr'], 'На сайте http://'.App::$server['HTTP_HOST'].App::$SUBDIR.' оставлен новый комментарий.', $message);
             }    
 
-            $this->__new_form = true;
+            $this->new_form = true;
         }
-        $this->__get_form_data_result = $output;
+        $this->get_form_data_result = $output;
     }
 }
 

@@ -70,11 +70,6 @@ return [
         ]
     ], 
    
-    'price' => [
-        'pattern' => '^price\/[\w\-]*$',
-        'controller' => 'modules\price\Controller',
-    ],    
-    
-        
+       
 ];
 

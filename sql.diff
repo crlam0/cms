@@ -160,9 +160,10 @@ ALTER TABLE `cat_item`
 
 
 === 2018-10-19
-INSERT INTO `settings` (`title`, `comment`) VALUES ('contacts_phone', '<b>Контакты: телефон</b>');
-INSERT INTO `settings` (`title`, `comment`) VALUES ('contacts_email', '<b>Контакты: E-Mail</b>');
-INSERT INTO `settings` (`title`, `comment`) VALUES ('contacts_addr', '<b>Контакты: адрес</b>');
+
+INSERT INTO `settings` (`name`, `comment`) VALUES ('contacts_phone', '<b>Контакты: телефон</b>');
+INSERT INTO `settings` (`name`, `comment`) VALUES ('contacts_email', '<b>Контакты: E-Mail</b>');
+INSERT INTO `settings` (`name`, `comment`) VALUES ('contacts_addr', '<b>Контакты: адрес</b>');
 
 === 2018-10-19
 

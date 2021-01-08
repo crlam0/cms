@@ -568,5 +568,16 @@ function get_id_by_alias ($table, $seo_alias, $exit_with_404 = false) {
 }
 
 
+/**
+ * Get HREF for menu item
+ *
+ * @param integer $tmp Unused
+ * @param array $row Row from SQL query
+ *
+ * @return string Output string
+ */
+function get_menu_href($tmp, $row) {
+    return App::$routing->getUrl($row['target_type'], $row['target_id'], $row);    
+}
 
 

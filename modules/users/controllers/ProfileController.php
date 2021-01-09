@@ -18,9 +18,9 @@ class ProfileController extends BaseController
         parent::__construct();
         $this->title = 'Профиль';
         $this->breadcrumbs[] = ['title'=>$this->title];
-        $this->image_path = App::$settings['users']['avatar_upload_path'];
-        $this->image_width = App::$settings['users']['avatar_image_width'];
-        $this->image_height = App::$settings['users']['avatar_image_height'];
+        $this->image_path = App::$settings['modules']['users']['avatar_upload_path'];
+        $this->image_width = App::$settings['modules']['users']['avatar_image_width'];
+        $this->image_height = App::$settings['modules']['users']['avatar_image_height'];
         $this->user_flag = 'passwd';
     }
     

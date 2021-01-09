@@ -13,12 +13,12 @@ class Bootstrap
         App::$routing->addRoutes([
             'article-part-list' => [
                 'pattern' => '^article\/?$',
-                'controller' => 'modules\article\Controller',
+                'controller' => 'modules\article\controllers\Controller',
                 'action' => 'part-list',
             ],    
             'article-list' => [
                 'pattern' => '^article\/([\w-]+)\/$',
-                'controller' => 'modules\article\Controller',
+                'controller' => 'modules\article\controllers\Controller',
                 'action' => 'items-list',
                 'params' => [
                     '0' => 'alias',
@@ -26,7 +26,7 @@ class Bootstrap
             ],    
             'article-list-with-page' => [
                 'pattern' => '^article\/([\w-]+)\/page(\d+)\/$',
-                'controller' => 'modules\article\Controller',
+                'controller' => 'modules\article\controllers\Controller',
                 'action' => 'items-list',
                 'params' => [
                     '0' => 'alias',
@@ -35,22 +35,37 @@ class Bootstrap
             ],    
             'article' => [
                 'pattern' => '^article\/([\w-]+)\/([\w-]+)\/?$',
-                'controller' => 'modules\article\Controller',
+                'controller' => 'modules\article\controllers\Controller',
                 'action' => 'content',
                 'params' => [
-                    '0' => 'part_alias',
+                    '0' => 'list_alias',
                     '1' => 'alias'
                 ]
             ],    
             'article-pdf' => [
                 'pattern' => '^article\/(.*)\/(.*)\.pdf$',
-                'controller' => 'modules\article\Controller',
+                'controller' => 'modules\article\controllers\Controller',
                 'action' => 'PDF',
                 'params' => [
                     '1' => 'uri',
                     '2' => 'alias',
                 ]
-            ],     
+            ],
+            
+            /* For admin module */
+            
+            'article-list-edit' => [
+                'pattern' => '^admin\/article\-edit\/[\w\-]*$',
+                'controller' => 'modules\article\controllers\ListEditController',
+            ],
+            'article-item-edit' => [
+                'pattern' => '^admin\/article\-edit\/items\/(\d+)\/[\w\-]*$',
+                'controller' => 'modules\article\controllers\ItemEditController',
+                'params' => [
+                    '0' => 'list_id',
+                ]
+            ],
+            
         ]);
         
         App::$routing->addGetUrlFunction('article_list', function ($list_id, $row) {

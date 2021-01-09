@@ -10,7 +10,7 @@ use classes\App;
  *
  * @author BooT
  */
-class Controller extends BaseController 
+class PriceController extends BaseController 
 {
     
     public function actionIndex(): string 
@@ -18,11 +18,11 @@ class Controller extends BaseController
         $this->title = 'Прайс-лист';
         $this->breadcrumbs[] = ['title'=>$this->title];
         
-        $this->tags['INCLUDE_JS'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/price/price.js"></script>' . "\n";
+        App::addAsset('js', 'modules/catalog/price.js');
         
         $query = "select content from article_item where seo_alias='before_price'";
         list($before_price) = App::$db->getRow($query);
-        $content .= $before_price . "<br />";
+        $content = $before_price . "<br />";
 
         $tags['subparts'] = $this->sub_part(0, 0, 2);        
 

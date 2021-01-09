@@ -133,15 +133,14 @@ if ($input['copy']) {
     $query = "SELECT * from cat_part where prev_id={$input['id']} order by num,title+1 asc";
     $result_part = my_query($query);
     while ($row_part = $result_part->fetch_assoc()) {
-        $row_part['title']; // IT'S A BRILLIANT !!!!!!!!!!!!!!
         $input_cat_id = $row_part['id'];
         unset($row_part['id']);
         $row_part['prev_id']=$input['to_part_id'];
         $query = "insert into cat_part " . db_insert_fields($row_part);
         my_query($query, null, false);
-        $part_id=App::$db->insert_id();        
-        $seo_alias=encodestring($row_part['title']).'_'.$part_id;        
-        my_query("update cat_part set seo_alias='{$seo_alias}' where id='{$part_id}'");
+        $insert_id=App::$db->insert_id();        
+        $seo_alias=encodestring($row_part['title']).'_'.$insert_id;        
+        my_query("update cat_part set seo_alias='{$seo_alias}' where id='{$insert_id}'");
         
         $query = "SELECT * from cat_item where part_id='{$input_cat_id}'";
         $result_item = my_query($query);

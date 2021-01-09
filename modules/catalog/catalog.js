@@ -30,7 +30,7 @@ $(document).ready(function () {
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
         $.ajax({
-            type: "GET", url: MYDIR + "load-image", dataType: "json", data: "get_popup_image_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight=" + windowHeight,
+            type: "GET", url: MYDIR + "load-image", dataType: "json", data: "file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight=" + windowHeight,
             success: function (msg) {
                 $('#popupHeader').html(msg.title);
                 $('#popupContent').html(msg.content);
@@ -55,7 +55,7 @@ $(document).ready(function () {
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
         $.ajax({
-            type: "GET", url: MYDIR + "load-image", dataType: "json", data: "get_popup_image_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight=" + windowHeight,
+            type: "GET", url: MYDIR + "load-image", dataType: "json", data: "file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight=" + windowHeight,
             success: function (msg) {
                 $('#popupHeader').html(msg.title);
                 $('#popupContent').html(msg.content);

@@ -135,8 +135,8 @@ final class Routing
             }
         }
         if(count(App::$get)) {
-            foreach(App::$get as $value) {
-                $this->params[] = $value;
+            foreach(App::$get as $key => $value) {
+                $this->params[$key] = $value;
             }
         }
     }

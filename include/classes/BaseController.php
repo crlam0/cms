@@ -41,6 +41,34 @@ class BaseController
         $this->tags['INCLUDE_JS']='';
     }
     
+    private function prepareParams($reflection, array $params = []) 
+    {
+        $pass = [];
+        foreach ($reflection->getParameters() as $param) {
+            /* @var $param ReflectionParameter */
+            if (isset($params[$param->getName()])) {
+                $pass[] = $params[$param->getName()];
+            } else {
+                $pass[] = $param->getDefaultValue();
+            }
+        }
+        return $pass;
+    }
+    
+    private function wrongParams($reflection, array $params = []) : void
+    {
+        App::error('Expected args: ' . implode(', ', $reflection->getParameters()));
+        $result = ''; $i=0; $size = count($params);
+        foreach ($params as $key => $value) {
+            $result .= 'Parameter #' . $i  . ' [  '.gettype($value).' $' . $key . ' ]';
+            $i++;
+            if($i < $size) {
+                $result .= ', ';
+            }
+        }
+        App::error('Actually args: ' . $result);
+    }
+    
     /**
      * Check method and run it if exists
      *
@@ -52,10 +80,16 @@ class BaseController
     private function runMethod(string $methodName, array $params = []) 
     {
         if (method_exists($this, $methodName)) {
-            $method = new \ReflectionMethod($this, $methodName);
-            if ($method->isPublic() && $method->getName() === $methodName) {
-                return $method->invokeArgs($this, $params);
+            $reflection = new \ReflectionMethod($this, $methodName);
+            if (!$reflection->isPublic()) {
+                throw new \InvalidArgumentException('Method ' . $methodName . ' found but is private.');
             }
+            try {
+                return $reflection->invokeArgs($this, $this->prepareParams($reflection, $params));
+            } catch (\Exception $e) {
+                App::error('Exception: ' . $e->getMessage());
+                $this->wrongParams($reflection, $params);
+            }            
         }        
         throw new \InvalidArgumentException('Method ' . $methodName . ' not found.');
     }

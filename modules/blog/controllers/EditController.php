@@ -53,9 +53,9 @@ class EditController extends BaseController
             $model->save(false);
             $this->redirect('update', ['id' =>$model->id]);
         }
-        $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/ckeditor/ckeditor.js"></script>' . "\n";
-        $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor.js"></script>' . "\n";
-        header('X-XSS-Protection:0');
+        App::addAsset('js', 'include/ckeditor/ckeditor.js');
+        App::addAsset('js', 'include/js/editor.js');
+        App::addAsset('header', 'X-XSS-Protection:0');
         $model->content = replace_base_href($model->content, false);
         return $this->render('blog_post_form.html.twig', [
             'model' => $model,
@@ -77,9 +77,9 @@ class EditController extends BaseController
             $model->save(false);
             $this->redirect('update', ['id' =>$model->id]);
         } 
-        $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/ckeditor/ckeditor.js"></script>' . "\n";
-        $this->tags['INCLUDE_HEAD'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'include/js/editor.js"></script>' . "\n";
-        header('X-XSS-Protection:0');
+        App::addAsset('js', 'include/ckeditor/ckeditor.js');
+        App::addAsset('js', 'include/js/editor.js');
+        App::addAsset('header', 'X-XSS-Protection:0');
         $model->content = replace_base_href($model->content, false);
         return $this->render('blog_post_form.html.twig', [
             'model' => $model,

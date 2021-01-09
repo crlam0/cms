@@ -35,6 +35,13 @@ class Bootstrap
                 'pattern' => '^profile\/?[\w\-]*$',
                 'controller' => 'modules\users\controllers\ProfileController'
             ],    
+
+            /* For admin module */
+            
+            'users-edit' => [
+                'pattern' => '^admin\/users\-edit\/[\w\-]*$',
+                'controller' => 'modules\users\controllers\EditController',
+            ],  
         ]);
     }
 }

@@ -1,0 +1,33 @@
+<center>
+    <form action="{{ this.base_url }}create" method="get">
+        <input class="btn btn-primary" type="submit" value="Добавить">
+    </form>
+</center>
+<br>
+<table width=90%  class="table table-responsive table-bordered normal-form" align="center">
+    <tr class="header" align="center">
+	<td width=15%>Дата</td>
+	<td width=40%>Заголовок</td>
+	<td width=20%>Алиас</td>
+	<td width=5% align="center">&nbsp;</td>
+	<td width=5% align="center">&nbsp;</td>
+    </tr>
+{% for row in rows %}
+    <tr class="content">
+	<td><b>{{ row.date_add }}</b></td>
+        <td><a href="{{ this.base_url }}items/{{ row.id }}/">{{ row.title }}</a></td>
+	<td>{{ row.seo_alias }}</td>
+	<td width=16><a href="{{ this.base_url }}update?id={{ row.id }}"><img src="{{ SUBDIR }}admin/images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href="{{ this.base_url }}delete?id={{ row.id }}"><img src="{{ SUBDIR }}admin/images/del.gif" alt="Удалить" border="0" onClick="return test();"></a></td>
+    </tr>
+{% endfor %}
+</table>
+<br />
+<center>
+    <form action="{{ this.base_url }}create" method=get>
+	<input class="btn btn-primary" type="submit" value="Добавить">
+    </form>
+</center>
+
+
+

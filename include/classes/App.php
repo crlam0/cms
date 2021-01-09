@@ -33,6 +33,10 @@ class App
     * @var FileCache Cache object
     */
     public static $cache;
+    /**
+    * @var Monolog\Logger Object of logger
+    */    
+    public static $logger;
     
     /**
     * @var Array Raw data from _GET
@@ -67,17 +71,22 @@ class App
     */
     public static $DEBUG_ARRAY;
     /**
-    * @var Monolog\Logger Object of logger
-    */    
-    public static $logger;
-    /**
     * @var Array Errors from validation etc.
     */    
     private static $errors = [];
     /**
-    * @var Array Debug array
+    * @var Array Container data
     */
     private static $data = [];
+    /**
+    * @var Array Assets data
+    */
+    private static $assets = [
+        'header' => [],
+        'head' => [],
+        'css' => [],
+        'js' => [],
+    ];
     
     /**
     * @var Array Array of denied words for input strings
@@ -253,8 +262,6 @@ class App
         App::$logger->error($message);
     }
     
-    
-    
     /**
      * Add message to session
      *
@@ -316,6 +323,19 @@ class App
     {
         return static::$errors;
     }
+    
+    /**
+     * Add item to $assets
+     *
+     * @param string $type
+     * @param string $value
+     *
+     */
+    public static function addAsset (string $type, string $value) : void
+    {
+        static::$assets[$type][] = $value;
+        
+    }
 
     private function failedAuth() {
         if (static::$user->id) {
@@ -362,7 +382,19 @@ class App
         }        
         $tags['Header'] = $controller->title;
         $tags['breadcrumbs'] = array_merge($tags['breadcrumbs'], $controller->breadcrumbs);
-        $tags = array_merge($tags, $controller->tags);
+        $tags = \array_merge($tags, $controller->tags);
+        foreach(static::$assets['header'] as $value) {
+            header($value);
+        }
+        foreach(static::$assets['head'] as $value) {
+            $tags['INCLUDE_HEAD'] .= $value . PHP_EOL;
+        }
+        foreach(static::$assets['css'] as $value) {
+            $tags['INCLUDE_HEAD'] .= '<link href="' . App::$SUBDIR . $value . '" rel="stylesheet" />' . PHP_EOL;
+        }
+        foreach(static::$assets['js'] as $value) {
+            $tags['INCLUDE_JS'] .= '<script src="' . App::$SUBDIR . $value . '"></script>' . PHP_EOL;
+        }
         static::sendResult($content, $tags, 200);
     }
     

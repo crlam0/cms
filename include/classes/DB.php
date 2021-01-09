@@ -366,7 +366,7 @@ class DB
         foreach($fields as $field => $value) {
             $a++;
             if(strstr($value, 'now()') || strstr($value, 'date_format')){
-                $sql .= $field . "='{$value}'";
+                $sql .= $field . "={$value}";
             } else {
                 $sql .= $field . '=?';
                 $params[$field] = stripcslashes($value);

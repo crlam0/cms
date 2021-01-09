@@ -47,7 +47,14 @@ class Bootstrap
                 'params' => [
                     '0' => 'alias',
                 ]
-            ],    
+            ],
+
+            /* For admin module */
+            
+            'blog-edit' => [
+                'pattern' => '^admin\/blog\-edit\/[\w\-]*$',
+                'controller' => 'modules\blog\controllers\EditController',
+            ],
         ]);
         
         App::$routing->addGetUrlFunction('blog_post',  function ($id, $row) {

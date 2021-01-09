@@ -73,7 +73,9 @@ if ($input['del']) {
     $query = 'select * from cat_item_images where item_id=' . $input['id'];
     $result = my_query($query);
     while ($row = $result->fetch_array()) {
-        if (!unlink($IMG_PATH . $row['fname']))$content.=my_msg_to_str('error', [],'Ошибка удаления файла !');
+        if (!unlink($IMG_PATH . $row['fname'])) {
+            $content.=my_msg_to_str('error', [],'Ошибка удаления файла !');
+        }
     }
     $query = 'delete from cat_item_images where item_id=' . $input['id'];
     my_query($query);
@@ -184,9 +186,7 @@ if ($input['edited']) {
         } else {
             $content.=my_msg_to_str('',[],json_last_error_msg());            
         }        
-    }
-    
-    
+    } 
     
     if (!strlen($input['form']['seo_alias'])){
         $input['form']['seo_alias'] = encodestring($input['form']['title']);
@@ -244,14 +244,6 @@ if (($input['edit']) || ($input['add'])) {
             }
         }
     }
-    
-    /*
-    if (isset($tags['special_offer']) && $tags['special_offer'] ){
-        $tags['special_offer'] = ' checked';
-    }if (isset($tags['novelty']) && $tags['novelty'] ){
-        $tags['novelty'] = ' checked';
-    }
-    */
 
     $tags['price_inputs'] = "<tr class=content align=left><td>{$row_part['price_title']}</td><td><input type=edit class=form-control maxlength=45 size=64 name=form[price] value=\"{$tags['price']}\"></td></tr>";
 

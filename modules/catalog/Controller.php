@@ -54,7 +54,7 @@ class Controller extends BaseController
     
     private function getHeaderBreadCrumbs(int $part_id, string $item_title = ''): array 
     {
-        $root_title = isset(App::$settings['modules']['catalog']['header']) ? App::$settings['modules']['catalog']['header'] : 'Каталог';
+        $root_title = isset(App::$settings['modules']['catalog']['header']) ?? 'Каталог';
         $title = $root_title;
         if ($part_id) {
             $breadcrumbs[] = ['title' => $root_title, 'url' => 'catalog/'];
@@ -103,7 +103,7 @@ class Controller extends BaseController
             $page = 1;
         }
         list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs($part_id);
-        $this->tags['INCLUDE_JS'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/catalog/catalog.js"></script>' . "\n";
+        App::addAsset('js', 'modules/catalog/catalog.js');
         
         $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id=? group by cat_part.id order by cat_part.num,cat_part.title asc";
         $result =App::$db->query($query, ['prev_id' => $part_id]);
@@ -212,7 +212,7 @@ class Controller extends BaseController
 
         $this->title = $tags['title'];
         $this->breadcrumbs[] = ['title' => $tags['title']];
-        $this->tags['INCLUDE_JS'] .= '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/catalog/catalog.js"></script>' . "\n";
+        App::addAsset('js', 'modules/catalog/catalog.js');
 
         $tags['related_products'] = $this->getRelatedProducts($row_part);
         $query = "select * from cat_item_images where item_id='{$tags['id']}' and id<>'{$tags['default_img']}' order by id asc";
@@ -226,7 +226,7 @@ class Controller extends BaseController
         return $this->render('cat_item_view', $tags, $result);        
     }
     
-    public function actionLoadImage(): array
+    public function actionLoadImage($file_name, $image_id, $item_id): array
     {
         $input = App::$input;
         $query = "select default_img,fname,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id=?";

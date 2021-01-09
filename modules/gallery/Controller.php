@@ -46,7 +46,7 @@ class Controller extends BaseController
         $this->title = $gallery_title;
         $this->breadcrumbs[] = ['title' => 'Галерея', 'url'=>'gallery/'];        
         $this->breadcrumbs[] = ['title' => $gallery_title];
-        $this->tags['INCLUDE_JS'] .= '<script type="text/javascript" src="'.App::$SUBDIR.'modules/gallery/gallery.js"></script>'."\n";
+        App::addAsset('js', 'modules/gallery/gallery.js');
 
         list($total) =  App::$db->getRow("SELECT count(id) from gallery_images where gallery_id='{$view_gallery}'");
         $pager = new Pagination($total, $page, App::$settings['gallery_images_per_page']);

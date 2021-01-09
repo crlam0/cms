@@ -24,7 +24,7 @@ class Controller extends BaseController
         if(isset(App::$settings['blog_msg_per_page'])) {
             $this->MSG_PER_PAGE = App::$settings['blog_msg_per_page'];
         }
-        $this->title = isset(App::$settings['modules']['blog']['header']) ? App::$settings['modules']['blog']['header'] : 'Блог';
+        $this->title = isset(App::$settings['modules']['blog']['header']) ?? 'Блог';
     }
     
     public function actionIndex(int $page = 1): string 
@@ -36,7 +36,7 @@ class Controller extends BaseController
 
         $pager = new Pagination($total, $page, $this->MSG_PER_PAGE);
         $tags['pager'] = $pager;
-        $this->tags['INCLUDE_JS'] = '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/blog/blog.js"></script>' . "\n";
+        App::addAsset('js', 'modules/blog/blog.js');
 
         $query = "SELECT {$this->TABLE}.*,users.fullname as author,users.avatar,
             (SELECT COUNT(id) FROM blog_posts_tags WHERE post_id = blog_posts.id) as tags_count,
@@ -77,7 +77,7 @@ class Controller extends BaseController
         $this->comments = new Comments ('blog', $post_id);
         
         $tags['post_view'] = true;
-        $this->tags['INCLUDE_JS'] = '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/blog/blog.js"></script>' . "\n";
+        App::addAsset('js', 'modules/blog/blog.js');
         
         $content = $this->render('blog_posts', $tags, $result);
 
@@ -109,7 +109,7 @@ class Controller extends BaseController
         $result = App::$db->query($query);
         
         $tags['post_view'] = true;
-        $this->tags['INCLUDE_JS'] = '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/blog/blog.js"></script>' . "\n";        
+        App::addAsset('js', 'modules/blog/blog.js');
 
         if (!$result->num_rows) {
              $content = App::$message->get('list_empty', [], '');

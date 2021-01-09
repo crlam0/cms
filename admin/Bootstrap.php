@@ -15,10 +15,6 @@ class Bootstrap
                 'pattern' => '^admin\/?[\w\-]*$',
                 'controller' => 'admin\controllers\IndexController'
             ],      
-            'blog-edit' => [
-                'pattern' => '^admin\/blog\-edit\/[\w\-]*$',
-                'controller' => 'modules\blog\controllers\EditController',
-            ],
             'settings-edit' => [
                 'pattern' => '^admin\/settings\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\SettingsEditController',
@@ -31,10 +27,6 @@ class Bootstrap
                 'pattern' => '^admin\/templates\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\TemplatesEditController',
             ],    
-            'users-edit' => [
-                'pattern' => '^admin\/users\-edit\/[\w\-]*$',
-                'controller' => 'modules\users\controllers\EditController',
-            ],  
         ]);
     }
 }

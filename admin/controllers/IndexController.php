@@ -76,5 +76,29 @@ class IndexController extends BaseController
         }        
     }    
     
+    public function actionViewStats(): string
+    {        
+        $query="SELECT day,count(id) as hits,sum(unique_visitor) as unique_hits from visitor_log group by day order by day desc limit 31";
+        $result = App::$db->query($query);
+        $content = App::$template->parse('stats_day_table', [], $result);
+
+        $query="SELECT remote_host,count(id) as hits from visitor_log group by remote_host order by hits desc limit 20";
+        $result = App::$db->query($query);
+        $content .= App::$template->parse('stats_hosts_table', [], $result);
+
+        $query="SELECT remote_addr,count(id) as hits from visitor_log group by remote_addr order by hits desc limit 20";
+        $result = App::$db->query($query);
+        $content .= App::$template->parse('stats_addr_table', [], $result);
+
+        $query="SELECT user_agent,count(id) as hits from visitor_log group by user_agent order by hits desc limit 10";
+        $result = App::$db->query($query);
+        $content .= App::$template->parse('stats_user_agent_table', [], $result);
+
+        $query="SELECT request_uri,count(id) as hits from visitor_log group by request_uri order by hits desc limit 20";
+        $result = App::$db->query($query);
+        $content .= App::$template->parse('stats_script_name_table', [], $result);        
+        
+        return $content;
+    }
 }
 

@@ -136,9 +136,16 @@ class Template
     {
                 
         $template = null;
-
         if (file_exists(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl')) {
             $temp = $this->MyTemplate->loadFromFile(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl', $name);
+            if ($temp) {
+                $template['name'] = $name;            
+                $template['content'] = $temp;
+                $template['template_type'] = 'my';
+            }
+        }
+        if (strpos(App::$server['REQUEST_URI'], 'admin/') && file_exists(dirname(App::$server['SCRIPT_FILENAME']) . '/admin/templates.tpl')) {
+            $temp = $this->MyTemplate->loadFromFile(dirname(App::$server['SCRIPT_FILENAME']) . '/admin/templates.tpl', $name);
             if ($temp) {
                 $template['name'] = $name;            
                 $template['content'] = $temp;

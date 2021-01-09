@@ -118,12 +118,12 @@ class ItemEditController extends BaseController
     
     private function saveImage($model, $file) 
     {        
-        $content = '';        
         if ($file['size'] < 100) {
             return '';
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            return App::$message->get('error', [], 'Неверный тип файла !');
+            App::setFlash('danger', 'Неверный тип файла !');
+            return false;
         }         
         $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
@@ -131,9 +131,8 @@ class ItemEditController extends BaseController
         if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, null, null, $this->image_width, $this->image_height)) {
             $model->image_name = $file_name;
             $model->image_type = $file['type'];
-            $content .= App::$message->get('', [], 'Изображение успешно добавлено.');
         } else {
-            $content .= App::$message->get('error', [], 'Ошибка копирования файла !');
+            App::setFlash('danger', 'Ошибка копирования файла !');
         }            
         return $content;
     }
@@ -150,7 +149,8 @@ class ItemEditController extends BaseController
     {
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {
-                return App::$message->get('error', [], 'Ошибка удаления файла');
+                App::setFlash('danger', 'Ошибка удаления файла');
+                return false;
             }
         }
         $model->image_name = '';

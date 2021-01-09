@@ -1755,7 +1755,7 @@ $(document).ready(function(){
 </tr>
 [%loop_begin%]
         <tr class="content">
-        <td align="center"><b>[%row(script_name)%]</b></td>
+        <td align="center"><b>[%row(request_uri)%]</b></td>
         <td align="center">[%row(hits)%]</td>
         </tr>
 [%loop_end%]

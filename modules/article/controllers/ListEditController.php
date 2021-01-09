@@ -87,7 +87,7 @@ class ListEditController extends BaseController
     public function actionDelete(int $id): string 
     {
         if(App::$db->getRow("select id from article_item where list_id=?", ['id' => $id])) {
-            App::setFlash('notice', 'Этот раздел не пустой !');
+            App::setFlash('danger', 'Этот раздел не пустой !');
             $this->redirect('index');
         }
         $model = new ArticleList($id);
@@ -105,13 +105,12 @@ class ListEditController extends BaseController
     }
     
     private function saveImage($model, $file) 
-    {        
-        $content = '';        
+    {
         if ($file['size'] < 100) {
-            return '';
+            return false;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            return App::$message->get('error', [], 'Неверный тип файла !');
+            App::setFlash('danger', 'Неверный тип файла !');
         }         
         $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
@@ -119,11 +118,9 @@ class ListEditController extends BaseController
         if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, null, null, $this->image_width, $this->image_height)) {
             $model->image_name = $file_name;
             $model->image_type = $file['type'];
-            $content .= App::$message->get('', [], 'Изображение успешно добавлено.');
         } else {
-            $content .= App::$message->get('error', [], 'Ошибка копирования файла !');
-        }            
-        return $content;
+            App::setFlash('danger', 'Ошибка копирования файла !');
+        }
     }
     
     public function actionDeleteImageFile($post_id) 
@@ -138,7 +135,8 @@ class ListEditController extends BaseController
     {
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {
-                return App::$message->get('error', [], 'Ошибка удаления файла');
+                App::setFlash('danger', 'Ошибка удаления файла');
+                return false;
             }
         }
         $model->image_name = '';

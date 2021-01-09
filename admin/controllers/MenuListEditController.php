@@ -66,6 +66,10 @@ class MenuListEditController extends BaseController
     
     public function actionDelete(int $id): string 
     {
+        if(App::$db->getRow("select id from menu_item where menu_id=?", ['id' => $id])) {
+            App::setFlash('danger', 'Этот раздел не пустой !');
+            $this->redirect('index');
+        }
         $model = new MenuList($id);
         $model->delete();
         $this->redirect('index');

@@ -1,99 +1,107 @@
 <?php
 
-namespace modules\blog\controllers;
+namespace admin\controllers;
 
 use classes\App;
 use classes\BaseController;
 use classes\Image;
 
-use modules\blog\models\BlogPost;
+use admin\models\MenuItem;
 
-class EditController extends BaseController
+class MenuItemEditController extends BaseController
 {
     private $image_path;
     private $image_width;
+    private $image_height;
 
     public function __construct() {
         parent::__construct();
-        $this->title = 'Блог';
+        $this->title = 'Меню';
         $this->breadcrumbs[] = ['title'=>$this->title];
-        $this->image_path = App::$settings['blog_img_path'];
-        $this->image_width = App::$settings['blog_img_max_width'];
+        $this->image_path = App::$settings['menu']['upload_path'] ?? 'theme/menu/';
+        $this->image_width = App::$settings['menu']['image_width'] ?? 32;
+        $this->image_height = App::$settings['menu']['image_height'] ?? 32;
         $this->user_flag = 'admin';
     }
 
-    public function actionIndex(): string
+    public function actionIndex(int $menu_id): string
     {
-        $model = new BlogPost;
-        $result = $model->findAll([], 'date_add DESC');        
-        return $this->render('blog_post_table.html.twig', [], $result);        
+        $model = new MenuItem;
+        $result = $model->findAll(['menu_id' => $menu_id], 'position ASC');        
+
+        [$list_title] = App::$db->getRow("select title from menu_list where id=?", ['id' => $menu_id]);
+        $this->title = 'Пункты в меню ' . $list_title;
+        $this->breadcrumbs[] = ['title' => $this->title];
+
+        return $this->render('menu_item_table.html.twig', [], $result);        
     }
 
-    public function actionActive(int $id, string $active): string 
+    public function actionActive(int $menu_id, int $id, int $active): string 
     {
-        $model = new BlogPost($id);
+        $model = new MenuItem($id);
         $model->active = $active;
         $model->save();
         echo $active;
         exit;
     }    
     
-    public function actionCreate(): string 
+    public function actionCreate(int $menu_id): string 
     {
-        $model = new BlogPost();
+        $model = new MenuItem();
+        App::$input['form']['menu_id'] = $menu_id;
+        App::$input['form']['target_id'] = App::$input['form']['target_id'] ?? 0; 
         if($model->load(App::$input['form']) && $model->validate()) {
-            if (!$model->seo_alias){
-                $model->seo_alias = encodestring($model->title);
-            }
-            $model->content = replace_base_href($model->content, true);
-            $model->active = 'Y';
-            $model->date_add = 'now()';
-            $model->uid = App::$user->id;
+            $model->active = '1';
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
-            App::setFlash('success', 'Пост успешно добавлен.');
-            $this->redirect('update', ['id' =>$model->id]);
+            App::setFlash('success', 'Пункт меню успешно добавлен.');
+            $this->redirect('index');
         }
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
-        App::addAsset('js', 'include/js/editor.js');
-        App::addAsset('header', 'X-XSS-Protection:0');
-        $model->content = replace_base_href($model->content, false);
-        return $this->render('blog_post_form.html.twig', [
+        $user_flags_result = App::$db->query('select title,value from users_flags');
+        $user_flags = $user_flags_result->fetch_all(MYSQLI_ASSOC);
+        
+        $menu_list_result = App::$db->query("select id,title from menu_list where id<>?", ['id' => $menu_id]);
+        $menu_list = $menu_list_result->fetch_all(MYSQLI_ASSOC);
+                
+        return $this->render('menu_item_form.html.twig', [
             'model' => $model,
             'action' => 'create',
             'form_title' => 'Добавление',
             'target_types' => $this->target_types,
+            'user_flags' => $user_flags,
+            'menu_list' => $menu_list,
         ]);
     }
 
-    public function actionUpdate(int $id): string 
+    public function actionUpdate(int $menu_id, int $id): string 
     {
-        $model = new BlogPost($id); 
+        $model = new MenuItem($id); 
         if($model->load(App::$input['form']) && $model->validate()) {
-            if (!$model->seo_alias){
-                $model->seo_alias = encodestring($model->title);
-            }
-            $model->content = replace_base_href($model->content, true);
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
-            App::setFlash('success', 'Пост успешно добавлен.');
-            $this->redirect('update', ['id' =>$model->id]);
-        } 
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
-        App::addAsset('js', 'include/js/editor.js');
-        App::addAsset('header', 'X-XSS-Protection:0');
-        $model->content = replace_base_href($model->content, false);
-        return $this->render('blog_post_form.html.twig', [
+            App::setFlash('success', 'Пункт меню успешно изменён.');
+            $this->redirect('index');
+        }
+        
+        $user_flags_result = App::$db->query('select title,value from users_flags');
+        $user_flags = $user_flags_result->fetch_all(MYSQLI_ASSOC);
+        
+        $menu_list_result = App::$db->query("select id,title from menu_list where id<>?", ['id' => $menu_id]);
+        $menu_list = $menu_list_result->fetch_all(MYSQLI_ASSOC);
+                
+        return $this->render('menu_item_form.html.twig', [
             'model' => $model,
             'action' => $this->getUrl('update', ['id' => $id]),
             'form_title' => 'Изменение',
             'target_types' => $this->target_types,
+            'user_flags' => $user_flags,
+            'menu_list' => $menu_list,
         ]);
     }
     
-    public function actionDelete(int $id): string 
+    public function actionDelete(int $menu_id, int $id): string 
     {
-        $model = new BlogPost($id);
+        $model = new MenuItem($id);
         $this->deleteImageFile($model);
         $model->delete();
         $this->redirect('index');
@@ -101,7 +109,7 @@ class EditController extends BaseController
 
     public function showImage($file_name){
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
-            return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="200" />';
+            return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="' . $this->image_width . '" />';
         } else {
             return 'Отсутствует';
         }        
@@ -129,12 +137,12 @@ class EditController extends BaseController
         return $content;
     }
     
-    public function actionDeleteImageFile($post_id) 
+    public function actionDeleteImageFile(int $menu_id, $item_id) 
     {
-        $model = new BlogPost($post_id);
+        $model = new MenuItem($item_id);
         $this->deleteImageFile($model);
         $model->save(false);
-        $this->redirect('update', ['id' =>$post_id]);
+        $this->redirect('update', ['id' =>$item_id]);
     }
     
     private function deleteImageFile($model) 
@@ -176,9 +184,9 @@ class EditController extends BaseController
         
     ];
     
-    public function actionGetTargetSelect($post_id, $target_type) 
+    public function actionGetTargetSelect(int $menu_id, $item_id, $target_type) 
     {
-        $model = new BlogPost($post_id);        
+        $model = new MenuItem($item_id);        
         $target_id = $model->target_id;
         $href = $model->href;
         
@@ -191,6 +199,7 @@ class EditController extends BaseController
             $output.="</select></td>";
             return $output;
         }
+        
         $output = '';
 
         switch ($target_type) {
@@ -214,55 +223,7 @@ class EditController extends BaseController
                 break;
         }
         echo $output;
-        exit;
-        
-    }
-    
-    public function actionGetTagsPopup($post_id) 
-    {
-        $result = App::$db->findAll('blog_posts_tags', ['post_id'=>$post_id]);
-        $post_tags = [];
-        while($row = $result->fetch_array()){
-            $post_tags[] = $row['tag_id'];
-        }        
-        $result = App::$db->findAll('blog_tags', [], 'name ASC');
-        $content = App::$template->parse('blog_post_tags.html.twig', ['post_id' => $post_id, 'post_tags' => $post_tags], $result);
-        $json['content'] = $content;
-        $json['result'] = 'OK';
-        echo json_encode($json);
-        exit;
-    }
-    
-    public function actionAddNewTag($new_tag_name, $post_id) 
-    {
-        App::$db->insertTable('blog_tags', ['name' => $new_tag_name, 'seo_alias' => encodestring($new_tag_name)]);
-        $tag_id = App::$db->insert_id();
-        if($tag_id) {
-            App::$db->insertTable('blog_posts_tags', ['post_id'=>$post_id, 'tag_id' => $tag_id]);
-        } else {
-            echo App::$db->error();
-        }
-        echo 'OK';
-        exit;
-    }
-    
-    public function actionTagChange($post_id, $tag_id, $value) 
-    {
-        if(strlen($value)>0) {
-            App::$db->insertTable('blog_posts_tags', ['post_id'=>$post_id, 'tag_id' => $tag_id]);
-        } else {
-            App::$db->deleteFromTable('blog_posts_tags', ['post_id'=>$post_id, 'tag_id' => $tag_id]);
-        }
-        echo 'OK';
-        exit;
-    }
-    
-    public function actionTagDelete($tag_id) 
-    {
-        App::$db->deleteFromTable('blog_posts_tags', ['tag_id' => $tag_id]);
-        App::$db->deleteFromTable('blog_tags', ['id' => $tag_id]);
-        echo 'OK';
-        exit;
+        exit;        
     }
     
 }

@@ -12,6 +12,7 @@ class ListEditController extends BaseController
 {
     private $image_path;
     private $image_width;
+    private $image_height;
 
     public function __construct() {
         parent::__construct();
@@ -97,7 +98,7 @@ class ListEditController extends BaseController
 
     public function showImage($file_name){
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
-            return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="200" />';
+            return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="' . $this->image_width . '" />';
         } else {
             return 'Отсутствует';
         }        
@@ -115,7 +116,7 @@ class ListEditController extends BaseController
         $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
         $file_name = encodestring($model->title) . '.' . $f_info['extension'];
-        if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, null, null, $this->image_width)) {
+        if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, null, null, $this->image_width, $this->image_height)) {
             $model->image_name = $file_name;
             $model->image_type = $file['type'];
             $content .= App::$message->get('', [], 'Изображение успешно добавлено.');

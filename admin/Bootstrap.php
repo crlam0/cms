@@ -8,13 +8,24 @@ class Bootstrap
 {
     public function bootstrap() 
     {
-        App::$template->addPath('admin/templates');
+        App::$template->addPath('admin/views');
             
         App::$routing->addRoutes([
             'admin-index' => [
                 'pattern' => '^admin\/?[\w\-]*$',
                 'controller' => 'admin\controllers\IndexController'
             ],      
+            'menu-list-edit' => [
+                'pattern' => '^admin\/menu\-edit\/[\w\-]*$',
+                'controller' => 'admin\controllers\MenuListEditController',
+            ],
+            'menu-item-edit' => [
+                'pattern' => '^admin\/menu\-edit\/items\/(\d+)\/[\w\-]*$',
+                'controller' => 'admin\controllers\MenuItemEditController',
+                'params' => [
+                    '0' => 'menu_id',
+                ]
+            ],
             'settings-edit' => [
                 'pattern' => '^admin\/settings\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\SettingsEditController',

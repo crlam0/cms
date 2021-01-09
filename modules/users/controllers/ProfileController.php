@@ -27,7 +27,7 @@ class ProfileController extends BaseController
     public function actionIndex(): string 
     {
         $model = new User(App::$user->id);
-        if($model->load(App::$input['form']) && $model->validate()){ 
+        if($model->load(App::$input['form']) && $model->validate() && check_csrf_token()){ 
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
             App::setFlash('success', 'Профиль успешно сохранён');

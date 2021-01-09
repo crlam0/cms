@@ -25,7 +25,6 @@ class TwigTemplate
         'debug' => false,
         'template_dirs' => [
             'templates',
-            'admin/templates',
         ],
         'cache_dir' => 'var/cache/twig',
         'autoescape' => '',

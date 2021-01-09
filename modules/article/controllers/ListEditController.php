@@ -18,9 +18,9 @@ class ListEditController extends BaseController
         parent::__construct();
         $this->title = 'Разделы статей';
         $this->breadcrumbs[] = ['title' => $this->title];
-        $this->image_path = App::$settings['modules']['article']['list_upload_path'];
-        $this->image_width = App::$settings['modules']['article']['list_image_width'];
-        $this->image_height = App::$settings['modules']['article']['list_image_height'];
+        $this->image_path = App::$settings['modules']['article']['list_upload_path'] ?? 'upload/article/';
+        $this->image_width = App::$settings['modules']['article']['list_image_width'] ?? 200;
+        $this->image_height = App::$settings['modules']['article']['list_image_height'] ?? 200;
         $this->user_flag = 'admin';
     }
 

@@ -100,5 +100,19 @@ class IndexController extends BaseController
         
         return $content;
     }
+    
+    public function actionGenSitemap(): string
+    {
+        
+        $sitemap = new Sitemap();
+        $types = explode(';', App::$settings['sitemap_types']);
+        $sitemap->build_pages_array($types);
+
+        $result = $sitemap->write();
+        $content = $result['output'];
+        
+        return App::$message->get('success',[],'Директория кэша очищена') . $content;
+        
+    }
 }
 

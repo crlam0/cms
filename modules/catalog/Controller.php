@@ -54,7 +54,7 @@ class Controller extends BaseController
     
     private function getHeaderBreadCrumbs(int $part_id, string $item_title = ''): array 
     {
-        $root_title = isset(App::$settings['modules']['catalog']['header']) ?? 'Каталог';
+        $root_title = App::$settings['modules']['catalog']['header'] ?? 'Каталог';
         $title = $root_title;
         if ($part_id) {
             $breadcrumbs[] = ['title' => $root_title, 'url' => 'catalog/'];

@@ -18,9 +18,9 @@ class ItemEditController extends BaseController
         parent::__construct();
         $this->title = 'Статьи';
         $this->breadcrumbs[] = ['title' => $this->title];
-        $this->image_path = App::$settings['modules']['article']['item_upload_path'];
-        $this->image_width = App::$settings['modules']['article']['item_image_width'];
-        $this->image_height = App::$settings['modules']['article']['item_image_height'];
+        $this->image_path = App::$settings['modules']['article']['item_upload_path'] ?? 'upload/article/';
+        $this->image_width = App::$settings['modules']['article']['item_image_width'] ?? 640;
+        $this->image_height = App::$settings['modules']['article']['item_image_height'] ?? 480;
         $this->user_flag = 'admin';
     }
 

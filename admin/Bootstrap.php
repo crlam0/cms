@@ -26,6 +26,14 @@ class Bootstrap
                     '0' => 'menu_id',
                 ]
             ],
+            'news-edit' => [
+                'pattern' => '^admin\/news\-edit\/[\w\-]*$',
+                'controller' => 'admin\controllers\NewsEditController',
+            ],
+            'offers-edit' => [
+                'pattern' => '^admin\/offers\-edit\/[\w\-]*$',
+                'controller' => 'admin\controllers\OffersEditController',
+            ],
             'settings-edit' => [
                 'pattern' => '^admin\/settings\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\SettingsEditController',

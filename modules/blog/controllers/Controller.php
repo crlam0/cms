@@ -24,7 +24,7 @@ class Controller extends BaseController
         if(isset(App::$settings['blog_msg_per_page'])) {
             $this->MSG_PER_PAGE = App::$settings['blog_msg_per_page'];
         }
-        $this->title = isset(App::$settings['modules']['blog']['header']) ?? 'Блог';
+        $this->title = App::$settings['modules']['blog']['header'] ?? 'Блог';
     }
     
     public function actionIndex(int $page = 1): string 

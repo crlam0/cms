@@ -24,6 +24,15 @@ class Bootstrap
                     '0' => 'alias',
                 ]
             ],    
+            'article-list-with-page' => [
+                'pattern' => '^article\/([\w-]+)\/page(\d+)\/$',
+                'controller' => 'modules\article\Controller',
+                'action' => 'items-list',
+                'params' => [
+                    '0' => 'alias',
+                    '1' => 'page',
+                ]
+            ],    
             'article' => [
                 'pattern' => '^article\/([\w-]+)\/([\w-]+)\/?$',
                 'controller' => 'modules\article\Controller',

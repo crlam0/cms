@@ -7,7 +7,7 @@
 {% endif %}
 
 
-<div id="cat_items">
+<div id="cat_items" class="row">
     {% for row in rows %}
         {% set props = this.getPropsArray(row.props) %}
         {% if various_cat_part_href is defined %}
@@ -15,13 +15,11 @@
         {% endif %}
         
         <div class="cat_item">
-            <div class="cat_item_image_border">
-                <div class="cat_item_image_table">
-                    <div class="cat_item_image" item_id="{{ row.item_id }}">
-                        <a href="{{ SUBDIR }}{{ cat_part_href }}{{ row.seo_alias }}" title="{{ row.title }}">
-                            {{ this.getListImage(row) }}
-                        </a>
-                    </div>
+            <div class="cat_item_image_wrapper">
+                <div class="cat_item_image" item_id="{{ row.item_id }}">
+                    <a href="{{ SUBDIR }}{{ cat_part_href }}{{ row.seo_alias }}" title="{{ row.title }}">
+                        {{ this.getListImage(row) }}
+                    </a>
                 </div>
                 {% if props.special_offer is defined %}
                     <div class="cat_item_special_offer">Хит</div>

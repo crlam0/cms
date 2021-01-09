@@ -1,10 +1,30 @@
+<style>
+.article-author:before {
+    position: relative;
+    top: -1px;
+    margin: 0 4px;
+    color: #6b6b6b;
+    content: '\2022';
+    font-size: 10px;
+}    
+</style>
+
+
 <div id="articles_list">
-    <div class="separator"></div>
     {% for row in rows %}
         <div class="item_title"><a href={{ SUBDIR }}{{ routing.getUrl('article', null, row) }}>{{ row.title }}</a></div>
-        <div class="item_descr">Автор: {{ row.author }}<br>Дата:  {{ row.date_add }}</div>
+        <div class="item_descr">Дата: {{ row.date_add }}{% if row.author|length > 0 %}<span class="article-author">Автор: {{ row.author }}</span>{% endif %}</div>
         <div class="separator"></div>
     {% endfor %}
 </div>
 
+{% if pager is defined %}
+    {% 
+    include 'pager.html.twig' with {
+        'pager': pager,
+        'main_route': article_list_href,
+        'route': article_list_href ~ 'page{$page}/'
+    }
+    %}
+{% endif %}   
 

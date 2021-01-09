@@ -40,7 +40,7 @@ function get_image_list($item_id) {
                 <td align=center><input type=radio name=ch_default class=default_img image_id={$row['id']}" . ($row['default_img'] == $row['id'] ? " checked" : "") . "></td>
                 <td align=center><img src={$IMG_URL}{$row['fname']} border=0 width=150></td>
                 <td><span id=descr_{$row['id']}>{$row['descr']}</span></td>
-                <td align=center><a href=# class=del_button image_id={$row['id']} alt=\"Удалить\"><img src=\"../images/del.gif\"  border=0></a></td>
+                <td align=center><a href=# class=del_button image_id={$row['id']} alt=\"Удалить\"><img src=\"" . App::$SUBDIR . "admin/images/del.gif\"  border=0></a></td>
 		</tr>";
     }
     $content.="</table>";

@@ -129,7 +129,7 @@ if ($input['del_img']) {
     $content.=my_msg_to_str('',[],'Изображение удалено');
 }
 
-if ($input["copy"]) {
+if ($input['copy']) {
     $query = "SELECT * from cat_part where prev_id={$input['id']} order by num,title+1 asc";
     $result_part = my_query($query);
     while ($row_part = $result_part->fetch_assoc()) {
@@ -160,10 +160,10 @@ if ($input["copy"]) {
 
 
 
-if ($input["added"]) {
-    if(!strlen($input["form"]["num"])){
-        list($input["form"]["num"])=my_select_row("select max(num) from cat_part where prev_id='{$input['form']['prev_id']}'",0);
-        $input["form"]["num"]++;
+if ($input['added']) {
+    if(!strlen($input['form']['num'])){
+        list($input['form']['num'])=my_select_row("select max(num) from cat_part where prev_id='{$input['form']['prev_id']}'",0);
+        $input['form']['num']++;
     }
     if (!strlen($input['form']['seo_alias']))$input['form']['seo_alias'] = encodestring($input['form']['title']);
     $num_rows=my_select_row("select id from cat_part where seo_alias='{$input['form']['seo_alias']}'",1);
@@ -174,6 +174,7 @@ if ($input["added"]) {
     }
     $input['form']['date_add']='now()';
     $input['form']['date_change']='now()';
+    $input['form']['related_products']='{}';
     $query = "insert into cat_part " . db_insert_fields($input['form']);
     my_query($query);
     $insert_id=App::$db->insert_id();
@@ -241,6 +242,8 @@ if (($input['edit']) || ($input['adding'])) {
 	$tags['form_title'] = "Добавление";
 	$tags['type'] = "added";
 	$tags['Header'] = "Добавление раздела";
+        $tags['item_image_width'] = '200';
+        $tags['item_image_height'] = '200';
         if(isset(App::$settings['catalog']['default_items_props'])){
             $tags['items_props'] = App::$settings['catalog']['default_items_props'];
         }        
@@ -293,8 +296,8 @@ function sub_part($prev_id, $deep) {
                 <td>{$spaces}<a href=cat_item_edit.php?part_id={$row['id']}>{$row['num']} {$row['title']}</a></td>
                 <td>{$row['seo_alias']}</a></td>
                 <td align=center>" . (is_file($IMG_PATH . $row['image_name']) ? "<img src={$IMG_URL}{$row['image_name']} border=0>" : "&nbsp;") . "</td>
-                <td width=16><a href=" . $_SERVER['PHP_SELF'] . "?edit=1&id={$row['id']}><img src=\"images/open.gif\" width=16 height=16 alt=\"Редактировать\" border=0></a></td>
-                <td width=16><a href=" . $_SERVER['PHP_SELF'] . "?del=1&id={$row['id']}><img src=\"images/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
+                <td width=16><a href=" . $_SERVER['PHP_SELF'] . "?edit=1&id={$row['id']}><img src=\"" . App::$SUBDIR . "admin/images/open.gif\" width=16 height=16 alt=\"Редактировать\" border=0></a></td>
+                <td width=16><a href=" . $_SERVER['PHP_SELF'] . "?del=1&id={$row['id']}><img src=\"" . App::$SUBDIR . "admin/images/del.gif\" alt=\"Удалить\" border=0 onClick=\"return test()\"></a></td>
             </tr>
             ";
 	sub_part($row['id'], $deep + 1);

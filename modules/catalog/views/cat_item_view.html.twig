@@ -3,8 +3,7 @@
 
 <div id="cat_item_view">
     <div class="image_block">
-        <div class="cat_item_image_border">
-            <div class="cat_item_image_table">
+        <div class="cat_item_image_wrapper">
                 <div class="cat_item_image cat_item_image_popup">
                     {% set image = this.getImageFilename(fname,file_type) %}
                     {% if image %}
@@ -13,7 +12,6 @@
                         Изображение отсутствует
                     {% endif %}
                 </div>
-            </div>
             {% if props.special_offer is defined %}
                 <div class="cat_item_special_offer">Хит</div>
             {% endif %}
@@ -23,7 +21,7 @@
         </div>
         {% if images is defined %}
             <div style="width:100%;height:1px;float:left;"> </div>
-            <div class=item_images>
+            <div class="item_images">
                 {% for image in images %}
                     {% set image_file = this.getImageFilename(image.fname,image.file_type, 50) %}
                     {% if image_file %}
@@ -39,9 +37,7 @@
         </span>
         <br />
         {% if props.not_availble is defined %}
-            <b>
-                Нет в наличии
-            </b>
+            <b>Нет в наличии</b>
         {% else %}
             <input type="edit" class="cnt_{{ id }} form-control catalog-form-control" size="1" maxlength="2" value="1">
             <a class="buy_button btn btn-default" item_id="{{ id }}">В корзину</a>

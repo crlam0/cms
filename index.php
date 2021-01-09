@@ -5,7 +5,7 @@ include 'include/common.php';
 use classes\App;
 
 if( isset($REDIRECT_TO_HTTPS) && App::$server['REQUEST_SCHEME'] === 'http' ){
-    $url = 'https://' . App::$server['HTTP_HOST'] . '' . App::$server['REQUEST_URI'];
+    $url = 'https://' . App::$server['HTTP_HOST'] . App::$server['REQUEST_URI'];
     redirect($url);
 }
 

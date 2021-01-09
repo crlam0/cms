@@ -2,8 +2,8 @@
 
 namespace modules\catalog;
 
-use classes\BaseController;
 use classes\App;
+use classes\BaseController;
 use classes\Pagination;
 use classes\Image;
 
@@ -31,39 +31,42 @@ class Controller extends BaseController
         return [$part_id, $page];
     }
     
-    private function prev_part(int $prev_id, int $deep, array $arr): array 
-    {        
+    public function actionIndex(): string
+    {
+        list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs(0);
+        return $this->actionPartList('');
+    }
+
+    private function prevPart(int $prev_id, int $deep): array 
+    {
         $query = "SELECT id,title,prev_id from cat_part where id=? order by title asc";
         $result = App::$db->query($query, ['id' => $prev_id]);
         if (!$result->num_rows) {
-            return null;
+            return [];
         }
-        $arr[$deep] = $result->fetch_array();
-        if ($arr[$deep]['prev_id']) {
-            $arr = $this->prev_part($arr[$deep]['prev_id'], $deep + 1, $arr);
+        $row = $result->fetch_array();
+        $arr[] = $row;
+        if ($row['prev_id']) {
+            $arr = array_merge($this->prevPart($row['prev_id'], $deep + 1), $arr);
         }
         return $arr;
     }
     
     private function getHeaderBreadCrumbs(int $part_id, string $item_title = ''): array 
     {
-        $root_title = isset(App::$settings['catalog_header']) ? App::$settings['catalog_header'] : 'Каталог';
+        $root_title = isset(App::$settings['modules']['catalog']['header']) ? App::$settings['modules']['catalog']['header'] : 'Каталог';
         $title = $root_title;
         if ($part_id) {
             $breadcrumbs[] = ['title' => $root_title, 'url' => 'catalog/'];
-            $arr = $this->prev_part($part_id, 0, []);
-            $arr = array_reverse($arr);
+            $arr = $this->prevPart($part_id, 0);
             $max_size = sizeof($arr) - 1;
-            $current_part_deep = 0;
-            foreach ($arr as $n => $row) {            
-                $current_part_deep++;
+            foreach ($arr as $n => $row) {
                 if (($n < $max_size) || (strlen($item_title))) {
                     $breadcrumbs[] = ['title' => $row['title'], 'url' => App::$routing->getUrl('cat_part', $row['id'])];
-                    $title = $root_title . " - {$row['title']}";
                 } else {
                     $breadcrumbs[] = ['title' => $row['title']];
-                    $title = $root_title . " - {$row['title']}";
                 }
+                $title = $root_title . " - {$row['title']}";
             }
         } else {
             $breadcrumbs[] = ['title' => $title];
@@ -118,12 +121,6 @@ class Controller extends BaseController
         return $content;
     }
     
-    public function actionIndex(): string
-    {
-        list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs(0);
-        return $this->actionPartList('');
-    }
-
     private function getPartItemsContent(int $part_id, int $page, bool $show_empty_message = true): string 
     {
         global $_SESSION;

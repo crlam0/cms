@@ -41,15 +41,17 @@ App::$debug = App::$settings['debug'];
 App::$db->debug = App::$settings['debug'];
 
 if(App::$debug) {
-    App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/debug.log', Logger::DEBUG));
-    $whoops = new Run();
-    $whoops->writeToOutput(true);
-    $whoops->allowQuit(true);
-    $PrettyPageHandler = new PrettyPageHandler();
-    $PrettyPageHandler->addDataTable('DEBUG Array',  App::$DEBUG_ARRAY);
-    $whoops->pushHandler($PrettyPageHandler);
-    $whoops->register();
-    $App->debug('Added exception handler');
+    App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/debug.log', Logger::DEBUG));    
+    if(class_exists('Whoops\Run')) {
+        $whoops = new Run();
+        $whoops->writeToOutput(true);
+        $whoops->allowQuit(true);
+        $PrettyPageHandler = new PrettyPageHandler();
+        $PrettyPageHandler->addDataTable('DEBUG Array',  App::$DEBUG_ARRAY);
+        $whoops->pushHandler($PrettyPageHandler);
+        $whoops->register();
+        $App->debug('Added exception handler');
+    }
 }
 
 App::debug('App created, arrays loaded');

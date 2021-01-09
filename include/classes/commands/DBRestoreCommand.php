@@ -47,7 +47,7 @@ class DBRestoreCommand extends Command
         system($command,$result);
         if($result!==0){
             $output->writeln('<error>ERROR!</error>');
-            $output->writeln('<error>Command was: '.$command.'</error>');
+            $output->writeln('<error>Command was: ' . $command . '</error>');
             unlink($dump_name);
         } else {
             $output->writeln('<info>Done!</info>');

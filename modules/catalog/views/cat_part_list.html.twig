@@ -1,24 +1,19 @@
-<div id="cat_parts">
+<div id="cat_parts" class="row">
     {% for row in rows %}
         <div class="cat_part">
-            <div class="cat_part_image_border">
-                <div class="cat_part_image_table">
-                    <div class="cat_part_image">
-                        {% set image = this.getPartImageFilename(row.image_name) %}
-                        {% if image %}
-                            <a href="{{ SUBDIR }}{{ routing.getUrl('cat_part', row.id) }}" title="{{ row.title }}">
-                                <img src="{{ SUBDIR }}{{ image }}" alt="{{ row.title }}" border="0" align="left">
-                            </a>
-                        {% else %}
-                            Изображение отсутствует
-                        {% endif %}
-                    </div>
-                </div>
+            <div class="cat_part_image">
+                {% set image = this.getPartImageFilename(row.image_name) %}
+                {% if image %}
+                    <a href="{{ SUBDIR }}{{ routing.getUrl('cat_part', row.id) }}" title="{{ row.title }}">
+                        <img src="{{ SUBDIR }}{{ image }}" alt="{{ row.title }}" border="0" align="left">
+                    </a>
+                {% else %}
+                    Изображение отсутствует
+                {% endif %}
             </div>
             <div class="cat_part_title">
                 <a href="{{ SUBDIR }}{{ routing.getUrl('cat_part', row.id) }}" title="{{ row.title }}">{{ row.title }}</a>
             </div>
-        </div>       
-
+        </div>
     {% endfor %}
 </div>

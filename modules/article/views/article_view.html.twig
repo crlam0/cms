@@ -1,4 +1,6 @@
 <div class="article_content">{{ content }}</div>
-<div class="article_author">Автор: {{ author }}</div>
+{% if author|length > 0 %}
+    <div class="article_author">Автор: {{ author }}</div>
+{% endif %}
 <div class="article_date">Дата: {{ date_add }}</div>
 <div class="separator"></div>

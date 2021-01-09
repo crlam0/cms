@@ -20,11 +20,11 @@ class Bootstrap
                 'controller' => 'modules\users\controllers\LogoutController'
             ],    
             'passwd-change' => [
-                'pattern' => '^passwd_change\/?$',
+                'pattern' => '^passwd-change\/?$',
                 'controller' => 'modules\users\controllers\PasswdChangeController'
             ],    
             'passwd-recovery' => [
-                'pattern' => '^passwd_recovery\/?[\w\-]*$',
+                'pattern' => '^passwd-recovery\/?[\w\-]*$',
                 'controller' => 'modules\users\controllers\PasswdRecoveryController'
             ],    
             'signup' => [

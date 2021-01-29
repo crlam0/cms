@@ -76,6 +76,7 @@ class MenuItemEditController extends BaseController
     public function actionUpdate(int $menu_id, int $id): string 
     {
         $model = new MenuItem($id); 
+        App::$input['form']['target_id'] = App::$input['form']['target_id'] ?? 0;
         if($model->load(App::$input['form']) && $model->validate()) {
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);

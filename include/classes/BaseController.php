@@ -88,6 +88,8 @@ class BaseController
                 return $reflection->invokeArgs($this, $this->prepareParams($reflection, $params));
             } catch (\Exception $e) {
                 App::error('Exception: ' . $e->getMessage());
+                App::error('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
+                App::error($e->getTraceAsString());
                 $this->wrongParams($reflection, $params);
             }            
         }        

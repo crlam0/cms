@@ -176,6 +176,10 @@ class MenuItemEditController extends BaseController
             'name' => 'Раздел файлов'
         ],
         [
+            'type' => 'catalog',
+            'name' => 'Каталог'
+        ],
+        [
             'type' => 'cat_part',
             'name' => 'Раздел каталога'
         ],

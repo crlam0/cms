@@ -16,7 +16,7 @@ App::set('Blocks', $BlocksObject);
  *
  * @param string $name Template's name
  * @param array $tags Tags array
- * @param array $sql_result Result from SQL query
+ * @param \mysqli_result $sql_result Result from SQL query
  * @param string $inner_content Inner content
  *
  * @return string Output content
@@ -29,7 +29,7 @@ function get_tpl_by_name($name, $tags = [], $sql_result = null, $inner_content =
  * Parse default template
  *
  * @param array $tags Tags array
- * @param array $sql_result Result from SQL query
+ * @param \mysqli_result $sql_result Result from SQL query
  * @param string $inner_content Inner content
  *
  * @return string Output content

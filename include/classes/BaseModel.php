@@ -287,12 +287,12 @@ class BaseModel implements \ArrayAccess
     /**
      * Delete model from DB.
      *
-     * @return array
+     * @return bool
      */
-    public function delete(): array
+    public function delete(): bool
     {
-        if(!is_integer($this->data['id'])) {
-            throw new \InvalidArgumentException('ID is empty');
+        if(!isset($this->data) || !is_integer($this->data['id'])) {
+            throw new \InvalidArgumentException('Data or ID is empty');
         }
         return App::$db->deleteFromTable(static::tableName(), ['id' => $this->data['id']]);  
     }    

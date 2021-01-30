@@ -440,9 +440,9 @@ class DB
      * @param string $table Table name
      * @param array $where Fields for where statement
      *
-     * @return array
+     * @return bool
      */
-    public function deleteFromTable(string $table, array $where): array
+    public function deleteFromTable(string $table, array $where): bool
     {
         
         $expr = '';

@@ -158,7 +158,7 @@ class BaseController
      *
      * @param string $template
      * @param array $tags
-     * @param array|null $result
+     * @param \mysqli_result|null $result
      *
      * @return string
      */

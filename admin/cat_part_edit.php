@@ -279,11 +279,11 @@ if (($input['edit']) || ($input['adding'])) {
     $tags['del_button'] = (isset($tags['image_name']) && is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $_SERVER['PHP_SELF'] . "?del_img=1&id={$tags['id']}>Удалить</a><br>" : '');
 
     $content .= get_tpl_by_name('cat_part_form', $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit;
 };
 
-function sub_part($prev_id, $deep) {
+function sub_part($prev_id, $deep): void {
     global $IMG_PATH, $tags, $IMG_URL;
     $query = "SELECT * from cat_part where prev_id={$prev_id} order by num,title+1 asc";
     $result = my_query($query);
@@ -306,5 +306,5 @@ function sub_part($prev_id, $deep) {
 $tags['table_content'] = '';
 sub_part(0, 0);
 $content .= get_tpl_by_name('cat_part_table', $tags);
-echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
 

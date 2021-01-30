@@ -117,8 +117,8 @@ class Services_JSON
   /**
    * constructs a new JSON instance
    *
-   * @param    int     $use    object behavior flags; combine with boolean-OR
-   *
+   * @param int     $use    object behavior flags; combine with boolean-OR
+
    *                           possible values:
    *                           - SERVICES_JSON_LOOSE_TYPE:  loose typing.
    *                                   "{...}" syntax creates associative arrays
@@ -129,8 +129,10 @@ class Services_JSON
    *                                   By default, a deeply-nested resource will
    *                                   bubble up with an error, so all return values
    *                                   from encode() should be checked with isError()
+   *
+   * @return void
    */
-  function Services_JSON($use = 0)
+  function Services_JSON($use = 0): void
   {
     $this->use = $use;
   }
@@ -450,7 +452,7 @@ class Services_JSON
    * @return   string  string value stripped of comments and whitespace
    * @access   private
    */
-  function reduce_string($str)
+  function reduce_string(string $str)
   {
     $str = preg_replace(array(
 
@@ -763,7 +765,7 @@ class Services_JSON
   /**
    * @todo Ultimately, this should just call PEAR::isError()
    */
-  function isError($data, $code = null)
+  function isError(string $data, $code = null)
   {
     if (class_exists('pear')) {
       return PEAR::isError($data, $code);
@@ -781,7 +783,7 @@ if (class_exists('PEAR_Error')) {
   class Services_JSON_Error extends PEAR_Error
   {
     function Services_JSON_Error($message = 'unknown error', $code = null,
-    $mode = null, $options = null, $userinfo = null)
+    $mode = null, $options = null, $userinfo = null): void
     {
       parent::PEAR_Error($message, $code, $mode, $options, $userinfo);
     }
@@ -795,7 +797,7 @@ if (class_exists('PEAR_Error')) {
   class Services_JSON_Error
   {
     function Services_JSON_Error($message = 'unknown error', $code = null,
-    $mode = null, $options = null, $userinfo = null)
+    $mode = null, $options = null, $userinfo = null): void
     {
 
     }

@@ -15,7 +15,10 @@ class PasswdChangeController extends BaseController
         $this->user_flag = 'passwd';
     }
 
-    private function checkInput($input)
+    /**
+     * @return bool|string
+     */
+    private function checkInput(array $input)
     {
         if(!password_verify(App::$input['old_passwd'], App::$user->passwd)) {
             return App::$message->get('error', [], 'Вы неверно ввели старый пароль');

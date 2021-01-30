@@ -37,7 +37,10 @@ class Image
         list($this->width, $this->height) = getimagesize($file_name);
     }
 
-    public static function getFileType(string $file_name, $file_type) : string 
+    /**
+     * @return string|bool
+     */
+    public static function getFileType(string $file_name, string $file_type)
     {
         if(!$file_type) {
             if((preg_match("/^.*\.jpg$/i", $file_name)) || (preg_match("/^.*\.jpeg$/i", $file_name))) {
@@ -90,7 +93,7 @@ class Image
         return imagecopyresampled($this->dst_image, $this->src_image, 0, 0, $src_x, $src_y, $width, $height, $src_w, $src_h);            
     }
     
-    public function resize ($max_width = 0, $max_height = 0, int $fix_width = 0, int $fix_height = 0) : bool
+    public function resize (int $max_width = 0, int $max_height = 0, int $fix_width = 0, int $fix_height = 0) : bool
     {
         if(!$this->src_image) {
             return false;
@@ -167,6 +170,9 @@ class Image
         return $this->getFileExt($this->file_type);
     }
     
+    /**
+     * @return bool|string
+     */
     public function getUrl(array $row, string $cache_path, string $script_url, int $max_width = 1024) 
     {
         $cache_file_name = $cache_path . md5($this->file_name.$max_width) . '.' . $this->getFileExtension();

@@ -64,7 +64,7 @@ class DB
         $this->query_log_array[] = 'Connected to ' . $host;
     }
 
-    private function bindParams($stmt, $params) {
+    private function bindParams($stmt, array $params) {
         $types = '';
         $values = [];
         foreach ($params as $name => $value) {            
@@ -100,7 +100,7 @@ class DB
      * Replace for mysql_query
      *
      * @param string $sql SQL Query
-     * @param boolean $params Params for query prepare
+     * @param array $params
      *
      * @return array mysqli result
      */
@@ -120,7 +120,7 @@ class DB
      * Replace for mysql_query
      *
      * @param string $sql SQL Query
-     * @param boolean $params Params for query prepare
+     * @param array $params
      *
      * @return array mysqli result
      */
@@ -150,7 +150,7 @@ class DB
      * Return one row from query
      *
      * @param string $sql SQL Query
-     * @param boolean $params Params for query prepare
+     * @param array $params
      *
      * @return array One row
      */
@@ -187,30 +187,33 @@ class DB
     /**
      * Test field parameter for deny SQL injections
      *
-     * @param string $sql Input string
+     * @param array|string $input Input string
+     * @param (int|string) $param
      *
-     * @return string Output string
+     * @return array|string Output string
+     *
+     * @psalm-return array|string
      */
-    public function testParam($str, $param='') 
+    public function testParam($input, $param = '')
     {
-        if (is_array($str)) {
-            foreach ($str as $key => $value) {
+        if (is_array($input)) {
+            foreach ($input as $key => $value) {
                 $str[$key] = $this->testParam($value);
             }
-            return $str;
+            return $input;
         }    
         if(!strstr(App::$server['REQUEST_URI'], 'admin/')) {
-            $str = htmlspecialchars($str);
+            $input = htmlspecialchars($input);
         }
-        $str = $this->escapeString($str);
+        $input = $this->escapeString($input);
         foreach($this->DENIED_WORDS as $word) {
-            if(stristr($str, $word)){
+            if(stristr($input, $word)){
                 App::$logger->error('testParam denied word', ['URI'=>App::$server['REQUEST_URI']]);
                 header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
                 exit();
             }
         }
-        return $str;
+        return $input;
     }
 
     /**
@@ -246,9 +249,9 @@ class DB
      *
      * @param array $fields Fields and data for query
      *
-     * @return string Complete string for query
+     * @return int|string Complete string for query
      */
-    public function insertFields(array $fields) : string 
+    public function insertFields(array $fields)
     {
         $total = count($fields);
         $output = '';
@@ -271,7 +274,7 @@ class DB
                     $str_values.=stripcslashes($value) . $str;
                 }else{
                     $value=$this->specialChars($value, $key);
-                    // $value=$this->escapeString($value);
+                    $value=$this->escapeString($value);
                     $str_values.= ( $value == 'now()' ? $value . $str : "'{$value}'{$str}");
                 }    
             }
@@ -308,7 +311,7 @@ class DB
                 $output.="$key=".stripcslashes($value) . $str;
             }else{
                 $value=$this->specialChars($value, $key);
-                // $value=$this->escapeString($value);
+                $value=$this->escapeString($value);
                 $output.= ( $value == 'now()' ? "{$key}={$value}" . $str : "{$key}='{$value}'{$str}");
             }    
         }
@@ -321,9 +324,9 @@ class DB
      * @param string $table Table name
      * @param array $fields Fields and data for query
      *
-     * @return string Complete string for query
+     * @return mysqli_result|bool
      */
-    public function insertTable(string $table, array $fields) : bool
+    public function insertTable(string $table, array $fields)
     {
         $str_fields = '';
         $str_values = '';
@@ -345,7 +348,7 @@ class DB
             }            
         }
         $sql = "INSERT INTO {$table}({$str_fields}) VALUES({$str_values})";
-        return $this->query($sql, $params);        
+        return $this->query($sql, $params);
     }
     
     /**
@@ -355,9 +358,9 @@ class DB
      * @param array $fields Fields and data for query
      * @param array $where Fields for where statement
      *
-     * @return string Complete string for query
+     * @return mysqli_result|bool
      */
-    public function updateTable(string $table, array $fields, array $where) : bool
+    public function updateTable(string $table, array $fields, array $where)
     {
         $sql = "UPDATE {$table} SET ";
         $params=[];
@@ -395,11 +398,11 @@ class DB
      * Select record from DB.
      *
      * @param string $table Table name
-     * @param integer $id
-     * 
-     * @return \mysqli_result.
+     * @param string $id
+     *
+     * @return mysqli_result
      */
-    public function findOne(string $table, string $id) 
+    public function findOne(string $table, string $id): \mysqli_result
     {
         $query = "SELECT * FROM {$table} WHERE id=?";
         return $this->query($query, ['id' => $id]);          
@@ -411,10 +414,10 @@ class DB
      * @param string $table Table name
      * @param array $where Fields for where statement
      * @param string $order_by Expression for ORDER BY
-     * 
-     * @return \mysqli_result.
+     *
+     * @return mysqli_result
      */
-    public function findAll(string $table, array $where = [], string $order_by = 'id desc') 
+    public function findAll(string $table, array $where = [], string $order_by = 'id desc'): \mysqli_result
     {
         if(!count($where)) {
             return $this->query("SELECT * FROM {$table} ORDER BY {$order_by}");
@@ -436,10 +439,10 @@ class DB
      *
      * @param string $table Table name
      * @param array $where Fields for where statement
-     * 
-     * @return \mysqli_result.
+     *
+     * @return array
      */
-    public function deleteFromTable(string $table, array $where)
+    public function deleteFromTable(string $table, array $where): array
     {
         
         $expr = '';

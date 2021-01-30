@@ -26,8 +26,9 @@ function my_msg_to_str($title, $tags = [], $str = '') {
  * @param string $subject Message subject
  * @param string $message Message content
  *
+ * @return void
  */
-function send_mail($message_to, $subject, $message) {
+function send_mail($message_to, $subject, $message): void {
     App::$message->mail($message_to, $subject, $message);
 }
 
@@ -36,10 +37,11 @@ function send_mail($message_to, $subject, $message) {
  *
  * @param string $message Message content
  *
+ * @return string
  */
-function send_sms($message) {
+function send_sms($message): string {
     if(!strlen(App::$settings['sms_api_id'])){
-        return false;
+        return '';
     }
     
     $ch = curl_init('http://sms.ru/sms/send');

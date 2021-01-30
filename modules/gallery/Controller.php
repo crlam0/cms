@@ -104,7 +104,7 @@ class Controller extends BaseController
         return $max_width;        
     }
     
-    public function getImage($row)
+    public function getImage($row): string
     {
         App::$input['preview']=true;
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
@@ -112,7 +112,7 @@ class Controller extends BaseController
         return $image->getHTML($row, static::$cache_path, 'gallery_popup', 'modules/gallery/image.php?preview=1&id=' . $row['id'], $this->getMaxWidth());
     }
     
-    public function getListImage($row)
+    public function getListImage($row): string
     {
         if(!$row['def_file_name']) {
             return 'Изображение отсутствует';
@@ -125,7 +125,7 @@ class Controller extends BaseController
         return $image->getHTML($row, static::$cache_path, '', 'modules/gallery/image.php?icon=1&id=' . $row['id'], $this->getMaxWidth());        
     }
     
-    public function getIcons($row)
+    public function getIcons($row): string
     {
         $content='';
         App::$input['icon']=true;

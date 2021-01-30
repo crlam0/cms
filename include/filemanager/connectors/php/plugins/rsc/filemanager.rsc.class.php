@@ -27,6 +27,11 @@ class FilemanagerRSC extends Filemanager {
 		return $return;
 	}
 	
+	/**
+	 * @return (int|mixed|null[]|string)[]
+	 *
+	 * @psalm-return array{Path?: mixed, Filename?: mixed, 'File Type'?: mixed|string, Preview?: mixed|string, Properties?: array{'Date Created': null, 'Date Modified': null, Height: null, Width: null, Size: null}|mixed, Error?: string, Code?: int}
+	 */
 	public function getinfo() {
 		$object = $this->get_object();
 		if (isset($object->name)) {
@@ -63,6 +68,11 @@ class FilemanagerRSC extends Filemanager {
 		return array();
 	}
 	
+	/**
+	 * @return (int|mixed|null[]|string)[][]
+	 *
+	 * @psalm-return array<array-key, array{Path: mixed|string, Filename: mixed, 'File Type': mixed|string, 'Mime Type'?: mixed, Preview: mixed|string, Properties: array{'Date Created': null, 'Date Modified': null, Height: null, Width: null, Size: null}|mixed, Error: string, Code: int}>
+	 */
 	public function getfolder() {
 		$container = trim($this->get['path'], '/ ');
 		$containerParts = explode('/', $container);
@@ -123,6 +133,11 @@ class FilemanagerRSC extends Filemanager {
 		return $array;
 	}
 	
+	/**
+	 * @return (int|mixed|string)[]|false
+	 *
+	 * @psalm-return array{Error: string, Code: int, 'Old Path': mixed, 'Old Name': mixed, 'New Path': mixed, 'New Name': mixed}|false
+	 */
 	public function rename() {
 		// keep old filename, if missing from new
 		$newNameParts = explode('.', $this->get['new']);
@@ -160,6 +175,11 @@ class FilemanagerRSC extends Filemanager {
 		return $array;
 	}
 	
+	/**
+	 * @return (int|mixed|string)[]|false|null
+	 *
+	 * @psalm-return array{Error: string, Code: int, Path: mixed}|false|null
+	 */
 	public function delete() {
 		$object = $this->get_object();
 		if (isset($object->name)) {
@@ -187,6 +207,9 @@ class FilemanagerRSC extends Filemanager {
 		$this->error(sprintf($this->lang('INVALID_DIRECTORY_OR_FILE')));
 	}
 	
+	/**
+	 * @return void
+	 */
 	public function add() {
 		$this->setParams();
 		if(!isset($_FILES['newfile']) || !is_uploaded_file($_FILES['newfile']['tmp_name'])) {
@@ -243,6 +266,11 @@ class FilemanagerRSC extends Filemanager {
 		die();
 	}
 	
+	/**
+	 * @return (int|mixed|string)[]
+	 *
+	 * @psalm-return array{Parent: string, Name: mixed, Error: string, Code: int}
+	 */
 	public function addfolder() {
 		$container = trim($this->get['path'], '/ ');
 		$containerParts = explode('/', $container);
@@ -263,6 +291,9 @@ class FilemanagerRSC extends Filemanager {
 			);
 	}
 	
+	/**
+	 * @return null|true
+	 */
 	public function download() {
 		$object = $this->get_object();
 		if (isset($object->name)) {
@@ -277,6 +308,9 @@ class FilemanagerRSC extends Filemanager {
 		$this->error(sprintf($this->lang('FILE_DOES_NOT_EXIST'),$this->get['path']));
 	}
 	
+	/**
+	 * @return void
+	 */
 	public function preview() {
 		
 		if(isset($this->get['path']) && file_exists($this->doc_root . $this->get['path'])) {
@@ -335,7 +369,7 @@ class FilemanagerRSC extends Filemanager {
 		}
 		return false;
 	}
-	private function get_file_info($object=null) {
+	private function get_file_info($object=null): ?object {
 		if (empty($object) || !is_object($object)) {
 			return null;
 		}

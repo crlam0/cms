@@ -39,9 +39,9 @@ class Sitemap {
      * @param string $changefreq Frequency of changes
      * @param string $priority Priority to crawl
      *
-     * @return string Output string
+     * @return void
      */
-    public function add_page($url,$changefreq,$priority){
+    public function add_page($url,$changefreq,$priority): void{
         $this->pages[]=array(
             'url' => $url,
             'changefreq' => $changefreq,
@@ -50,13 +50,13 @@ class Sitemap {
     }
 
     /**
-     * Add URL list from database to $pages 
+     * Add URL list from database to $pages
      *
      * @param array $types Types of content
      *
-     * @return string Output string
+     * @return void
      */
-    public function build_pages_array($types){
+    public function build_pages_array($types): void{
         if(in_array('article', $types)){
             $this->add_page('article/', 'monthly', '0.50');
             $query = 'SELECT * from article_list order by date_add asc';
@@ -107,7 +107,7 @@ class Sitemap {
      *
      * @return array ['output','count']
      */
-    public function write($test_only = false){        
+    public function write(bool $test_only = false){        
         $ServerUrl = App::$server['REQUEST_SCHEME'] . '://' . App::$server['HTTP_HOST'] . App::$SUBDIR;
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;

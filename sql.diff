@@ -1,3 +1,8 @@
+=== 2021-01-13
+
+update menu_item set target_id=0 WHERE target_id IS null;
+update blog_posts set target_id=0 WHERE target_id IS null;
+
 === 2020-12-23
 
 UPDATE `templates` SET `file_name`='admin.html.twig',`template_type`='twig' WHERE  `id`=30;

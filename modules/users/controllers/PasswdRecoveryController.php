@@ -9,6 +9,9 @@ use modules\users\models\User;
 class PasswdRecoveryController extends BaseController
 {    
     
+    /**
+     * @return bool|string
+     */
     private function checkInput()
     {
         if( strlen(App::$input['new_passwd1'])<8 ){
@@ -22,7 +25,7 @@ class PasswdRecoveryController extends BaseController
         }
     }
     
-    private function passwdChange($user): string 
+    private function passwdChange(User $user): string 
     {
         $user->salt = $user->generateSalt();
         $user->passwd = $user->encryptPassword(App::$input['new_passwd1'], $user->salt);

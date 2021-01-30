@@ -20,7 +20,7 @@ class BlocksTest extends TestCase
         App::$routing = new Routing('');
     }
 
-    public function testBlocksMenuMain()
+    public function testBlocksMenuMain(): void
     {
         $content=$this->Blocks->content('menu_main');
         self::assertStringContainsString('id="menu-main"', $content);

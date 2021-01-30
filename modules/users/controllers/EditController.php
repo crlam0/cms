@@ -61,6 +61,7 @@ class EditController extends BaseController
             $model->regdate = 'now()';
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
+            App::setFlash('success', 'Пользователь успешно добавлен.');
             $this->redirect('update', ['id' => $model->id]);
         }
         return $this->render('users_form.html.twig', [
@@ -78,6 +79,7 @@ class EditController extends BaseController
             $model->passwd = $model->encryptPassword(App::$input['form']['passwd'], $model->salt);            
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
+            App::setFlash('success', 'Пользователь успешно изменён.');
             $this->redirect('update', ['id' => $model->id]);
         } 
         return $this->render('users_form.html.twig', [
@@ -95,7 +97,7 @@ class EditController extends BaseController
         $this->redirect('index');
     }    
 
-    public function showImage($file_name){
+    public function showImage($file_name): string{
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
             return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="'.$this->image_width.'" />';
         } else {
@@ -103,7 +105,7 @@ class EditController extends BaseController
         }        
     }
     
-    private function saveImage($model, $file) 
+    private function saveImage(User $model, $file): string 
     {        
         $content = '';        
         if ($file['size'] < 100) {
@@ -124,7 +126,7 @@ class EditController extends BaseController
         return $content;
     }
     
-    public function actionDeleteImageFile($user_id) 
+    public function actionDeleteImageFile($user_id): void 
     {
         $model = new User($user_id);
         $this->deleteImageFile($model);
@@ -132,7 +134,10 @@ class EditController extends BaseController
         $this->redirect('update', ['id' =>$user_id]);
     }
     
-    private function deleteImageFile($model) 
+    /**
+     * @return null|string
+     */
+    private function deleteImageFile(User $model) 
     {
         if (is_file(App::$DIR . $this->image_path . $model->avatar)) {
             if (!unlink(App::$DIR . $this->image_path . $model->avatar)) {
@@ -142,7 +147,7 @@ class EditController extends BaseController
         $model->avatar = '';
     }
     
-    public function actionGetFlagsPopup($user_id) 
+    public function actionGetFlagsPopup($user_id): void 
     {
         $model = new User($user_id);
         $flags = $model->getFlagsAsArray();
@@ -154,7 +159,7 @@ class EditController extends BaseController
         exit;
     }
     
-    public function actionAddNewFlag($new_flag_name, $user_id) 
+    public function actionAddNewFlag($new_flag_name, $user_id): void 
     {
         $flag_value = encodestring($new_flag_name);
         App::$db->insertTable('users_flags', ['title' => $new_flag_name, 'value' => $flag_value]);
@@ -170,7 +175,7 @@ class EditController extends BaseController
         exit;
     }
     
-    public function actionFlagChange($user_id, $flag_value, $value) 
+    public function actionFlagChange($user_id, $flag_value, $value): void 
     {
         $model = new User($user_id);
         if(strlen($value)>0) {
@@ -183,7 +188,7 @@ class EditController extends BaseController
         exit;
     }
     
-    public function actionFlagDelete($flag_id) 
+    public function actionFlagDelete($flag_id): void 
     {
         App::$db->deleteFromTable('users_flags', ['id' => $flag_id]);
         echo 'OK';

@@ -40,13 +40,16 @@ class ProfileController extends BaseController
         ]);
     }
 
+    /**
+     * @return null|string
+     */
     public function showImage($file_name){
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
             return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="'.$this->image_width.'" />';
         }     
     }
     
-    private function saveImage($model, $file) 
+    private function saveImage(User $model, $file): string 
     {        
         $content = '';        
         if ($file['size'] < 100) {
@@ -67,7 +70,7 @@ class ProfileController extends BaseController
         return $content;
     }
     
-    public function actionDeleteImageFile($user_id) 
+    public function actionDeleteImageFile($user_id): void 
     {
         $model = new User($user_id);
         $this->deleteImageFile($model);
@@ -75,7 +78,10 @@ class ProfileController extends BaseController
         $this->redirect('');
     }
     
-    private function deleteImageFile($model) 
+    /**
+     * @return null|string
+     */
+    private function deleteImageFile(User $model) 
     {
         if (is_file(App::$DIR . $this->image_path . $model->avatar)) {
             if (!unlink(App::$DIR . $this->image_path . $model->avatar)) {

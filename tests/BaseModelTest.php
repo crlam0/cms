@@ -12,21 +12,21 @@ class ModelTest extends TestCase
         $this->model = new tests\TestModel;
     }
 
-    public function testGetterAndSetter() 
+    public function testGetterAndSetter(): void 
     {
         $this->model->name = 'Test 1';
         self::assertEquals('Test 1', $this->model->name);
         self::assertEquals('Test 1', $this->model['name']);
     }
 
-    public function testLoad() 
+    public function testLoad(): void 
     {
         $this->model->load(['name' => 'Test 1']);
         self::assertEquals('Test 1', $this->model->name);
         self::assertEquals('Test 1', $this->model['name']);
     }
     
-    public function testCheckRulesString() 
+    public function testCheckRulesString(): void 
     {
         $this->model->value = 5;
 
@@ -38,7 +38,7 @@ class ModelTest extends TestCase
         self::assertTrue($this->model->validate());
     }
     
-    public function testCheckRulesInteger() 
+    public function testCheckRulesInteger(): void 
     {
         $this->model->name = 'Test 1';
 
@@ -50,7 +50,7 @@ class ModelTest extends TestCase
         self::assertTrue($this->model->validate());
     }
     
-    public function testCheckRequired() 
+    public function testCheckRequired(): void 
     {
         $this->model->value = 5;
         $this->model->name = '';

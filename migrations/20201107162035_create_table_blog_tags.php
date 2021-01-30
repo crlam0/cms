@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class CreateTableBlogTags extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $blog_tags = $this->table('blog_tags', ['engine' => 'MyISAM']);
         $blog_tags

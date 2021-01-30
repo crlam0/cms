@@ -43,14 +43,14 @@ class User extends ClassesUser {
     }
 
     
-    public function findByEmail($email) {
+    public function findByEmail($email): void {
         $row = App::$db->getRow("select id,flags from users where email=? and flags like '%active%'", ['email' => $email]);
         if($row) {
             $this->authByArray($row);
         }
     }    
 
-    public function findByToken($token) {
+    public function findByToken($token): void {
         $row = App::$db->getRow("select id,flags from users where token=? and flags like '%active%'", ['token' => $token]);
         if($row) {
             $this->authByArray($row);

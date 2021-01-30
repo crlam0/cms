@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ChangeSettingsTemplatesColumns extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $settings = $this->table('settings');
         $settings->renameColumn('title', 'name')

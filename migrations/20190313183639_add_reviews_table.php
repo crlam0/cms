@@ -6,7 +6,7 @@ use Phinx\Migration\AbstractMigration;
 class AddReviewsTable extends AbstractMigration
 {
 
-    function change()
+    function change(): void
     {
         $test = $this->table('reviews', ['engine' => 'MyISAM']);
         $test

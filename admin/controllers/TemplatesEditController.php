@@ -34,8 +34,8 @@ class TemplatesEditController extends BaseController
             $this->redirect('update', ['id' =>$model->id]);
         }
         
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
-        App::addAsset('js', 'include/js/editor.js');
+        App::addAsset('js', 'include/edit_area/edit_area_full.js');
+        App::addAsset('js', 'include/js/editor_html.js');
         App::addAsset('header', 'X-XSS-Protection:0');
         
         return $this->render('templates_form.html.twig', [
@@ -62,8 +62,8 @@ class TemplatesEditController extends BaseController
             $model->content = $this->twigTplLoad($model->file_name);
         }         
 
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
-        App::addAsset('js', 'include/js/editor.js');
+        App::addAsset('js', 'include/edit_area/edit_area_full.js');
+        App::addAsset('js', 'include/js/editor_html.js');
         App::addAsset('header', 'X-XSS-Protection:0');
         
         return $this->render('templates_form.html.twig', [
@@ -80,7 +80,11 @@ class TemplatesEditController extends BaseController
         $this->redirect('index');
     }
     
-    private function twigTplLoad($filename){
+    /**
+     * @return false|string
+     */
+    private function twigTplLoad($filename): string
+    {
         if(!strstr($filename,'.html.twig')) {
             $filename.='.html.twig';
         }
@@ -92,7 +96,8 @@ class TemplatesEditController extends BaseController
         }    
     }
 
-    private function twigTplSave($form){
+    private function twigTplSave($form): bool
+    {
         if($form['template_type']!='twig' || !strlen($form['content']) || !strlen($form['file_name'])) {
             return true;
         }

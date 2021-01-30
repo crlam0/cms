@@ -7,7 +7,7 @@ use classes\BaseController;
 class TestController extends BaseController
 {
     
-    public function actionIndex($arg1, $arg2)
+    public function actionIndex($arg1, $arg2): string
     {
         $this->title = 'Test';
         $this->breadcrumbs[] = ['title'=>'test','url'=>'test/'];

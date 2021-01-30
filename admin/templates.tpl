@@ -174,8 +174,8 @@
 	<tr class="content" align="left">
 	<td><b>[%row(name)%]</b><br>[%row(descr)%]</td>
 	<td align="center">[%func(show_img)%]</td>
-	<td width=16><a href=[%PHP_SELF%]?edit_author=1&id=[%row(id)%]><img src="../images/open.gif" alt="Изменить" border="0"></a></td>
-	<td width=16><a href=[%PHP_SELF%]?del_author=1&id=[%row(id)%]><img src="../images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?edit_author=1&id=[%row(id)%]><img src="images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href=[%PHP_SELF%]?del_author=1&id=[%row(id)%]><img src="images/del.gif" alt="Удалить" border="0" onClick="return test()"></a></td>
 	</tr>
 [%loop_end%]
 </table>

@@ -27,6 +27,9 @@ class CacheClearCommand extends Command
         ;
     }
 
+    /**
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<comment>Clearing cache</comment>');

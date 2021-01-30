@@ -15,20 +15,20 @@ class RoutingTest extends TestCase
         $this->Routing->matchRoutes();
     }
     
-    public function testIsIndexPage() 
+    public function testIsIndexPage(): void 
     {
         $result = $this->Routing->isIndexPage();
         self::assertFalse($result);
     }
     
-    public function testController() 
+    public function testController(): void 
     {        
         $result = $this->Routing->controller;
         self::assertEquals('modules\misc\FAQController', $result);
         self::assertEquals(['page'=>'1'], $this->Routing->params);
     }
     
-    public function testGetPartArray() 
+    public function testGetPartArray(): void 
     {        
         $result=$this->Routing->getPartArray();
         self::assertEquals('default', $result['title']);

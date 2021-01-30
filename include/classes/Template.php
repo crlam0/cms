@@ -81,9 +81,9 @@ class Template
      *
      * @param string $path Function name
      *
-     * @return null
+     * @return void
      */
-    public function addPath(string $path)
+    public function addPath(string $path): void
     {
         $loader = $this->TwigTemplate->addPath($path);
     }    
@@ -127,12 +127,12 @@ class Template
      *
      * @param string $name Template's name
      * @param array $tags Tags array
-     * @param array $sql_result Result from SQL query
+     * @param mysqli_result $sql_result Result from SQL query
      * @param string $inner_content Inner content
      *
      * @return string Output content
      */
-    function parse(string $name, array $tags = [], $sql_result = [], string $inner_content = '') : string 
+    function parse(string $name, array $tags = [], ?\mysqli_result $sql_result = null, string $inner_content = '') : string 
     {
                 
         $template = null;

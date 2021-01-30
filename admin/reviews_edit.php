@@ -7,7 +7,7 @@ use classes\App;
 
 $image_path = $settings['reviews']['upload_path'];
 
-function show_img($tmp, $row) {
+function show_img($tmp, $row): string {
     global $DIR, $image_path;
     if (is_file($DIR . $image_path . $row['file_name'])) {
         return "<img src=\"../".$image_path.$row['file_name']."\" border=0 width=200></a>";
@@ -93,7 +93,7 @@ if (($input["edit_reviews"]) || ($input["add_reviews"])) {
     $tags['INCLUDE_HEAD'] = $JQUERY_INC . $EDITOR_INC;
     $tags['content'] = replace_base_href($tags['content'], false);    
     $content.=get_tpl_by_name("reviews_edit_form", $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit();
 }
 
@@ -101,5 +101,5 @@ $query = "SELECT * from reviews order by date asc";
 $result = my_query($query);
 $content.=get_tpl_by_name("reviews_edit_table", $tags, $result);
 
-echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
 

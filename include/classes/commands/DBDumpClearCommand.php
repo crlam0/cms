@@ -23,6 +23,9 @@ class DBDumpClearCommand extends Command
         ;
     }
 
+    /**
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->paths = glob('dump-*.sql');

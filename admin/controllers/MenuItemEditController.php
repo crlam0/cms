@@ -76,6 +76,7 @@ class MenuItemEditController extends BaseController
     public function actionUpdate(int $menu_id, int $id): string 
     {
         $model = new MenuItem($id); 
+        App::$input['form']['target_id'] = App::$input['form']['target_id'] ?? 0;
         if($model->load(App::$input['form']) && $model->validate()) {
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
@@ -107,7 +108,7 @@ class MenuItemEditController extends BaseController
         $this->redirect('index');
     }    
 
-    public function showImage($file_name){
+    public function showImage($file_name): string{
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
             return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="' . $this->image_width . '" />';
         } else {
@@ -115,7 +116,10 @@ class MenuItemEditController extends BaseController
         }        
     }
     
-    private function saveImage($model, $file) 
+    /**
+     * @return false|string
+     */
+    private function saveImage(MenuItem $model, $file): string
     {        
         $content = '';        
         if ($file['size'] < 100) {
@@ -123,7 +127,7 @@ class MenuItemEditController extends BaseController
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
             App::setFlash('danger', 'Неверный тип файла !');
-            return false;
+            return '';
         }         
         $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
@@ -138,7 +142,7 @@ class MenuItemEditController extends BaseController
         return $content;
     }
     
-    public function actionDeleteImageFile(int $menu_id, $item_id) 
+    public function actionDeleteImageFile(int $menu_id, $item_id): void 
     {
         $model = new MenuItem($item_id);
         $this->deleteImageFile($model);
@@ -146,7 +150,10 @@ class MenuItemEditController extends BaseController
         $this->redirect('update', ['id' =>$item_id]);
     }
     
-    private function deleteImageFile($model) 
+    /**
+     * @return false|null
+     */
+    private function deleteImageFile(MenuItem $model) 
     {
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {
@@ -186,13 +193,13 @@ class MenuItemEditController extends BaseController
         
     ];
     
-    public function actionGetTargetSelect(int $menu_id, $item_id, $target_type) 
+    public function actionGetTargetSelect(int $menu_id, $item_id, $target_type): void 
     {
         $model = new MenuItem($item_id);        
         $target_id = $model->target_id;
         $href = $model->href;
         
-        function get_option($name, $sql, $target_id) {
+        function get_option($name, $sql, $target_id): string {
             $result = my_query($sql);
             $output = '<td>' . $name . ':</td><td><select class="form-control" name="form[target_id]">';
             while ($row = $result->fetch_array()) {

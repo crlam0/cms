@@ -85,9 +85,9 @@ class BBCodeEditor {
      * @param integer $Height Textarea heught
      * @param string $ImagePath Path to controls images
      *
-     * @return string Output string
+     * @return void
      */
-    private function ShowControl($Width, $Height, $ImagePath) {
+    private function ShowControl($Width, $Height, $ImagePath): void {
         $this->__width = $Width;
         $this->__height = $Height;
         $this->__imagePath = $ImagePath;
@@ -389,8 +389,10 @@ class BBCodeEditor {
      * Set control value.
      *
      * @param string $NewValue New value
+     *
+     * @return void
      */
-    public function SetValue($NewValue) {
+    public function SetValue($NewValue): void {
         $this->__value = $NewValue;
     }
 

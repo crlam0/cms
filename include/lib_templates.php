@@ -21,7 +21,7 @@ App::set('Blocks', $BlocksObject);
  *
  * @return string Output content
  */
-function get_tpl_by_name($name, $tags = [], $sql_result = [], $inner_content = '') {
+function get_tpl_by_name($name, $tags = [], $sql_result = null, $inner_content = '') {
     return App::$template->parse($name, $tags, $sql_result, $inner_content);
 }
 
@@ -34,6 +34,6 @@ function get_tpl_by_name($name, $tags = [], $sql_result = [], $inner_content = '
  *
  * @return string Output content
  */
-function get_tpl_default($tags = [], $sql_result = [], $inner_content = '') {
+function get_tpl_default($tags = [], $sql_result = null, $inner_content = '') {
     return App::$template->parse(App::get('tpl_default'), $tags, $sql_result, $inner_content);
 }

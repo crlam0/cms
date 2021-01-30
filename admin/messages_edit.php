@@ -38,12 +38,12 @@ if (($input['view'])||($input['adding'])){
         <option value=error".($tags['type']=="error"?" selected":"").">Error</option>
         </select>";        
         $content.=get_tpl_by_name('messages_edit_form',$tags);
-        echo get_tpl_default($tags,"",$content);  
+        echo get_tpl_default($tags, null, $content);  
 }else{
 
 	$query="SELECT * from messages order by name asc";
 	$result=App::$db->query($query);
 	$content.=get_tpl_by_name('messages_edit_table',$tags,$result);
-	echo get_tpl_default($tags,'',$content);	
+	echo get_tpl_default($tags, null, $content);	
 }
 

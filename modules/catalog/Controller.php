@@ -161,7 +161,10 @@ class Controller extends BaseController
         return $content;
     }
     
-    private function getItemId(int $part_id, string $item_title): int 
+    /**
+     * @return int|numeric
+     */
+    private function getItemId(int $part_id, string $item_title) 
     {
         $query = "select id,part_id from cat_item where seo_alias=? and part_id=?";
         $row = App::$db->getRow($query, ['seo_alias' => $item_title, 'part_id' => $part_id]);
@@ -171,7 +174,7 @@ class Controller extends BaseController
         return 0;
     }
     
-    private function getRelatedProducts(array $row_part)
+    private function getRelatedProducts(array $row_part): ?string
     {        
         if(!$related_products = my_json_decode($row_part['related_products'])) {
             $related_products=[];
@@ -273,7 +276,8 @@ class Controller extends BaseController
     }
 
     /*  +++ */
-    public function getPropsArray($props) {    
+    public function getPropsArray($props) 
+    {    
         if($props_values = my_json_decode($props)) {
             foreach($props_values as $key => $value ){
                 if(!strlen($props_values[$key])) {
@@ -286,7 +290,8 @@ class Controller extends BaseController
     }
 
     /*  ??? */
-    public function getPropName($part_id,$name) {
+    public function getPropName($part_id,$name) 
+    {
         list($items_props) = App::$db->getRow("select items_props from cat_part where id=?", ['id' => $part_id]);
         list($items_props) = my_select_row($query);
         if($props_values = my_json_decode($items_props)) {
@@ -296,7 +301,11 @@ class Controller extends BaseController
     }
 
     /*  ??? */
-    public function getPropNamesArray($part_id) {
+    /**
+     * @return array
+     */
+    public function getPropNamesArray($part_id): array
+    {
         list($items_props) = App::$db->getRow("select items_props from cat_part where id=?", ['id' => $part_id]);
         if($props_values = my_json_decode($items_props)) {        
             $result=[];
@@ -305,10 +314,11 @@ class Controller extends BaseController
             }
             return $result;
         }
-        return false;    
+        return [];    
     }
     
-    public static function getCacheFilename($file_name, $file_type, $max_width) {
+    public static function getCacheFilename(string $file_name, string $file_type, int $max_width): string 
+    {
         if(!$file_type || !strlen($file_type)) {
             $file_type = Image::getFileType($file_name, '');
         }
@@ -318,7 +328,12 @@ class Controller extends BaseController
         return static::$cache_path . md5($file_name . $max_width) . '.' . $file_extension;
     }
     
-    public function getImageUrl($file_name, $file_type, $width, $crop = true) {
+    /**
+     * @param bool $crop
+     *
+     * @return string
+     */
+    public function getImageUrl(string $file_name, string $file_type, int $width, bool $crop = true): string {
         $cache_file_name = $this->getCacheFilename($file_name, $file_type, $width);
         if(is_file(App::$DIR . $cache_file_name)) {
             return $cache_file_name;
@@ -339,7 +354,7 @@ class Controller extends BaseController
         }
     }
 
-    public function getListImage($row) {
+    public function getListImage($row): string {
         App::$input['preview']=true;
         $file_name = App::$DIR . App::$settings['catalog_item_img_path'] . $row['fname'];
         // $image = new Image($file_name, $row['file_type']);
@@ -348,6 +363,9 @@ class Controller extends BaseController
         return $image->getHTML($row, static::$cache_path, 'catalog_popup', $cript_name, App::$settings['catalog_item_img_preview']);
     }
 
+    /**
+     * @return bool|string
+     */
     public function getPartImageFilename($fname, $width = 0) {
         $IMG_PART_PATH = App::$DIR . App::$settings['catalog_part_img_path'];
         if(!$width) {

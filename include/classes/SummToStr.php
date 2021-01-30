@@ -60,9 +60,15 @@ class SummToStr
 
     /**
      * Склоняем словоформу
+     *
      * @author runcore
+     *
+     * @param int|string $n
+     *
+     * @return string
      */
-    private static function morph($n, $f1, $f2, $f5) {
+    private static function morph($n, string $f1, string $f2, string $f5): string 
+    {
         $n = abs(intval($n)) % 100;
         if ($n > 10 && $n < 20) {
             return $f5;

@@ -20,23 +20,23 @@ class AppTest extends TestCase
         $this->App = new App($DIR, $SUBDIR);
     }            
 
-    public function testSetGet()
+    public function testSetGet(): void
     {
         App::set('test', '123' );
         self::assertEquals('123', App::get('test'));
     }
     
-    public function testDIR()
+    public function testDIR(): void
     {
         self::assertEquals('test1', App::$DIR);
     }
     
-    public function testSUBDIR()
+    public function testSUBDIR(): void
     {
         self::assertEquals('test2', App::$SUBDIR);
     }
     
-    public function testLoadInputData()
+    public function testLoadInputData(): void
     {
         $this->App->loadInputData(['test' => 'get'], [], []);
         self::assertEquals('get', App::$get['test']);

@@ -170,8 +170,10 @@ class CF_Authentication
      * argument blank.
      *
      * @param string $path Specify path to CA bundle (default to included)
+     *
+     * @return void
      */
-    function ssl_use_cabundle($path=NULL)
+    function ssl_use_cabundle($path=NULL): void
     {
         $this->cfs_http->ssl_use_cabundle($path);
     }
@@ -297,8 +299,10 @@ class CF_Authentication
 
     /**
      * Toggle debugging - set cURL verbose flag
+     *
+     * @return void
      */
-    function setDebug($bool)
+    function setDebug($bool): void
     {
         $this->dbug = $bool;
         $this->cfs_http->setDebug($bool);
@@ -394,8 +398,10 @@ class CF_Connection
      * Toggle debugging of instance and back-end HTTP module
      *
      * @param boolean $bool enable/disable cURL debugging
+     *
+     * @return void
      */
-    function setDebug($bool)
+    function setDebug($bool): void
     {
         $this->dbug = (boolean) $bool;
         $this->cfs_http->setDebug($this->dbug);
@@ -406,15 +412,16 @@ class CF_Connection
      *
      * Example:
      * <code>
-     *  
+     *
      * $conn->close();
-     * 
+     *
      * </code>
      *
      * Will close all current cUrl active connections.
-     * 
+     *
+     * @return void
      */
-    public function close()
+    public function close(): void
     {
         $this->cfs_http->close();
     }
@@ -588,11 +595,13 @@ class CF_Connection
      * </code>
      *
      * @param string $container_name name of the remote Container
-     * @return container CF_Container instance
+     *
+     * @return CF_Container CF_Container instance
+     *
      * @throws NoSuchContainerException thrown if no remote Container
      * @throws InvalidResponseException unexpected response
      */
-    function get_container($container_name=NULL)
+    function get_container($container_name=NULL): CF_Container
     {
         list($status, $reason, $count, $bytes) =
                 $this->cfs_http->head_container($container_name);
@@ -817,8 +826,10 @@ class CF_Connection
      * </code>
      *
      * @param string $func_name the name of the user callback function
+     *
+     * @return void
      */
-    function set_read_progress_function($func_name)
+    function set_read_progress_function($func_name): void
     {
         $this->cfs_http->setReadProgressFunc($func_name);
     }
@@ -853,8 +864,10 @@ class CF_Connection
      * </code>
      *
      * @param string $func_name the name of the user callback function
+     *
+     * @return void
      */
-    function set_write_progress_function($func_name)
+    function set_write_progress_function($func_name): void
     {
         $this->cfs_http->setWriteProgressFunc($func_name);
     }
@@ -879,8 +892,10 @@ class CF_Connection
      * argument blank.
      *
      * @param string $path Specify path to CA bundle (default to included)
+     *
+     * @return void
      */
-    function ssl_use_cabundle($path=NULL)
+    function ssl_use_cabundle($path=NULL): void
     {
         $this->cfs_http->ssl_use_cabundle($path);
     }
@@ -1079,11 +1094,15 @@ class CF_Container
      * $container->purge_from_cdn();
      * # or 
      * $container->purge_from_cdn("user1@domain.com,user2@domain.com");
+     *
      * @returns boolean True if successful
+     *
      * @throws CDNNotEnabledException if CDN Is not enabled on this connection
      * @throws InvalidResponseException if the response expected is not returned
+     *
+     * @return true
      */
-    function purge_from_cdn($email=null)
+    function purge_from_cdn($email=null): bool
     {
         if (!$this->cfs_http->getCDNMUrl()) 
         {
@@ -1113,11 +1132,14 @@ class CF_Container
      * </code>
      *
      * @returns boolean True if successful
+     *
      * @throws CDNNotEnabledException CDN functionality not returned during auth
      * @throws AuthenticationException if auth token is not valid/expired
      * @throws InvalidResponseException unexpected response
+     *
+     * @return true
      */
-    function acl_user_agent($cdn_acl_user_agent="") {
+    function acl_user_agent($cdn_acl_user_agent=""): bool {
         if ($this->cfs_http->getCDNMUrl() == NULL) {
             throw new CDNNotEnabledException(
                 "Authentication response did not indicate CDN availability");
@@ -1153,11 +1175,14 @@ class CF_Container
      * </code>
      *
      * @returns boolean True if successful
+     *
      * @throws CDNNotEnabledException CDN functionality not returned during auth
      * @throws AuthenticationException if auth token is not valid/expired
      * @throws InvalidResponseException unexpected response
+     *
+     * @return true
      */
-    function acl_referrer($cdn_acl_referrer="") {
+    function acl_referrer($cdn_acl_referrer=""): bool {
         if ($this->cfs_http->getCDNMUrl() == NULL) {
             throw new CDNNotEnabledException(
                 "Authentication response did not indicate CDN availability");
@@ -1185,7 +1210,7 @@ class CF_Container
      * uploaded to a ".CDN_ACCESS_LOGS" container in the form of
      * "container_name.YYYYMMDDHH-XXXX.gz". Requires CDN be enabled on
      * the account.
-     * 
+     *
      * Example:
      * <code>
      * # ... authentication code excluded (see previous examples) ...
@@ -1199,11 +1224,14 @@ class CF_Container
      * </code>
      *
      * @returns boolean True if successful
+     *
      * @throws CDNNotEnabledException CDN functionality not returned during auth
      * @throws AuthenticationException if auth token is not valid/expired
      * @throws InvalidResponseException unexpected response
+     *
+     * @return true
      */
-    function log_retention($cdn_log_retention=False) {
+    function log_retention($cdn_log_retention=False): bool {
         if ($this->cfs_http->getCDNMUrl() == NULL) {
             throw new CDNNotEnabledException(
                 "Authentication response did not indicate CDN availability");
@@ -1249,11 +1277,14 @@ class CF_Container
      * </code>
      *
      * @returns boolean True if successful
+     *
      * @throws CDNNotEnabledException CDN functionality not returned during auth
      * @throws AuthenticationException if auth token is not valid/expired
      * @throws InvalidResponseException unexpected response
+     *
+     * @return true
      */
-    function make_private()
+    function make_private(): bool
     {
         if ($this->cfs_http->getCDNMUrl() == NULL) {
             throw new CDNNotEnabledException(
@@ -1296,8 +1327,10 @@ class CF_Container
      * </code>
      *
      * @returns boolean True if enabled, False otherwise
+     *
+     * @return bool
      */
-    function is_public()
+    function is_public(): bool
     {
         return $this->cdn_enabled == True ? True : False;
     }
@@ -1323,9 +1356,10 @@ class CF_Container
      * </code>
      *
      * @param string $obj_name name of storage Object
-     * @return obj CF_Object instance
+     *
+     * @return CF_Object CF_Object instance
      */
-    function create_object($obj_name=NULL)
+    function create_object($obj_name=NULL): CF_Object
     {
         return new CF_Object($this, $obj_name);
     }
@@ -1352,9 +1386,10 @@ class CF_Container
      * </code>
      *
      * @param string $obj_name name of storage Object
-     * @return obj CF_Object instance
+     *
+     * @return CF_Object CF_Object instance
      */
-    function get_object($obj_name=NULL)
+    function get_object($obj_name=NULL): CF_Object
     {
         return new CF_Object($this, $obj_name, True);
     }
@@ -1550,8 +1585,10 @@ class CF_Container
      *
      * It assumes the last element of the full path is the "real" Object
      * and does NOT create a remote storage Object for that last element.
+     *
+     * @return void
      */
-    function create_paths($path_name)
+    function create_paths($path_name): void
     {
         if ($path_name[0] == '/') {
             $path_name = mb_substr($path_name, 0, 1);
@@ -1574,8 +1611,10 @@ class CF_Container
      * Internal method to grab CDN/Container info if appropriate to do so
      *
      * @throws InvalidResponseException unexpected response
+     *
+     * @return void
      */
-    private function _cdn_initialize()
+    private function _cdn_initialize(): void
     {
         list($status, $reason, $cdn_enabled, $cdn_uri, $cdn_ttl,
              $cdn_log_retention, $cdn_acl_user_agent, $cdn_acl_referrer) =
@@ -1756,9 +1795,9 @@ class CF_Object
      * print "<img src='$pic->public_uri()' />\n";
      * </code>
      *
-     * @return string Object's public URI or NULL
+     * @return null|string Object's public URI or NULL
      */
-    function public_uri()
+    function public_uri(): ?string
     {
         if ($this->container->cdn_enabled) {
             return $this->container->cdn_uri . "/" . $this->name;
@@ -1848,10 +1887,12 @@ class CF_Object
      *
      * @param resource $fp open resource for writing data to
      * @param array $hdrs user-defined headers (Range, If-Match, etc.)
-     * @return string Object's data
+     *
+     * @return true Object's data
+     *
      * @throws InvalidResponseException unexpected response
      */
-    function stream(&$fp, $hdrs=array())
+    function stream(&$fp, $hdrs=array()): bool
     {
         list($status, $reason) = 
                 $this->container->cfs_http->get_object_to_stream($this,$fp,$hdrs);
@@ -2079,11 +2120,13 @@ class CF_Object
      * </code>
      *
      * @param string $filename name of local file to write data to
-     * @return boolean <kbd>True</kbd> if successful
+     *
+     * @return true <kbd>True</kbd> if successful
+     *
      * @throws IOException error opening file
      * @throws InvalidResponseException unexpected response
      */
-    function save_to_filename($filename)
+    function save_to_filename($filename): bool
     {
         $fp = @fopen($filename, "wb");
         if (!$fp) {
@@ -2107,11 +2150,15 @@ class CF_Object
      * $obj->purge_from_cdn();
      * # or 
      * $obj->purge_from_cdn("user1@domain.com,user2@domain.com");
+     *
      * @returns boolean True if successful
+     *
      * @throws CDNNotEnabledException if CDN Is not enabled on this connection
      * @throws InvalidResponseException if the response expected is not returned
+     *
+     * @return true
      */
-    function purge_from_cdn($email=null)
+    function purge_from_cdn($email=null): bool
     {
         if (!$this->container->cfs_http->getCDNMUrl())
         {
@@ -2134,8 +2181,10 @@ class CF_Object
      * the user to handle any data integrity checks.
      *
      * @param string $etag MD5 checksum hexidecimal string
+     *
+     * @return void
      */
-    function set_etag($etag)
+    function set_etag($etag): void
     {
         $this->etag = $etag;
         $this->_etag_override = True;
@@ -2188,8 +2237,10 @@ class CF_Object
 
     /**
      * PRIVATE: fetch information about the remote Object if it exists
+     *
+     * @return bool
      */
-    private function _initialize()
+    private function _initialize(): bool
     {
         list($status, $reason, $etag, $last_modified, $content_type,
             $content_length, $metadata) =

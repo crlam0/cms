@@ -96,7 +96,7 @@ class ListEditController extends BaseController
         $this->redirect('index');
     }    
 
-    public function showImage($file_name){
+    public function showImage($file_name): string{
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
             return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="' . $this->image_width . '" />';
         } else {
@@ -104,7 +104,10 @@ class ListEditController extends BaseController
         }        
     }
     
-    private function saveImage($model, $file) 
+    /**
+     * @return false|null
+     */
+    private function saveImage(ArticleList $model, $file) 
     {
         if ($file['size'] < 100) {
             return false;
@@ -123,7 +126,7 @@ class ListEditController extends BaseController
         }
     }
     
-    public function actionDeleteImageFile($post_id) 
+    public function actionDeleteImageFile($post_id): void 
     {
         $model = new ArticleList($post_id);
         $this->deleteImageFile($model);
@@ -131,7 +134,10 @@ class ListEditController extends BaseController
         $this->redirect('update', ['id' => $post_id]);
     }
     
-    private function deleteImageFile($model) 
+    /**
+     * @return false|null
+     */
+    private function deleteImageFile(ArticleList $model) 
     {
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {

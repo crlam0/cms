@@ -27,6 +27,9 @@ class DebugOnCommand extends Command
         ;
     }
 
+    /**
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<comment>Switch debug mode on</comment>');

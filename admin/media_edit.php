@@ -16,7 +16,7 @@ if (isset($_SESSION["view_files"])) {
     $tags['Header'].=" -> $list_title";
 }
 
-function show_size($tmp, $row) {
+function show_size($tmp, $row): string {
     global $DIR, $settings, $SUBDIR;
     $file_name = $settings["media_upload_path"] . $row['file_name'];
     if (is_file($DIR . $file_name)) {
@@ -40,6 +40,9 @@ if ($input["del_file"]) {
 if ($input["added_file"]) {
     $input['form']['date_add'] = "now()";
     $input['form']['list_id'] = $_SESSION["view_files"];
+    if(!$input['form']['num']) {
+        $input['form']['num'] = '1';
+    }
     if ($_FILES["uploaded_file"]["size"] > 100) {
       	$f_info = pathinfo($_FILES["uploaded_file"]["name"]);
 	$file_name = encodestring($input['form']['title']) . "." . $f_info["extension"];
@@ -58,6 +61,9 @@ if ($input["added_file"]) {
 }
 
 if ($input["edited_file"]) {
+    if(!$input['form']['num']) {
+        $input['form']['num'] = '1';
+    }
     if ($_FILES["uploaded_file"]["size"] > 100) {
 	list($fname_old) = my_select_row("select file_name from media_files where id='{$input['id']}'");
 	if (is_file($DIR . $settings["media_upload_path"] . $fname_old)) {
@@ -94,7 +100,7 @@ if (($input["edit_file"]) || ($input["add_file"])) {
     $tags['descr'] = "<textarea class=\"form-control\" name=form[descr] rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
     // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_name("media_files_edit_form", $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit();
 }
 
@@ -102,7 +108,7 @@ if (isset($_SESSION["view_files"])) {
     $query = "SELECT * from media_files where list_id='" . $_SESSION["view_files"] . "' order by num asc, date_add desc";
     $result = my_query($query);
     $content.=get_tpl_by_name("media_files_edit_table", $tags, $result);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit();
 }
 
@@ -152,7 +158,7 @@ if (($input["edit_list"]) || ($input["add_list"])) {
     $tags['descr'] = "<textarea class=\"form-control\" name=form[descr] rows=15 cols=80 maxlength=64000>{$tags['descr']}</textarea>";
     // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_name("media_list_edit_form", $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit();
 }
 
@@ -162,5 +168,5 @@ left join media_files on (media_files.list_id=media_list.id)
 group by media_list.id order by media_list.date_add desc";
 $result = my_query($query);
 $content.=get_tpl_by_name("media_list_edit_table", $tags, $result);
-echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
 

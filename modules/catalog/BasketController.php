@@ -84,7 +84,11 @@ class BasketController extends Controller
         exit();
     }
     
-    private function checkInput(array $input) {        
+    /**
+     * @return bool|string
+     */
+    private function checkInput(array $input)
+    {        
         if (strlen($input['lastname'])<3) {
             return App::$message->get('error', [], 'Неверно заполнено поле &quot;Фамилия&quot;');
         }

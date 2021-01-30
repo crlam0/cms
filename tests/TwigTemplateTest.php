@@ -10,17 +10,17 @@ class TwigTemplateTest extends TestCase
         parent::setUp();
     }
 
-    public function testStringParse()
+    public function testStringParse(): void
     {
         $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, [], 'Hello {{ name }}');
         $content = $twig->render('', ['name'=>'Test']);
         self::assertEquals('Hello Test', $content);
     }
     
-    public function testFunctionParse()
+    public function testFunctionParse(): void
     {
         $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, [], '{{ TwigTest(123) }}');
-        function TwigTest($param){
+        function TwigTest($param): string{
             return 'TwigTestFunction: ' . $param;
         }
         $twig->addFunction('TwigTest');
@@ -28,7 +28,7 @@ class TwigTemplateTest extends TestCase
         self::assertEquals('TwigTestFunction: 123', $content);
     }
     
-    public function testSQLParse()            
+    public function testSQLParse(): void            
     {
         $result=classes\App::$db->query("select login from users where login='boot'");
         $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);

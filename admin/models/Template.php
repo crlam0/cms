@@ -64,7 +64,7 @@ class Template extends BaseModel {
         ];
     }
     
-    public function getType()
+    public function getType(): string
     {
         return ucfirst($this->template_type);
     }

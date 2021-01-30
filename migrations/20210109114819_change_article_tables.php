@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ChangeArticleTables extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $table = $this->table('article_list');
         $table->addColumn('date_change', 'datetime', ['default' => 'CURRENT_TIMESTAMP'])

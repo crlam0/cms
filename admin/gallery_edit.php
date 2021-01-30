@@ -18,9 +18,9 @@ if ($input['list_gallery']) {
 if ($input['active']) {
     $query = "update gallery_list set active='" . $input['active'] . "' where id='" . $input['id'] . "'";
     if (my_query($query)) {
-        print $input['active'];
+        echo $input['active'];
     } else {
-        print mysql_error();
+        echo mysql_error();
     }
     exit;
 }
@@ -37,14 +37,14 @@ if ($input['default_image_id']) {
     exit;
 }
 
-function is_default_image($tmp, $row) {
+function is_default_image($tmp, $row): string {
     
     list($default_image_id) = my_select_row("select default_image_id from gallery_list where id='{$row["gallery_id"]}'", true);
     if($default_image_id===$row["id"]) return " checked";
     return "";
 }
 
-function show_img($tmp, $row) {
+function show_img($tmp, $row): string {
     global $DIR, $settings;
     if (is_file($DIR . $settings["gallery_upload_path"] . $row['file_name'])) {
     	return "<a href=../modules/gallery/image.php?id={$row['id']}><img src=\"../modules/gallery/image.php?preview=1&id={$row['id']}\" border=0></a>";
@@ -53,7 +53,12 @@ function show_img($tmp, $row) {
     }
 }
 
-function reArrayFiles(&$file_post) {
+/**
+ * @return array[]
+ *
+ * @psalm-return array<0|positive-int, array>
+ */
+function reArrayFiles(&$file_post): array {
 
     $file_ary = array();
     $file_count = count($file_post['name']);
@@ -177,7 +182,7 @@ if (($input['edit_image']) || ($input['add_image'])) {
     $tags['descr'] = "<textarea name=form[descr] class=\"form-control\" rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
     // $tags['INCLUDE_HEAD'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_name('gallery_image_edit_form', $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit();
 }
 
@@ -186,7 +191,7 @@ if (isset($_SESSION['view_gallery'])) {
     $result = my_query($query);
     $content.=get_tpl_by_name('gallery_image_edit_table', $tags, $result);
     $tags['INCLUDE_HEAD']=$JQUERY_INC;
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit();
 }
 
@@ -238,7 +243,7 @@ if ($input["edited_gallery"]) {
     if (!strlen($input['form']['seo_alias']))$input['form']['seo_alias'] = encodestring($input['form']['title']);
     $query = "update gallery_list set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
     my_query($query);
-    if ($_FILES["img_file"]["size"] > 100) {
+    if (isset($_FILES["img_file"]) && $_FILES["img_file"]["size"] > 100) {
         list($img) = my_select_row("select image_name from gallery_list where id=" . $input["id"]);
         if (is_file($IMG_PATH . $img)) {
             if (!unlink($IMG_PATH . $img)){
@@ -277,7 +282,7 @@ if (($input['edit_gallery']) || ($input['add_gallery'])) {
     $tags['del_button'] = (isset($tags['image_name']) && is_file($IMG_PATH . $tags['image_name']) ? "<a href=" . $server['PHP_SELF'] . "?del_gallery_list_image=1&id={$tags['id']}>Удалить</a><br>" : "");
 
     $content.=get_tpl_by_name('gallery_list_edit_form', $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit();
 }
 
@@ -290,4 +295,4 @@ $result = my_query($query);
 $tags['INCLUDE_HEAD']=$JQUERY_INC;
 
 $content.=get_tpl_by_name("gallery_list_edit_table", $tags, $result);
-echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);

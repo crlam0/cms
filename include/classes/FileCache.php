@@ -17,7 +17,7 @@ class FileCache {
         $this->cache_path = App::$DIR . $cache_path;
     }
     
-    private function getFileName($key) {
+    private function getFileName($key): string {
         $hash = hash('sha256', $key);
         return $this->cache_path . $hash[0].$hash[1].'/'.$hash;
     }
@@ -34,7 +34,7 @@ class FileCache {
         return file_exists($this->getFileName($key));
     }
     
-    public function set($key, $data) {
+    public function set($key, $data): bool {
         if(!$key){
             return false;
         }
@@ -55,7 +55,7 @@ class FileCache {
         return true;
     }
     
-    public function delete($key) {
+    public function delete($key): bool {
         if(!$this->has($key)) {
             return true;
         }
@@ -66,7 +66,7 @@ class FileCache {
         return true;
     }
     
-    public function clear() {
+    public function clear(): void {
         del_tree($this->cache_path);
     }
 }

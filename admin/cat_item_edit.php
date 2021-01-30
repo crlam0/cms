@@ -15,7 +15,7 @@ $tags['Header'].=" -> $part_title";
 $IMG_PATH = $DIR . $settings['catalog_item_img_path'];
 $IMG_URL = $BASE_HREF . $settings['catalog_item_img_path'];
 
-function show_img($tmp, $row) {
+function show_img($tmp, $row): string {
     global $IMG_PATH, $IMG_URL;
     if (is_file($IMG_PATH . $row['fname'])) {
         return "<a href={$IMG_URL}{$row['fname']}><img src={$IMG_URL}{$row['fname']} border=0 width=150></a>";
@@ -24,7 +24,7 @@ function show_img($tmp, $row) {
     }
 }
 
-function get_image_list($item_id) {
+function get_image_list($item_id): string {
     global $IMG_URL;
     $query = "select cat_item_images.*,default_img,cat_item.id as item_id from cat_item_images left join cat_item on (cat_item.id=item_id) where item_id='$item_id'";
     $result = my_query($query);
@@ -254,7 +254,7 @@ if (($input['edit']) || ($input['add'])) {
     if($input['edit']){
         $content .= get_tpl_by_name('cat_item_images_form', $tags);
     }
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit;
 }
 
@@ -266,11 +266,11 @@ $result = my_query($query);
 $row_part = my_select_row("select * from cat_part where id=" . $_SESSION['ADMIN_PART_ID'], 1);
 $tags['price_header']="<td width=10%>{$row_part['price_title']}</td>";
 
-function price_content($tmp,$row){
+function price_content($tmp,$row): string{
     $row_part = my_select_row("select * from cat_part where id='{$_SESSION['ADMIN_PART_ID']}'", true);
     $content = "<td align=center>{$row['price']}</td>";
     return $content;
 }
 
 $content = get_tpl_by_name('cat_item_table', $tags, $result);
-echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);

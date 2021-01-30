@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ChangeMenuItemTable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $table = $this->table('menu_item');
         $table->addColumn('image_name', 'string', ['limit' => 255, 'default' => ''])

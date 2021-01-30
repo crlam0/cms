@@ -25,10 +25,9 @@ class Comments
     /**
      * Set object params
      *
-     * @param integer $target_type Target type
+     * @param string $target_type
      * @param integer $target_id Target ID
      * @param string $action_href Action HREF
-     *
      */
     public function __construct(string $target_type, int $target_id = 0, string $action_href = '')
     {
@@ -43,7 +42,7 @@ class Comments
      *
      * @param integer $target_id ID of content
      *
-     * @return integer Count of comments
+     * @return string
      */
     public function show_count(int $target_id) : string
     {        
@@ -127,6 +126,7 @@ class Comments
      *
      * @param array $input Input array
      *
+     * @return false|null
      */
     public function get_form_data($input)
     {

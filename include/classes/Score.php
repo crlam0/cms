@@ -19,9 +19,8 @@ class Score
     /**
      * Set object params
      *
-     * @param integer $target_type Target type
+     * @param string $target_type
      * @param string $action_href Action HREF
-     *
      */
     public function __construct(string $target_type)
     {
@@ -33,9 +32,9 @@ class Score
      *
      * @param integer $target_id ID of content
      *
-     * @return integer Count of comments
+     * @return int
      */
-    public function getCount(int $target_id) : string
+    public function getCount(int $target_id) : int
     {        
         $query="select count(score) from {$this->table} where target_type=? and target_id=?";
         list($score) = App::$db->getRow($query, ['target_type' => $this->target_type, 'target_id' => $target_id]);
@@ -47,9 +46,9 @@ class Score
      *
      * @param integer $target_id ID of content
      *
-     * @return integer Count of comments
+     * @return int
      */
-    public function getAverage(int $target_id) : string
+    public function getAverage(int $target_id) : int
     {        
         $query="select sum(score)/count(score) from {$this->table} where target_type=? and target_id=?";
         list($score) = App::$db->getRow($query, ['target_type' => $this->target_type, 'target_id' => $target_id]);
@@ -62,9 +61,9 @@ class Score
      * @param integer $target_id ID of content
      * @param integer $score ID of content
      *
-     * @return bool
+     * @return int
      */
-    public function add(int $target_id, int $score) : bool
+    public function add(int $target_id, int $score) : int
     {
         $data = [];
         $data['date'] = 'now()';

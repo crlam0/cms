@@ -41,7 +41,12 @@ class BaseController
         $this->tags['INCLUDE_JS']='';
     }
     
-    private function prepareParams($reflection, array $params = []) 
+    /**
+     * @return array
+     *
+     * @psalm-return list<mixed>
+     */
+    private function prepareParams(\ReflectionMethod $reflection, array $params = []): array 
     {
         $pass = [];
         foreach ($reflection->getParameters() as $param) {
@@ -55,7 +60,7 @@ class BaseController
         return $pass;
     }
     
-    private function wrongParams($reflection, array $params = []) : void
+    private function wrongParams(\ReflectionMethod $reflection, array $params = []) : void
     {
         App::error('Expected args: ' . implode(', ', $reflection->getParameters()));
         $result = ''; $i=0; $size = count($params);
@@ -109,13 +114,14 @@ class BaseController
     }
     
     /**
-     * Redirect to self 
+     * Redirect to self
      *
      * @param string $url Additioanal URL
      * @param array $params Additioanal params
      *
+     * @return void
      */
-    public function redirect($url = '', $params = []) 
+    public function redirect($url = '', $params = []): void 
     {   
         redirect($this->getUrl($url, $params));
     }
@@ -126,8 +132,9 @@ class BaseController
      * @param string $url Additioanal URL
      * @param array $params Additioanal params
      *
+     * @return string
      */
-    public function getUrl($url = '', $params = []) 
+    public function getUrl($url = '', $params = []): string 
     {        
         if(count($params)) {
             $url .= '?';
@@ -149,9 +156,11 @@ class BaseController
      *
      * @param string $template
      * @param array $tags
+     * @param array|null $result
      *
+     * @return string
      */
-    public function render($template, $tags = [], $result = null) 
+    public function render($template, $tags = [], ?\mysqli_result $result = null): string 
     {        
         return App::$template->parse($template, array_merge($tags, ['this' => $this]), $result);
     }

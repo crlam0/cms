@@ -12,7 +12,7 @@ class ControllerTest extends TestCase
         $this->Controller = new tests\TestController;
     }
 
-    public function testRun() 
+    public function testRun(): void 
     {        
         $result=$this->Controller->run('index', ['arg1'=>'test1', 'arg2'=>'test2']);
         self::assertEquals('test1<br />test2', $result);

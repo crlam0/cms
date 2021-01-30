@@ -22,11 +22,11 @@ function get_csrf_token() {
 }
 
 /**
- * Compare CSRF token from session and input. 
+ * Compare CSRF token from session and input.
  *
- * @return string Output string
+ * @return bool Output string
  */
-function check_csrf_token() {
+function check_csrf_token(): bool {
     global $_SESSION;
     return App::$input['CSRF_Token'] === $_SESSION['CSRF_Token'];
 }
@@ -44,14 +44,14 @@ class CommentsTest extends TestCase
         $_SESSION['CSRF_Token'] = '';
     }
     
-    public function testCommentsForm()
+    public function testCommentsForm(): void
     {
         $Comments = new Comments('test');
         $content = $Comments->show_form();
         self::assertStringStartsWith('<a name="comment_form"></a>', $content);
     }
 
-    public function testCommentsFormValidationName()
+    public function testCommentsFormValidationName(): void
     {
         global $_SESSION;
         $Comments = new Comments('test');
@@ -63,7 +63,7 @@ class CommentsTest extends TestCase
 
     }
 
-    public function testCommentsFormValidationEMail()
+    public function testCommentsFormValidationEMail(): void
     {
         global $_SESSION;
         $Comments = new Comments('test');
@@ -74,7 +74,7 @@ class CommentsTest extends TestCase
         self::assertStringContainsString('Вы неверно ввели E-Mail адрес !', $content);
     }
 
-    public function testCommentsFormValidationMessage()
+    public function testCommentsFormValidationMessage(): void
     {
         global $_SESSION;
         $Comments = new Comments('test');

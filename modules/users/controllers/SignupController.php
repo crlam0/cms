@@ -9,6 +9,9 @@ use classes\User;
 class SignupController extends BaseController
 {    
     
+    /**
+     * @return bool|string
+     */
     private function checkInput($form)
     {
         if ( strlen($form['login'])<4 ){

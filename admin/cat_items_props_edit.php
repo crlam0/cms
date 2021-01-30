@@ -33,7 +33,7 @@ if (isset($input['attr_name'])) {
     exit();
 }
 
-function part_items($part_id) {
+function part_items($part_id): string {
     $content = '';
     $query = "select cat_item.*,cat_item.id as item_id,cat_part.items_props
         from cat_item
@@ -105,7 +105,7 @@ function part_items($part_id) {
 if (true) {
     $subparts = 0;
 
-    function sub_part($prev_id, $deep, $max_deep) {
+    function sub_part($prev_id, $deep, $max_deep): void {
         global $content, $subparts;
         if ($deep){
             $subparts++;
@@ -165,4 +165,4 @@ $(document).ready(function(){
     ';
 
 
-echo get_tpl_by_name($part['tpl_name'], $tags, '', $final_content);
+echo get_tpl_by_name($part['tpl_name'], $tags, null, $final_content);

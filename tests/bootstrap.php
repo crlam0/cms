@@ -17,8 +17,8 @@ $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
 App::$logger = new Logger('main');
 App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/test.log', Logger::ERROR));
 
-require_once $DIR.'vendor/autoload.php';
+require_once App::$DIR.'vendor/autoload.php';
 
-$settings['debug'] = false;
+App::$settings['debug'] = false;
 
 

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ChangeUsersTable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $table = $this->table('users');
         $table->addColumn('token_expire', 'integer', ['limit' => 11])

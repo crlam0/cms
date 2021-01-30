@@ -30,8 +30,9 @@ function check_key($key, $array) {
  *
  * @param array $array Input array
  *
+ * @return void
  */
-function print_array($mixed) {
+function print_array($mixed): void {
     if (php_sapi_name() !== "cli") {
         echo "<pre>";
     }
@@ -229,8 +230,9 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height =
  * @param integer $month Month number
  * @param callable $show_day_func Function for customize day output
  *
+ * @return void
  */
-function show_month($month, $show_day_func = null) {
+function show_month($month, $show_day_func = null): void {
     $month_names = array(1 => 'Январь', 2 => 'Февраль', 3 => 'Март', 4 => 'Апрель', 5 => 'Май', 6 => 'Июнь', 7 => 'Июль', 8 => 'Август', 9 => 'Сентябрь', 10 => 'Октябрь', 11 => 'Ноябрь', 12 => 'Декабрь');
     $day_names = array('Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс');
     $allow_past = false;
@@ -289,11 +291,11 @@ function get_csrf_token() {
 }
 
 /**
- * Compare CSRF token from session and input. 
+ * Compare CSRF token from session and input.
  *
- * @return string Output string
+ * @return bool Output string
  */
-function check_csrf_token() {
+function check_csrf_token(): bool {
     global $_SESSION;
     return App::$input['CSRF_Token'] === $_SESSION['CSRF_Token'];
 }
@@ -487,8 +489,9 @@ if(!function_exists('mime_content_type')) {
  *
  * @param string $url
  *
+ * @return void
  */
-function redirect($url) {
+function redirect($url): void {
   $content = sprintf('<!DOCTYPE html>
   <html>
   <head>

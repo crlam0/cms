@@ -34,7 +34,7 @@ class App
     */
     public static $cache;
     /**
-    * @var Monolog\Logger Object of logger
+    * @var \Monolog\Logger Object of logger
     */    
     public static $logger;
     
@@ -97,7 +97,7 @@ class App
      * Load settings to App
      *
      * @param string $dir Full path to App
-     * @param array $subdir Subdir of App
+     * @param string $subdir Subdir of App
      *
     */   
     public function __construct(string $dir, string $subdir = '/')
@@ -114,8 +114,9 @@ class App
      *
      * @param object $db
      *
-    */    
-    public function setDB($db)
+     * @return void
+     */
+    public function setDB($db): void
     {
         static::$db = $db;
     }
@@ -268,8 +269,9 @@ class App
      * @param string $type
      * @param string $message
      *
+     * @return void
      */
-    public static function setFlash(string $type, string $message) {
+    public static function setFlash(string $type, string $message): void {
         global $_SESSION;
         $_SESSION['flash_type'] = $type;
         $_SESSION['flash_message'] = $message;
@@ -337,6 +339,9 @@ class App
         
     }
 
+    /**
+     * @return string
+     */
     private function failedAuth() {
         if (static::$user->id) {
             static::debug('Failed auth, user ID: ' . static::$user->id . ' URL: ' . static::$routing->request_uri);
@@ -348,7 +353,7 @@ class App
         exit;
     }
     
-    public static function sendResult($content, array $tags = [], int $code = 200) 
+    public static function sendResult(string $content, array $tags = [], int $code = 200): void 
     {
         switch ($code) {
             case 200:
@@ -374,7 +379,7 @@ class App
         exit;
     }
     
-    private function getContent($controller, $content, $tags) 
+    private function getContent(object $controller, $content, array $tags): void 
     {
         if(is_array($content)) {
             echo json_encode($content);
@@ -434,8 +439,10 @@ class App
      * Run cotroller or include file found in routing
      *
      * @param array $tags
+     *
+     * @return void
      */
-    public function run (array $tags = [])
+    public function run (array $tags = []): void
     {
         $file = static::$routing->file;
         if($file && is_file(static::$DIR . $file)) {

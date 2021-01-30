@@ -29,7 +29,8 @@ class Message
         return $class;
     }
     
-    private function parseTags(array $message, array $tags) : array {
+    private function parseTags(array $message, array $tags) : array 
+    {
         if (is_array($tags)){
             if(array_key_exists('type',$tags)) {
                 $message['type'] = $tags['type'];            
@@ -47,7 +48,7 @@ class Message
      * Return message by name
      *
      * @param string $name Message name
-     * @param string $tags Array of tags
+     * @param array $tags
      * @param string $content Content string
      *
      * @return string Output string
@@ -139,12 +140,13 @@ class Message
      * @param string $subject Message subject
      * @param string $content Message content
      *
+     * @return int
      */
-    function mail(string $message_to, string $subject, string $content, string $content_type = 'text/plain') 
+    function mail(string $message_to, string $subject, string $content, string $content_type = 'text/plain') : int
     {
         if(App::$debug) {
             echo "Send E-Mail:<br />To: {$message_to}<br />Subject: {$subject}<br />Content: {$content}<br />";
-            return true;
+            return 0;
         }
         $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
         $mailer = new \Swift_Mailer($transport);

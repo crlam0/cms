@@ -23,6 +23,9 @@ class DBDumpCommand extends Command
         ;
     }
 
+    /**
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         global $DBHOST, $DBUSER, $DBPASSWD, $DBNAME;

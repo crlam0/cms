@@ -59,7 +59,7 @@ class BaseModel implements \ArrayAccess
     /**
      * @return string Label for field
      */
-    public function label($name)
+    public function label(string $name)
     {
         $labels = $this->attributeLabels();
         if(isset($labels[$name])) {
@@ -104,10 +104,10 @@ class BaseModel implements \ArrayAccess
     
     /**
      * Load data to model from $input
-     * 
+     *
      * @param array $input Input data from POST/GET
-     * 
-     * @return BaseModel|null 
+     *
+     * @return bool
      */
     public function load($input) : bool
     {
@@ -269,7 +269,7 @@ class BaseModel implements \ArrayAccess
      * 
      * @return boolean TRUE if complete.
      */
-    public function save($need_validate = true)             
+    public function save(bool $need_validate = true)             
     {
         if($need_validate && !$this->validate()) {
             return false;
@@ -286,10 +286,10 @@ class BaseModel implements \ArrayAccess
     
     /**
      * Delete model from DB.
-     * 
-     * @return \mysqli_result.
+     *
+     * @return array
      */
-    public function delete()
+    public function delete(): array
     {
         if(!is_integer($this->data['id'])) {
             throw new \InvalidArgumentException('ID is empty');
@@ -299,12 +299,12 @@ class BaseModel implements \ArrayAccess
     
     /**
      * Return model data from DB.
-     * 
+     *
      * @param integer $id
-     * 
-     * @return \mysqli_result.
+     *
+     * @return \mysqli_result|null
      */
-    public static function findOne($id) {
+    public static function findOne($id): ?\mysqli_result {
         if($id !== null) {
             return App::$db->findOne(static::tableName() , $id);
         }
@@ -313,13 +313,13 @@ class BaseModel implements \ArrayAccess
     
     /**
      * Return model's data from DB.
-     * 
+     *
      * @param array $where params for where statement.
      * @param string $order_by Order by string.
-     * 
-     * @return \mysqli_result.
+     *
+     * @return \mysqli_result
      */
-    public static function findAll($where = [], $order_by = 'id desc') {
+    public static function findAll($where = [], $order_by = 'id desc'): ?\mysqli_result {
         return App::$db->findAll(static::tableName() , $where, $order_by);          
     }
     

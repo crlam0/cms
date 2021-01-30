@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ChangeMessagesTable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $templates = $this->table('messages');
         $templates->renameColumn('title', 'name')

@@ -6,7 +6,7 @@ use classes\BBCodeEditor;
 class BBCodeEditorTest extends TestCase
 {
 
-    public function testBBCodeEditor()
+    public function testBBCodeEditor(): void
     {
         $BBCodeEditor = new BBCodeEditor();
         $content = $BBCodeEditor->GetContol(100,100,'');

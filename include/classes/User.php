@@ -283,7 +283,7 @@ class User extends BaseModel
      * Generate token and put it to DB
      *
      * @param integer $expire_days
-     * @param string $type password_hash, salt or null
+     * @param int $type
      *
      * @return string Generated token
      */
@@ -313,7 +313,7 @@ class User extends BaseModel
      *
      * @param string $token
      *
-     * @return false|array User data or false
+     * @return array|false|null User data or false
      */
     public function checkToken(string $token) 
     {
@@ -331,6 +331,7 @@ class User extends BaseModel
     /**
      * Generate RememberMe cookie and token.
      *
+     * @return false|null
      */
     public function setRememberme(string $COOKIE_NAME) 
     {
@@ -343,9 +344,9 @@ class User extends BaseModel
     }
 
     /**
-     * Return users id and flags if he have valid RememberMe cookie. 
+     * Return users id and flags if he have valid RememberMe cookie.
      *
-     * @return mixed Array if complete, false if error.
+     * @return bool
      */
     public function authByRememberme(string $COOKIE_NAME) : bool
     {

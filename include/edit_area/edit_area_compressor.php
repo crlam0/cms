@@ -21,7 +21,7 @@
 	class Compressor{
 	
 		
-		function compressor($param)
+		function compressor($param): void
 		{
 			$this->__construct($param);
 		}
@@ -50,7 +50,7 @@
 			$this->send_datas();
 		}
 		
-		function send_headers()
+		function send_headers(): void
 		{
 			header("Content-type: text/javascript; charset: UTF-8");
 			header("Vary: Accept-Encoding"); // Handle proxies
@@ -59,7 +59,7 @@
 				header("Content-Encoding: ".$this->gzip_enc_header);
 		}
 		
-		function check_gzip_use()
+		function check_gzip_use(): void
 		{
 			$encodings = array();
 			$desactivate_gzip=false;
@@ -85,7 +85,10 @@
 			}
 		}
 		
-		function check_cache()
+		/**
+		 * @return false
+		 */
+		function check_cache(): bool
 		{
 			// Only gzip the contents if clients and server support it
 			if (file_exists($this->cache_file)) {
@@ -138,7 +141,7 @@
 			return false;
 		}
 		
-		function load_files()
+		function load_files(): void
 		{
 			$loader= $this->get_content("edit_area_loader.js")."\n";
 			
@@ -274,7 +277,7 @@
 					
 		}
 		
-		function send_datas()
+		function send_datas(): void
 		{
 			if($this->param['debug']){
 				$header=sprintf("/* USE PHP COMPRESSION\n");
@@ -314,7 +317,10 @@
 		}
 				
 		
-		function get_content($end_uri)
+		/**
+		 * @return false|string
+		 */
+		function get_content(string $end_uri): bool|string
 		{
 			$end_uri=preg_replace("/\.\./", "", $end_uri); // Remove any .. (security)
 			$file= $this->path.$end_uri;
@@ -331,7 +337,7 @@
 			}
 		}
 		
-		function get_javascript_content($end_uri)
+		function get_javascript_content(string $end_uri): ?string
 		{
 			$val=$this->get_content($end_uri);
 	
@@ -340,7 +346,7 @@
 			return $val;
 		}
 		
-		function compress_javascript(&$code)
+		function compress_javascript(string &$code): void
 		{
 			if($this->param['compress'])
 			{
@@ -356,7 +362,7 @@
 			}
 		}
 		
-		function get_css_content($end_uri){
+		function get_css_content(string $end_uri): ?string{
 			$code=$this->get_content($end_uri);
 			// remove comments
 			$code= preg_replace("/(?:\/\*(?:.|\n|\r|\t)*?(?:\*\/|$))/s", "", $code);
@@ -369,7 +375,7 @@
 			return $code;
 		}
 		
-		function get_html_content($end_uri){
+		function get_html_content(string $end_uri): ?string{
 			$code=$this->get_content($end_uri);
 			//$code= preg_replace('/(\"(?:\\\"|[^\"])*(?:\"|$))|' . "(\'(?:\\\'|[^\'])*(?:\'|$))|(?:\/\/(?:.|\r|\t)*?(\n|$))|(?:\/\*(?:.|\n|\r|\t)*?(?:\*\/|$))/s", "$1$2$3", $code);
 			$code= preg_replace('/(( |\t|\r)*\n( |\t)*)+/s', " ", $code);
@@ -377,7 +383,7 @@
 			return $code;
 		}
 		
-		function prepare_string_for_quotes(&$str){
+		function prepare_string_for_quotes(?string &$str): void{
 			// prepare the code to be putted into quotes 
 			/*$pattern= array("/(\\\\)?\"/", '/\\\n/'	, '/\\\r/'	, "/(\r?\n)/");
 			$replace= array('$1$1\\"', '\\\\\\n', '\\\\\\r'	, '\\\n"$1+"');*/
@@ -389,14 +395,17 @@
 			$str= preg_replace($pattern, $replace, $str);
 		}
 		
-		function replace_scripts($var, $param1, $param2)
+		function replace_scripts($var, $param1, $param2): string
 		{
 			$this->$var=stripslashes($param2);
 	        return $param1."[];";
 		}
 
 		/* for php version that have not thoses functions */
-		function file_get_contents($file)
+		/**
+		 * @return false|string
+		 */
+		function file_get_contents(string $file): string|bool
 		{
 			$fd = fopen($file, 'rb');
 			$content = fread($fd, filesize($file));
@@ -405,7 +414,7 @@
 			return $content;				
 		}
 		
-		function file_put_contents($file, &$content, $mtime=-1)
+		function file_put_contents($file, string|bool &$content, int $mtime=-1): bool
 		{
 			if($mtime==-1)
 				$mtime=time();
@@ -419,7 +428,7 @@
 			return false;
 		}
 		
-		function get_microtime()
+		function get_microtime(): float
 		{
 		   list($usec, $sec) = explode(" ", microtime());
 		   return ((float)$usec + (float)$sec);

@@ -76,7 +76,7 @@ class EditController extends BaseController
             $model->content = replace_base_href($model->content, true);
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
-            App::setFlash('success', 'Пост успешно добавлен.');
+            App::setFlash('success', 'Пост успешно изменён.');
             $this->redirect('update', ['id' =>$model->id]);
         } 
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
@@ -99,7 +99,7 @@ class EditController extends BaseController
         $this->redirect('index');
     }    
 
-    public function showImage($file_name){
+    public function showImage($file_name): string{
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
             return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="200" />';
         } else {
@@ -107,7 +107,7 @@ class EditController extends BaseController
         }        
     }
     
-    private function saveImage($model, $file) 
+    private function saveImage(BlogPost $model, $file): string 
     {        
         $content = '';        
         if ($file['size'] < 100) {
@@ -129,7 +129,7 @@ class EditController extends BaseController
         return $content;
     }
     
-    public function actionDeleteImageFile($post_id) 
+    public function actionDeleteImageFile($post_id): void 
     {
         $model = new BlogPost($post_id);
         $this->deleteImageFile($model);
@@ -137,7 +137,10 @@ class EditController extends BaseController
         $this->redirect('update', ['id' =>$post_id]);
     }
     
-    private function deleteImageFile($model) 
+    /**
+     * @return null|string
+     */
+    private function deleteImageFile(BlogPost $model) 
     {
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {
@@ -176,13 +179,13 @@ class EditController extends BaseController
         
     ];
     
-    public function actionGetTargetSelect($post_id, $target_type) 
+    public function actionGetTargetSelect($post_id, $target_type): void 
     {
         $model = new BlogPost($post_id);        
         $target_id = $model->target_id;
         $href = $model->href;
         
-        function get_option($name, $sql, $target_id) {
+        function get_option($name, $sql, $target_id): string {
             $result = my_query($sql);
             $output = '<td>' . $name . ':</td><td><select class="form-control" name="form[target_id]">';
             while ($row = $result->fetch_array()) {
@@ -218,7 +221,7 @@ class EditController extends BaseController
         
     }
     
-    public function actionGetTagsPopup($post_id) 
+    public function actionGetTagsPopup($post_id): void 
     {
         $result = App::$db->findAll('blog_posts_tags', ['post_id'=>$post_id]);
         $post_tags = [];
@@ -233,7 +236,7 @@ class EditController extends BaseController
         exit;
     }
     
-    public function actionAddNewTag($new_tag_name, $post_id) 
+    public function actionAddNewTag($new_tag_name, $post_id): void 
     {
         App::$db->insertTable('blog_tags', ['name' => $new_tag_name, 'seo_alias' => encodestring($new_tag_name)]);
         $tag_id = App::$db->insert_id();
@@ -246,7 +249,7 @@ class EditController extends BaseController
         exit;
     }
     
-    public function actionTagChange($post_id, $tag_id, $value) 
+    public function actionTagChange($post_id, $tag_id, $value): void 
     {
         if(strlen($value)>0) {
             App::$db->insertTable('blog_posts_tags', ['post_id'=>$post_id, 'tag_id' => $tag_id]);
@@ -257,7 +260,7 @@ class EditController extends BaseController
         exit;
     }
     
-    public function actionTagDelete($tag_id) 
+    public function actionTagDelete($tag_id): void 
     {
         App::$db->deleteFromTable('blog_posts_tags', ['tag_id' => $tag_id]);
         App::$db->deleteFromTable('blog_tags', ['id' => $tag_id]);

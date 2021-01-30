@@ -15,7 +15,7 @@ class SitemapTest extends TestCase
         App::$routing = new Routing('');
     }
 
-    public function testSitemap()
+    public function testSitemap(): void
     {
         $Sitemap = new Sitemap();
         $Sitemap->build_pages_array(['article']);

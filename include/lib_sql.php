@@ -38,9 +38,8 @@ function my_select_row($sql, $dont_debug=false) {
  *
  * @param array $fields Fields and data for query
  *
- * @return string Complete string for query
+ * @return int|string Complete string for query
  */
-
 function db_insert_fields($fields) {
     return App::$db->insertFields($fields);
 }

@@ -42,7 +42,7 @@ if (($input["edit_comment"]) || ($input["add_comment"])) {
         $tags['Header'] = "Добавление комментария";
     }
     $content.=get_tpl_by_name("comment_edit_form", $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit();
 }
 
@@ -52,4 +52,4 @@ $result = my_query($query);
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 
 $content.=get_tpl_by_name("comments_edit_table", $tags, $result);
-echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);

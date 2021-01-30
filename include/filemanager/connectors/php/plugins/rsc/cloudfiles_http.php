@@ -164,7 +164,7 @@ class CF_Http
         
     }
 
-    function ssl_use_cabundle($path=NULL)
+    function ssl_use_cabundle($path=NULL): void
     {
         if ($path) {
             $this->cabundle_path = $path;
@@ -180,7 +180,12 @@ class CF_Http
 
     # Uses separate cURL connection to authenticate
     #
-    function authenticate($user, $pass, $acct=NULL, $host=NULL)
+    /**
+     * @return array
+     *
+     * @psalm-return array{0: mixed, 1: mixed, 2: mixed, 3: mixed, 4: mixed}
+     */
+    function authenticate($user, $pass, $acct=NULL, $host=NULL): array
     {
         $path = array();
         if (isset($acct)){
@@ -225,7 +230,12 @@ class CF_Http
 
     # (CDN) GET /v1/Account
     #
-    function list_cdn_containers($enabled_only)
+    /**
+     * @return (array|mixed|string)[]
+     *
+     * @psalm-return array{0: mixed, 1: mixed|string, 2: array<empty, empty>|mixed}
+     */
+    function list_cdn_containers($enabled_only): array
     {
         $conn_type = "GET_CALL";
         $url_path = $this->_make_path("CDN");
@@ -280,8 +290,13 @@ class CF_Http
     }
 
     # (CDN) POST /v1/Account/Container
+    /**
+     * @return (mixed|null|string)[]
+     *
+     * @psalm-return array{0: mixed, 1: string, 2: mixed|null}
+     */
     function update_cdn_container($container_name, $ttl=86400, $cdn_log_retention=False,
-                                  $cdn_acl_user_agent="", $cdn_acl_referrer)
+                                  $cdn_acl_user_agent="", $cdn_acl_referrer): array
     {
         if ($container_name == "")
             throw new SyntaxException("Container name not set.");
@@ -316,7 +331,12 @@ class CF_Http
 
     # (CDN) PUT /v1/Account/Container
     #
-    function add_cdn_container($container_name, $ttl=86400)
+    /**
+     * @return (false|mixed)[]
+     *
+     * @psalm-return array{0: mixed, 1: mixed, 2: false|mixed}
+     */
+    function add_cdn_container($container_name, $ttl=86400): array
     {
         if ($container_name == "")
             throw new SyntaxException("Container name not set.");
@@ -343,7 +363,12 @@ class CF_Http
 
     # (CDN) POST /v1/Account/Container
     #
-    function remove_cdn_container($container_name)
+    /**
+     * @return (mixed|string)[]
+     *
+     * @psalm-return array{0: mixed, 1: string}
+     */
+    function remove_cdn_container($container_name): array
     {
         if ($container_name == "")
             throw new SyntaxException("Container name not set.");
@@ -371,7 +396,12 @@ class CF_Http
 
     # (CDN) HEAD /v1/Account
     #
-    function head_cdn_container($container_name)
+    /**
+     * @return (int|mixed|null|string)[]
+     *
+     * @psalm-return array{0: int|mixed, 1: mixed|string, 2: mixed|null, 3: mixed|null, 4: mixed|null, 5: mixed|null, 6: mixed|null, 7: mixed|null}
+     */
+    function head_cdn_container($container_name): array
     {
         if ($container_name == "")
             throw new SyntaxException("Container name not set.");
@@ -411,7 +441,12 @@ class CF_Http
 
     # GET /v1/Account
     #
-    function list_containers($limit=0, $marker=NULL)
+    /**
+     * @return (array|int|mixed|string)[]
+     *
+     * @psalm-return array{0: int|mixed, 1: mixed|string, 2: array<empty, empty>|mixed}
+     */
+    function list_containers($limit=0, $marker=NULL): array
     {
         $conn_type = "GET_CALL";
         $url_path = $this->_make_path();
@@ -452,7 +487,12 @@ class CF_Http
 
     # GET /v1/Account?format=json
     #
-    function list_containers_info($limit=0, $marker=NULL)
+    /**
+     * @return (array|int|mixed|string)[]
+     *
+     * @psalm-return array{0: int|mixed, 1: mixed|string, 2: array<empty, empty>|mixed}
+     */
+    function list_containers_info($limit=0, $marker=NULL): array
     {
         $conn_type = "GET_CALL";
         $url_path = $this->_make_path() . "?format=json";
@@ -493,7 +533,12 @@ class CF_Http
 
     # HEAD /v1/Account
     #
-    function head_account()
+    /**
+     * @return (int|mixed|string)[]
+     *
+     * @psalm-return array{0: mixed, 1: mixed|string, 2: int|mixed, 3: int|mixed}
+     */
+    function head_account(): array
     {
         $conn_type = "HEAD";
 
@@ -564,7 +609,12 @@ class CF_Http
 
     # GET /v1/Account/Container
     #
-    function list_objects($cname,$limit=0,$marker=NULL,$prefix=NULL,$path=NULL)
+    /**
+     * @return (array|int|mixed|string)[]
+     *
+     * @psalm-return array{0: int|mixed, 1: mixed|string, 2: array<empty, empty>|mixed}
+     */
+    function list_objects($cname,$limit=0,$marker=NULL,$prefix=NULL,$path=NULL): array
     {
         if (!$cname) {
             $this->error_str = "Container name not set.";
@@ -617,7 +667,12 @@ class CF_Http
 
     # GET /v1/Account/Container?format=json
     #
-    function get_objects($cname,$limit=0,$marker=NULL,$prefix=NULL,$path=NULL)
+    /**
+     * @return (array|int|mixed|string)[]
+     *
+     * @psalm-return array{0: int|mixed, 1: mixed|string, 2: array<empty, empty>|mixed}
+     */
+    function get_objects($cname,$limit=0,$marker=NULL,$prefix=NULL,$path=NULL): array
     {
         if (!$cname) {
             $this->error_str = "Container name not set.";
@@ -672,7 +727,12 @@ class CF_Http
 
     # HEAD /v1/Account/Container
     #
-    function head_container($container_name)
+    /**
+     * @return (int|mixed|string)[]|false
+     *
+     * @psalm-return array{0: mixed, 1: mixed|string, 2: int|mixed, 3: int|mixed}|false
+     */
+    function head_container($container_name): array|bool
     {
 
         if ($container_name == "") {
@@ -706,7 +766,12 @@ class CF_Http
 
     # GET /v1/Account/Container/Object
     #
-    function get_object_to_string(&$obj, $hdrs=array())
+    /**
+     * @return (mixed|null|string)[]
+     *
+     * @psalm-return array{0: mixed, 1: mixed|string, 2: mixed|null}
+     */
+    function get_object_to_string(&$obj, $hdrs=array()): array
     {
         if (!is_object($obj) || get_class($obj) != "CF_Object") {
             throw new SyntaxException(
@@ -737,7 +802,12 @@ class CF_Http
 
     # GET /v1/Account/Container/Object
     #
-    function get_object_to_stream(&$obj, &$resource=NULL, $hdrs=array())
+    /**
+     * @return (mixed|string)[]
+     *
+     * @psalm-return array{0: mixed, 1: mixed|string}
+     */
+    function get_object_to_stream(&$obj, &$resource=NULL, $hdrs=array()): array
     {
         if (!is_object($obj) || get_class($obj) != "CF_Object") {
             throw new SyntaxException(
@@ -773,7 +843,12 @@ class CF_Http
 
     # PUT /v1/Account/Container/Object
     #
-    function put_object(&$obj, &$fp)
+    /**
+     * @return (int|mixed|null|string)[]
+     *
+     * @psalm-return array{0: int|mixed, 1: mixed|string, 2: mixed|null}
+     */
+    function put_object(&$obj, &$fp): array
     {
         if (!is_object($obj) || get_class($obj) != "CF_Object") {
             throw new SyntaxException(
@@ -867,7 +942,12 @@ class CF_Http
 
     # HEAD /v1/Account/Container/Object
     #
-    function head_object(&$obj)
+    /**
+     * @return (array|int|mixed|null|string)[]
+     *
+     * @psalm-return array{0: int|mixed, 1: mixed|string, 2: mixed|null, 3: mixed|null, 4: mixed|null, 5: mixed|null, 6: array<empty, empty>|mixed}
+     */
+    function head_object(&$obj): array
     {
         if (!is_object($obj) || get_class($obj) != "CF_Object") {
             throw new SyntaxException(
@@ -941,7 +1021,7 @@ class CF_Http
         return $this->error_str;
     }
 
-    function setDebug($bool)
+    function setDebug($bool): void
     {
         $this->dbug = $bool;
         foreach ($this->connections as $k => $v) {
@@ -966,7 +1046,7 @@ class CF_Http
         return $this->auth_token;
     }
 
-    function setCFAuth($cfs_auth, $servicenet=False)
+    function setCFAuth(obj $cfs_auth, bool $servicenet=False): void
     {
         if ($servicenet) {
             $this->storage_url = "https://snet-" . substr($cfs_auth->storage_url, 8);
@@ -977,17 +1057,17 @@ class CF_Http
         $this->cdnm_url = $cfs_auth->cdnm_url;
     }
 
-    function setReadProgressFunc($func_name)
+    function setReadProgressFunc($func_name): void
     {
         $this->_user_read_progress_callback_func = $func_name;
     }
 
-    function setWriteProgressFunc($func_name)
+    function setWriteProgressFunc($func_name): void
     {
         $this->_user_write_progress_callback_func = $func_name;
     }
 
-    private function _header_cb($ch, $header)
+    private function _header_cb($ch, $header): int
     {
         preg_match("/^HTTP\/1\.[01] (\d{3}) (.*)/", $header, $matches);
         if (isset($matches[1])) {
@@ -1089,7 +1169,10 @@ class CF_Http
         return strlen($header);
     }
 
-    private function _read_cb($ch, $fd, $length)
+    /**
+     * @return false|string
+     */
+    private function _read_cb($ch, $fd, $length): string|bool
     {
         $data = fread($fd, $length);
         $len = strlen($data);
@@ -1099,7 +1182,7 @@ class CF_Http
         return $data;
     }
 
-    private function _write_cb($ch, $data)
+    private function _write_cb($ch, $data): int
     {
         $dlen = strlen($data);
         switch ($this->_write_callback_type) {
@@ -1121,7 +1204,7 @@ class CF_Http
         return $dlen;
     }
 
-    private function _auth_hdr_cb($ch, $header)
+    private function _auth_hdr_cb($ch, $header): int
     {
         preg_match("/^HTTP\/1\.[01] (\d{3}) (.*)/", $header, $matches);
         if (isset($matches[1])) {
@@ -1145,7 +1228,13 @@ class CF_Http
         return strlen($header);
     }
 
-    private function _make_headers($hdrs=NULL)
+    /**
+     * @return string[]
+     *
+     * @psalm-return list<string>
+     * @param (mixed|string)[]|null $hdrs
+     */
+    private function _make_headers(?array $hdrs=NULL): array
     {
         $new_headers = array();
         $has_stoken = False;
@@ -1179,7 +1268,10 @@ class CF_Http
         return $new_headers;
     }
 
-    private function _init($conn_type, $force_new=False)
+    /**
+     * @return false|null
+     */
+    private function _init(string $conn_type, bool $force_new=False)
     {
         if (!array_key_exists($conn_type, $this->connections)) {
             $this->error_str = "Invalid CURL_XXX connection type";
@@ -1230,7 +1322,7 @@ class CF_Http
         return;
     }
 
-    private function _reset_callback_vars()
+    private function _reset_callback_vars(): void
     {
         $this->_text_list = array();
 	$this->_return_list = NULL;
@@ -1251,7 +1343,7 @@ class CF_Http
         $this->response_reason = "";
     }
 
-    private function _make_path($t="STORAGE",$c=NULL,$o=NULL)
+    private function _make_path(string $t="STORAGE",$c=NULL,$o=NULL): string
     {
         $path = array();
         switch ($t) {
@@ -1274,7 +1366,12 @@ class CF_Http
         return implode("/",$path);
     }
 
-    private function _metadata_headers(&$obj)
+    /**
+     * @return int|string[]
+     *
+     * @psalm-return int|list<string>
+     */
+    private function _metadata_headers(object &$obj): array|int
     {
         $hdrs = array();
         foreach ($obj->metadata as $k => $v) {
@@ -1296,7 +1393,10 @@ class CF_Http
         return $hdrs;
     }
 
-    private function _send_request($conn_type, $url_path, $hdrs=NULL, $method="GET", $force_new=False)
+    /**
+     * @param (mixed|string)[]|null $hdrs
+     */
+    private function _send_request(string $conn_type, string $url_path, ?array $hdrs=NULL, string $method="GET", bool $force_new=False)
     {
         $this->_init($conn_type, $force_new);
         $this->_reset_callback_vars();
@@ -1334,7 +1434,7 @@ class CF_Http
         return curl_getinfo($this->connections[$conn_type], CURLINFO_HTTP_CODE);
     }
     
-    function close()
+    function close(): void
     {
         foreach ($this->connections as $cnx) {
             if (isset($cnx)) {
@@ -1343,7 +1443,10 @@ class CF_Http
             }
         }
     }
-    private function create_array()
+    /**
+     * @return true
+     */
+    private function create_array(): bool
     {
 	$this->_text_list = explode("\n",rtrim($this->_return_list,"\n\x0B"));
 	return True;

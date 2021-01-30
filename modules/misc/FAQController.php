@@ -45,6 +45,9 @@ class FAQController extends BaseController
         return App::$template->parse('faq_list', $tags, $result);        
     }
     
+    /**
+     * @return bool|string
+     */
     private function checkInput(array $input)
     {
         global $_SESSION;

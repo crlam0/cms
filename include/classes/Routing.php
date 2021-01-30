@@ -104,9 +104,8 @@ final class Routing
     /**
      * Add found params to input
      *
-     * @param string $route Found route
-     * @param string $matches Found matches
-     *
+     * @param array $route
+     * @param array $matches
      */
     private function proceedInput (array $route, array $matches) : void 
     {
@@ -123,9 +122,8 @@ final class Routing
     /**
      * Add found params to controller
      *
-     * @param string $route Found route
-     * @param string $matches Found matches
-     *
+     * @param array $route
+     * @param array $matches
      */
     private function proceedParams (array $route, array $matches) : void 
     {
@@ -144,9 +142,8 @@ final class Routing
     /**
      * Proceed found router
      *
-     * @param string $route Found route
-     * @param string $matches Found matches
-     *
+     * @param array $route
+     * @param array $matches
      */
     private function proceedMatches (array $route, array $matches) : void 
     {        
@@ -172,8 +169,9 @@ final class Routing
     /**
      * Try to find route.
      *
+     * @return void
      */
-    public function matchRoutes () 
+    public function matchRoutes (): void 
     {
         foreach($this->routes as $title => $route) {
             $matches = [];
@@ -189,8 +187,9 @@ final class Routing
     /**
      * Return URL without action name.
      *
+     * @return string
      */
-    public function getBaseUrl() {
+    public function getBaseUrl(): string {
         if($this->controller_base_url !== null) {
             return $this->controller_base_url;
         }

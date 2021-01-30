@@ -6,7 +6,7 @@ use classes\App;
 
 class Bootstrap
 {
-    public function bootstrap() 
+    public function bootstrap(): void 
     {
         App::$template->addPath('admin/views');
             

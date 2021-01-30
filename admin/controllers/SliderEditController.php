@@ -83,7 +83,7 @@ class SliderEditController extends BaseController
         return $content;
     }
 
-    public function showImage($file_name){
+    public function showImage($file_name): string{
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
             return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="200" />';
         } else {
@@ -91,7 +91,7 @@ class SliderEditController extends BaseController
         }        
     }
     
-    private function saveImage($file, $image_id, $title) 
+    private function saveImage($file, int $image_id, int $title): string 
     {        
         $content = '';
         
@@ -114,7 +114,7 @@ class SliderEditController extends BaseController
         return $content;
     }
     
-    private function deleteImageFile($image_id) {
+    private function deleteImageFile(int $image_id): string {
         list($image_old) = App::$db->getRow("select file_name from {$this->TABLE} where id=?", ['id' => $image_id]);
         if (is_file(App::$DIR . $this->image_path . $image_old)) {
             if (!unlink(App::$DIR . $this->image_path . $image_old)) {

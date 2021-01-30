@@ -15,7 +15,7 @@ if (App::$input['active']) {
     exit;
 }
 
-function show_img($tmp, $row) {
+function show_img($tmp, $row): string {
     global $DIR, $settings;
     if (is_file($DIR . $settings['partners']['upload_path'] . $row['file_name'])) {
         return "<img src=\"../".$settings['partners']['upload_path'].$row['file_name']."\" border=0 width=200></a>";
@@ -98,12 +98,12 @@ if (($input['edit_partner']) || ($input['add_partner'])) {
     $tags['descr'] = "<textarea name=form[descr] rows=15 cols=100 maxlength=64000>{$tags['descr']}</textarea>";
     $tags['head_inc'] = $EDITOR_SIMPLE_INC;
     $content.=get_tpl_by_name('partners_edit_form', $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
     exit();
 }
 
 $query = "SELECT * from partners order by pos,title asc";
 $result = my_query($query);
 $content.=get_tpl_by_name("partners_edit_table", $tags, $result);
-echo get_tpl_by_name($part['tpl_name'], $tags, '', $content);
+echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
 

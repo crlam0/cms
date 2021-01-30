@@ -44,7 +44,7 @@ class Filemanager {
     $this->loadLanguageFile();
   }
 
-  public function error($string,$textarea=false) {
+  public function error(string $string,bool $textarea=false): void {
     $array = array(
 			'Error'=>$string,
 			'Code'=>'-1',
@@ -58,7 +58,7 @@ class Filemanager {
     die();
   }
 
-  public function lang($string) {
+  public function lang(string $string) {
     if(isset($this->language[$string]) && $this->language[$string]!='') {
       return $this->language[$string];
     } else {
@@ -66,6 +66,9 @@ class Filemanager {
     }
   }
 
+  /**
+   * @return null|true
+   */
   public function getvar($var) {
     if(!isset($_GET[$var]) || $_GET[$var]=='') {
       $this->error(sprintf($this->lang('INVALID_VAR'),$var));
@@ -74,6 +77,9 @@ class Filemanager {
       return true;
     }
   }
+  /**
+   * @return null|true
+   */
   public function postvar($var) {
     if(!isset($_POST[$var]) || $_POST[$var]=='') {
       $this->error(sprintf($this->lang('INVALID_VAR'),$var));
@@ -83,6 +89,11 @@ class Filemanager {
     }
   }
 
+  /**
+   * @return (int|mixed|string)[]
+   *
+   * @psalm-return array{Path: mixed, Filename: mixed, 'File Type': mixed, Preview: mixed, Properties: mixed, Error: string, Code: int}
+   */
   public function getinfo() {
     $this->item = array();
     $this->item['properties'] = $this->properties;
@@ -100,6 +111,11 @@ class Filemanager {
     return $array;
   }
 
+  /**
+   * @return (int|mixed|null[]|string)[][]
+   *
+   * @psalm-return array<string, array{Path: string, Filename: mixed|string, 'File Type': mixed|string, Preview: mixed|string, Properties: array{'Date Created': null, 'Date Modified': null, Height: null, Width: null, Size: null}|mixed, Error: string, Code: int}>
+   */
   public function getfolder() {
     $array = array();
     $filesDir = array();
@@ -174,6 +190,11 @@ class Filemanager {
     return $array;
   }
 
+  /**
+   * @return (int|mixed|string)[]
+   *
+   * @psalm-return array{Error: string, Code: int, 'Old Path': mixed, 'Old Name': string, 'New Path': string, 'New Name': mixed}
+   */
   public function rename() {
 
     $suffix='';
@@ -214,6 +235,11 @@ class Filemanager {
     return $array;
   }
 
+  /**
+   * @return (int|mixed|string)[]|null
+   *
+   * @psalm-return array{Error: string, Code: int, Path: mixed}|null
+   */
   public function delete() {
 
     if(is_dir($this->doc_root . rawurldecode($this->get['path']))) {
@@ -237,6 +263,9 @@ class Filemanager {
     }
   }
 
+  /**
+   * @return void
+   */
   public function add() {
     $this->setParams();
     if(!isset($_FILES['newfile']) || !is_uploaded_file($_FILES['newfile']['tmp_name'])) {
@@ -270,6 +299,11 @@ class Filemanager {
     die();
   }
 
+  /**
+   * @return (int|mixed|string)[]
+   *
+   * @psalm-return array{Parent: mixed, Name: mixed, Error: string, Code: int}
+   */
   public function addfolder() {
     if(is_dir($this->doc_root . $this->get['path'] . $this->get['name'])) {
       $this->error(sprintf($this->lang('DIRECTORY_ALREADY_EXISTS'),$this->get['name']));
@@ -288,6 +322,9 @@ class Filemanager {
     return $array;
   }
 
+  /**
+   * @return void
+   */
   public function download() {
 
     if(isset($this->get['path']) && file_exists($this->doc_root .rawurldecode($this->get['path']))) {
@@ -304,6 +341,9 @@ class Filemanager {
     }
   }
 
+  /**
+   * @return void
+   */
   public function preview() {
 
     if(isset($this->get['path']) && file_exists($this->doc_root . rawurldecode($this->get['path']))) {
@@ -318,7 +358,7 @@ class Filemanager {
     }
   }
 
-  private function setParams() {
+  private function setParams(): void {
     $tmp = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/');
     $tmp = explode('?',$tmp);
     $params = array();
@@ -337,7 +377,7 @@ class Filemanager {
   }
 
 
-  private function get_file_info($path='',$return=array()) {
+  private function get_file_info(string $path='',$return=array()): void {
     if($path=='') {
       $path = rawurldecode($this->get['path']);
     }
@@ -383,7 +423,7 @@ class Filemanager {
     //$return['properties']['Date Created'] = date($config['date'], $return['filectime']); // PHP cannot get create timestamp
   }
 
-  private function unlinkRecursive($dir,$deleteRootToo=true) {
+  private function unlinkRecursive(string $dir,bool $deleteRootToo=true): void {
     if(!$dh = @opendir($dir)) {
       return;
     }
@@ -405,7 +445,14 @@ class Filemanager {
     return;
   }
 
-  private function cleanString($string, $allowed = array()) {
+  /**
+   * @param string[] $allowed
+   *
+   * @return (null|string)[]|null|string
+   *
+   * @psalm-return array<array-key, null|string>|null|string
+   */
+  private function cleanString($string, array $allowed = array()) {
     $allow = null;
 
     if (!empty($allowed)) {
@@ -442,7 +489,7 @@ class Filemanager {
         return $cleaned;
   }
 
-  private function sanitize($var) {
+  private function sanitize($var): string {
     $sanitized = strip_tags($var);
     $sanitized = str_replace('http://', '', $sanitized);
     $sanitized = str_replace('https://', '', $sanitized);
@@ -450,7 +497,7 @@ class Filemanager {
     return $sanitized;
   }
 
-  private function checkFilename($path,$filename,$i='') {
+  private function checkFilename(string $path,string $filename,$i='') {
     if(!file_exists($path . $filename)) {
       return $filename;
     } else {
@@ -466,7 +513,7 @@ class Filemanager {
     }
   }
 
-  private function loadLanguageFile() {
+  private function loadLanguageFile(): void {
 
     // we load langCode var passed into URL if present and if exists
     // else, we use default configuration var
@@ -482,7 +529,7 @@ class Filemanager {
     }
   }
 
-  private function availableLanguages() {
+  private function availableLanguages(): void {
 
     if ($handle = opendir($this->root.'/scripts/languages/')) {
       while (false !== ($file = readdir($handle))) {

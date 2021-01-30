@@ -5,6 +5,6 @@ require '../include/common.php';
 $controller = new admin\controllers\IndexController();
 $content = $controller->actionIndex();
 
-echo get_tpl_default($tags, [], $content);
+echo get_tpl_default($tags, null, $content);
 
 

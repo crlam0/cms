@@ -35,9 +35,9 @@ class TwigTemplate
     /**
      * Create twig object
      *
-     * @param string $template_type Template type
+     * @param int $template_type
      * @param array $config_override Override config parameters
-     * @param array $content Template content for  string and array types
+     * @param null|string $content
      *
      * @return null
      */
@@ -104,9 +104,9 @@ class TwigTemplate
      *
      * @param string $name Function name
      *
-     * @return null
+     * @return void
      */
-    public function addFunction(string $name)
+    public function addFunction(string $name): void
     {
         $this->twig->registerUndefinedFunctionCallback(function ($name) {
             if (function_exists($name)) {
@@ -121,9 +121,9 @@ class TwigTemplate
      *
      * @param string $path Function name
      *
-     * @return null
+     * @return void
      */
-    public function addPath(string $path)
+    public function addPath(string $path): void
     {
         $loader = $this->twig->getLoader();
         $loader->addPath(App::$DIR . $path);
@@ -155,9 +155,9 @@ class TwigTemplate
      * Render twig object
      *
      * @param string $name Template name
-     * @param array $params 
+     * @param array $params
      *
-     * @return null
+     * @return string
      */
     public function render(string $name, array $params = []) : string
     {

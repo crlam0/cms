@@ -60,6 +60,7 @@ class ArticleItem extends BaseModel {
             'id' => 'ID',
             'title' => 'Название',
             'seo_alias' => 'SEO алиас',
+            'author' => 'Автор',
             'content' => 'Описание',
         ];
     }

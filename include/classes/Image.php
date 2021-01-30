@@ -93,7 +93,7 @@ class Image
         return imagecopyresampled($this->dst_image, $this->src_image, 0, 0, $src_x, $src_y, $width, $height, $src_w, $src_h);            
     }
     
-    public function resize (int $max_width = 0, int $max_height = 0, int $fix_width = 0, int $fix_height = 0) : bool
+    public function resize (?int $max_width = 0, ?int $max_height = 0, ?int $fix_width = 0, ?int $fix_height = 0) : bool
     {
         if(!$this->src_image) {
             return false;

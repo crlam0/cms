@@ -196,7 +196,7 @@ class BaseModel implements \ArrayAccess
      * 
      * @return bool
      */
-    private function checkInteger($value, $rule) : bool
+    private function checkInteger($value, array $rule) : bool
     {
         if(strlen($value) != strlen(intval($value))) {
             return false;
@@ -221,7 +221,7 @@ class BaseModel implements \ArrayAccess
      * 
      * @return bool
      */
-    private function checkString($value, $rule) : bool
+    private function checkString($value, array $rule) : bool
     {
         if(!is_string($value)) {
             return false;
@@ -304,7 +304,7 @@ class BaseModel implements \ArrayAccess
      *
      * @return \mysqli_result|null
      */
-    public static function findOne($id): ?\mysqli_result {
+    public static function findOne(?int $id): ?\mysqli_result {
         if($id !== null) {
             return App::$db->findOne(static::tableName() , $id);
         }
@@ -319,7 +319,7 @@ class BaseModel implements \ArrayAccess
      *
      * @return \mysqli_result
      */
-    public static function findAll($where = [], $order_by = 'id desc'): ?\mysqli_result {
+    public static function findAll(array $where = [], string $order_by = 'id desc'): ?\mysqli_result {
         return App::$db->findAll(static::tableName() , $where, $order_by);          
     }
     

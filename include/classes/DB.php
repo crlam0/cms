@@ -64,7 +64,8 @@ class DB
         $this->query_log_array[] = 'Connected to ' . $host;
     }
 
-    private function bindParams($stmt, array $params) {
+    private function bindParams($stmt, array $params) 
+    {
         $types = '';
         $values = [];
         foreach ($params as $name => $value) {            
@@ -81,7 +82,8 @@ class DB
         return $stmt;
     }
 
-    public function prepareAndExecute(string $sql, array $params = []) {
+    public function prepareAndExecute(string $sql, array $params = []) 
+    {
 
         $stmt = $this->mysqli->prepare($sql);
         if(!$stmt) {

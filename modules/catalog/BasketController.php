@@ -106,7 +106,7 @@ class BasketController extends Controller
     
     private function requestDone(array $form) : string
     {        
-        global $BASE_HREF, $_SESSION;
+        global $_SESSION;
         $data = $this->getBasketData();
         $summ = $data['summ'];
         $item_list = $data['item_list'];
@@ -118,8 +118,9 @@ class BasketController extends Controller
         $tags['summ_with_discount'] = add_zero($this->calcDiscount($summ, $tags['discount']));
         $tags['form'] = $form;
         $content = $this->render('basket_mail.html.twig', $tags, $result);
+        $remote_host=(check_key('REMOTE_HOST',App::$server) ? App::$server['REMOTE_HOST'] : gethostbyaddr(App::$server['REMOTE_ADDR']) );
         if(!App::$debug){
-            App::$message->mail(App::$settings['email_to_addr'], 'Запрос с сайта ' . $BASE_HREF, $content, 'text/html');
+            App::$message->mail(App::$settings['email_to_addr'], 'Запрос с сайта ' . $remote_host, $content, 'text/html');
         }
         
         unset($data);

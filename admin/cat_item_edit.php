@@ -13,7 +13,7 @@ list($part_title) = my_select_row("select title from cat_part where id='{$_SESSI
 $tags['Header'].=" -> $part_title";
 
 $IMG_PATH = $DIR . $settings['catalog_item_img_path'];
-$IMG_URL = $BASE_HREF . $settings['catalog_item_img_path'];
+$IMG_URL = $SUBDIR . $settings['catalog_item_img_path'];
 
 function show_img($tmp, $row): string {
     global $IMG_PATH, $IMG_URL;

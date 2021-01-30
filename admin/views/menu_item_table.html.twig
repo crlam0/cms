@@ -49,8 +49,8 @@ $(document).ready(function(){
 	   type: "GET", url: "{{ this.base_url }}active", data: "id=" + id + "&active=" + active,
 	   success: function(msg){
 	     var tr_id="#tr_"+id;
-	     if(msg == '1') $(tr_id).attr("class","active_Y");
-	     else if(msg == '0') $(tr_id).attr("class","active_N");
+	     if(msg == '1') $(tr_id).attr("class","active_1");
+	     else if(msg == '0') $(tr_id).attr("class","active_0");
 	     else alert(msg);
 	   }
 	});

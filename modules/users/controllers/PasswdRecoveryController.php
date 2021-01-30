@@ -48,7 +48,7 @@ class PasswdRecoveryController extends BaseController
             return $this->passwdChange($user);
         }
         $tags['token'] = App::$input['token'];
-        $content .= App::$template->parse('user_passwd_recovery_confirm', $tags);
+        $content .= App::$template->parse('user_passwd_recovery_confirm.html.twig', $tags);
         return $content;
     }
 
@@ -79,7 +79,7 @@ class PasswdRecoveryController extends BaseController
         $this->breadcrumbs[] = ['title'=>$this->title];
 
         if (!App::$user->id) {
-            return App::$template->parse('user_passwd_recovery', []);
+            return App::$template->parse('user_passwd_recovery.html.twig', []);
         } else {
             return App::$message->get('user_already_logged_on');
         }        

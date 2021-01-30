@@ -14,7 +14,11 @@ class Controller extends BaseController
         $this->breadcrumbs[] = ['title' => 'Статьи'];
         $query = "select * from article_list order by title asc";
         $result = App::$db->query($query);
-        return App::$template->parse('article_list', [], $result);        
+        if ($result->num_rows) {
+            return $this->render('article_list', [], $result);
+        } else {
+            return App::$message->get('list_empty');
+        }
     }
 
     public function actionItemsList(string $alias, int $page = 1): string
@@ -39,8 +43,11 @@ class Controller extends BaseController
         $query = "select * from article_item where active='Y' and list_id=? order by title asc limit {$pager->getOffset()},{$pager->getLimit()}";
         $result = App::$db->query($query, ['list_id' => $list_id]);
 
-        
-        return App::$template->parse('article_items', $tags, $result);
+        if ($result->num_rows) {
+            return $this->render('article_items', [], $result);
+        } else {
+            return App::$message->get('list_empty');
+        }
     }
     
     public function actionContent(string $list_alias, string $alias): string

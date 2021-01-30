@@ -57,7 +57,7 @@ class PasswdChangeController extends BaseController
         }
         
         if (App::$user->id) {
-            $content .= App::$template->parse('user_passwd_change');
+            $content .= App::$template->parse('user_passwd_change.html.twig');
             return $content;
         } else {
             redirect('login/');

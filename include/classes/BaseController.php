@@ -123,7 +123,7 @@ class BaseController
      *
      * @return void
      */
-    public function redirect($url = '', $params = []): void 
+    public function redirect(string $url = '', array $params = []): void 
     {   
         redirect($this->getUrl($url, $params));
     }
@@ -136,7 +136,7 @@ class BaseController
      *
      * @return string
      */
-    public function getUrl($url = '', $params = []): string 
+    public function getUrl(string $url = '', array $params = []): string 
     {        
         if(count($params)) {
             $url .= '?';
@@ -162,7 +162,7 @@ class BaseController
      *
      * @return string
      */
-    public function render($template, $tags = [], ?\mysqli_result $result = null): string 
+    public function render(string $template, array $tags = [], ?\mysqli_result $result = null): string 
     {        
         return App::$template->parse($template, array_merge($tags, ['this' => $this]), $result);
     }

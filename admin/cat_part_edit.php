@@ -98,7 +98,7 @@ function prev_part($prev_id, $deep, $arr) {
 }
 
 $IMG_PATH = $DIR . $settings['catalog_part_img_path'];
-$IMG_URL = $BASE_HREF . $settings['catalog_part_img_path'];
+$IMG_URL = $SUBDIR . $settings['catalog_part_img_path'];
 
 if ($input['del']) {
     $query = "select count(id) as cnt from cat_part where prev_id='" . $input['id'] . "' having cnt>0

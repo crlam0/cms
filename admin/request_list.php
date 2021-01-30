@@ -15,7 +15,7 @@ if ($input['del']) {
 
 function file_info($tmp, $row): string {
     global $DIR, $SUBDIR, $settings;
-    if (is_file($DIR . $settings['files_upload_path'] . $row['file_name'])) {
+    if (isset($row['file_name']) && is_file($DIR . $settings['files_upload_path'] . $row['file_name'])) {
         return "<br />Прикреплен файл: <a href=\"{$SUBDIR}{$settings['files_upload_path']}{$row['file_name']}\" target=\"_blank\">{$row['file_name']}</a>";
     } else {
         return '';

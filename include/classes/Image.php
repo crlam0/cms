@@ -40,7 +40,7 @@ class Image
     /**
      * @return string|bool
      */
-    public static function getFileType(string $file_name, string $file_type)
+    public static function getFileType(string $file_name, ?string $file_type)
     {
         if(!$file_type) {
             if((preg_match("/^.*\.jpg$/i", $file_name)) || (preg_match("/^.*\.jpeg$/i", $file_name))) {

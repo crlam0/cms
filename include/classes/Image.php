@@ -28,7 +28,7 @@ class Image
         }
         if ($this->file_type == 'image/jpeg' ) {
             $this->src_image = imagecreatefromjpeg($file_name);
-        } elseif ($file_type == 'image/png'){
+        } elseif ($this->file_type == 'image/png'){
             $this->src_image = imagecreatefrompng($file_name);
         }
         if (!$this->src_image) {

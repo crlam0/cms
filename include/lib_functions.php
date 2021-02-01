@@ -17,8 +17,9 @@ use classes\Image;
  *
  * @return boolean true if key in array
  */
-function check_key($key, $array) {
-    if(is_array($array) && array_key_exists($key, $array)) {
+function check_key($key, $array)
+{
+    if (is_array($array) && array_key_exists($key, $array)) {
         return $array[$key];
     } else {
         return false;
@@ -32,7 +33,8 @@ function check_key($key, $array) {
  *
  * @return void
  */
-function print_array($mixed): void {
+function print_array($mixed): void
+{
     if (php_sapi_name() !== "cli") {
         echo "<pre>";
     }
@@ -53,7 +55,8 @@ function print_array($mixed): void {
  *
  * @return string Output string
  */
-function add_zero($summ) {
+function add_zero($summ)
+{
     $rub = floor($summ);
     $kop = 100 * round($summ - $rub, 2);
     if (strlen($kop) == 1) {
@@ -70,7 +73,8 @@ function add_zero($summ) {
  *
  * @return string Output string
  */
-function my_cleanstring($string, $do_remove_spaces = false) {
+function my_cleanstring($string, $do_remove_spaces = false)
+{
     $string = str_replace("\r", "", $string);
     $string = str_replace("\n", "", $string);
     if ($do_remove_spaces == 1) {
@@ -87,10 +91,11 @@ function my_cleanstring($string, $do_remove_spaces = false) {
  *
  * @return string Output string
  */
-function cut_string($string, $lenght) {
-    $b_chars = array(" ", ",", ".", ";");
+function cut_string($string, $lenght)
+{
+    $b_chars = [" ", ",", ".", ";"];
     $string = strip_tags($string);
-    if (strlen($string) <= $lenght){
+    if (strlen($string) <= $lenght) {
         return $string;
     }
     $result = substr($string, 0, $lenght);
@@ -109,7 +114,8 @@ function cut_string($string, $lenght) {
  *
  * @return string Output string
  */
-function convert_bytes($in) {
+function convert_bytes($in)
+{
     $suffix = "";
     if ($in > 1024) {
         $in = $in / 1024;
@@ -136,8 +142,9 @@ function convert_bytes($in) {
  *
  * @return string Output string
  */
-function translit($string) {
-    $cyr = array(
+function translit($string)
+{
+    $cyr = [
         "Щ", "Ш", "Ч", "Ц", "Ю", "Я", "Ж", "А", "Б", "В",
         "Г", "Д", "Е", "Ё", "З", "И", "Й", "К", "Л", "М", "Н",
         "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ь", "Ы", "Ъ",
@@ -146,8 +153,8 @@ function translit($string) {
         "г", "д", "е", "ё", "з", "и", "й", "к", "л", "м", "н",
         "о", "п", "р", "с", "т", "у", "ф", "х", "ь", "ы", "ъ",
         "э", "є", "ї", "і"
-    );
-    $lat = array(
+    ];
+    $lat = [
         "Shch", "Sh", "Ch", "C", "Yu", "Ya", "J", "A", "B", "V",
         "G", "D", "e", "e", "Z", "I", "y", "K", "L", "M", "N",
         "O", "P", "R", "S", "T", "U", "F", "H", "",
@@ -156,16 +163,22 @@ function translit($string) {
         "g", "d", "e", "e", "z", "i", "y", "k", "l", "m", "n",
         "o", "p", "r", "s", "t", "u", "f", "h",
         "", "y", "", "e", "e", "yi", "i"
-    );
+    ];
     for ($i = 0; $i < count($cyr); $i++) {
         $c_cyr = $cyr[$i];
         $c_lat = $lat[$i];
         $string = str_replace($c_cyr, $c_lat, $string);
     }
     $string = preg_replace(
-            "/([qwrtpsdfghklzxcvbnmQWRTPSDFGHKLZXCVBNM]+)[jJ]e/", "\${1}e", $string);
+        "/([qwrtpsdfghklzxcvbnmQWRTPSDFGHKLZXCVBNM]+)[jJ]e/",
+        "\${1}e",
+        $string
+    );
     $string = preg_replace(
-            "/([qwrtpsdfghklzxcvbnmQWRTPSDFGHKLZXCVBNM]+)[jJ]/", "\${1}'", $string);
+        "/([qwrtpsdfghklzxcvbnmQWRTPSDFGHKLZXCVBNM]+)[jJ]/",
+        "\${1}'",
+        $string
+    );
     $string = preg_replace("/([eyuioaEYUIOA]+)[Kk]h/", "\${1}h", $string);
     $string = preg_replace("/^kh/", "h", $string);
     $string = preg_replace("/^Kh/", "H", $string);
@@ -179,8 +192,9 @@ function translit($string) {
  *
  * @return string Output string
  */
-function encodestring($string) {
-    $string = str_replace(array(" ", "\"", "&", "<", ">"), array(" "), $string);
+function encodestring($string)
+{
+    $string = str_replace([" ", "\"", "&", "<", ">"], [" "], $string);
     $string = preg_replace("/[_ \.,?!\[\](){}]+/", "_", $string);
     $string = preg_replace("/-{2,}/", "--", $string);
     $string = preg_replace("/_-+_/", "--", $string);
@@ -195,7 +209,7 @@ function encodestring($string) {
 /**
  * @var Array Array of valid MIME types
  */
-$validImageTypes = array("image/pjpeg", "image/jpeg", "image/gif", "image/png", "image/x-png");
+$validImageTypes = ["image/pjpeg", "image/jpeg", "image/gif", "image/png", "image/x-png"];
 
 /**
  * Move uploaded image with resize if needed
@@ -207,22 +221,23 @@ $validImageTypes = array("image/pjpeg", "image/jpeg", "image/gif", "image/png", 
  *
  * @return boolean True if success
  */
-function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height = 0, $fix_width = 0, $fix_height = 0) {    
-    $Image = new Image($src_file['tmp_name'],$src_file['type']);
-    
-    if(!$Image->width) {
+function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height = 0, $fix_width = 0, $fix_height = 0)
+{
+    $Image = new Image($src_file['tmp_name'], $src_file['type']);
+
+    if (!$Image->width) {
         App::$message->error('Load image error');
         return false;
     }
-    if(!$Image->resize($max_width, $max_height, $fix_width, $fix_height)) {
+    if (!$Image->resize($max_width, $max_height, $fix_width, $fix_height)) {
         return move_uploaded_file($src_file['tmp_name'], $dst_file);
     }
-    if(!$Image->save($dst_file)) {
+    if (!$Image->save($dst_file)) {
         App::$message->error('Save image error');
         return false;
     }
     return is_file($dst_file);
-    // 
+    //
 }
 
 /**
@@ -233,9 +248,10 @@ function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height =
  *
  * @return void
  */
-function show_month($month, $show_day_func = null): void {
-    $month_names = array(1 => 'Январь', 2 => 'Февраль', 3 => 'Март', 4 => 'Апрель', 5 => 'Май', 6 => 'Июнь', 7 => 'Июль', 8 => 'Август', 9 => 'Сентябрь', 10 => 'Октябрь', 11 => 'Ноябрь', 12 => 'Декабрь');
-    $day_names = array('Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс');
+function show_month($month, $show_day_func = null): void
+{
+    $month_names = [1 => 'Январь', 2 => 'Февраль', 3 => 'Март', 4 => 'Апрель', 5 => 'Май', 6 => 'Июнь', 7 => 'Июль', 8 => 'Август', 9 => 'Сентябрь', 10 => 'Октябрь', 11 => 'Ноябрь', 12 => 'Декабрь'];
+    $day_names = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     $allow_past = false;
     $date_format = 'd.m.Y';
 
@@ -260,7 +276,7 @@ function show_month($month, $show_day_func = null): void {
             // $minulost = (date('Ymd') >= date('Ymd', $i + 86400)) && !$allow_past;
             echo '<div class="day' . $today . '">';
             $day = date('j', $i);
-            if(is_callable($show_day_func)) {
+            if (is_callable($show_day_func)) {
                 $show_day_func(date('Y-m-d', $i));
             } else {
                 echo $day;
@@ -278,13 +294,14 @@ function show_month($month, $show_day_func = null): void {
 
 
 /**
- * Return CSRF token value from session. 
+ * Return CSRF token value from session.
  *
  * @return string Output string
  */
-function get_csrf_token() {
+function get_csrf_token()
+{
     global $_SESSION;
-    if(!array_key_exists('CSRF_Token',$_SESSION)) {
+    if (!array_key_exists('CSRF_Token', $_SESSION)) {
         $token = App::$user->encryptPassword(App::$user->generateSalt(), App::$user->generateSalt());
         $_SESSION['CSRF_Token'] = $token;
     }
@@ -296,7 +313,8 @@ function get_csrf_token() {
  *
  * @return bool Output string
  */
-function check_csrf_token(): bool {
+function check_csrf_token(): bool
+{
     global $_SESSION;
     return App::$input['CSRF_Token'] === $_SESSION['CSRF_Token'];
 }
@@ -309,7 +327,8 @@ function check_csrf_token(): bool {
  *
  * @return string Output string
  */
-function get_block($name, $allow_cache = false) {
+function get_block($name, $allow_cache = false)
+{
     return App::get('Blocks')->content($name, $allow_cache);
 }
 
@@ -320,9 +339,10 @@ function get_block($name, $allow_cache = false) {
  *
  * @return string Output string
  */
-function widget($class_name, $allow_cache = false): string {
+function widget($class_name, $allow_cache = false): string
+{
     $class_name = str_replace('/', '\\', $class_name);
-    if(class_exists($class_name)) {
+    if (class_exists($class_name)) {
         $object = new $class_name;
         return $object->run();
     }
@@ -336,10 +356,11 @@ function widget($class_name, $allow_cache = false): string {
  *
  * @return string Value
  */
-function include_php($file_name) {
+function include_php($file_name)
+{
     $DIR = App::$DIR;
     $SUBDIR = App::$SUBDIR;
-    if(is_file($DIR . $file_name)) {
+    if (is_file($DIR . $file_name)) {
         ob_start();
         include_once($DIR . $file_name);
         $content = ob_get_clean();
@@ -357,11 +378,12 @@ function include_php($file_name) {
  *
  * @return bool True if complete
  */
-function del_tree($dir) {
-    if(!file_exists($dir)) {
+function del_tree($dir)
+{
+    if (!file_exists($dir)) {
         return true;
     }
-    $files = array_diff(scandir($dir), array('.', '..'));
+    $files = array_diff(scandir($dir), ['.', '..']);
     foreach ($files as $file) {
         (is_dir("$dir/$file")) ? del_tree("$dir/$file") : unlink("$dir/$file");
     }
@@ -375,9 +397,10 @@ function del_tree($dir) {
  *
  * @return bool True if complete
  */
-function clear_cache_dir($subdir = '') {
+function clear_cache_dir($subdir = '')
+{
     if (strlen($subdir)) {
-        return del_tree(App::$DIR . 'var/cache/' . $subdir );
+        return del_tree(App::$DIR . 'var/cache/' . $subdir);
     } else {
         return del_tree(App::$DIR . 'var/cache');
     }
@@ -390,11 +413,12 @@ function clear_cache_dir($subdir = '') {
  *
  * @return mixed Array if complete, false if error.
  */
-function my_json_decode($json) {
-    if(strlen($json)) {
+function my_json_decode($json)
+{
+    if (strlen($json)) {
         $result = json_decode($json, true);
-        if(json_last_error() != JSON_ERROR_NONE) {
-            App::debug( 'JSON decode error: ' . json_last_error_msg() . ' JSON: ' . $json);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            App::debug('JSON decode error: ' . json_last_error_msg() . ' JSON: ' . $json);
             return false;
         }
     } else {
@@ -403,11 +427,12 @@ function my_json_decode($json) {
     return $result;
 }
 
-if(!function_exists('mime_content_type')) {
+if (!function_exists('mime_content_type')) {
 
-    function mime_content_type($filename) {
+    function mime_content_type($filename)
+    {
 
-        $mime_types = array(
+        $mime_types = [
 
             'txt' => 'text/plain',
             'htm' => 'text/html',
@@ -461,8 +486,8 @@ if(!function_exists('mime_content_type')) {
             // open office
             'odt' => 'application/vnd.oasis.opendocument.text',
             'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-        );
-        $arr=explode('.',$filename);
+        ];
+        $arr=explode('.', $filename);
         $ext = strtolower(array_pop($arr));
         if (array_key_exists($ext, $mime_types)) {
             return $mime_types[$ext];
@@ -492,8 +517,9 @@ if(!function_exists('mime_content_type')) {
  *
  * @return void
  */
-function redirect($url): void {
-  $content = sprintf('<!DOCTYPE html>
+function redirect($url): void
+{
+    $content = sprintf('<!DOCTYPE html>
   <html>
   <head>
     <meta charset="UTF-8" />
@@ -506,10 +532,10 @@ function redirect($url): void {
   </body>
   </html>', htmlspecialchars($url, ENT_QUOTES, 'UTF-8'));
 
-  header('Location: ' . $url);
-  header('Status: 301 Moved Permanently', false, 301);
+    header('Location: ' . $url);
+    header('Status: 301 Moved Permanently', false, 301);
 
-  die($content);
+    die($content);
 }
 
 
@@ -521,7 +547,8 @@ function redirect($url): void {
  *
  * @return string Output string
  */
-function replace_base_href($content, $direction = false) {
+function replace_base_href($content, $direction = false)
+{
     if ($direction) {
         return str_replace(App::$server['REQUEST_SCHEME'] . '://' . App::$server["HTTP_HOST"] . App::$SUBDIR, "[%SUBDIR%]", $content);
     } else {
@@ -538,8 +565,9 @@ function replace_base_href($content, $direction = false) {
  *
  * @return string Output string
  */
-function path($route, $params=[]){
-    if(count($params)){        
+function path($route, $params = [])
+{
+    if (count($params)) {
         foreach ($params as $item => $value) {
             $route = str_replace('{$'.$item.'}', $value, $route);
         }
@@ -557,7 +585,8 @@ function path($route, $params=[]){
  *
  * @return integer ID of found item or null
  */
-function get_id_by_alias ($table, $seo_alias, $exit_with_404 = false) {
+function get_id_by_alias($table, $seo_alias, $exit_with_404 = false)
+{
     global $tags;
     list($id) = App::$db->getRow("select id from {$table} where seo_alias = ?", ['seo_alias' => $seo_alias]);
     if ((int)$id > 0) {
@@ -580,8 +609,7 @@ function get_id_by_alias ($table, $seo_alias, $exit_with_404 = false) {
  *
  * @return string Output string
  */
-function get_menu_href($tmp, $row) {
-    return App::$routing->getUrl($row['target_type'], $row['target_id'], $row);    
+function get_menu_href($tmp, $row)
+{
+    return App::$routing->getUrl($row['target_type'], $row['target_id'], $row);
 }
-
-

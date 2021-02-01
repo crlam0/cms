@@ -13,7 +13,8 @@ class MenuListEditController extends BaseController
     private $image_path;
     private $image_width;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->title = 'Разделы меню';
         $this->breadcrumbs[] = ['title' => $this->title];
@@ -23,14 +24,14 @@ class MenuListEditController extends BaseController
     public function actionIndex(): string
     {
         $model = new MenuList;
-        $result = $model->findAll([], 'title ASC');        
-        return $this->render('menu_list_table.html.twig', [], $result);        
+        $result = $model->findAll([], 'title ASC');
+        return $this->render('menu_list_table.html.twig', [], $result);
     }
 
-    public function actionCreate(): string 
+    public function actionCreate(): string
     {
         $model = new MenuList();
-        if($model->load(App::$input['form']) && $model->validate()) {
+        if ($model->load(App::$input['form']) && $model->validate()) {
             $model->root = isset(App::$input['form']['root']) ? 1 : 0;
             $model->top_menu = isset(App::$input['form']['top_menu']) ? 1 : 0;
             $model->bottom_menu = isset(App::$input['form']['bottom_menu']) ? 1 : 0;
@@ -45,10 +46,10 @@ class MenuListEditController extends BaseController
         ]);
     }
 
-    public function actionUpdate(int $id): string 
+    public function actionUpdate(int $id): string
     {
-        $model = new MenuList($id);        
-        if($model->load(App::$input['form']) && $model->validate()) {
+        $model = new MenuList($id);
+        if ($model->load(App::$input['form']) && $model->validate()) {
             $model->root = isset(App::$input['form']['root']) ? 1 : 0;
             $model->top_menu = isset(App::$input['form']['top_menu']) ? 1 : 0;
             $model->bottom_menu = isset(App::$input['form']['bottom_menu']) ? 1 : 0;
@@ -56,25 +57,22 @@ class MenuListEditController extends BaseController
             App::setFlash('success', 'Раздел успешно обновлён');
             $this->redirect('index');
         }
-        
+
         return $this->render('menu_list_form.html.twig', [
             'model' => $model,
             'action' => $this->getUrl('update', ['id' => $id]),
             'form_title' => 'Изменение',
         ]);
     }
-    
-    public function actionDelete(int $id): string 
+
+    public function actionDelete(int $id): string
     {
-        if(App::$db->getRow("select id from menu_item where menu_id=?", ['id' => $id])) {
+        if (App::$db->getRow("select id from menu_item where menu_id=?", ['id' => $id])) {
             App::setFlash('danger', 'Этот раздел не пустой !');
             $this->redirect('index');
         }
         $model = new MenuList($id);
         $model->delete();
         $this->redirect('index');
-    }    
-
-    
+    }
 }
-

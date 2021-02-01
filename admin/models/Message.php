@@ -9,8 +9,9 @@ use classes\BaseModel;
  *
  * @author BooT
  */
-class Message extends BaseModel {
-    
+class Message extends BaseModel
+{
+
     /**
      * @inheritdoc
      */
@@ -18,7 +19,7 @@ class Message extends BaseModel {
     {
         return 'messages';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -31,8 +32,8 @@ class Message extends BaseModel {
             'content',
             'comment'
         ];
-    }    
-    
+    }
+
     /**
      * @inheritdoc
      */
@@ -58,11 +59,10 @@ class Message extends BaseModel {
             'comment' => 'Коментарий',
         ];
     }
-    
+
     public $types = [
-        'info', 
-        'notice', 
+        'info',
+        'notice',
         'error',
     ];
-    
 }

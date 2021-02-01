@@ -13,7 +13,8 @@ class EditController extends BaseController
     private $image_path;
     private $image_width;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->title = 'Блог';
         $this->breadcrumbs[] = ['title'=>$this->title];
@@ -25,29 +26,29 @@ class EditController extends BaseController
     public function actionIndex(): string
     {
         $model = new BlogPost;
-        $result = $model->findAll([], 'date_add DESC');        
-        return $this->render('blog_post_table.html.twig', [], $result);        
+        $result = $model->findAll([], 'date_add DESC');
+        return $this->render('blog_post_table.html.twig', [], $result);
     }
 
-    public function actionActive(int $id, string $active): string 
+    public function actionActive(int $id, string $active): string
     {
         $model = new BlogPost($id);
         $model->active = $active;
         $model->save();
         echo $active;
         exit;
-    }    
-    
-    public function actionCreate(): string 
+    }
+
+    public function actionCreate(): string
     {
         $model = new BlogPost();
-        if($model->load(App::$input['form']) && $model->validate()) {
-            if (!$model->seo_alias){
+        if ($model->load(App::$input['form']) && $model->validate()) {
+            if (!$model->seo_alias) {
                 $model->seo_alias = encodestring($model->title);
             }
-            if (!$model->target_id){
+            if (!$model->target_id) {
                 $model->target_id = 0;
-            }            
+            }
             $model->content = replace_base_href($model->content, true);
             $model->active = 'Y';
             $model->date_add = 'now()';
@@ -69,11 +70,11 @@ class EditController extends BaseController
         ]);
     }
 
-    public function actionUpdate(int $id): string 
+    public function actionUpdate(int $id): string
     {
-        $model = new BlogPost($id); 
-        if($model->load(App::$input['form']) && $model->validate()) {
-            if (!$model->seo_alias){
+        $model = new BlogPost($id);
+        if ($model->load(App::$input['form']) && $model->validate()) {
+            if (!$model->seo_alias) {
                 $model->seo_alias = encodestring($model->title);
             }
             $model->content = replace_base_href($model->content, true);
@@ -81,7 +82,7 @@ class EditController extends BaseController
                 App::setFlash('success', 'Пост успешно изменён.');
             }
             $this->redirect('update', ['id' =>$model->id]);
-        } 
+        }
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
@@ -93,56 +94,58 @@ class EditController extends BaseController
             'target_types' => $this->target_types,
         ]);
     }
-    
-    public function actionDelete(int $id): string 
+
+    public function actionDelete(int $id): string
     {
         $model = new BlogPost($id);
         $this->deleteImageFile($model);
         $model->delete();
         $this->redirect('index');
-    }    
+    }
 
-    public function showImage($file_name): string{
+    public function showImage($file_name): string
+    {
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
             return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="200" />';
         } else {
             return 'Отсутствует';
-        }        
+        }
     }
-    
-    private function saveImage(BlogPost $model, $file): string 
-    {        
-        if(!$file['size']){
-            return true;            
+
+    private function saveImage(BlogPost $model, $file): string
+    {
+        if (!$file['size']) {
+            return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
             App::setFlash('danger', 'Неверный тип файла !');
             return false;
-        }         
+        }
         $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
         $file_name = encodestring($model->title) . '.' . $f_info['extension'];
         if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, $this->image_width)) {
             $model->image_name = $file_name;
-            $model->image_type = $file['type'];return true;
+            $model->image_type = $file['type'];
+            return true;
         } else {
             App::setFlash('danger', 'Ошибка копирования файла !');
             return false;
         }
     }
-    
-    public function actionDeleteImageFile($post_id): void 
+
+    public function actionDeleteImageFile($post_id): void
     {
         $model = new BlogPost($post_id);
         $this->deleteImageFile($model);
         $model->save(false);
         $this->redirect('update', ['id' =>$post_id]);
     }
-    
+
     /**
      * @return null|string
      */
-    private function deleteImageFile(BlogPost $model) 
+    private function deleteImageFile(BlogPost $model)
     {
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {
@@ -152,7 +155,7 @@ class EditController extends BaseController
         $model->image_name = '';
         $model->image_type = '';
     }
-    
+
     public $target_types = [
         [
             'type' => 'link',
@@ -178,16 +181,17 @@ class EditController extends BaseController
             'type' => 'gallery_list',
             'name' => 'Раздел галереи'
         ],
-        
+
     ];
-    
-    public function actionGetTargetSelect($post_id, $target_type): void 
+
+    public function actionGetTargetSelect($post_id, $target_type): void
     {
-        $model = new BlogPost($post_id);        
+        $model = new BlogPost($post_id);
         $target_id = $model->target_id;
         $href = $model->href;
-        
-        function get_option($name, $sql, $target_id): string {
+
+        function get_option($name, $sql, $target_id): string
+        {
             $result = my_query($sql);
             $output = '<td>' . $name . ':</td><td><select class="form-control" name="form[target_id]">';
             while ($row = $result->fetch_array()) {
@@ -220,16 +224,15 @@ class EditController extends BaseController
         }
         echo $output;
         exit;
-        
     }
-    
-    public function actionGetTagsPopup($post_id): void 
+
+    public function actionGetTagsPopup($post_id): void
     {
         $result = App::$db->findAll('blog_posts_tags', ['post_id'=>$post_id]);
         $post_tags = [];
-        while($row = $result->fetch_array()){
+        while ($row = $result->fetch_array()) {
             $post_tags[] = $row['tag_id'];
-        }        
+        }
         $result = App::$db->findAll('blog_tags', [], 'name ASC');
         $content = App::$template->parse('blog_post_tags.html.twig', ['post_id' => $post_id, 'post_tags' => $post_tags], $result);
         $json['content'] = $content;
@@ -237,12 +240,12 @@ class EditController extends BaseController
         echo json_encode($json);
         exit;
     }
-    
-    public function actionAddNewTag($new_tag_name, $post_id): void 
+
+    public function actionAddNewTag($new_tag_name, $post_id): void
     {
         App::$db->insertTable('blog_tags', ['name' => $new_tag_name, 'seo_alias' => encodestring($new_tag_name)]);
         $tag_id = App::$db->insert_id();
-        if($tag_id) {
+        if ($tag_id) {
             App::$db->insertTable('blog_posts_tags', ['post_id'=>$post_id, 'tag_id' => $tag_id]);
         } else {
             echo App::$db->error();
@@ -250,10 +253,10 @@ class EditController extends BaseController
         echo 'OK';
         exit;
     }
-    
-    public function actionTagChange($post_id, $tag_id, $value): void 
+
+    public function actionTagChange($post_id, $tag_id, $value): void
     {
-        if(strlen($value)>0) {
+        if (strlen($value)>0) {
             App::$db->insertTable('blog_posts_tags', ['post_id'=>$post_id, 'tag_id' => $tag_id]);
         } else {
             App::$db->deleteFromTable('blog_posts_tags', ['post_id'=>$post_id, 'tag_id' => $tag_id]);
@@ -261,14 +264,12 @@ class EditController extends BaseController
         echo 'OK';
         exit;
     }
-    
-    public function actionTagDelete($tag_id): void 
+
+    public function actionTagDelete($tag_id): void
     {
         App::$db->deleteFromTable('blog_posts_tags', ['tag_id' => $tag_id]);
         App::$db->deleteFromTable('blog_tags', ['id' => $tag_id]);
         echo 'OK';
         exit;
     }
-    
 }
-

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('body').on('click', 'a.buy_button', function () {
         var id = $(this).attr("item_id");
         var cnt_id = ".cnt_" + id;
@@ -24,6 +24,6 @@ $(document).ready(function() {
 var aside = document.querySelector('#price_parts'),
     HTMLtop = document.documentElement.getBoundingClientRect().top,
     t0 = aside.getBoundingClientRect().top - HTMLtop;
-window.onscroll = function() {
+window.onscroll = function () {
     aside.className = (t0 < window.pageYOffset ? 'sticky' : '');
 };

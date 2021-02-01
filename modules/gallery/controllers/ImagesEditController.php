@@ -15,7 +15,8 @@ class ImagesEditController extends BaseController
     private $image_max_width;
     private $image_max_height;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->title = 'Галерея';
         $this->breadcrumbs[] = ['title' => $this->title];
@@ -29,15 +30,15 @@ class ImagesEditController extends BaseController
     {
         $model = new GalleryImage;
         $result = $model->findAll(['gallery_id' => $gallery_id], 'date_add DESC');
-        
+
         [$list_title, $default_image_id] = App::$db->getRow("select title,default_image_id from gallery_list where id=?", ['id' => $gallery_id]);
         $this->title = 'Изображения в разделе ' . $list_title;
         $this->breadcrumbs[] = ['title' => $this->title];
-                
+
         return $this->render('gallery_item_table.html.twig', ['default_image_id' => $default_image_id], $result);
     }
 
-    public function actionDefaultImage(int $gallery_id, int $image_id): string 
+    public function actionDefaultImage(int $gallery_id, int $image_id): string
     {
         $model = new GalleryList($gallery_id);
         $model->default_image_id = $image_id;
@@ -46,10 +47,10 @@ class ImagesEditController extends BaseController
         exit;
     }
 
-    public function actionCreate(int $gallery_id): string 
+    public function actionCreate(int $gallery_id): string
     {
         $model = new GalleryImage();
-        if($model->load(App::$input['form']) && $model->validate()) {
+        if ($model->load(App::$input['form']) && $model->validate()) {
             $model->gallery_id = $gallery_id;
             $model->date_add = 'now()';
             $model->date_change = 'now()';
@@ -66,10 +67,10 @@ class ImagesEditController extends BaseController
         ]);
     }
 
-    public function actionUpdate(int $gallery_id, int $id): string 
+    public function actionUpdate(int $gallery_id, int $id): string
     {
-        $model = new GalleryImage($id); 
-        if($model->load(App::$input['form']) && $model->validate()) {
+        $model = new GalleryImage($id);
+        if ($model->load(App::$input['form']) && $model->validate()) {
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
@@ -83,32 +84,33 @@ class ImagesEditController extends BaseController
             'form_title' => 'Изменение',
         ]);
     }
-    
-    public function actionDelete(int $gallery_id, int $id): string 
+
+    public function actionDelete(int $gallery_id, int $id): string
     {
         $model = new GalleryImage($id);
         $this->deleteImageFile($model);
         $model->delete();
         $this->redirect('index');
-    }    
+    }
 
-    public function showImage($file_name): string{
+    public function showImage($file_name): string
+    {
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
             return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="200" />';
         } else {
             return 'Отсутствует';
-        }        
+        }
     }
-    
+
     /**
      * @return array[]
      *
      * @psalm-return array<0|positive-int, array>
      */
-    private function reArrayFiles(&$file_post): array 
+    private function reArrayFiles(&$file_post): array
     {
 
-        $file_ary = array();
+        $file_ary = [];
         $file_count = count($file_post['name']);
         $file_keys = array_keys($file_post);
 
@@ -120,8 +122,8 @@ class ImagesEditController extends BaseController
 
         return $file_ary;
     }
-    
-    
+
+
     public function actionAddMultiple(int $gallery_id): string
     {
         if ($_FILES['files']) {
@@ -140,17 +142,17 @@ class ImagesEditController extends BaseController
         }
         App::setFlash('success', 'Изображения успешно добавлены.');
         $this->redirect('index');
-    }    
-    
-    private function saveImage(GalleryImage $model, $file) 
-    {        
-        if(!$file['size']){
+    }
+
+    private function saveImage(GalleryImage $model, $file)
+    {
+        if (!$file['size']) {
             return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
             App::setFlash('danger', 'Неверный тип файла !');
             return false;
-        }         
+        }
         $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
         $file_name = encodestring($model->title) . '.' . $f_info['extension'];
@@ -163,19 +165,19 @@ class ImagesEditController extends BaseController
             return false;
         }
     }
-    
-    public function actionDeleteImageFile(int $gallery_id, $post_id): void 
+
+    public function actionDeleteImageFile(int $gallery_id, $post_id): void
     {
         $model = new GalleryImage($post_id);
         $this->deleteImageFile($model);
         $model->save(false);
         $this->redirect('update', ['id' =>$post_id]);
     }
-    
+
     /**
      * @return false|null
      */
-    private function deleteImageFile(GalleryImage $model) 
+    private function deleteImageFile(GalleryImage $model)
     {
         if (is_file(App::$DIR . $this->image_path . $model->file_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->file_name)) {
@@ -186,6 +188,4 @@ class ImagesEditController extends BaseController
         $model->file_name = '';
         $model->file_type = '';
     }
-    
 }
-

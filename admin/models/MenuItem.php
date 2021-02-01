@@ -9,8 +9,9 @@ use classes\BaseModel;
  *
  * @author BooT
  */
-class MenuItem extends BaseModel {
-    
+class MenuItem extends BaseModel
+{
+
     /**
      * @inheritdoc
      */
@@ -18,7 +19,7 @@ class MenuItem extends BaseModel {
     {
         return 'menu_item';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -40,7 +41,7 @@ class MenuItem extends BaseModel {
             'image_type',
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -69,5 +70,4 @@ class MenuItem extends BaseModel {
             'title' => 'Название',
         ];
     }
-    
 }

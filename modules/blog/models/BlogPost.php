@@ -9,8 +9,9 @@ use classes\BaseModel;
  *
  * @author BooT
  */
-class BlogPost extends BaseModel {
-    
+class BlogPost extends BaseModel
+{
+
     /**
      * @inheritdoc
      */
@@ -18,7 +19,7 @@ class BlogPost extends BaseModel {
     {
         return 'blog_posts';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -39,7 +40,7 @@ class BlogPost extends BaseModel {
             'image_type',
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -63,5 +64,4 @@ class BlogPost extends BaseModel {
             'seo_alias' => 'SEO алиас',
         ];
     }
-    
 }

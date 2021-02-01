@@ -14,7 +14,8 @@ class MenuItemEditController extends BaseController
     private $image_width;
     private $image_height;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->title = 'Меню';
         $this->breadcrumbs[] = ['title'=>$this->title];
@@ -27,30 +28,30 @@ class MenuItemEditController extends BaseController
     public function actionIndex(int $menu_id): string
     {
         $model = new MenuItem;
-        $result = $model->findAll(['menu_id' => $menu_id], 'position ASC');        
+        $result = $model->findAll(['menu_id' => $menu_id], 'position ASC');
 
         [$list_title] = App::$db->getRow("select title from menu_list where id=?", ['id' => $menu_id]);
         $this->title = 'Пункты в меню ' . $list_title;
         $this->breadcrumbs[] = ['title' => $this->title];
 
-        return $this->render('menu_item_table.html.twig', [], $result);        
+        return $this->render('menu_item_table.html.twig', [], $result);
     }
 
-    public function actionActive(int $menu_id, int $id, int $active): string 
+    public function actionActive(int $menu_id, int $id, int $active): string
     {
         $model = new MenuItem($id);
         $model->active = $active;
         $model->save();
         echo $active;
         exit;
-    }    
-    
-    public function actionCreate(int $menu_id): string 
+    }
+
+    public function actionCreate(int $menu_id): string
     {
         $model = new MenuItem();
         App::$input['form']['menu_id'] = $menu_id;
-        App::$input['form']['target_id'] = App::$input['form']['target_id'] ?? 0; 
-        if($model->load(App::$input['form']) && $model->validate()) {
+        App::$input['form']['target_id'] = App::$input['form']['target_id'] ?? 0;
+        if ($model->load(App::$input['form']) && $model->validate()) {
             $model->active = '1';
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
@@ -59,10 +60,10 @@ class MenuItemEditController extends BaseController
         }
         $user_flags_result = App::$db->query('select title,value from users_flags');
         $user_flags = $user_flags_result->fetch_all(MYSQLI_ASSOC);
-        
+
         $menu_list_result = App::$db->query("select id,title from menu_list where id<>?", ['id' => $menu_id]);
         $menu_list = $menu_list_result->fetch_all(MYSQLI_ASSOC);
-                
+
         return $this->render('menu_item_form.html.twig', [
             'model' => $model,
             'action' => 'create',
@@ -73,23 +74,23 @@ class MenuItemEditController extends BaseController
         ]);
     }
 
-    public function actionUpdate(int $menu_id, int $id): string 
+    public function actionUpdate(int $menu_id, int $id): string
     {
-        $model = new MenuItem($id); 
+        $model = new MenuItem($id);
         App::$input['form']['target_id'] = App::$input['form']['target_id'] ?? 0;
-        if($model->load(App::$input['form']) && $model->validate()) {
+        if ($model->load(App::$input['form']) && $model->validate()) {
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
             App::setFlash('success', 'Пункт меню успешно изменён.');
             $this->redirect('index');
         }
-        
+
         $user_flags_result = App::$db->query('select title,value from users_flags');
         $user_flags = $user_flags_result->fetch_all(MYSQLI_ASSOC);
-        
+
         $menu_list_result = App::$db->query("select id,title from menu_list where id<>?", ['id' => $menu_id]);
         $menu_list = $menu_list_result->fetch_all(MYSQLI_ASSOC);
-                
+
         return $this->render('menu_item_form.html.twig', [
             'model' => $model,
             'action' => $this->getUrl('update', ['id' => $id]),
@@ -99,36 +100,37 @@ class MenuItemEditController extends BaseController
             'menu_list' => $menu_list,
         ]);
     }
-    
-    public function actionDelete(int $menu_id, int $id): string 
+
+    public function actionDelete(int $menu_id, int $id): string
     {
         $model = new MenuItem($id);
         $this->deleteImageFile($model);
         $model->delete();
         $this->redirect('index');
-    }    
+    }
 
-    public function showImage($file_name): string{
+    public function showImage($file_name): string
+    {
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
             return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="' . $this->image_width . '" />';
         } else {
             return 'Отсутствует';
-        }        
+        }
     }
-    
+
     /**
      * @return false|string
      */
     private function saveImage(MenuItem $model, $file): string
-    {        
-        $content = '';        
+    {
+        $content = '';
         if ($file['size'] < 100) {
             return '';
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
             App::setFlash('danger', 'Неверный тип файла !');
             return '';
-        }         
+        }
         $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
         $file_name = encodestring($model->title) . '.' . $f_info['extension'];
@@ -138,22 +140,22 @@ class MenuItemEditController extends BaseController
             App::setFlash('danger', 'Изображение успешно добавлено.');
         } else {
             App::setFlash('danger', 'Ошибка копирования файла !');
-        }            
+        }
         return $content;
     }
-    
-    public function actionDeleteImageFile(int $menu_id, $item_id): void 
+
+    public function actionDeleteImageFile(int $menu_id, $item_id): void
     {
         $model = new MenuItem($item_id);
         $this->deleteImageFile($model);
         $model->save(false);
         $this->redirect('update', ['id' =>$item_id]);
     }
-    
+
     /**
      * @return false|null
      */
-    private function deleteImageFile(MenuItem $model) 
+    private function deleteImageFile(MenuItem $model)
     {
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {
@@ -164,7 +166,7 @@ class MenuItemEditController extends BaseController
         $model->image_name = '';
         $model->image_type = '';
     }
-    
+
     public $target_types = [
         [
             'type' => 'link',
@@ -194,16 +196,17 @@ class MenuItemEditController extends BaseController
             'type' => 'gallery_list',
             'name' => 'Раздел галереи'
         ],
-        
+
     ];
-    
-    public function actionGetTargetSelect(int $menu_id, $item_id, $target_type): void 
+
+    public function actionGetTargetSelect(int $menu_id, $item_id, $target_type): void
     {
-        $model = new MenuItem($item_id);        
+        $model = new MenuItem($item_id);
         $target_id = $model->target_id;
         $href = $model->href;
-        
-        function get_option($name, $sql, $target_id): string {
+
+        function get_option($name, $sql, $target_id): string
+        {
             $result = my_query($sql);
             $output = '<td>' . $name . ':</td><td><select class="form-control" name="form[target_id]">';
             while ($row = $result->fetch_array()) {
@@ -212,7 +215,7 @@ class MenuItemEditController extends BaseController
             $output.="</select></td>";
             return $output;
         }
-        
+
         $output = '';
 
         switch ($target_type) {
@@ -236,8 +239,6 @@ class MenuItemEditController extends BaseController
                 break;
         }
         echo $output;
-        exit;        
+        exit;
     }
-    
 }
-

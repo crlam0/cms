@@ -1,16 +1,18 @@
 <?php
 
 namespace classes;
+
 use classes\App;
 
 /**
  * Class BBCODE_EDITOR
- * 
+ *
  * Textarea with BBCode support
- * 
+ *
  */
 
-class BBCodeEditor {
+class BBCodeEditor
+{
 
     private $__controlId;
     private $__value;
@@ -18,14 +20,15 @@ class BBCodeEditor {
     private $__width;
     private $__height;
 
-    public function __construct() {
-        if(isset($__numControls)){
+    public function __construct()
+    {
+        if (isset($__numControls)) {
             $__numControls++;
         } else {
             $__numControls = 1;
         }
         $this->__controlId = $__numControls;
-        if(array_key_exists('bbcode_textarea',$_POST)) {
+        if (array_key_exists('bbcode_textarea', $_POST)) {
             $this->__value = $_POST['bbcode_textarea'];
         } else {
             $this->__value = '';
@@ -43,41 +46,54 @@ class BBCodeEditor {
      * @return string Output string
      */
 
-    private function bb_parse($string) {
+    private function bb_parse($string)
+    {
         $string = strip_tags($string);
-        while (preg_match_all('`\[(.+?)=?(.*?)\](.+?)\[/\1\]`', $string, $matches))
+        while (preg_match_all('`\[(.+?)=?(.*?)\](.+?)\[/\1\]`', $string, $matches)) {
             foreach ($matches[0] as $key => $match) {
-                list($tag, $param, $innertext) = array($matches[1][$key], $matches[2][$key], $matches[3][$key]);
+                list($tag, $param, $innertext) = [$matches[1][$key], $matches[2][$key], $matches[3][$key]];
                 switch ($tag) {
-                    case 'b': $replacement = "<strong>$innertext</strong>";
+                    case 'b':
+                        $replacement = "<strong>$innertext</strong>";
                         break;
-                    case 'i': $replacement = "<em>$innertext</em>";
+                    case 'i':
+                        $replacement = "<em>$innertext</em>";
                         break;
-                    case 'u': $replacement = "<u>$innertext</u>";
+                    case 'u':
+                        $replacement = "<u>$innertext</u>";
                         break;
-                    case 'size': $replacement = "<span style=\"font-size: $param;\">$innertext</a>";
+                    case 'size':
+                        $replacement = "<span style=\"font-size: $param;\">$innertext</a>";
                         break;
-                    case 'color': $replacement = "<span style=\"color: $param;\">$innertext</a>";
+                    case 'color':
+                        $replacement = "<span style=\"color: $param;\">$innertext</a>";
                         break;
-                    case 'left': $replacement = "<p align=left>$innertext</p>";
+                    case 'left':
+                        $replacement = "<p align=left>$innertext</p>";
                         break;
-                    case 'center': $replacement = "<p align=center>$innertext</p>";
+                    case 'center':
+                        $replacement = "<p align=center>$innertext</p>";
                         break;
-                    case 'right': $replacement = "<p align=right>$innertext</p>";
+                    case 'right':
+                        $replacement = "<p align=right>$innertext</p>";
                         break;
-                    case 'quote': $replacement = "<blockquote>$innertext</blockquote>";
+                    case 'quote':
+                        $replacement = "<blockquote>$innertext</blockquote>";
                         break;
-                    case 'url': $replacement = '<a href="' . ($param ? $param : $innertext) . "\">$innertext</a>";
+                    case 'url':
+                        $replacement = '<a href="' . ($param ? $param : $innertext) . "\">$innertext</a>";
                         break;
-                    case 'img': $replacement = "<img src=\"$innertext\" border=0>";
+                    case 'img':
+                        $replacement = "<img src=\"$innertext\" border=0>";
                         break;
                 }
                 $string = str_ireplace($match, $replacement, $string);
             }
+        }
         return $string;
     }
-    
-    
+
+
     /**
      * Show textarea with BBCode controls.
      *
@@ -87,14 +103,15 @@ class BBCodeEditor {
      *
      * @return void
      */
-    private function ShowControl($Width, $Height, $ImagePath): void {
+    private function ShowControl($Width, $Height, $ImagePath): void
+    {
         $this->__width = $Width;
         $this->__height = $Height;
         $this->__imagePath = $ImagePath;
         ?>
         <style>
             #bbcode_editor table {
-                border: #999999 1px solid;	
+                border: #999999 1px solid;  
                 background-color:#D7D7D7;
                 width: <?= $this->__width ?>px;
                 height: <?= $this->__height ?>px;
@@ -103,28 +120,28 @@ class BBCodeEditor {
                 font-size: 11px; 
                 font-family: Verdana, Arial, Helvetica, sans-serif;
                 color: #111111;
-            }		
+            }       
             #bbcode_editor table > tr,td {
                 border-width: 0px;
                 padding: 0px;
                 margin: 0px;
-            }		
+            }       
             #bbcode_editor .buttons {
                 padding-top: 2px;
                 padding-left: 3px;
                 font-size: 11px; 
                 max-width: 220px;
-            }		
+            }       
             #bbcode_editor .color_select {
                 font-size: 10px;
                 font-family: Verdana, Arial, Helvetica, sans-serif;
-            }		
+            }       
             #bbcode_editor select.color_select {
-                border: #999999 1px solid;	
-            }		
+                border: #999999 1px solid;  
+            }       
             #bbcode_textarea {
-                border: #999999 1px solid;	
-            }		
+                border: #999999 1px solid;  
+            }       
             #bbcode_helpbox {
                 border-style:none;
                 background-color:#D7D7D7;
@@ -154,7 +171,7 @@ class BBCodeEditor {
                             <option value="silver" style="color:silver">Silver</option>
                             <option value="gray" style="color:gray">Gray</option>
                             <option value="maroon" style="color:maroon">Maroon</option>
-                            <option value="red" style="color:red">Red</option>		                
+                            <option value="red" style="color:red">Red</option>                      
                             <option value="purple" style="color:purple">Purple</option>
                             <option value="fuchsia" style="color:fuchsia">Fuchsia</option>
                             <option value="navy" style="color:navy">Navy</option>
@@ -165,7 +182,7 @@ class BBCodeEditor {
                             <option value="green" style="color:green">Green</option>
                             <option value="olive" style="color:olive">Olive</option>
                             <option value="yellow" style="color:yellow">Yellow</option>
-                            <option value="white" style="color:white">White</option>	                
+                            <option value="white" style="color:white">White</option>                    
                         </select>
                     </td>
                 </tr>
@@ -377,7 +394,8 @@ class BBCodeEditor {
      *
      * @return string Output string
      */
-    public function GetContol($Width, $Height, $ImagePath) {
+    public function GetContol($Width, $Height, $ImagePath)
+    {
         ob_start();
         $this->ShowControl($Width, $Height, $ImagePath);
         $content = ob_get_contents();
@@ -392,7 +410,8 @@ class BBCodeEditor {
      *
      * @return void
      */
-    public function SetValue($NewValue): void {
+    public function SetValue($NewValue): void
+    {
         $this->__value = $NewValue;
     }
 
@@ -401,7 +420,8 @@ class BBCodeEditor {
      *
      * @return string Output string
      */
-    public function GetValue() {
+    public function GetValue()
+    {
         return App::$input['bbcode_textarea'];
     }
 
@@ -410,8 +430,8 @@ class BBCodeEditor {
      *
      * @return string Output string
      */
-    public function GetHTML() {
+    public function GetHTML()
+    {
         return $this->bb_parse(App::$input['bbcode_textarea']);
     }
-
 }

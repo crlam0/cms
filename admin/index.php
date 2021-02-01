@@ -6,5 +6,3 @@ $controller = new admin\controllers\IndexController();
 $content = $controller->actionIndex();
 
 echo get_tpl_default($tags, null, $content);
-
-

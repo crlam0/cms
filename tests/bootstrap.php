@@ -20,5 +20,3 @@ App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/test.log', Logg
 require_once App::$DIR.'vendor/autoload.php';
 
 App::$settings['debug'] = false;
-
-

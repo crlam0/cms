@@ -6,15 +6,16 @@ use classes\BaseController;
 use classes\App;
 
 class RSSController extends BaseController
-{    
+{
+
     public function actionIndex(): string
     {
         $this->title = 'Новости из RSS';
         $this->breadcrumbs[] = ['title'=>$this->title];
 
         $xmlstr = @file_get_contents($settings['rss_url']);
-        if ( $xmlstr===false ){
-            return App::$message->get('rss_error');                
+        if ($xmlstr===false) {
+            return App::$message->get('rss_error');
         }
 
         $xml = xml_parser_create();
@@ -34,12 +35,11 @@ class RSSController extends BaseController
                 //echo $element[$index["DESCRIPTION"][$i+1]]["value"];
                 $tags['title']=$element[$index['TITLE'][$i+1]]['value'];
                 $tags['content']=$element[$index['DESCRIPTION'][$i+1]]['value'];
-                $tags['content']=str_replace("<img ","<img class=border ",$tags['content']);
+                $tags['content']=str_replace("<img ", "<img class=border ", $tags['content']);
                 $tags['content'].="<div><a class=button href=\"".$element[$index['LINK'][$i+1]]['value']."\"> Подробнее ... </a></div>";
                 $content.=App::$template->parse('news_rss', $tags);
-        }        
-        
-        return $content;        
+        }
+
+        return $content;
     }
 }
-

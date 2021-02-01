@@ -9,8 +9,9 @@ use classes\BaseModel;
  *
  * @author BooT
  */
-class TestModel extends BaseModel {
-    
+class TestModel extends BaseModel
+{
+
     /**
      * @inheritdoc
      */
@@ -20,10 +21,10 @@ class TestModel extends BaseModel {
             'id',
             'name',
             'value',
-            'comment'        
+            'comment'
         ];
-    }    
-    
+    }
+
     /**
      * @inheritdoc
      */
@@ -31,7 +32,7 @@ class TestModel extends BaseModel {
     {
         return 'test';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -56,5 +57,4 @@ class TestModel extends BaseModel {
             'comment' => 'Коментарий',
         ];
     }
-    
 }

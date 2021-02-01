@@ -23,7 +23,7 @@ if (($input["view"]) || ($input["adding"])) {
     if ($input["view"]) {
         $query = "select * from discount where id=" . $input["id"];
         $result = my_query($query);
-        $tags=array_merge($tags,$result->fetch_array());
+        $tags=array_merge($tags, $result->fetch_array());
         $tags['form_title'] = "Редактирование";
         $tags['type'] = "edit";
         $tags['Header'] = "Редактирование скидки";
@@ -32,11 +32,9 @@ if (($input["view"]) || ($input["adding"])) {
         $tags['type'] = "add";
         $tags['Header'] = "Добавление скидки";
     }
-echo $tags['summ'];
+    echo $tags['summ'];
     $content .= get_tpl_by_name("discount_edit_form", $tags);
-
 } else {
-
     $query = "SELECT * from discount order by summ asc";
     $result = my_query($query);
 

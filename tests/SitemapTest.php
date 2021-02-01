@@ -21,8 +21,6 @@ class SitemapTest extends TestCase
         $Sitemap->build_pages_array(['article']);
         $result = $Sitemap->write(true);
         self::assertStringContainsString('article/', $result['output']);
-        self::assertGreaterThan(1, $result['count']);        
+        self::assertGreaterThan(1, $result['count']);
     }
-    
 }
-

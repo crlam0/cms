@@ -10,28 +10,30 @@ namespace classes;
  *
  */
 
-class Sitemap {
-    private $static_pages = array(
-        array(
+class Sitemap
+{
+    private $static_pages = [
+        [
             'url' => '',
             'changefreq' => 'weekly',
             'priority' => '1.00',
-        ),
-        array(
+        ],
+        [
             'url' => 'sitemap.xml',
             'changefreq' => 'monthly',
             'priority' => '0.90',
-        ),
-    );
+        ],
+    ];
     public $pages;
-    
-    public function __construct(){
-        if(isset(App::$settings['sitemap_static_pages']) && is_array(App::$settings['sitemap_static_pages'])){
+
+    public function __construct()
+    {
+        if (isset(App::$settings['sitemap_static_pages']) && is_array(App::$settings['sitemap_static_pages'])) {
             $this->static_pages = array_merge($this->static_pages, App::$settings['sitemap_static_pages']);
         }
         $this->pages=$this->static_pages;
     }
-    
+
     /**
      * Add page to $pages
      *
@@ -41,12 +43,13 @@ class Sitemap {
      *
      * @return void
      */
-    public function add_page($url,$changefreq,$priority): void{
-        $this->pages[]=array(
+    public function add_page($url, $changefreq, $priority): void
+    {
+        $this->pages[]=[
             'url' => $url,
             'changefreq' => $changefreq,
             'priority' => $priority,
-        );
+        ];
     }
 
     /**
@@ -56,8 +59,9 @@ class Sitemap {
      *
      * @return void
      */
-    public function build_pages_array($types): void{
-        if(in_array('article', $types)){
+    public function build_pages_array($types): void
+    {
+        if (in_array('article', $types)) {
             $this->add_page('article/', 'monthly', '0.50');
             $query = 'SELECT * from article_list order by date_add asc';
             $result = App::$db->query($query);
@@ -69,16 +73,16 @@ class Sitemap {
             while ($row = $result->fetch_array()) {
                 $this->add_page(App::$routing->getUrl('article', $row['id']), 'monthly', '0.80');
             }
-        }    
-        if(in_array('blog', $types)){
+        }
+        if (in_array('blog', $types)) {
             $this->add_page('blog/', 'monthly', '0.50');
             $query = "SELECT * from blog_posts where active='Y' order by date_add asc";
             $result = App::$db->query($query);
             while ($row = $result->fetch_array()) {
                 $this->add_page(App::$routing->getUrl('blog_post', null, $row), 'monthly', '0.80');
-            }    
+            }
         }
-        if(in_array('gallery', $types)){
+        if (in_array('gallery', $types)) {
             $this->add_page('gallery/', 'monthly', '0.50');
             $query = "SELECT * from gallery_list where active='Y' order by title asc";
             $result = App::$db->query($query);
@@ -86,7 +90,7 @@ class Sitemap {
                 $this->add_page(App::$routing->getUrl('gallery_list', $row['id']), 'monthly', '0.80');
             }
         }
-        if(in_array('catalog', $types)){
+        if (in_array('catalog', $types)) {
             $this->add_page('catalog/', 'monthly', '0.80');
             $query = 'SELECT id from cat_part order by num,title asc';
             $result = App::$db->query($query);
@@ -101,13 +105,14 @@ class Sitemap {
             }
         }
     }
-    
+
     /**
      * Write Sitemap.xml basing on $pages
      *
      * @return array ['output','count']
      */
-    public function write(bool $test_only = false){        
+    public function write(bool $test_only = false)
+    {
         $ServerUrl = App::$server['REQUEST_SCHEME'] . '://' . App::$server['HTTP_HOST'] . App::$SUBDIR;
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
@@ -123,7 +128,6 @@ class Sitemap {
 
         $output='';
         foreach ($this->pages as $page) {
-
             $url = $ServerUrl . $page['url'];
 
             $output.= "Add {$url} <br>";
@@ -134,22 +138,31 @@ class Sitemap {
 
             // put url in "loc" element
             $urlNode->appendChild($dom->createElementNS(
-                            $SITEMAP_NS, "loc", $url));
+                $SITEMAP_NS,
+                "loc",
+                $url
+            ));
             $urlNode->appendChild(
-                    $dom->createElementNS(
-                            $SITEMAP_NS, 'changefreq', $page['changefreq'])
+                $dom->createElementNS(
+                    $SITEMAP_NS,
+                    'changefreq',
+                    $page['changefreq']
+                )
             );
 
             $urlNode->appendChild(
-                    $dom->createElementNS(
-                            $SITEMAP_NS, 'priority', $page['priority'])
+                $dom->createElementNS(
+                    $SITEMAP_NS,
+                    'priority',
+                    $page['priority']
+                )
             );
         }
 
         $xml = $dom->saveXML();
-        if(!$test_only) {
+        if (!$test_only) {
             file_put_contents(App::$DIR . 'sitemap.xml', $xml);
-        }    
-        return array('output'=>$output,'count'=>count($this->pages));
+        }
+        return ['output'=>$output,'count'=>count($this->pages)];
     }
 }

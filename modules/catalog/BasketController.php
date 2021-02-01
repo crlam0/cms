@@ -7,7 +7,8 @@ use classes\App;
 use classes\SummToStr;
 
 class BasketController extends Controller
-{ 
+{
+
     public function actionAddBuy(): string
     {
         global $_SESSION;
@@ -23,16 +24,16 @@ class BasketController extends Controller
             $json['result'] = 'ERR';
         }
         echo json_encode($json);
-        exit;        
+        exit;
     }
-    
+
     private function getDiscount(int $summ): int
-    {        
+    {
         $query="SELECT discount from discount where summ<='{$summ}' order by summ desc";
         $result=App::$db->query($query);
-        if($result->num_rows){
+        if ($result->num_rows) {
             list($discount)=$result->fetch_array();
-        }else{
+        } else {
             $discount=0;
         }
         return $discount;
@@ -41,15 +42,15 @@ class BasketController extends Controller
     private function calcDiscount(int $summ, int $discount): float
     {
         return $summ*(1-$discount/100);
-    }    
-    
+    }
+
     private function getBasketData(): array
     {
-        global $_SESSION;        
+        global $_SESSION;
         $where='';
         foreach ($_SESSION['BUY'] as $item_id => $cnt) {
             $where.= !strlen($where) ? " id='{$item_id}'" : " or id='{$item_id}'" ;
-        } 
+        }
         $query = "select * from cat_item where $where order by b_code,title asc";
         $result = App::$db->query($query);
         $summ = 0;
@@ -64,7 +65,7 @@ class BasketController extends Controller
         }
         return ['summ' => $summ, 'cnt' => $cnt, 'item_list' => $item_list, 'result' => $result];
     }
-    
+
     public function actionGetSummary(): void
     {
         global $_SESSION;
@@ -79,16 +80,16 @@ class BasketController extends Controller
             $content = $this->render('basket_summary.html.twig', $tags, $result);
             echo $content;
         } else {
-            echo App::$message->get('notice',[],"Корзина пуста !");
+            echo App::$message->get('notice', [], "Корзина пуста !");
         }
         exit();
     }
-    
+
     /**
      * @return bool|string
      */
     private function checkInput(array $input)
-    {        
+    {
         if (strlen($input['lastname'])<3) {
             return App::$message->get('error', [], 'Неверно заполнено поле &quot;Фамилия&quot;');
         }
@@ -103,9 +104,9 @@ class BasketController extends Controller
         }
         return true;
     }
-    
+
     private function requestDone(array $form) : string
-    {        
+    {
         global $_SESSION;
         $data = $this->getBasketData();
         $summ = $data['summ'];
@@ -118,41 +119,41 @@ class BasketController extends Controller
         $tags['summ_with_discount'] = add_zero($this->calcDiscount($summ, $tags['discount']));
         $tags['form'] = $form;
         $content = $this->render('basket_mail.html.twig', $tags, $result);
-        $remote_host=(check_key('REMOTE_HOST',App::$server) ? App::$server['REMOTE_HOST'] : gethostbyaddr(App::$server['REMOTE_ADDR']) );
-        if(!App::$debug){
+        $remote_host=(check_key('REMOTE_HOST', App::$server) ? App::$server['REMOTE_HOST'] : gethostbyaddr(App::$server['REMOTE_ADDR']) );
+        if (!App::$debug) {
             App::$message->mail(App::$settings['email_to_addr'], 'Запрос с сайта ' . $remote_host, $content, 'text/html');
         }
-        
+
         unset($data);
         $data['date'] = 'now()';
-        $data['item_list'] = $item_list;        
+        $data['item_list'] = $item_list;
         $data['contact_info']='ФИО: ' . $form['lastname'] . ' ' . $form['firstname'] . PHP_EOL;
         $data['contact_info'].='E-Mail: ' . $form['email'] . PHP_EOL;
         $data['contact_info'].='Телефон: ' . $form['phone'] . PHP_EOL;
         $data['contact_info'].='IP адрес: ' . App::$server['REMOTE_ADDR'] . PHP_EOL;
         $data['item_list'] = $item_list;
         $data['comment'] = $form['comment'];
-        
+
         $query = "insert into request" . App::$db->insertFields($data);
         App::$db->query($query);
         unset($_SESSION['BUY']);
-        return App::$message->get('',[],'Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.');
+        return App::$message->get('', [], 'Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.');
     }
-    
+
     public function actionRequest() : string
-    {        
+    {
         $this->title = 'Оформить заказ';
         $this->breadcrumbs[] = [ 'title' => 'Корзина', 'url' => 'basket/' ];
         $this->breadcrumbs[] = [ 'title' => $this->title ];
-        
-        if ( !isset($_SESSION['BUY']) || !is_array($_SESSION['BUY']) ||  !count($_SESSION['BUY'])) {
-            return App::$message->get('notice',[],'Корзина пуста !');
+
+        if (!isset($_SESSION['BUY']) || !is_array($_SESSION['BUY']) ||  !count($_SESSION['BUY'])) {
+            return App::$message->get('notice', [], 'Корзина пуста !');
         }
-        
+
         $content = '';
-        if(App::$input['request_done']) {
+        if (App::$input['request_done']) {
             $input_result = $this->checkInput(App::$input['form']);
-            if($input_result === true) {
+            if ($input_result === true) {
                 return $this->requestDone(App::$input['form']);
             } else {
                 $content .= $input_result;
@@ -170,46 +171,46 @@ class BasketController extends Controller
         $content .= App::$template->parse('basket_request.html.twig', $tags);
         return $content;
     }
-    
+
     public function actionClear(): void
     {
         unset($_SESSION['BUY']);
         redirect(App::$SUBDIR . 'basket/');
         exit;
     }
-    
+
     public function actionDel(): string
     {
         $item_id = App::$input['item_id'];
         unset($_SESSION['BUY'][$item_id]);
         return $this->actionIndex();
-    }    
-    
+    }
+
     private function buttonClick(string $type) : void
     {
-        foreach(App::$input['buy_cnt'] as $item_id => $item_cnt) {
-            if (is_numeric($item_cnt) && $item_cnt > 0 && $item_cnt < 99 ) {
+        foreach (App::$input['buy_cnt'] as $item_id => $item_cnt) {
+            if (is_numeric($item_cnt) && $item_cnt > 0 && $item_cnt < 99) {
                 $_SESSION['BUY'][$item_id]['count'] = $item_cnt;
             }
         }
-        if($type == 'request') {
+        if ($type == 'request') {
             redirect(App::$SUBDIR . 'basket/request');
-        }        
+        }
     }
-    
+
     public function actionIndex() : string
     {
         global $_SESSION;
-        
+
         $this->title = 'Корзина';
         $this->breadcrumbs[] = ['title' => $this->title ];
-        
-        if(App::$input['button']) {
+
+        if (App::$input['button']) {
             $this->buttonClick(App::$input['button']);
         }
-        
-        if ( !isset($_SESSION['BUY']) || !is_array($_SESSION['BUY']) ||  !count($_SESSION['BUY'])) {
-            return App::$message->get('notice',[],'Корзина пуста !');
+
+        if (!isset($_SESSION['BUY']) || !is_array($_SESSION['BUY']) ||  !count($_SESSION['BUY'])) {
+            return App::$message->get('notice', [], 'Корзина пуста !');
         }
         $where = '';
         $count = 0;
@@ -230,9 +231,8 @@ class BasketController extends Controller
         $tags['discount'] = $this->getDiscount($summ);
         $tags['summ_with_discount'] = add_zero($this->calcDiscount($summ, $tags['discount']));
         $tags['summ_with_discount_str'] = SummToStr::get($this->calcDiscount($summ, $tags['discount']));
-        
+
         $content = $this->render('basket_index.html.twig', $tags, $result);
         return $content;
     }
-    
 }

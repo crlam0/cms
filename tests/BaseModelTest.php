@@ -5,28 +5,28 @@ use PHPUnit\Framework\TestCase;
 class ModelTest extends TestCase
 {
     private $model;
-    
+
     public function setUp() : void
     {
         parent::setUp();
         $this->model = new tests\TestModel;
     }
 
-    public function testGetterAndSetter(): void 
+    public function testGetterAndSetter(): void
     {
         $this->model->name = 'Test 1';
         self::assertEquals('Test 1', $this->model->name);
         self::assertEquals('Test 1', $this->model['name']);
     }
 
-    public function testLoad(): void 
+    public function testLoad(): void
     {
         $this->model->load(['name' => 'Test 1']);
         self::assertEquals('Test 1', $this->model->name);
         self::assertEquals('Test 1', $this->model['name']);
     }
-    
-    public function testCheckRulesString(): void 
+
+    public function testCheckRulesString(): void
     {
         $this->model->value = 5;
 
@@ -37,8 +37,8 @@ class ModelTest extends TestCase
         $this->model->name = 'Test 1';
         self::assertTrue($this->model->validate());
     }
-    
-    public function testCheckRulesInteger(): void 
+
+    public function testCheckRulesInteger(): void
     {
         $this->model->name = 'Test 1';
 
@@ -49,8 +49,8 @@ class ModelTest extends TestCase
         $this->model->value = 5;
         self::assertTrue($this->model->validate());
     }
-    
-    public function testCheckRequired(): void 
+
+    public function testCheckRequired(): void
     {
         $this->model->value = 5;
         $this->model->name = '';
@@ -62,5 +62,4 @@ class ModelTest extends TestCase
         $this->model->name = 'Test 1';
         self::assertTrue($this->model->validate());
     }
-    
 }

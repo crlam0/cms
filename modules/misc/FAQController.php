@@ -12,24 +12,24 @@ use classes\BBCodeEditor;
  *
  * @author BooT
  */
-class FAQController extends BaseController 
+class FAQController extends BaseController
 {
     private $TABLE = 'faq';
     private $MSG_PER_PAGE = '20';
     private $editor;
-    
+
     public function __construct()
     {
-        if(isset(App::$settings['faq_msg_per_page'])) {
+        if (isset(App::$settings['faq_msg_per_page'])) {
             $this->MSG_PER_PAGE = App::$settings['faq_msg_per_page'];
         }
         $this->title = isset(App::$settings['faq_header']) ? App::$settings['faq_header'] : 'Вопросы/ответы';
         $this->breadcrumbs[] = ['title'=>$this->title];
-        
-        $this->editor = new BBCodeEditor ();
+
+        $this->editor = new BBCodeEditor();
     }
-    
-    public function actionIndex(int $page = 1) : string 
+
+    public function actionIndex(int $page = 1) : string
     {
         $query = "SELECT count(id) from {$this->TABLE} where active='Y'";
         $result = App::$db->query($query);
@@ -42,9 +42,9 @@ class FAQController extends BaseController
         $query = "SELECT {$this->TABLE}.* from {$this->TABLE} where {$this->TABLE}.active='Y' group by {$this->TABLE}.id order by {$this->TABLE}.id desc limit {$pager->getOffset()},{$pager->getLimit()}";
         $result = App::$db->query($query);
 
-        return App::$template->parse('faq_list', $tags, $result);        
+        return App::$template->parse('faq_list', $tags, $result);
     }
-    
+
     /**
      * @return bool|string
      */
@@ -66,13 +66,13 @@ class FAQController extends BaseController
         if (!preg_match("/^[A-Za-z0-9-_\.]+@[A-Za-z0-9-\.]+\.[A-Za-z0-9-\.]{2,3}$/", $input['email'])) {
             return App::$message->get('form_error_email');
         }
-        if ( !array_key_exists('IMG_CODE', $_SESSION) || $input['img_code'] != $_SESSION['IMG_CODE']) {
+        if (!array_key_exists('IMG_CODE', $_SESSION) || $input['img_code'] != $_SESSION['IMG_CODE']) {
             return App::$message->get('form_error_code');
-        } 
-        return true;        
+        }
+        return true;
     }
-    
-    private function requestDone(array $input) : void 
+
+    private function requestDone(array $input) : void
     {
         $input['ip'] = App::$server['REMOTE_ADDR'];
         $input['date'] = 'now()';
@@ -87,33 +87,33 @@ class FAQController extends BaseController
         $message.='Сообщение:' . PHP_EOL;
         $message.=str_replace('\r\n', PHP_EOL, $input['txt']) . PHP_EOL;
         echo $message;
-        if(!App::$debug){
+        if (!App::$debug) {
             App::$message->mail(App::$settings['email_to_addr'], 'На сайте http://' . App::$server['HTTP_HOST'] . App::$SUBDIR . ' оставлено новое сообщение.', $message);
         }
     }
-    
-    public function actionAdd() : string 
+
+    public function actionAdd() : string
     {
         global $_SESSION;
         $content = '';
         if (is_array(App::$input['form'])) {
             App::$input['form']['txt'] = $this->editor->GetValue();
             $input_result = $this->checkInput(App::$input['form']);
-            if($input_result === true) {
+            if ($input_result === true) {
                 $this->requestDone(App::$input['form']);
                 $_SESSION['IMG_CODE'] = rand(111111, 999999);
                 $content = App::$message->get('', [], 'Сообщение успешно добавлено !');
-                return $content . $this->actionIndex();                
+                return $content . $this->actionIndex();
             } else {
                 $content .= $input_result;
                 $tags = App::$input['form'];
                 $this->editor->SetValue(stripcslashes(App::$input['form']['txt']));
-            }            
+            }
         } else {
             $tags = [
                 'author' => '',
                 'email' => '',
-                'txt' => '',                
+                'txt' => '',
             ];
         }
         $tags['editor'] = $this->editor->GetContol(400, 200, '../theme/bbcode_editor');
@@ -122,5 +122,4 @@ class FAQController extends BaseController
         $content .= App::$template->parse('faq_form', $tags);
         return $content;
     }
-    
 }

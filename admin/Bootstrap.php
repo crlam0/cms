@@ -6,15 +6,15 @@ use classes\App;
 
 class Bootstrap
 {
-    public function bootstrap(): void 
+    public function bootstrap(): void
     {
         App::$template->addPath('admin/views');
-            
+
         App::$routing->addRoutes([
             'admin-index' => [
                 'pattern' => '^admin\/?[\w\-]*$',
                 'controller' => 'admin\controllers\IndexController'
-            ],      
+            ],
             'faq-edit' => [
                 'pattern' => '^admin\/faq\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\FaqEditController',
@@ -65,7 +65,7 @@ class Bootstrap
             'templates-edit' => [
                 'pattern' => '^admin\/templates\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\TemplatesEditController',
-            ],    
+            ],
         ]);
     }
 }

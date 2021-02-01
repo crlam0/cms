@@ -10,28 +10,28 @@ use classes\App;
  *
  * @author BooT
  */
-class PriceController extends BaseController 
+class PriceController extends BaseController
 {
-    
-    public function actionIndex(): string 
+
+    public function actionIndex(): string
     {
         $this->title = 'Прайс-лист';
         $this->breadcrumbs[] = ['title'=>$this->title];
-        
+
         App::addAsset('js', 'modules/catalog/price.js');
-        
+
         $query = "select content from article_item where seo_alias='before_price'";
         list($before_price) = App::$db->getRow($query);
         $content = $before_price . "<br />";
 
-        $tags['subparts'] = $this->sub_part(0, 0, 2);        
+        $tags['subparts'] = $this->sub_part(0, 0, 2);
 
         $query = "SELECT cat_part.*from cat_part where prev_id='0' order by cat_part.num,cat_part.title asc";
         $result = App::$db->query($query);
         return App::$template->parse('price_index.html.twig', $tags, $result);
     }
-    
-    private function part_items(array $row): string 
+
+    private function part_items(array $row): string
     {
         $content = '';
 
@@ -46,8 +46,8 @@ class PriceController extends BaseController
         }
         return $content;
     }
-    
-    private function sub_part(int $prev_id, int $deep, int $max_deep): string 
+
+    private function sub_part(int $prev_id, int $deep, int $max_deep): string
     {
         $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='{$prev_id}' group by cat_part.id order by cat_part.num,cat_part.title asc";
         $result = App::$db->query($query);
@@ -58,11 +58,10 @@ class PriceController extends BaseController
             }
             $content .= $this->part_items($row);
 
-            if ($deep < $max_deep){
+            if ($deep < $max_deep) {
                 $this->sub_part($row['id'], $deep + 1, $max_deep);
             }
         }
         return $content;
     }
-
 }

@@ -9,8 +9,9 @@ use classes\BaseModel;
  *
  * @author BooT
  */
-class MediaList extends BaseModel {
-    
+class MediaList extends BaseModel
+{
+
     /**
      * @inheritdoc
      */
@@ -18,7 +19,7 @@ class MediaList extends BaseModel {
     {
         return 'media_list';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -37,7 +38,7 @@ class MediaList extends BaseModel {
             'image_type',
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -62,5 +63,4 @@ class MediaList extends BaseModel {
             'descr' => 'Описание',
         ];
     }
-    
 }

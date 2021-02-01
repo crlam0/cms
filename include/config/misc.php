@@ -26,4 +26,3 @@ $console = [
         'misc' => 'var/cache/misc',
     ],
 ];
-    

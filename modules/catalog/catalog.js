@@ -1,6 +1,6 @@
 
 $(document).ready(function () {
-    
+
     var MYDIR = DIR + 'modules/catalog/';
 
     $('body').on('click', 'a.buy_button', function () {
@@ -23,7 +23,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     $("img.cat_item_image_popup").click(function () {
         var file_name = $(this).attr("file_name");
         var item_id = $(this).attr("item_id");

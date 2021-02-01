@@ -10,7 +10,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class DebugOffCommand extends Command
 {
-    
+
     private $db;
 
     public function __construct($db)
@@ -33,13 +33,13 @@ class DebugOffCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<comment>Switch debug mode off</comment>');
-        
+
         $query = "update settings set value='0' where name='debug'";
-        if($this->db->query($query)) {
+        if ($this->db->query($query)) {
             $output->writeln('<info>Done!</info>');
         } else {
             $output->writeln('<error>ERROR!</error>');
             $output->writeln('<error>Error was: ' . $this->db->error() . '</error>');
-        }        
+        }
     }
 }

@@ -11,7 +11,7 @@ require_once 'bootstrap.php';
 class BlocksTest extends TestCase
 {
     private $Blocks;
-    
+
     public function setUp() : void
     {
         parent::setUp();
@@ -26,6 +26,4 @@ class BlocksTest extends TestCase
         $content = $this->Blocks->content('menu_main');
         self::assertStringContainsString('id="menu-main"', $content);
     }
-    
 }
-

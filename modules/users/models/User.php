@@ -10,8 +10,9 @@ use classes\User as ClassesUser;
  *
  * @author BooT
  */
-class User extends ClassesUser {
-    
+class User extends ClassesUser
+{
+
     /**
      * @inheritdoc
      */
@@ -42,21 +43,23 @@ class User extends ClassesUser {
         ];
     }
 
-    
-    public function findByEmail($email): void {
-        $row = App::$db->getRow("select id,flags from users where email=? and flags like '%active%'", ['email' => $email]);
-        if($row) {
-            $this->authByArray($row);
-        }
-    }    
 
-    public function findByToken($token): void {
-        $row = App::$db->getRow("select id,flags from users where token=? and flags like '%active%'", ['token' => $token]);
-        if($row) {
+    public function findByEmail($email): void
+    {
+        $row = App::$db->getRow("select id,flags from users where email=? and flags like '%active%'", ['email' => $email]);
+        if ($row) {
             $this->authByArray($row);
         }
-    }   
-    
+    }
+
+    public function findByToken($token): void
+    {
+        $row = App::$db->getRow("select id,flags from users where token=? and flags like '%active%'", ['token' => $token]);
+        if ($row) {
+            $this->authByArray($row);
+        }
+    }
+
     /**
      * Add flag
      *
@@ -64,7 +67,7 @@ class User extends ClassesUser {
      *
      * @return boolean true if complete
      */
-    public function addFlag(string $flag) 
+    public function addFlag(string $flag)
     {
         if (!strlen($flag) || $this->haveFlag($flag)) {
             return false;
@@ -73,8 +76,8 @@ class User extends ClassesUser {
         $array[] = $flag;
         $this->flags=implode(';', $array);
         return true;
-    }    
-    
+    }
+
     /**
      * Remove flag
      *
@@ -82,15 +85,14 @@ class User extends ClassesUser {
      *
      * @return boolean true if complete
      */
-    public function delFlag(string $flag) 
+    public function delFlag(string $flag)
     {
         if (!strlen($flag) || !$this->haveFlag($flag)) {
             return false;
         }
         $array = $this->getFlagsAsArray();
-        array_splice($array, array_search($flag, $array ), 1);
+        array_splice($array, array_search($flag, $array), 1);
         $this->flags=implode(';', $array);
         return true;
-    }        
-    
+    }
 }

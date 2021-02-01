@@ -11,7 +11,7 @@ class CreateTableBlogTags extends AbstractMigration
               ->addColumn('name', 'string', ['limit' => 64])
               ->addColumn('seo_alias', 'string', ['limit' => 64])
               ->create();
-        
+
         $blog_posts_tags = $this->table('blog_posts_tags', ['engine' => 'MyISAM']);
         $blog_posts_tags
               ->addColumn('post_id', 'integer', ['limit' => 11])

@@ -11,10 +11,10 @@ use Stormiix\Twig\Extension\MixExtension;
 
 use classes\App;
 
-class TwigTemplate 
+class TwigTemplate
 {
     private $twig;
-    
+
     const TYPE_STRING = 0;
     const TYPE_ARRAY = 1;
     const TYPE_FILE = 2;
@@ -44,19 +44,19 @@ class TwigTemplate
     public function __construct(int $template_type, array $config_override = [], string $content = null)
     {
         $this->template_type = $template_type;
-        
-        if(is_array($config_override)) {
-            foreach($config_override as $key => $value) {
+
+        if (is_array($config_override)) {
+            foreach ($config_override as $key => $value) {
                 $this->config[$key] = $value;
             }
         }
-        
+
         switch ($this->template_type) {
             case $this::TYPE_FILE:
                     $loader = new FilesystemLoader();
-                    foreach($this->config['template_dirs'] as $path) {
-                        $loader->addPath(App::$DIR . $path);
-                    }
+                foreach ($this->config['template_dirs'] as $path) {
+                    $loader->addPath(App::$DIR . $path);
+                }
                 break;
             case $this::TYPE_ARRAY:
                     $loader = new ArrayLoader($content);
@@ -70,7 +70,7 @@ class TwigTemplate
                 App::$message->error('Unknown template type');
                 return null;
         }
-        
+
         $environment = new Environment($loader, [
             'cache' => $this->config['debug'] ? false : App::$DIR . $this->config['cache_dir'],
             'debug' => $this->config['debug'],
@@ -82,13 +82,13 @@ class TwigTemplate
         if ($this->config['debug']) {
             $environment->addExtension(new DebugExtension());
         }
-      
+
         $mix = new MixExtension(
             App::$DIR . 'theme/',     // the absolute public directory
             'mix-manifest.json'   // the manifest filename (default value is 'mix-manifest.json')
         );
         $environment->addExtension($mix);
-        
+
         $environment->addGlobal('SUBDIR', App::$SUBDIR);
         $environment->addGlobal('PHP_SELF', App::$server['PHP_SELF']);
         $environment->addGlobal('PHP_SELF_DIR', App::$server['PHP_SELF_DIR']);
@@ -113,7 +113,7 @@ class TwigTemplate
                 return new TwigFunction($name, $name);
             }
             return false;
-        });    
+        });
     }
 
     /**
@@ -148,7 +148,7 @@ class TwigTemplate
     public function create_template($template)
     {
         return $this->twig->createTemplate($template);
-    }        
+    }
      */
 
     /**
@@ -164,10 +164,9 @@ class TwigTemplate
         if ($this->template_type === $this::TYPE_STRING) {
             $name = 'template';
         }
-        if ($this->template_type === $this::TYPE_FILE && !strstr($name,'.html.twig') ) {
+        if ($this->template_type === $this::TYPE_FILE && !strstr($name, '.html.twig')) {
             $name .= '.html.twig';
         }
         return $this->twig->render($name, $params);
     }
-
 }

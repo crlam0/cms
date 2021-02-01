@@ -7,7 +7,8 @@ use classes\BaseController;
 use classes\Pagination;
 
 class Controller extends BaseController
-{    
+{
+
     public function actionPartList(): string
     {
         $this->title = 'Статьи';
@@ -24,16 +25,16 @@ class Controller extends BaseController
     public function actionItemsList(string $alias, int $page = 1): string
     {
         $list_id = get_id_by_alias('article_list', $alias, true);
-        
+
         [$title, $list_seo_alias] = App::$db->getRow("select title,seo_alias from article_list where id=?", ['id' => $list_id]);
-        
+
         $this->title = $title;
         $this->breadcrumbs[] = ['title' => 'Статьи','url' => 'article/'];
         $this->breadcrumbs[] = ['title' => $title];
-        
+
         $query = "SELECT count(id) from article_item where list_id=?";
         [$total] = App::$db->getRow($query, ['list_id' => $list_id]);
-        
+
         $per_page = App::$settings['modules']['article']['article_per_page'] ?? 10;
 
         $pager = new Pagination($total, $page, $per_page);
@@ -49,7 +50,7 @@ class Controller extends BaseController
             return App::$message->get('list_empty');
         }
     }
-    
+
     public function actionContent(string $list_alias, string $alias): string
     {
         $article_id = get_id_by_alias('article_item', $alias, true);
@@ -72,17 +73,14 @@ class Controller extends BaseController
         return  App::$template->parse('article_view', $row);
     }
 
-    public function actionPDF(string $uri, string $alias): string 
+    public function actionPDF(string $uri, string $alias): string
     {
         $id = get_id_by_alias('article_item', $alias, true);
         $query = "select * from article_item where id=?";
         $result = App::$db->query($query, ['id' => $id]);
         $row = $result->fetch_array();
-        
+
         $PDF = new PDFView();
         return $PDF->get($row, $stream = true);
     }
-    
-
 }
-

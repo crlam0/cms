@@ -16,7 +16,7 @@ namespace classes;
 
 class User extends BaseModel
 {
-    
+
     /**
     * @const Use password hash to create token.
     */
@@ -31,9 +31,9 @@ class User extends BaseModel
     * @const Remove token.
     */
     const TOKEN_NULL = 2;
-    
+
     private $data_loaded;
-    
+
     /**
      * @inheritdoc
      */
@@ -41,7 +41,7 @@ class User extends BaseModel
     {
         return 'users';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -61,7 +61,7 @@ class User extends BaseModel
             'avatar',
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -90,10 +90,10 @@ class User extends BaseModel
             'fullname' => 'Полное имя',
         ];
     }
-    
-    public function __construct($id = null, $flags = '') 
+
+    public function __construct($id = null, $flags = '')
     {
-        if($id !== null) {
+        if ($id !== null) {
             parent::__construct($id);
             $this->data_loaded = true;
         } else {
@@ -103,7 +103,7 @@ class User extends BaseModel
             $this->data_loaded = false;
         }
     }
-    
+
     public function __get(string $name)
     {
         switch ($name) {
@@ -112,7 +112,7 @@ class User extends BaseModel
             case 'flags':
                 return parent::__get('flags');
             default:
-                if(!$this->data_loaded) {
+                if (!$this->data_loaded) {
                     $this->loadFromDb($this->id);
                     $this->data_loaded = true;
                 }
@@ -136,13 +136,13 @@ class User extends BaseModel
     /**
      * Load data from array
      *
-     * @param array $arr 
+     * @param array $arr
      *
      */
     public function authByArray(array $arr) : bool
     {
         return $this->authByIdFlags($arr['id'], $arr['flags']);
-    }    
+    }
 
     /**
      * Load data from _SESSION.
@@ -152,23 +152,23 @@ class User extends BaseModel
      */
     public function authBySession(array $session) : bool
     {
-        if(array_key_exists('UID', $session)) {
-            if(!(int)$session['UID']>0) {
+        if (array_key_exists('UID', $session)) {
+            if (!(int)$session['UID']>0) {
                 return false;
             }
             $id = $session['UID'];
         } else {
             return false;
         }
-        if(array_key_exists('FLAGS', $session)) {
+        if (array_key_exists('FLAGS', $session)) {
             $flags = $session['FLAGS'];
         } else {
             return false;
         }
         App::debug('Auth by session');
         return $this->authByIdFlags($id, $flags);
-    }    
-    
+    }
+
     /**
      * Check user access
      *
@@ -177,18 +177,18 @@ class User extends BaseModel
      *
      * @return array|false False if auth failed
      */
-    public function authByLoginPassword(string $login, string $password) 
+    public function authByLoginPassword(string $login, string $password)
     {
         $row = App::$db->getRow("select id,flags,passwd,salt from users where login=? and flags like '%active%'", ['login' => $login]);
         if ($row) {
-            if(password_verify($password, $row['passwd'])) {
+            if (password_verify($password, $row['passwd'])) {
                 $this->authByArray($row);
                 return $row;
             }
         }
         return false;
-    }    
-    
+    }
+
     /**
      * Clear user data
      *
@@ -206,27 +206,27 @@ class User extends BaseModel
      *
      * @return boolean true if user have flag
      */
-    public function haveFlag(string $flag) 
+    public function haveFlag(string $flag)
     {
         if (!strlen($flag)) {
             return true;
         }
         return strpos($this->flags, $flag) > -1;
-    }    
+    }
 
     /**
      * Return user's flags as array
      *
      * @return array
      */
-    public function getFlagsAsArray() 
+    public function getFlagsAsArray()
     {
-        if(strlen($this->flags) > 0) {
-            return explode(';', $this->flags);            
+        if (strlen($this->flags) > 0) {
+            return explode(';', $this->flags);
         } else {
             return [];
         }
-    }    
+    }
 
     /**
      * Check user access
@@ -239,14 +239,14 @@ class User extends BaseModel
     {
         return (!strlen($flag)) || ($this->haveFlag($flag)) || ($this->haveFlag('global'));
     }
-    
-    
+
+
     /**
      * Generate salt for user account
      *
      * @return string Generated salt
      */
-    public function generateSalt() : string 
+    public function generateSalt() : string
     {
         $salt = '';
         for ($i = 0; $i < 22; $i++) {
@@ -282,7 +282,7 @@ class User extends BaseModel
      *
      * @return string Generated hash
      */
-    public function encryptPassword(string $passwd, string $salt) : string 
+    public function encryptPassword(string $passwd, string $salt) : string
     {
         if (mb_strlen($salt) === 22) {
             return crypt($passwd, '$2a$13$' . $salt);
@@ -301,7 +301,7 @@ class User extends BaseModel
      */
     public function makeToken(int $expire_days, int $type = 0) : string
     {
-        if(!$this->id){
+        if (!$this->id) {
             return null;
         }
         $token_expire = time() + $expire_days*24*3600;
@@ -319,7 +319,7 @@ class User extends BaseModel
         App::$db->updateTable($this::tableName(), ['token'=>$token, 'token_expire'=>$token_expire], ['id'=>$this->id]);
         return $this->token;
     }
-    
+
     /**
      * Check token
      *
@@ -327,28 +327,28 @@ class User extends BaseModel
      *
      * @return array|false|null User data or false
      */
-    public function checkToken(string $token) 
+    public function checkToken(string $token)
     {
         $data = App::$db->getRow('select id,flags,token_expire from users where token=?', ['token' => $token]);
-        if(!$data) {
+        if (!$data) {
             return false;
         }
-        if($data['token_expire'] > time()) {
+        if ($data['token_expire'] > time()) {
             return $data;
         } else {
             $this->makeToken($data['id'], 0, static::TOKEN_NULL);
         }
     }
-    
+
     /**
      * Generate RememberMe cookie and token.
      *
      * @return false|null
      */
-    public function setRememberme(string $COOKIE_NAME) 
+    public function setRememberme(string $COOKIE_NAME)
     {
-        if(!$this->id || !$COOKIE_NAME) {
-            return false;        
+        if (!$this->id || !$COOKIE_NAME) {
+            return false;
         }
         $expire = time()+31*24*3600;
         $token = $this->makeToken(31);
@@ -362,14 +362,14 @@ class User extends BaseModel
      */
     public function authByRememberme(string $COOKIE_NAME) : bool
     {
-        if(!$value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME')) {
+        if (!$value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME')) {
             return false;
         }
         $token = App::$db->testParam($value);
-        if($data = $this->checkToken($token)){
+        if ($data = $this->checkToken($token)) {
             App::debug('Auth by Rememberme cookie');
             list($_SESSION['UID'],$_SESSION['FLAGS']) = $data;
-            return $this->authByIdFlags($data['id'],$data['flags']);
+            return $this->authByIdFlags($data['id'], $data['flags']);
         }
         return false;
     }
@@ -381,10 +381,9 @@ class User extends BaseModel
     public function delRememberme(string $COOKIE_NAME) : void
     {
         $value = filter_input(INPUT_COOKIE, $COOKIE_NAME.'_REMEMBERME');
-        if(strlen($value)){
+        if (strlen($value)) {
             setcookie($COOKIE_NAME.'_REMEMBERME', '', time(), App::$SUBDIR);
             $this->makeToken(0, static::TOKEN_NULL);
         }
     }
-    
 }

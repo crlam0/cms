@@ -6,7 +6,8 @@ use classes\BaseController;
 use classes\App;
 
 class LogoutController extends BaseController
-{    
+{
+
     public function actionIndex(): void
     {
         global $_SESSION, $COOKIE_NAME;
@@ -14,7 +15,6 @@ class LogoutController extends BaseController
         App::$user->logout();
         $_SESSION['UID']=0;
         $_SESSION['FLAGS']='';
-        redirect(App::$SUBDIR);    
+        redirect(App::$SUBDIR);
     }
 }
-

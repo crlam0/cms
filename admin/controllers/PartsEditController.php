@@ -6,11 +6,13 @@ use classes\App;
 use classes\BaseController;
 
 class PartsEditController extends BaseController
-{    
-    
+{
+
+
     private $table;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         parent::__construct();
         $this->table = 'parts';
         $this->title = 'Разделы';
@@ -21,13 +23,13 @@ class PartsEditController extends BaseController
     {
         $query = "SELECT * from {$this->table} order by title asc";
         $result = App::$db->query($query);
-        
-        return $this->render('parts_table.html.twig', [], $result);        
+
+        return $this->render('parts_table.html.twig', [], $result);
     }
 
-    public function actionCreate(): string 
+    public function actionCreate(): string
     {
-        if(is_array(App::$input['form'])) {
+        if (is_array(App::$input['form'])) {
             App::$db->insertTable($this->table, App::$input['form']);
             redirect('index');
         }
@@ -45,9 +47,9 @@ class PartsEditController extends BaseController
         return $this->render('parts_form.html.twig', $tags);
     }
 
-    public function actionUpdate(int $id): string 
+    public function actionUpdate(int $id): string
     {
-        if(is_array(App::$input['form'])) {
+        if (is_array(App::$input['form'])) {
             App::$db->updateTable($this->table, App::$input['form'], ['id' => $id]);
             redirect('index');
         }
@@ -58,12 +60,10 @@ class PartsEditController extends BaseController
         $tags['flags'] = $flags->fetch_all(MYSQLI_ASSOC);
         return $this->render('parts_form.html.twig', $tags);
     }
-    
-    public function actionDelete(int $id): string 
+
+    public function actionDelete(int $id): string
     {
         App::$db->deleteFromTable($this->table, ['id' => $id]);
         return $this->actionIndex();
     }
-    
 }
-

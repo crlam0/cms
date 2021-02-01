@@ -15,7 +15,8 @@ use classes\App;
  *
  * @return string Output string
  */
-function my_msg_to_str($title, $tags = [], $str = '') {
+function my_msg_to_str($title, $tags = [], $str = '')
+{
     return App::$message->get($title, $tags, $str);
 }
 
@@ -28,7 +29,8 @@ function my_msg_to_str($title, $tags = [], $str = '') {
  *
  * @return void
  */
-function send_mail($message_to, $subject, $message): void {
+function send_mail($message_to, $subject, $message): void
+{
     App::$message->mail($message_to, $subject, $message);
 }
 
@@ -39,21 +41,21 @@ function send_mail($message_to, $subject, $message): void {
  *
  * @return string
  */
-function send_sms($message): string {
-    if(!strlen(App::$settings['sms_api_id'])){
+function send_sms($message): string
+{
+    if (!strlen(App::$settings['sms_api_id'])) {
         return '';
     }
-    
+
     $ch = curl_init('http://sms.ru/sms/send');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+    curl_setopt($ch, CURLOPT_POSTFIELDS, [
         'api_id' => App::$settings['sms_api_id'],
         'to' => App::$settings['sms_my_number'],
         'text' => $message
-    ));
-    $body = curl_exec($ch);    
+    ]);
+    $body = curl_exec($ch);
     curl_close($ch);
     return $body;
 }
-

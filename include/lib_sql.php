@@ -8,7 +8,6 @@
 
 use classes\App;
 
-
 /**
  * Replace for mysql_query
  *
@@ -17,7 +16,8 @@ use classes\App;
  *
  * @return array mysqli result
  */
-function my_query($sql, $dont_debug=false) {
+function my_query($sql, $dont_debug = false)
+{
     return App::$db->query($sql);
 }
 
@@ -29,8 +29,9 @@ function my_query($sql, $dont_debug=false) {
  *
  * @return array One row
  */
-function my_select_row($sql, $dont_debug=false) {
-    return App::$db->getRow($sql);    
+function my_select_row($sql, $dont_debug = false)
+{
+    return App::$db->getRow($sql);
 }
 
 /**
@@ -40,7 +41,8 @@ function my_select_row($sql, $dont_debug=false) {
  *
  * @return int|string Complete string for query
  */
-function db_insert_fields($fields) {
+function db_insert_fields($fields)
+{
     return App::$db->insertFields($fields);
 }
 
@@ -52,9 +54,7 @@ function db_insert_fields($fields) {
  * @return string Complete string for query
  */
 
-function db_update_fields($fields) {
+function db_update_fields($fields)
+{
     return App::$db->updateFields($fields);
 }
-
-
-

@@ -6,7 +6,7 @@ use classes\BaseController;
 
 class TestController extends BaseController
 {
-    
+
     public function actionIndex($arg1, $arg2): string
     {
         $this->title = 'Test';
@@ -14,4 +14,3 @@ class TestController extends BaseController
         return $arg1. '<br />' . $arg2;
     }
 }
-

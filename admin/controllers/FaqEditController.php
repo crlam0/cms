@@ -6,10 +6,12 @@ use classes\App;
 use classes\BaseController;
 
 class FaqEditController extends BaseController
-{        
+{
+
     private $table;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         parent::__construct();
         $this->table = 'faq';
         $this->title = 'Вопрос/ответ';
@@ -21,22 +23,22 @@ class FaqEditController extends BaseController
         $result = App::$db->findAll($this->table, [], 'date,author asc');
         // $query = "SELECT * from {$this->table} order by date,author asc";
         // $result = App::$db->query($query);
-        
-        return $this->render('faq_table.html.twig', [], $result);        
+
+        return $this->render('faq_table.html.twig', [], $result);
     }
-    
-    public function actionActive(int $id, string $active): string 
+
+    public function actionActive(int $id, string $active): string
     {
         App::$db->updateTable($this->table, ['active' => $active], ['id' => $id]);
         echo $active;
         exit;
-    }  
+    }
 
-    public function actionCreate(): string 
+    public function actionCreate(): string
     {
         global $_FILES;
         $content = '';
-        if(is_array(App::$input['form'])) {
+        if (is_array(App::$input['form'])) {
             App::$input['form']['ans_uid'] = App::$user->id;
             App::$input['form']['date'] = App::$input['form']['date'] ?? 'now()';
             App::$db->insertTable($this->table, App::$input['form']);
@@ -53,14 +55,14 @@ class FaqEditController extends BaseController
             'txt' => '',
             'ans' => '',
         ];
-        
+
         return $this->render('faq_form.html.twig', $tags);
     }
 
-    public function actionUpdate(int $id): string 
+    public function actionUpdate(int $id): string
     {
         global $_FILES;
-        if(is_array(App::$input['form'])) {
+        if (is_array(App::$input['form'])) {
             App::$input['form']['ans_uid'] = App::$user->id;
             App::$db->updateTable($this->table, App::$input['form'], ['id' => $id]);
             redirect('index');
@@ -71,13 +73,10 @@ class FaqEditController extends BaseController
 
         return $this->render('faq_form.html.twig', $tags);
     }
-    
-    public function actionDelete(int $id): string 
+
+    public function actionDelete(int $id): string
     {
         App::$db->deleteFromTable($this->table, ['id' => $id]);
         return $this->actionIndex();
     }
-
-    
 }
-

@@ -46,7 +46,7 @@ TD,BLOCKQUOTE,FORM,SELECT,OPTION,INPUT,TEXTAREA {
     font-family: Tahoma,sans-serif
 }
 table.admin {
-    background-color: #7799ee;        
+    background-color: #7799ee;
 }
 table.admin td{
     padding: 3px;
@@ -123,7 +123,7 @@ img.margin {
 .modal-dialog {
     text-align: left;
     min-width: 300px;
-} 
+}
 
 .modal-fs .modal-dialog {
   width: 800px;

@@ -1,5 +1,5 @@
 <?php
-if(!isset($input)) {
+if (!isset($input)) {
     require '../include/common.php';
 }
 
@@ -9,14 +9,14 @@ $tags['Header'] = 'Прайс-лист';
 if (isset($input['attr_name'])) {
     $input['id'] = intval($input['id']);
     // $input['value'] = intval($input['value']);
-    if($input['attr_type'] == "simple") {
+    if ($input['attr_type'] == "simple") {
         $query = "update cat_item set {$input['attr_name']}='{$input['value']}' where id='{$input['id']}'";
         $result = my_query($query);
-    } else if($input['attr_type'] == "json" || $input['attr_type'] == "boolean") {
+    } elseif ($input['attr_type'] == "json" || $input['attr_type'] == "boolean") {
         $query = "select props from cat_item where id='{$input['id']}'";
         $row = my_select_row($query);
-        if($row){
-            if(!$props_values = my_json_decode($row['props'])) {
+        if ($row) {
+            if (!$props_values = my_json_decode($row['props'])) {
                 $props_values=[];
             }
             $props_values[$input['attr_name']] = $input['value'];
@@ -25,7 +25,7 @@ if (isset($input['attr_name'])) {
             $result = my_query($query);
         }
     }
-    if($result) {
+    if ($result) {
         echo 'OK';
     } else {
         echo "Fuck";
@@ -33,7 +33,8 @@ if (isset($input['attr_name'])) {
     exit();
 }
 
-function part_items($part_id): string {
+function part_items($part_id): string
+{
     $content = '';
     $query = "select cat_item.*,cat_item.id as item_id,cat_part.items_props
         from cat_item
@@ -47,15 +48,15 @@ function part_items($part_id): string {
         $content .= '<tr>';
         $tags = $result->fetch_array();
         $content .= '<td>Название</td>'. '<td>Базовая цена</td>' . PHP_EOL;
-        if(strlen($tags['items_props'])) {
+        if (strlen($tags['items_props'])) {
             $props_array = json_decode($tags['items_props'], true);
             // print_array($props_array);
-            if(!is_array($props_array)) {
-                $content.=my_msg_to_str('',[],'Массив свойств неверен');
+            if (!is_array($props_array)) {
+                $content.=my_msg_to_str('', [], 'Массив свойств неверен');
             } else {
                 $props_values=json_decode($tags['props'], true);
                 // print_array($props_values);
-                if(is_array($props_values)){
+                if (is_array($props_values)) {
                     foreach ($props_values as $input_name => $value) {
                         $param_value[$input_name]=$value;
                     }
@@ -71,26 +72,26 @@ function part_items($part_id): string {
             $content .= '<tr><td width="300">'.$tags['title'].'</td>';
             $content .= '<td><input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="simple" attr_name="price" value="'.$tags['price'].'"></td>';
             // echo $tags['items_props'];
-            if(strlen($tags['items_props'])) {
+            if (strlen($tags['items_props'])) {
                 $props_array = json_decode($tags['items_props'], true);
                 // print_array($props_array);
-                if(!is_array($props_array)) {
-                    $content.=my_msg_to_str('',[],'Массив свойств неверен');
+                if (!is_array($props_array)) {
+                    $content.=my_msg_to_str('', [], 'Массив свойств неверен');
                 } else {
                     $props_values=json_decode($tags['props'], true);
                     // print_array($props_values);
                     $param_value = [];
-                    if(is_array($props_values)){
+                    if (is_array($props_values)) {
                         foreach ($props_values as $input_name => $value) {
                             $param_value[$input_name]=$value;
                         }
                     }
                     foreach ($props_array as $input_name => $params) {
                         $content .= '<td align="center">' . PHP_EOL;
-                        if(check_key('type', $params) == 'boolean') {
-                            $content .= '<input type="checkbox" class="attr_change" size="8" id="'.$tags['id'].'"  attr_type="boolean" attr_name="'.$input_name.'" '.(check_key($input_name,$param_value) ? ' checked' : '').'>';
+                        if (check_key('type', $params) == 'boolean') {
+                            $content .= '<input type="checkbox" class="attr_change" size="8" id="'.$tags['id'].'"  attr_type="boolean" attr_name="'.$input_name.'" '.(check_key($input_name, $param_value) ? ' checked' : '').'>';
                         } else {
-                            $content .= '<input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="json" attr_name="'.$input_name.'" value="'.check_key($input_name,$param_value).'">';
+                            $content .= '<input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="json" attr_name="'.$input_name.'" value="'.check_key($input_name, $param_value).'">';
                         }
                         $content .= '</td>' . PHP_EOL;
                     }
@@ -105,9 +106,10 @@ function part_items($part_id): string {
 if (true) {
     $subparts = 0;
 
-    function sub_part($prev_id, $deep, $max_deep): void {
+    function sub_part($prev_id, $deep, $max_deep): void
+    {
         global $content, $subparts;
-        if ($deep){
+        if ($deep) {
             $subparts++;
         }
         $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='$prev_id' group by cat_part.id order by cat_part.num,cat_part.title asc";
@@ -121,7 +123,7 @@ if (true) {
             }
 
             $content .= part_items($row['id']);
-            if ($deep < $max_deep){
+            if ($deep < $max_deep) {
                 sub_part($row['id'], $deep + 1, $max_deep);
             }
         }

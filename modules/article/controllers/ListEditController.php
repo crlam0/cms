@@ -14,7 +14,8 @@ class ListEditController extends BaseController
     private $image_width;
     private $image_height;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->title = 'Разделы статей';
         $this->breadcrumbs[] = ['title' => $this->title];
@@ -27,15 +28,15 @@ class ListEditController extends BaseController
     public function actionIndex(): string
     {
         $model = new ArticleList;
-        $result = $model->findAll([], 'date_add DESC');        
-        return $this->render('article_list_table.html.twig', [], $result);        
+        $result = $model->findAll([], 'date_add DESC');
+        return $this->render('article_list_table.html.twig', [], $result);
     }
 
-    public function actionCreate(): string 
+    public function actionCreate(): string
     {
         $model = new ArticleList();
-        if($model->load(App::$input['form']) && $model->validate()) {
-            if (!$model->seo_alias){
+        if ($model->load(App::$input['form']) && $model->validate()) {
+            if (!$model->seo_alias) {
                 $model->seo_alias = encodestring($model->title);
             }
             $model->descr = replace_base_href($model->descr, true);
@@ -58,11 +59,11 @@ class ListEditController extends BaseController
         ]);
     }
 
-    public function actionUpdate(int $id): string 
+    public function actionUpdate(int $id): string
     {
-        $model = new ArticleList($id); 
-        if($model->load(App::$input['form']) && $model->validate()) {
-            if (!$model->seo_alias){
+        $model = new ArticleList($id);
+        if ($model->load(App::$input['form']) && $model->validate()) {
+            if (!$model->seo_alias) {
                 $model->seo_alias = encodestring($model->title);
             }
             $model->descr = replace_base_href($model->descr, true);
@@ -83,10 +84,10 @@ class ListEditController extends BaseController
             'form_title' => 'Изменение',
         ]);
     }
-    
-    public function actionDelete(int $id): string 
+
+    public function actionDelete(int $id): string
     {
-        if(App::$db->getRow("select id from article_item where list_id=?", ['id' => $id])) {
+        if (App::$db->getRow("select id from article_item where list_id=?", ['id' => $id])) {
             App::setFlash('danger', 'Этот раздел не пустой !');
             $this->redirect('index');
         }
@@ -94,28 +95,29 @@ class ListEditController extends BaseController
         $this->deleteImageFile($model);
         $model->delete();
         $this->redirect('index');
-    }    
+    }
 
-    public function showImage($file_name): string{
+    public function showImage($file_name): string
+    {
         if (is_file(App::$DIR . $this->image_path . $file_name)) {
             return '<img src="' . App::$SUBDIR . $this->image_path . $file_name . '" border="0" width="' . $this->image_width . '" />';
         } else {
             return 'Отсутствует';
-        }        
+        }
     }
-    
+
     /**
      * @return bool
      */
-    private function saveImage(ArticleList $model, $file) 
+    private function saveImage(ArticleList $model, $file)
     {
-        if(!$file['size']){
+        if (!$file['size']) {
             return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
             App::setFlash('danger', 'Неверный тип файла !');
             return false;
-        }         
+        }
         $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
         $file_name = encodestring($model->title) . '.' . $f_info['extension'];
@@ -128,19 +130,19 @@ class ListEditController extends BaseController
             return false;
         }
     }
-    
-    public function actionDeleteImageFile($post_id): void 
+
+    public function actionDeleteImageFile($post_id): void
     {
         $model = new ArticleList($post_id);
         $this->deleteImageFile($model);
         $model->save(false);
         $this->redirect('update', ['id' => $post_id]);
     }
-    
+
     /**
      * @return false|null
      */
-    private function deleteImageFile(ArticleList $model) 
+    private function deleteImageFile(ArticleList $model)
     {
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {
@@ -151,6 +153,4 @@ class ListEditController extends BaseController
         $model->image_name = '';
         $model->image_type = '';
     }
-    
 }
-

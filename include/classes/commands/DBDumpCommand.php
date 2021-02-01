@@ -33,20 +33,19 @@ class DBDumpCommand extends Command
 
         $dump_name = 'dump-' . date('Y-m-d_His'). (strlen($table) ? '_'.$table : '') . '.sql';
         $output->writeln('<comment>Dumping db into </comment><info>'.$dump_name.'</info>');
-        if(strlen($table)) {
+        if (strlen($table)) {
             $output->writeln('<comment>Only table </comment><info>'.$table.'</info>');
         }
 
         $command="mysqldump -h {$DBHOST} -u {$DBUSER} --password={$DBPASSWD} {$DBNAME} {$table} > {$dump_name}";
         $result = 0;
-        system($command,$result);
-        if($result!==0){
+        system($command, $result);
+        if ($result!==0) {
             $output->writeln('<error>ERROR!</error>');
             $output->writeln('<error>Command was: '.$command.'</error>');
             unlink($dump_name);
         } else {
             $output->writeln('<info>Done!</info>');
         }
-
     }
 }

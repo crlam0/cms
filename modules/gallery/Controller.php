@@ -13,15 +13,15 @@ use classes\Image;
  *
  * @author User
  */
-class Controller extends BaseController 
+class Controller extends BaseController
 {
-    
+
     public static $cache_path = 'var/cache/gallery/';
-    
+
     public function actionPartList(): string
     {
         $this->title = 'Галерея';
-        $this->breadcrumbs[] = ['title'=>$this->title];        
+        $this->breadcrumbs[] = ['title'=>$this->title];
         $query = "SELECT 
                 gallery_list.*,count(images.id) AS images,max(images.date_add) AS last_images_date_add,
                 def_img.id as def_id,def_img.file_name as def_file_name,def_img.file_type as def_file_type 
@@ -37,14 +37,14 @@ class Controller extends BaseController
             return App::$message->get('list_empty');
         }
     }
-    
+
     public function actionImagesList(string $alias, int $page = 1): string
     {
-        $view_gallery = get_id_by_alias('gallery_list', $alias, true);            
+        $view_gallery = get_id_by_alias('gallery_list', $alias, true);
         list($gallery_title, $gallery_seo_alias) = App::$db->getRow("SELECT title, seo_alias from gallery_list where id='{$view_gallery}'");
-        
+
         $this->title = $gallery_title;
-        $this->breadcrumbs[] = ['title' => 'Галерея', 'url'=>'gallery/'];        
+        $this->breadcrumbs[] = ['title' => 'Галерея', 'url'=>'gallery/'];
         $this->breadcrumbs[] = ['title' => $gallery_title];
         App::addAsset('js', 'modules/gallery/gallery.js');
 
@@ -61,8 +61,8 @@ class Controller extends BaseController
             $content = $this->render('gallery_images_list', $tags, $result);
         }
 
-        if(App::$settings['gallery_use_comments']) {
-            $comments = new Comments ('gallery',$view_gallery);
+        if (App::$settings['gallery_use_comments']) {
+            $comments = new Comments('gallery', $view_gallery);
             $comments->get_form_data(App::$input['form']);
             $content.=$comments->show_list();
             $tags['action']=App::$SUBDIR . $tags['gallery_list_href'] . '#comments';
@@ -70,7 +70,7 @@ class Controller extends BaseController
         }
         return $content;
     }
-    
+
     public function actionLoad(): array
     {
         $query = "SELECT * from gallery_images where id='".App::$input['id']."'";
@@ -82,14 +82,15 @@ class Controller extends BaseController
 
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $tags['file_name'];
         $image = new Image($file_name, $tags['file_type']);
-        $tags['IMAGE'] = $image->getHTML($tags, 'var/cache/gallery/','','modules/gallery/image.php?clientHeight='.App::$input['clientHeight'].'&id=' . $tags['id'], $this->getMaxWidth());
+        $tags['IMAGE'] = $image->getHTML($tags, 'var/cache/gallery/', '', 'modules/gallery/image.php?clientHeight='.App::$input['clientHeight'].'&id=' . $tags['id'], $this->getMaxWidth());
 
         $json = $tags;
         $json['content'] = $this->render('gallery_image_view', $tags);
         return $json;
     }
-    
-    public static function getMaxWidth() {
+
+    public static function getMaxWidth()
+    {
         if (App::$input['preview']) {
             $max_width = App::$settings['gallery_max_width_preview'];
         } else {
@@ -100,10 +101,10 @@ class Controller extends BaseController
         }
         if (App::$input['width'] && is_integer(App::$input['width'])) {
             $max_width = App::$input['width'];
-        }    
-        return $max_width;        
+        }
+        return $max_width;
     }
-    
+
     public function getImage($row): string
     {
         App::$input['preview']=true;
@@ -111,32 +112,31 @@ class Controller extends BaseController
         $image = new Image($file_name, $row['file_type']);
         return $image->getHTML($row, static::$cache_path, 'gallery_popup', 'modules/gallery/image.php?preview=1&id=' . $row['id'], $this->getMaxWidth());
     }
-    
+
     public function getListImage($row): string
     {
-        if(!$row['def_file_name']) {
+        if (!$row['def_file_name']) {
             return 'Изображение отсутствует';
         }
-        App::$input['icon']=true;    
+        App::$input['icon']=true;
         $row['file_name'] = $row['def_file_name'];
         $row['id'] = $row['def_id'];
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
         $image = new Image($file_name, $row['def_file_type']);
-        return $image->getHTML($row, static::$cache_path, '', 'modules/gallery/image.php?icon=1&id=' . $row['id'], $this->getMaxWidth());        
+        return $image->getHTML($row, static::$cache_path, '', 'modules/gallery/image.php?icon=1&id=' . $row['id'], $this->getMaxWidth());
     }
-    
+
     public function getIcons($row): string
     {
         $content='';
         App::$input['icon']=true;
         $query="select * from gallery_images where gallery_id='{$row['id']}' limit 6";
         $result = App::$db->query($query);
-        while($row = $result->fetch_array()){
+        while ($row = $result->fetch_array()) {
             $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
             $image = new Image($file_name, $row['file_type']);
             $content .= $image->getHTML($row, static::$cache_path, 'list_icon', 'modules/gallery/image.php?preview=1&id=' . $row['id'], $this->getMaxWidth());
         }
-        return $content;        
+        return $content;
     }
-
 }

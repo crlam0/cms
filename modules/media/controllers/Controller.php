@@ -11,13 +11,13 @@ use classes\Pagination;
  *
  * @author User
  */
-class Controller extends BaseController 
+class Controller extends BaseController
 {
-    
+
     public function actionPartList(): string
     {
         $this->title = 'Файлы';
-        $this->breadcrumbs[] = ['title'=>$this->title];        
+        $this->breadcrumbs[] = ['title'=>$this->title];
         $query = "SELECT media_list.*,count(files.id) AS files,max(files.date_add) AS last_files_date_add
             FROM media_list
             LEFT JOIN media_files AS files ON (files.list_id=media_list.id)
@@ -29,15 +29,15 @@ class Controller extends BaseController
             return App::$message->get('list_empty');
         }
     }
-    
+
     public function actionFilesList(string $alias, int $page = 1): string
     {
-        $view_media = get_id_by_alias('media_list', $alias, true);            
+        $view_media = get_id_by_alias('media_list', $alias, true);
         list($media_title, $media_seo_alias, $media_descr) = App::$db->getRow("SELECT title, seo_alias, descr from media_list where id=?", ['id' => $view_media]);
         $tags['list_descr'] = $media_descr;
-        
+
         $this->title = $media_title;
-        $this->breadcrumbs[] = ['title' => 'Файлы', 'url'=>'media/'];        
+        $this->breadcrumbs[] = ['title' => 'Файлы', 'url'=>'media/'];
         $this->breadcrumbs[] = ['title' => $media_title];
 
         list($total) =  App::$db->getRow("SELECT count(id) from media_files where list_id='{$view_media}'");
@@ -57,17 +57,17 @@ class Controller extends BaseController
         }
         return $content;
     }
-    
-    public function actionDownload(): void 
+
+    public function actionDownload(): void
     {
         $file_id = App::$input['media_file_id'];
-        
-        if(is_numeric($file_id)) {
+
+        if (is_numeric($file_id)) {
             list($file_name, $title) = App::$db->getRow("select file_name,title from media_files where id=?", ['id' => $file_id]);
             $f_info = pathinfo($file_name);
-            $download_file_name = $title . "." . $f_info['extension']; 
+            $download_file_name = $title . "." . $f_info['extension'];
             $file_name = App::$DIR . App::$settings['media_upload_path'] . $file_name;
-            if(file_exists($file_name)) {
+            if (file_exists($file_name)) {
                 $mime_type=mime_content_type($file_name);
                 header('Content-Description: File Transfer');
                 header('Content-Type: ' . $mime_type);
@@ -87,33 +87,33 @@ class Controller extends BaseController
         }
         $tags['Header'] = 'Ошибка 404';
         $tags['file_name'] = App::$input['download_file_name'];
-        $content = App::$message->get('file_not_found',$tags);
+        $content = App::$message->get('file_not_found', $tags);
         App::sendResult($content, $tags, 404);
-    }    
-    
-    public function isFileExists(array $row): bool 
+    }
+
+    public function isFileExists(array $row): bool
     {
         $file_name = App::$settings['media_upload_path'] . $row['file_name'];
         return is_file(App::$DIR . $file_name);
     }
 
-    public function getHREF(array $row): string 
+    public function getHREF(array $row): string
     {
-        return App::$SUBDIR . "media/download?media_file_id={$row['id']}";        
+        return App::$SUBDIR . "media/download?media_file_id={$row['id']}";
     }
 
-    public function getFileSize(array $row): string 
+    public function getFileSize(array $row): string
     {
         $file_name = App::$settings['media_upload_path'] . $row['file_name'];
         if (is_file(App::$DIR . $file_name)) {
             return convert_bytes(filesize(App::$DIR . $file_name));
         } else {
             return "Файл отсутствует";
-        }        
+        }
     }
-    
-    public function getPlayerTag(array $row): string 
-    {        
+
+    public function getPlayerTag(array $row): string
+    {
         global $player_num, $player_show;
         $file_name = App::$settings['media_upload_path'] . $row['file_name'];
         if (stristr($file_name, ".mp3")) {
@@ -139,10 +139,5 @@ class Controller extends BaseController
                 </div>
             ';
         }
-    }   
-    
+    }
 }
-
-
-
-

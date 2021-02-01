@@ -6,7 +6,7 @@ use classes\Template;
 class TemplateTest extends TestCase
 {
     private $Template;
-    
+
     public function setUp() : void
     {
         parent::setUp();
@@ -18,12 +18,10 @@ class TemplateTest extends TestCase
         $content=$this->Template->parse('tests/test.tpl');
         self::assertStringStartsWith('<!DOCTYPE html>', $content);
     }
-    
-    public function testSQLParse(): void            
+
+    public function testSQLParse(): void
     {
         $content=$this->Template->parse('faq_list');
         self::assertStringStartsWith('<div id="faq">', $content);
     }
-    
 }
-

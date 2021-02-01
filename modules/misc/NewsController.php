@@ -2,6 +2,7 @@
 
 
 namespace modules\misc;
+
 use classes\BaseController;
 use classes\App;
 
@@ -10,10 +11,10 @@ use classes\App;
  *
  * @author BooT
  */
-class NewsController extends BaseController 
+class NewsController extends BaseController
 {
     private $TABLE = 'news';
-    
+
     public function actionIndex(): string
     {
         $this->title = 'Новости';
@@ -21,9 +22,9 @@ class NewsController extends BaseController
         $query = "select * from {$this->TABLE} order by date desc";
         $result = App::$db->query($query);
         $this->tags['content-cut'] = 'cut';
-        return $this->render('news_table', [], $result);        
+        return $this->render('news_table', [], $result);
     }
-    
+
     public function actionItemView(string $alias): string
     {
         $item_id = get_id_by_alias($this->TABLE, $alias, true);
@@ -31,12 +32,12 @@ class NewsController extends BaseController
         $this->breadcrumbs[] = ['title'=>$this->title];
         $query = "select * from {$this->TABLE} where id='{$item_id}' order by date desc";
         $result = App::$db->query($query);
-        return $this->render($this->TABLE.'news_table', [], $result);        
-    }    
-    
+        return $this->render($this->TABLE.'news_table', [], $result);
+    }
+
     public function getFullContent(array $row): string
     {
-        if($this->tags['content-cut']==='cut') {
+        if ($this->tags['content-cut']==='cut') {
             $this->tags['content'] = strip_tags($row['content']);
             $this->tags['content'] = cut_string($this->tags['content'], 250);
         } else {
@@ -44,5 +45,4 @@ class NewsController extends BaseController
         }
         return replace_base_href($this->tags['content']);
     }
-    
 }

@@ -10,7 +10,7 @@ class ChangeSettingsTemplatesColumns extends AbstractMigration
         $settings->renameColumn('title', 'name')
               ->addIndex(['name'], ['unique' => true])
               ->save();
-        
+
         $templates = $this->table('templates');
         $templates->renameColumn('title', 'name')
               ->addIndex(['name'], ['unique' => true])

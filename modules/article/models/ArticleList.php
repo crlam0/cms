@@ -9,8 +9,9 @@ use classes\BaseModel;
  *
  * @author BooT
  */
-class ArticleList extends BaseModel {
-    
+class ArticleList extends BaseModel
+{
+
     /**
      * @inheritdoc
      */
@@ -18,7 +19,7 @@ class ArticleList extends BaseModel {
     {
         return 'article_list';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -36,7 +37,7 @@ class ArticleList extends BaseModel {
             'image_type',
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -61,5 +62,4 @@ class ArticleList extends BaseModel {
             'descr' => 'Описание',
         ];
     }
-    
 }

@@ -9,8 +9,9 @@ use classes\BaseModel;
  *
  * @author BooT
  */
-class Template extends BaseModel {
-    
+class Template extends BaseModel
+{
+
     /**
      * @inheritdoc
      */
@@ -18,7 +19,7 @@ class Template extends BaseModel {
     {
         return 'templates';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -34,7 +35,7 @@ class Template extends BaseModel {
             'template_type',
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -63,10 +64,9 @@ class Template extends BaseModel {
             'template_type' => 'Тип',
         ];
     }
-    
+
     public function getType(): string
     {
         return ucfirst($this->template_type);
     }
-    
 }

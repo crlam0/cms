@@ -1,17 +1,17 @@
 <?php
 
-if(file_exists(__DIR__.'/../local/config.php')) {
+if (file_exists(__DIR__.'/../local/config.php')) {
     require __DIR__.'/../local/config.php';
 } else {
     die('Main config not found');
 }
 require __DIR__.'/config/misc.php';
 
-if(file_exists(__DIR__.'/../local/misc.local.php')) {
+if (file_exists(__DIR__.'/../local/misc.local.php')) {
     require_once __DIR__.'/../local/misc.local.php';
-}    
+}
 
-if(file_exists(__DIR__.'/../vendor/autoload.php')) {
+if (file_exists(__DIR__.'/../vendor/autoload.php')) {
     require_once __DIR__.'/../vendor/autoload.php';
 } else {
     die('Cant find autoloader');
@@ -40,14 +40,14 @@ $App->addGlobals();
 App::$debug = App::$settings['debug'];
 App::$db->debug = App::$settings['debug'];
 
-if(App::$debug) {
-    App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/debug.log', Logger::DEBUG));    
-    if(class_exists('Whoops\Run')) {
+if (App::$debug) {
+    App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/debug.log', Logger::DEBUG));
+    if (class_exists('Whoops\Run')) {
         $whoops = new Run();
         $whoops->writeToOutput(true);
         $whoops->allowQuit(true);
         $PrettyPageHandler = new PrettyPageHandler();
-        $PrettyPageHandler->addDataTable('DEBUG Array',  App::$DEBUG_ARRAY);
+        $PrettyPageHandler->addDataTable('DEBUG Array', App::$DEBUG_ARRAY);
         $whoops->pushHandler($PrettyPageHandler);
         $whoops->register();
         $App->debug('Added exception handler');
@@ -58,7 +58,7 @@ App::debug('App created, arrays loaded');
 unset($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
 
 App::$user = new User(null, App::$settings['default_flags']);
-App::$routing = new Routing (App::$server['REQUEST_URI']);
+App::$routing = new Routing(App::$server['REQUEST_URI']);
 App::$message = new Message();
 App::$template = new Template();
 App::$cache = new FileCache('var/cache/misc/');
@@ -70,11 +70,11 @@ require_once __DIR__.'/lib_functions.php';
 
 $App->debug('Library loaded');
 
-if(App::$server['SERVER_PROTOCOL']) {
+if (App::$server['SERVER_PROTOCOL']) {
     session_cache_limiter('nocache');
     session_name($SESSID);
     session_start();
-    if( ! App::$user->authBySession($_SESSION) ) {
+    if (! App::$user->authBySession($_SESSION)) {
         App::$user->authByRememberme($COOKIE_NAME);
     }
     require_once __DIR__.'/lib_stats.php';
@@ -92,7 +92,7 @@ if (!$part['id']) {
 }
 $App->set('tpl_default', $part['tpl_name']);
 
-if(!App::$user->checkAccess($part['user_flag'])) {
+if (!App::$user->checkAccess($part['user_flag'])) {
     if (App::$user->id) {
         App::sendResult(App::$message->getError('У вас нет соответствующих прав !'), $tags, 403);
     } else {
@@ -103,18 +103,18 @@ if(!App::$user->checkAccess($part['user_flag'])) {
 }
 
 
-if(isset(App::$settings['modules'])) {
-    foreach(App::$settings['modules'] as $name => $data) {
-        if(isset($data['bootstrap'])) {
-            if(class_exists($data['bootstrap'])) {    
+if (isset(App::$settings['modules'])) {
+    foreach (App::$settings['modules'] as $name => $data) {
+        if (isset($data['bootstrap'])) {
+            if (class_exists($data['bootstrap'])) {
                 $bootstrap = new $data['bootstrap'];
                 App::debug('Run boostrap for module "' . $name .'"');
                 $bootstrap->bootstrap();
             } else {
                 App::debug('Boostrap class for module "' . $name .'" decalred but not exists: "' . $data['bootstrap'] . '"');
             }
-        }        
-    }    
+        }
+    }
 }
 
 App::$routing->matchRoutes();

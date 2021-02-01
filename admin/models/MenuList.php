@@ -9,8 +9,9 @@ use classes\BaseModel;
  *
  * @author BooT
  */
-class menuList extends BaseModel {
-    
+class menuList extends BaseModel
+{
+
     /**
      * @inheritdoc
      */
@@ -18,7 +19,7 @@ class menuList extends BaseModel {
     {
         return 'menu_list';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -32,7 +33,7 @@ class menuList extends BaseModel {
             'bottom_menu',
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -54,5 +55,4 @@ class menuList extends BaseModel {
             'title' => 'Название',
         ];
     }
-    
 }

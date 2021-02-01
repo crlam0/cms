@@ -13,7 +13,7 @@ if (!is_file($file_name)) {
     exit();
 }
 
-if(strlen($file_type)) {
+if (strlen($file_type)) {
     $file_ext = Image::getFileExt($file_type);
 } else {
     $file_ext = 'jpeg';
@@ -41,23 +41,23 @@ if ((!empty(App::$input['clientHeight'])) && ($max_height > App::$input['clientH
     $max_height = App::$input['clientHeight'];
 }
 
-if(file_exists($cache_file_name)) {
+if (file_exists($cache_file_name)) {
     header('Content-type: ' . $file_type);
     $img = file_get_contents($cache_file_name);
     print $img;
     exit;
 }
-$Image = new Image($file_name,$file_type);
-if(!$Image->width) {
+$Image = new Image($file_name, $file_type);
+if (!$Image->width) {
     die('Load error');
 }
-if($crop) {
-    $Image->crop($max_width,$max_width);
+if ($crop) {
+    $Image->crop($max_width, $max_width);
 } else {
-    $Image->resize($max_width,$max_height);
-}    
-  
-if(!$Image->save($cache_file_name)) {
+    $Image->resize($max_width, $max_height);
+}
+
+if (!$Image->save($cache_file_name)) {
     die('Save error');
 }
 

@@ -9,8 +9,9 @@ use classes\BaseModel;
  *
  * @author BooT
  */
-class GalleryList extends BaseModel {
-    
+class GalleryList extends BaseModel
+{
+
     /**
      * @inheritdoc
      */
@@ -18,7 +19,7 @@ class GalleryList extends BaseModel {
     {
         return 'gallery_list';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -35,7 +36,7 @@ class GalleryList extends BaseModel {
             'descr',
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -60,5 +61,4 @@ class GalleryList extends BaseModel {
             'descr' => 'Описание',
         ];
     }
-    
 }

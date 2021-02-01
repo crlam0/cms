@@ -10,19 +10,21 @@ namespace modules\misc;
  *
  * @author BooT
  */
-class SearchController extends BaseController{
-    
-    public function actionIndex() {
+class SearchController extends BaseController
+{
+
+    public function actionIndex()
+    {
         $this->title = 'Поиск';
-        $this->breadcrumbs[] = ['title'=>$this->title]; 
-        
+        $this->breadcrumbs[] = ['title'=>$this->title];
+
         $content='
         <form action="'.App::$SUBDIR.'search/" method="post">
             <input type="edit" maxlength="255" size="48" name="search_str" value="'.App::$input['search_str'].'">
             <input type="submit" value="Искать">    
         </form><br />';
 
-        if(strlen(App::$input['search_str'])>3){
+        if (strlen(App::$input['search_str'])>3) {
             $query="
             (SELECT id, 'article' as type, seo_alias, title, content, MATCH (title,content) AGAINST ('" . App::$input["search_str"] . "') AS score
             FROM article_item 
@@ -34,10 +36,10 @@ class SearchController extends BaseController{
             order by score desc";
             $result=App::$db->query($query);
             $result_cnt=$result->num_rows;
-            if($result_cnt>0){
+            if ($result_cnt>0) {
                 $content.="<h5>Найдено {$result_cnt} совпадений.</h5><br />";
                 while ($row = $result->fetch_array()) {
-                    switch ($row['type']){
+                    switch ($row['type']) {
                         case "article":
                             $href=App::$SUBDIR . App::$routing->getUrl('article', $row['id']);
                             break;
@@ -47,13 +49,13 @@ class SearchController extends BaseController{
                     }
                     $content.="<a class=search_result href=\"{$href}\" title=\"{$row["title"]}\">{$row["title"]}</a><br />";
                     $content_str = strip_tags($row["content"]);
-                    $content_str = cut_string($content_str,100);
+                    $content_str = cut_string($content_str, 100);
                     $content.="<span class=search_content>".$content_str."</span><br />";
                 }
-            }else{
+            } else {
                 $content.=App::$message->get('warnig', $tags, 'Ничего не найдено.');
             }
-        }else{
+        } else {
             $content.=App::$message->get('warnig', $tags, 'Поисковый запрос слишком короткий.');
         }
 

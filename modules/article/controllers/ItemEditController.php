@@ -33,7 +33,7 @@ class ItemEditController extends BaseController
         $this->title = 'Статьи в разделе ' . $list_title;
         $this->breadcrumbs[] = ['title' => $this->title];
                 
-        return $this->render('item_table.html.twig', [], $result);        
+        return $this->render('article_item_table.html.twig', [], $result);        
     }
 
     public function actionActive(int $list_id, int $id, string $active): string 
@@ -58,16 +58,16 @@ class ItemEditController extends BaseController
             $model->date_add = 'now()';
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
-            $this->saveImage($model, $_FILES['image_file']);
-            $model->save(false);
-            App::setFlash('success', 'Статья успешно добавлена.');
+            if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
+                App::setFlash('success', 'Статья успешно добавлена.');
+            }
             $this->redirect('update', ['id' =>$model->id]);
         }
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
         $model->content = replace_base_href($model->content, false);
-        return $this->render('item_form.html.twig', [
+        return $this->render('article_item_form.html.twig', [
             'model' => $model,
             'action' => 'create',
             'form_title' => 'Добавление',
@@ -84,16 +84,16 @@ class ItemEditController extends BaseController
             $model->content = replace_base_href($model->content, true);
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
-            $this->saveImage($model, $_FILES['image_file']);
-            $model->save(false);
-            App::setFlash('success', 'Статья успешно изменена.');
+            if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
+                App::setFlash('success', 'Статья успешно изменена.');
+            }
             $this->redirect('update', ['id' =>$model->id]);
         } 
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
         $model->content = replace_base_href($model->content, false);
-        return $this->render('item_form.html.twig', [
+        return $this->render('article_item_form.html.twig', [
             'model' => $model,
             'action' => $this->getUrl('update', ['id' => $id]),
             'form_title' => 'Изменение',
@@ -118,8 +118,8 @@ class ItemEditController extends BaseController
     
     private function saveImage(ArticleItem $model, $file) 
     {        
-        if ($file['size'] < 100) {
-            return '';
+        if(!$file['size']){
+            return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
             App::setFlash('danger', 'Неверный тип файла !');
@@ -131,8 +131,10 @@ class ItemEditController extends BaseController
         if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, null, null, $this->image_width, $this->image_height)) {
             $model->image_name = $file_name;
             $model->image_type = $file['type'];
+            return true;
         } else {
             App::setFlash('danger', 'Ошибка копирования файла !');
+            return false;
         }            
     }
     

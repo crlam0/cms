@@ -13,17 +13,17 @@ class Bootstrap
         App::$routing->addRoutes([
             'gallery-part-list' => [
                 'pattern' => '^gallery\/?$',
-                'controller' => 'modules\gallery\Controller',
+                'controller' => 'modules\gallery\controllers\Controller',
                 'action' => 'part-list'
             ],    
             'gallery-load' => [
                 'pattern' => '^gallery\/load$',
-                'controller' => 'modules\gallery\Controller',
+                'controller' => 'modules\gallery\controllers\Controller',
                 'action' => 'load'
             ],    
             'gallery-images-list' => [
                 'pattern' => '^gallery\/([\w-]+)\/?$',
-                'controller' => 'modules\gallery\Controller',
+                'controller' => 'modules\gallery\controllers\Controller',
                 'action' => 'images-list',
                 'params' => [
                     '0' => 'alias',
@@ -31,7 +31,7 @@ class Bootstrap
             ],    
             'gallery-images-list-page' => [
                 'pattern' => '^gallery\/([\w-]+)\/(\d+)\/?$',
-                'controller' => 'modules\gallery\Controller',
+                'controller' => 'modules\gallery\controllers\Controller',
                 'action' => 'images-list',
                 'params' => [
                     '0' => 'alias',

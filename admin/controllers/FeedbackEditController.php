@@ -17,9 +17,9 @@ class FeedbackEditController extends BaseController
     public function __construct() {
         parent::__construct();
         $this->table = 'feedback';
-        $this->image_path = App::$settings['feedback']['upload_path'];
-        $this->image_width = App::$settings['feedback']['image_width'];
-        $this->image_height = App::$settings['feedback']['image_height'];
+        $this->image_path = App::$settings['feedback']['upload_path'] ?? 'upload/';
+        $this->image_width = App::$settings['feedback']['image_width'] ?? 512;
+        $this->image_height = App::$settings['feedback']['image_height'] ?? 512;
 
         $this->title = 'Отзывы';
         $this->breadcrumbs[] = ['title'=>$this->title];
@@ -43,12 +43,13 @@ class FeedbackEditController extends BaseController
     public function actionCreate(): string 
     {
         global $_FILES;
-        $content = '';
         if(is_array(App::$input['form'])) {
             App::$input['form']['date'] = App::$input['form']['date'] ?? 'now()';
             App::$db->insertTable($this->table, App::$input['form']);
-            $image_id = App::$db->insert_id();
-            $content .= $this->saveImage($_FILES['image_file'], $image_id, $image_id);
+            $item_id = App::$db->insert_id();
+            if($this->saveImage($_FILES['image_file'], $item_id, $item_id)) {
+                App::setFlash('success', 'Предложение успешно добавлено');
+            }
             redirect('index');
         }
         $tags = [
@@ -67,18 +68,18 @@ class FeedbackEditController extends BaseController
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
         
-        $content .= $this->render('feedback_form.html.twig', $tags);
-        return $content;
+        return $this->render('feedback_form.html.twig', $tags);
     }
 
     public function actionUpdate(int $id): string 
     {
         global $_FILES;
-        $content = '';
         if(is_array(App::$input['form'])) {
             App::$input['form']['date'] = App::$input['form']['date'] ?? 'now()';
             App::$db->updateTable($this->table, App::$input['form'], ['id' => $id]);
-            $content .= $this->saveImage($_FILES['image_file'], $id, $id);
+            if($this->saveImage($_FILES['image_file'], $id, $id)) {
+                App::setFlash('success', 'Предложение успешно обновлено');
+            }
             redirect('index');
         }
         $tags = App::$db->getRow("select * from {$this->table} where id=?", ['id' => $id]);
@@ -88,9 +89,8 @@ class FeedbackEditController extends BaseController
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
-
-        $content .= $this->render('feedback_form.html.twig', $tags);
-        return $content;        
+        
+        return $this->render('feedback_form.html.twig', $tags);
     }
     
     public function actionDelete(int $id): string 
@@ -109,26 +109,25 @@ class FeedbackEditController extends BaseController
         }        
     }
     
-    private function saveImage($file, int $item_id, int $image_id): string 
-    {        
-        $content = '';
-        
-        if ($file['size'] < 100) {
-            return '';
+    private function saveImage($file, int $item_id, int $image_id): bool
+    {
+        if(!$file['size']){
+            return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            return App::$message->get('error', [], 'Неверный тип файла !');
+            App::setFlash('danger', 'Неверный тип файла !');
+            return false;
         }         
-        $this->deleteImageFile($image_id);
+        $this->deleteImageFile($item_id);
         $f_info = pathinfo($file['name']);
         $file_name = $image_id . '.' . $f_info['extension'];
         if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, null, null, $this->image_width, $this->image_height)) {
             App::$db->updateTable($this->table, ['file_name' => $file_name, 'file_type' => $file['type']], ['id' => $item_id]);
-            $content .= App::$message->get('', [], 'Изображение успешно добавлено.');
+            return true;
         } else {
-            $content .= App::$message->get('error', [], 'Ошибка копирования файла !');
-        }            
-        return $content;
+            App::setFlash('danger', 'Ошибка копирования файла !');
+            return false;
+        }
     }
     
     public function actionDeleteImageFile($item_id): void 

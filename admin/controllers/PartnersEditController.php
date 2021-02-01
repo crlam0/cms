@@ -17,8 +17,8 @@ class PartnersEditController extends BaseController
     public function __construct() {
         parent::__construct();
         $this->table = 'partners';
-        $this->image_path = App::$settings['partners']['upload_path'];
-        $this->image_width = App::$settings['partners']['image_width'];
+        $this->image_path = App::$settings['partners']['upload_path'] ?? 'upload/';
+        $this->image_width = App::$settings['partners']['image_width'] ?? 512;
 
         $this->title = 'Партнёры';
         $this->breadcrumbs[] = ['title'=>$this->title];
@@ -42,11 +42,12 @@ class PartnersEditController extends BaseController
     public function actionCreate(): string 
     {
         global $_FILES;
-        $content = '';
         if(is_array(App::$input['form'])) {
             App::$db->insertTable($this->table, App::$input['form']);
-            $image_id = App::$db->insert_id();
-            $content .= $this->saveImage($_FILES['image_file'], $image_id, App::$input['form']['title']);
+            $item_id = App::$db->insert_id();
+            if ($this->saveImage($_FILES['image_file'], $item_id, App::$input['form']['title'])) {
+                App::setFlash('success', 'Партнёр успешно добавлен');
+            }
             redirect('index');
         }
         $tags = [
@@ -65,19 +66,19 @@ class PartnersEditController extends BaseController
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
-        
-        $content .= $this->render('partners_form.html.twig', $tags);
-        return $content;
+
+        return $this->render('partners_form.html.twig', $tags);
     }
 
     public function actionUpdate(int $id): string 
     {
         global $_FILES;
-        $content = '';
         if(is_array(App::$input['form'])) {
             App::$db->updateTable($this->table, App::$input['form'], ['id' => $id]);
-            $content .= $this->saveImage($_FILES['image_file'], $id, App::$input['form']['title']);
-            // redirect('index');
+            if ($this->saveImage($_FILES['image_file'], $id, App::$input['form']['title'])) {
+                App::setFlash('success', 'Партнёр успешно обновлён');
+            }
+            redirect('index');
         }
         $tags = App::$db->getRow("select * from {$this->table} where id=?", ['id' => $id]);
         $tags['action'] = $this->getUrl('update', ['id' => $id]);
@@ -86,9 +87,8 @@ class PartnersEditController extends BaseController
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
-
-        $content .= $this->render('partners_form.html.twig', $tags);
-        return $content;        
+        
+        return $this->render('partners_form.html.twig', $tags);
     }
     
     public function actionDelete(int $id): string 
@@ -107,26 +107,25 @@ class PartnersEditController extends BaseController
         }        
     }
     
-    private function saveImage($file, int $image_id, string $title): string 
-    {        
-        $content = '';
-        
-        if ($file['size'] < 100) {
-            return '';
+    private function saveImage($file, int $item_id, string $title): string 
+    {
+        if(!$file['size']){
+            return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            return App::$message->get('error', [], 'Неверный тип файла !');
+            App::setFlash('danger', 'Неверный тип файла !');
+            return false;
         }         
-        $this->deleteImageFile($image_id);
+        $this->deleteImageFile($item_id);
         $f_info = pathinfo($file['name']);
         $file_name = encodestring($title) . '.' . $f_info['extension'];
         if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, $this->image_width)) {
             App::$db->updateTable($this->table, ['file_name' => $file_name, 'file_type' => $file['type']], ['id' => $item_id]);
-            $content .= App::$message->get('', [], 'Изображение успешно добавлено.');
+            return true;
         } else {
-            $content .= App::$message->get('error', [], 'Ошибка копирования файла !');
-        }            
-        return $content;
+            App::setFlash('danger', 'Ошибка копирования файла !');
+            return false;
+        }
     }
     
     public function actionDeleteImageFile($item_id): void 

@@ -17,12 +17,13 @@ class BlocksTest extends TestCase
         parent::setUp();
         $this->Blocks = new Blocks();
         App::$user = new User();
+        App::$user->authByArray(['id'=>10, 'flags'=>'active']);
         App::$routing = new Routing('');
     }
 
     public function testBlocksMenuMain(): void
     {
-        $content=$this->Blocks->content('menu_main');
+        $content = $this->Blocks->content('menu_main');
         self::assertStringContainsString('id="menu-main"', $content);
     }
     

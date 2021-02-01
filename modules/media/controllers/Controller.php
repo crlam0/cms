@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\media;
+namespace modules\media\controllers;
 
 use classes\BaseController;
 use classes\App;

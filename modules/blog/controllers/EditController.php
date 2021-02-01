@@ -45,13 +45,16 @@ class EditController extends BaseController
             if (!$model->seo_alias){
                 $model->seo_alias = encodestring($model->title);
             }
+            if (!$model->target_id){
+                $model->target_id = 0;
+            }            
             $model->content = replace_base_href($model->content, true);
             $model->active = 'Y';
             $model->date_add = 'now()';
             $model->uid = App::$user->id;
-            $this->saveImage($model, $_FILES['image_file']);
-            $model->save(false);
-            App::setFlash('success', 'Пост успешно добавлен.');
+            if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
+                App::setFlash('success', 'Пост успешно добавлен.');
+            }
             $this->redirect('update', ['id' =>$model->id]);
         }
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
@@ -74,9 +77,9 @@ class EditController extends BaseController
                 $model->seo_alias = encodestring($model->title);
             }
             $model->content = replace_base_href($model->content, true);
-            $this->saveImage($model, $_FILES['image_file']);
-            $model->save(false);
-            App::setFlash('success', 'Пост успешно изменён.');
+            if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
+                App::setFlash('success', 'Пост успешно изменён.');
+            }
             $this->redirect('update', ['id' =>$model->id]);
         } 
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
@@ -109,24 +112,23 @@ class EditController extends BaseController
     
     private function saveImage(BlogPost $model, $file): string 
     {        
-        $content = '';        
-        if ($file['size'] < 100) {
-            return '';
+        if(!$file['size']){
+            return true;            
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            return App::$message->get('error', [], 'Неверный тип файла !');
+            App::setFlash('danger', 'Неверный тип файла !');
+            return false;
         }         
         $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
         $file_name = encodestring($model->title) . '.' . $f_info['extension'];
-        if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, null, null, $this->image_width, $this->image_height)) {
+        if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, $this->image_width)) {
             $model->image_name = $file_name;
-            $model->image_type = $file['type'];
-            $content .= App::$message->get('', [], 'Изображение успешно добавлено.');
+            $model->image_type = $file['type'];return true;
         } else {
-            $content .= App::$message->get('error', [], 'Ошибка копирования файла !');
-        }            
-        return $content;
+            App::setFlash('danger', 'Ошибка копирования файла !');
+            return false;
+        }
     }
     
     public function actionDeleteImageFile($post_id): void 

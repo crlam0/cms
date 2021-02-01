@@ -93,7 +93,7 @@ class ListEditController extends BaseController
     
     public function actionDelete(int $id): string 
     {
-        if(App::$db->getRow("select id from gallery_item where list_id=?", ['id' => $id])) {
+        if(App::$db->getRow("select id from gallery_images where gallery_id=?", ['id' => $id])) {
             App::setFlash('danger', 'Этот раздел не пустой !');
             $this->redirect('index');
         }

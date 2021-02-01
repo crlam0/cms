@@ -54,9 +54,9 @@ class ImagesEditController extends BaseController
             $model->date_add = 'now()';
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
-            $this->saveImage($model, $_FILES['image_file']);
-            $model->save(false);
-            App::setFlash('success', 'Изображение успешно добавлено.');
+            if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
+                App::setFlash('success', 'Изображение успешно добавлено.');
+            }
             $this->redirect('index');
         }
         return $this->render('gallery_item_form.html.twig', [
@@ -72,9 +72,9 @@ class ImagesEditController extends BaseController
         if($model->load(App::$input['form']) && $model->validate()) {
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
-            $this->saveImage($model, $_FILES['image_file']);
-            $model->save(false);
-            App::setFlash('success', 'Изображение успешно изменено.');
+            if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
+                App::setFlash('success', 'Изображение успешно изменено.');
+            }
             $this->redirect('index');
         }
         return $this->render('gallery_item_form.html.twig', [
@@ -144,8 +144,8 @@ class ImagesEditController extends BaseController
     
     private function saveImage(GalleryImage $model, $file) 
     {        
-        if ($file['size'] < 100) {
-            return '';
+        if(!$file['size']){
+            return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
             App::setFlash('danger', 'Неверный тип файла !');
@@ -157,8 +157,10 @@ class ImagesEditController extends BaseController
         if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, $this->image_max_width, $this->image_max_height)) {
             $model->file_name = $file_name;
             $model->file_type = $file['type'];
+            return true;
         } else {
             App::setFlash('danger', 'Ошибка копирования файла !');
+            return false;
         }
     }
     

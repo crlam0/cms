@@ -317,7 +317,7 @@ class Controller extends BaseController
         return [];    
     }
     
-    public static function getCacheFilename(string $file_name, string $file_type, int $max_width): string 
+    public static function getCacheFilename(string $file_name, ?string $file_type, int $max_width): string 
     {
         if(!$file_type || !strlen($file_type)) {
             $file_type = Image::getFileType($file_name, '');
@@ -333,7 +333,7 @@ class Controller extends BaseController
      *
      * @return string
      */
-    public function getImageUrl(string $file_name, string $file_type, int $width, bool $crop = true): string {
+    public function getImageUrl(string $file_name, ?string $file_type, int $width, bool $crop = true): string {
         $cache_file_name = $this->getCacheFilename($file_name, $file_type, $width);
         if(is_file(App::$DIR . $cache_file_name)) {
             return $cache_file_name;

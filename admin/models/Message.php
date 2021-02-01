@@ -1,6 +1,6 @@
 <?php
 
-namespace tests;
+namespace admin\models;
 
 use classes\BaseModel;
 
@@ -9,7 +9,15 @@ use classes\BaseModel;
  *
  * @author BooT
  */
-class TestModel extends BaseModel {
+class Message extends BaseModel {
+    
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'messages';
+    }
     
     /**
      * @inheritdoc
@@ -19,18 +27,11 @@ class TestModel extends BaseModel {
         return [
             'id',
             'name',
-            'value',
-            'comment'        
+            'type',
+            'content',
+            'comment'
         ];
     }    
-    
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'test';
-    }
     
     /**
      * @inheritdoc
@@ -38,9 +39,9 @@ class TestModel extends BaseModel {
     public function rules()
     {
         return [
-            [['name', 'value'], 'required'],
-            [['name'], 'string', ['min' => 1, 'max' => 8]],
-            [['value'], 'integer', ['min' => 1, 'max' => 8]],
+            [['name', 'type'], 'required'],
+            [['name'], 'string', ['min' => 1, 'max' => 255]],
+            [['content'], 'text'],
         ];
     }
 
@@ -52,9 +53,16 @@ class TestModel extends BaseModel {
         return [
             'id' => 'ID',
             'name' => 'Название',
-            'value' => 'Значение',
+            'type' => 'Тип',
+            'content' => 'Содержание',
             'comment' => 'Коментарий',
         ];
     }
+    
+    public $types = [
+        'info', 
+        'notice', 
+        'error',
+    ];
     
 }

@@ -1,0 +1,60 @@
+<style type="text/css">
+    tr.active_Y { background: #ffffff; }
+    tr.active_N { background: #dddddd; }
+</style>
+
+    <center>
+    <form action="{{ this.base_url }}create" method="get">
+        <input class="btn btn-primary" type="submit" value="Добавить">
+    </form>
+</center>
+<br>
+<table width=90%  class="table table-responsive table-bordered normal-form" align="center">
+    <tr class="header" align="center">
+	<td width=15%>Дата</td>
+	<td width=40%>Заголовок</td>
+	<td width=20%>Алиас</td>
+	<td width=20%>Изображение</td>
+	<td width=20%>Активна</td>
+	<td width=5% align="center">&nbsp;</td>
+	<td width=5% align="center">&nbsp;</td>
+    </tr>
+{% for row in rows %}
+    <tr class="active_{{ row.active }}" align="left" id="tr_{{ row.id }}">
+	<td><b>{{ row.date_add }}</b></td>
+        <td><a href="{{ this.base_url }}items/{{ row.id }}/">{{ row.title }}</a></td>
+	<td>{{ row.seo_alias }}</td>
+	<td align="center">{{ this.showImage(row.default_image_id) }}</td>        
+	<td align="center"><input class="" type="checkbox" class="sw_active" value='{{ row.id }}' {% if row.active=='Y'%} checked{% endif %}></td>
+	<td width=16><a href="{{ this.base_url }}update?id={{ row.id }}"><img src="{{ SUBDIR }}admin/images/open.gif" alt="Изменить" border="0"></a></td>
+	<td width=16><a href="{{ this.base_url }}delete?id={{ row.id }}"><img src="{{ SUBDIR }}admin/images/del.gif" alt="Удалить" border="0" onClick="return test();"></a></td>
+    </tr>
+{% endfor %}
+</table>
+<br />
+<center>
+    <form action="{{ this.base_url }}create" method=get>
+	<input class="btn btn-primary" type="submit" value="Добавить">
+    </form>
+</center>
+
+<script type="text/javascript">
+$(document).ready(function(){  
+    $('input:checkbox').change(function(){
+	var id=$(this).val();
+	if( $(this).prop("checked") ){ var active='Y'; }else{ var active='N'; }
+	$.ajax({
+	   type: "GET", url: "{{ this.base_url }}active", data: "id=" + id + "&active=" + active,
+	   success: function(msg){
+	     var tr_id="#tr_"+id;
+	     if(msg == 'Y') $(tr_id).attr("class","active_Y");
+	     else if(msg == 'N') $(tr_id).attr("class","active_N");
+	     else alert(msg);
+	   }
+	});
+    });
+});
+</script>
+
+
+

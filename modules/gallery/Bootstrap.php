@@ -38,6 +38,19 @@ class Bootstrap
                     '1' => 'page',
                 ]
             ],     
+            /* For admin module */
+            
+            'gallery-list-edit' => [
+                'pattern' => '^admin\/gallery\-edit\/[\w\-]*$',
+                'controller' => 'modules\gallery\controllers\ListEditController',
+            ],
+            'gallery-image-edit' => [
+                'pattern' => '^admin\/gallery\-edit\/items\/(\d+)\/[\w\-]*$',
+                'controller' => 'modules\gallery\controllers\ImagesEditController',
+                'params' => [
+                    '0' => 'gallery_id',
+                ]
+            ],
         ]);
         
         App::$routing->addGetUrlFunction('gallery_list', function ($list_id, $row) {

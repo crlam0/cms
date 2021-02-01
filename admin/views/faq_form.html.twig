@@ -1,0 +1,23 @@
+<form action="{{ action }}" method="POST">
+<input type="hidden" name=MAX_FILE_SIZE value=16000000>		
+<input type="hidden" name="id" value="{{ id }}">
+<table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
+	<tr class="header"><td colspan="2">{{ form_title }}</td></tr>
+	<tr class="content" align="left"><td>Автор:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[author]" value="{{ author }}"></td></tr>
+	<tr class="content" align="left"><td>E-Mail:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[email]" value="{{ email }}"></td></tr>
+	<tr class="header"><td colspan="2">Сообщение</td></tr>
+        <tr class="content"><td align="left" colspan="2">
+            <textarea name="form[txt]" rows="5" cols="100" maxlength="64000" id="editor">{{ txt }}</textarea>
+        </td></tr>
+	<tr class="header"><td colspan="2">Ответ</td></tr>
+        <tr class="content"><td align="left" colspan="2">
+            <textarea name="form[ans]" rows="5" cols="100" maxlength="64000" id="editor">{{ ans }}</textarea>
+        </td></tr>
+	<tr class="header" align="left"><td align="center" colspan="2"><input class="btn btn-primary" type="submit" value="  Сохранить  "></td></tr>
+</table>
+</form>
+<br>
+<center>
+    <a href="{{ this.base_url }}" class="btn btn-default"><< Назад</a>
+</center>
+

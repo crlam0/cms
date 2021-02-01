@@ -1,3 +1,15 @@
+=== 2021-02-01
+
+ALTER TABLE `partners`
+	ADD COLUMN `file_name` VARCHAR(255) NULL DEFAULT NULL AFTER `active`,
+	ADD COLUMN `file_type` VARCHAR(50) NULL DEFAULT NULL AFTER `file_name`;
+
+RENAME TABLE `reviews` TO `feedback`;
+ALTER TABLE `feedback`
+	ADD COLUMN `active` ENUM('Y','N') NOT NULL DEFAULT 'Y' AFTER `date`,
+	CHANGE COLUMN `file_name` `file_name` VARCHAR(50) NULL DEFAULT NULL AFTER `content`,
+	CHANGE COLUMN `file_type` `file_type` VARCHAR(50) NULL DEFAULT NULL AFTER `file_name`;
+
 === 2021-01-13
 
 update menu_item set target_id=0 WHERE target_id IS null;

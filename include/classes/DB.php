@@ -365,10 +365,13 @@ class DB
     public function updateTable(string $table, array $fields, array $where)
     {
         $sql = "UPDATE {$table} SET ";
-        $params=[];
+        $params = [];
         $total = count($fields);
-        $a=0;
+        $a = 0;
         foreach($fields as $field => $value) {
+            if($value === null) {
+                continue;
+            }
             $a++;
             if(strstr($value, 'now()') || strstr($value, 'date_format')){
                 $sql .= $field . "={$value}";
@@ -376,10 +379,9 @@ class DB
                 $sql .= $field . '=?';
                 $params[$field] = stripcslashes($value);
             }
-            if ($a != $total) {
-                $sql .= ',';
-            }            
+            $sql .= ',';
         }
+        $sql = substr($sql,0,strlen($sql)-1);
         if(count($where)) {
             $sql .= ' WHERE ';
             $total = count($where);

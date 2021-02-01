@@ -1,0 +1,27 @@
+<form action="{{ action }}" method="POST">
+    <input type="hidden" name="id" value="{{ model.id }}">
+    <table width="500" class="table table-striped table-responsive table-bordered normal-form" align="center">
+        <tr class="header"><td colspan="2">{{ form_title }}</td></tr>
+
+        <tr class="content" align="left"><td>{{ model.label('name') }}:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[name]" value="{{ model.name }}"></td></tr>
+        
+        <tr class="content" align="left"><td>{{ model.label('type') }}:</td><td>
+            <select class="form-control" name="form[type]">
+                {% for type in model.types %}
+                    <option value="{{ type }}" {% if model.type == type %}selected{% endif %}>{{ type }}</option>
+                {% endfor %}
+            </select>
+        </td></tr>
+        
+        <tr class="content" align="left"><td>{{ model.label('content') }}:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[content]" value="{{ model.content }}"></td></tr>
+
+        <tr class=header align="left"><td align="center" colspan="2">                
+            <input class="btn btn-primary" type="submit" name="update" value="{% if action == 'create' %}Добавить{% else %}Обновить{% endif %}"> 
+        </td></tr>
+    </table>
+</form>
+<br>
+<center>
+    <a href="{{ this.base_url }}" class="btn btn-default"><< Назад</a>
+</center>
+

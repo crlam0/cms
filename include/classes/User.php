@@ -2,6 +2,18 @@
 
 namespace classes;
 
+/**
+ * This is the model class for user.
+ *
+ * @property integer $id
+ * @property string $login
+ * @property string $fullname
+ *
+ */
+
+
+
+
 class User extends BaseModel
 {
     

@@ -209,6 +209,7 @@ $validImageTypes = array("image/pjpeg", "image/jpeg", "image/gif", "image/png", 
  */
 function move_uploaded_image($src_file, $dst_file, $max_width = 0, $max_height = 0, $fix_width = 0, $fix_height = 0) {    
     $Image = new Image($src_file['tmp_name'],$src_file['type']);
+    
     if(!$Image->width) {
         App::$message->error('Load image error');
         return false;

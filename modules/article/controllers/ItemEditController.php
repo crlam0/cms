@@ -134,7 +134,6 @@ class ItemEditController extends BaseController
         } else {
             App::setFlash('danger', 'Ошибка копирования файла !');
         }            
-        return $content;
     }
     
     public function actionDeleteImageFile(int $list_id, $post_id): void 

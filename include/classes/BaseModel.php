@@ -51,7 +51,7 @@ class BaseModel implements \ArrayAccess
             return $this->loadFromDb($id);
         }
         foreach(static::fields() as $key) {
-            $this->data[$key] = '';
+            $this->data[$key] = null;
         }
         return $this;
     }

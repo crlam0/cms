@@ -15,6 +15,14 @@ class Bootstrap
                 'pattern' => '^admin\/?[\w\-]*$',
                 'controller' => 'admin\controllers\IndexController'
             ],      
+            'faq-edit' => [
+                'pattern' => '^admin\/faq\-edit\/[\w\-]*$',
+                'controller' => 'admin\controllers\FaqEditController',
+            ],
+            'feedback-edit' => [
+                'pattern' => '^admin\/feedback\-edit\/[\w\-]*$',
+                'controller' => 'admin\controllers\FeedbackEditController',
+            ],
             'menu-list-edit' => [
                 'pattern' => '^admin\/menu\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\MenuListEditController',
@@ -26,6 +34,10 @@ class Bootstrap
                     '0' => 'menu_id',
                 ]
             ],
+            'messages-edit' => [
+                'pattern' => '^admin\/messages\-edit\/[\w\-]*$',
+                'controller' => 'admin\controllers\MessagesEditController',
+            ],
             'news-edit' => [
                 'pattern' => '^admin\/news\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\NewsEditController',
@@ -33,6 +45,14 @@ class Bootstrap
             'offers-edit' => [
                 'pattern' => '^admin\/offers\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\OffersEditController',
+            ],
+            'partners-edit' => [
+                'pattern' => '^admin\/partners\-edit\/[\w\-]*$',
+                'controller' => 'admin\controllers\PartnersEditController',
+            ],
+            'parts-edit' => [
+                'pattern' => '^admin\/parts\-edit\/[\w\-]*$',
+                'controller' => 'admin\controllers\PartsEditController',
             ],
             'settings-edit' => [
                 'pattern' => '^admin\/settings\-edit\/[\w\-]*$',

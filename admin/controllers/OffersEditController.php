@@ -9,14 +9,14 @@ use classes\Image;
 class OffersEditController extends BaseController
 {    
     
-    private $TABLE;
+    private $table;
     private $image_path;
     private $image_width;
     private $image_height;
     
     public function __construct() {
         parent::__construct();
-        $this->TABLE = 'offers';
+        $this->table = 'offers';
         $this->image_path = App::$settings['offers']['upload_path'];
         $this->image_width = App::$settings['offers']['image_width'];
         $this->image_height = App::$settings['offers']['image_height'];
@@ -27,10 +27,10 @@ class OffersEditController extends BaseController
 
     public function actionIndex(): string
     {
-        $query = "SELECT * from {$this->TABLE} order by date,title asc";
+        $query = "SELECT * from {$this->table} order by date,title asc";
         $result = App::$db->query($query);
         
-        return $this->render('news_table.html.twig', [], $result);        
+        return $this->render('offers_table.html.twig', [], $result);        
     }
     
     public function actionCreate(): string 
@@ -38,9 +38,9 @@ class OffersEditController extends BaseController
         global $_FILES;
         $content = '';
         if(is_array(App::$input['form'])) {
-            App::$input['form']['date'] = App::$input['form']['date'] ?: 'now()';
+            App::$input['form']['date'] = App::$input['form']['date'] ?? 'now()';
             App::$input['form']['seo_alias'] = App::$input['form']['seo_alias'] ?: encodestring(App::$input['form']['title']);
-            App::$db->insertTable($this->TABLE, App::$input['form']);
+            App::$db->insertTable($this->table, App::$input['form']);
             $image_id = App::$db->insert_id();
             $file = $_FILES['image_file'];    
             $content .= $this->saveImage($file, $image_id, $image_id);
@@ -64,7 +64,7 @@ class OffersEditController extends BaseController
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
         
-        $content .= $this->render('news_form.html.twig', $tags);
+        $content .= $this->render('offers_form.html.twig', $tags);
         return $content;
     }
 
@@ -73,14 +73,14 @@ class OffersEditController extends BaseController
         global $_FILES;
         $content = '';
         if(is_array(App::$input['form'])) {
-            App::$input['form']['date'] = App::$input['form']['date'] ?: 'now()';
+            App::$input['form']['date'] = App::$input['form']['date'] ?? 'now()';
             App::$input['form']['seo_alias'] = App::$input['seo_alias'] ?: encodestring(App::$input['form']['title']);
-            App::$db->updateTable($this->TABLE, App::$input['form'], ['id' => $id]);
+            App::$db->updateTable($this->table, App::$input['form'], ['id' => $id]);
             $file = $_FILES['image_file'];    
             $content .= $this->saveImage($file, $id, $id);
             redirect('index');
         }
-        $tags = App::$db->getRow("select * from {$this->TABLE} where id=?", ['id' => $id]);
+        $tags = App::$db->getRow("select * from {$this->table} where id=?", ['id' => $id]);
         $tags['action'] = $this->getUrl('update', ['id' => $id]);
         $tags['form_title'] = 'Изменение';
       
@@ -88,14 +88,14 @@ class OffersEditController extends BaseController
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
 
-        $content .= $this->render('news_form.html.twig', $tags);
+        $content .= $this->render('offers_form.html.twig', $tags);
         return $content;        
     }
     
     public function actionDelete(int $id): string 
     {
         $content = $this->deleteImageFile($id);
-        $query = "delete from {$this->TABLE} where id=?";
+        $query = "delete from {$this->table} where id=?";
         App::$db->query($query , ['id' => $id]);  
         $content .= $this->actionIndex();
         return $content;
@@ -123,8 +123,7 @@ class OffersEditController extends BaseController
         $f_info = pathinfo($file['name']);
         $file_name = encodestring($title) . '.' . $f_info['extension'];
         if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, null, null, $this->image_width, $this->image_height)) {
-            $query = "update {$this->TABLE} set file_name=?, file_type=? where id=?";
-            App::$db->query($query , ['file_name' => $file_name, 'file_type' => $file['type'], 'id' => $image_id]);
+            App::$db->updateTable($this->table, ['file_name' => $file_name, 'file_type' => $file['type']], ['id' => $item_id]);
             $content .= App::$message->get('', [], 'Изображение успешно добавлено.');
         } else {
             $content .= App::$message->get('error', [], 'Ошибка копирования файла !');
@@ -139,7 +138,7 @@ class OffersEditController extends BaseController
     }
 
     private function deleteImageFile(int $image_id): string {
-        list($image_old) = App::$db->getRow("select file_name from {$this->TABLE} where id=?", ['id' => $image_id]);
+        list($image_old) = App::$db->getRow("select file_name from {$this->table} where id=?", ['id' => $image_id]);
         if (is_file(App::$DIR . $this->image_path . $image_old)) {
             if (!unlink(App::$DIR . $this->image_path . $image_old)) {
                 return  App::$message->get('error', [], 'Ошибка удаления файла');

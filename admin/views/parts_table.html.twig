@@ -4,20 +4,19 @@
         <input class="btn btn-primary" type="submit" value="Добавить">
     </form>
 </center>
+
 <br>
-<table width=500  class="table table-striped table-responsive table-bordered normal-form" align="center">
+<table width=500  class="table table-responsive table-bordered normal-form" align="center">
     <tr class=header align="center">
-        <td width=10%>Дата</td>
-        <td width=30%>Название</td>
-        <td width=40%>Изображение</td>
+        <td width=45%>Название</td>
+        <td width=45%>URI</td>
         <td width=5% align="center">&nbsp;</td>
         <td width=5% align="center">&nbsp;</td>
     </tr>
     {% for row in rows %}
-        <tr class="content" align="left">
-            <td>{{ row.date }}</td>
-            <td><b>{{ row.title }}</b><br>{{ row.content|nl2br }}</td>
-            <td align="center">{{ this.showImage(row.file_name) }}</td>
+        <tr class="content">
+            <td><b>{{ row.title }}</b></td>
+            <td>{{ row.uri }}</td>
             <td width=16><a href="{{ this.base_url }}update?id={{ row.id }}"><img src="{{ SUBDIR }}admin/images/open.gif" alt="Изменить" border="0"></a></td>
             <td width=16><a href="{{ this.base_url }}delete?id={{ row.id }}"><img src="{{ SUBDIR }}admin/images/del.gif" alt="Удалить" border="0" onClick="return test();"></a></td>
         </tr>
@@ -29,4 +28,8 @@
         <input class="btn btn-primary" type="submit" value="Добавить">
     </form>
 </center>
+
 <br />
+
+
+

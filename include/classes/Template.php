@@ -85,7 +85,17 @@ class Template
      */
     public function addPath(string $path): void
     {
-        $loader = $this->TwigTemplate->addPath($path);
+        $this->TwigTemplate->addPath($path);
+    }
+
+    /**
+     * Get paths for search Twig templates.
+     *
+     * @return array
+     */
+    public function getPaths() : array
+    {
+        return $this->TwigTemplate->getPaths();
     }
 
     /**

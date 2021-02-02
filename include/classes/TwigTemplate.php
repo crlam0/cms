@@ -130,15 +130,16 @@ class TwigTemplate
     }
 
     /**
-     * Get path for search
+     * Get paths for search
      *
      * @return array
      */
-    public function getPaths()
+    public function getPaths() : array
     {
         $loader = $this->twig->getLoader();
         return $loader->getPaths();
     }
+    
     /**
      * Create template from string
      *

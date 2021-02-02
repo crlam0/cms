@@ -90,12 +90,14 @@ class TemplatesEditController extends BaseController
         if (!strstr($filename, '.html.twig')) {
             $filename.='.html.twig';
         }
-        $filename = App::$DIR . 'templates/' . $filename;
-        if (file_exists($filename)) {
-            return file_get_contents($filename);
-        } else {
-            return '';
+        $paths = App::$template->getPaths();
+        foreach ($paths as $path) {
+            $search_filename = $path . '/' . $filename;
+            if (file_exists($search_filename)) {
+                return file_get_contents($search_filename);
+            }
         }
+        return '';
     }
 
     private function twigTplSave($form): bool

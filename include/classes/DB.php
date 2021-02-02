@@ -54,7 +54,7 @@ class DB
 
         if ($this->mysqli->connect_error) {
             $error_str = 'DB connect error ' . $this->mysqli->connect_errno . ': ' . $this->mysqli->connect_error;
-            App::$logger->error($error_str);
+            App::error($error_str);
             die($error_str);
         }
         $this->query('SET character_set_client = utf8');
@@ -139,7 +139,7 @@ class DB
             }
             return $result;
         } catch (\InvalidArgumentException $e) {
-            App::$logger->error($e->getMessage());
+            App::error($e->getMessage());
             if ($this->debug) {
                 die($e->getMessage());
             } else {
@@ -210,7 +210,7 @@ class DB
         $input = $this->escapeString($input);
         foreach ($this->DENIED_WORDS as $word) {
             if (stristr($input, $word)) {
-                App::$logger->error('testParam denied word', ['URI'=>App::$server['REQUEST_URI']]);
+                App::error('testParam denied word ' . App::$server['REQUEST_URI']);
                 header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
                 exit();
             }

@@ -47,12 +47,12 @@ class FileCache
         $file_name = $this->getFileName($key);
         if (!file_exists(dirname($file_name))) {
             if (!mkdir(dirname($file_name), 0755, true)) {
-                App::$logger->error('Cant create dir ' . dirname($file_name));
+                App::error('Cant create dir ' . dirname($file_name));
                 return false;
             }
         }
         if (!file_put_contents($file_name, $data)) {
-            App::$logger->error('Cant write ' . $this->getFileName($key));
+            App::error('Cant write ' . $this->getFileName($key));
             return false;
         }
         return true;
@@ -64,7 +64,7 @@ class FileCache
             return true;
         }
         if (!unlink($this->getFileName($key))) {
-            App::$logger->error('Cant delete ' . $this->getFileName($key));
+            App::error('Cant delete ' . $this->getFileName($key));
             return false;
         }
         return true;

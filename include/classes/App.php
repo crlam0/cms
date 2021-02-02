@@ -3,6 +3,7 @@
 namespace classes;
 
 use classes\MyArray;
+use Cake\Log\Log;
 
 class App
 {
@@ -34,11 +35,6 @@ class App
     * @var FileCache Cache object
     */
     public static $cache;
-    /**
-    * @var \Monolog\Logger Object of logger
-    */
-    public static $logger;
-
     /**
     * @var Array Raw data from _GET
     */
@@ -251,7 +247,7 @@ class App
         $time = microtime(true) - static::$DEBUG_ARRAY[0];
         $time = sprintf('%.4F', $time);
         static::$DEBUG_ARRAY[] = $time . "\t " . $message;
-        static::$logger->debug($message);
+        Log::debug($message);
     }
 
     /**
@@ -265,7 +261,7 @@ class App
         $time = microtime(true) - static::$DEBUG_ARRAY[0];
         $time = sprintf('%.4F', $time);
         static::$DEBUG_ARRAY[] = $time . "\t " . $message;
-        App::$logger->error($message);
+        Log::error($message);
     }
 
     /**

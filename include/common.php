@@ -7,10 +7,6 @@ if (file_exists(__DIR__.'/../local/config.php')) {
 }
 require __DIR__.'/config/misc.php';
 
-if (file_exists(__DIR__.'/../local/misc.local.php')) {
-    require_once __DIR__.'/../local/misc.local.php';
-}
-
 if (file_exists(__DIR__.'/../vendor/autoload.php')) {
     require_once __DIR__.'/../vendor/autoload.php';
 } else {
@@ -24,14 +20,17 @@ use classes\User;
 use classes\Template;
 use classes\Message;
 use classes\Session;
-use classes\FileCache;
+use classes\CacheAdapter;
+
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+use Cake\Log\Log;
 
-App::$logger = new Logger('main');
-App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/error.log', Logger::ERROR));
+Log::setConfig('error', [
+    'className' => 'Cake\Log\Engine\FileLog',
+    'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
+    'file' => $DIR . 'var/log/error.log',
+]);
 
 $App = new App($DIR, $SUBDIR);
 $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
@@ -42,7 +41,11 @@ App::$debug = App::$settings['debug'];
 App::$db->debug = App::$settings['debug'];
 
 if (App::$debug) {
-    App::$logger->pushHandler(new StreamHandler($DIR . 'var/log/debug.log', Logger::DEBUG));
+    Log::setConfig('debug', [
+        'className' => 'Cake\Log\Engine\FileLog',
+        'levels' => ['notice', 'info', 'debug'],
+        'file' => $DIR . 'var/log/debug.log',
+    ]);
     if (class_exists('Whoops\Run')) {
         $whoops = new Run();
         $whoops->writeToOutput(true);
@@ -62,7 +65,7 @@ App::$user = new User(null, App::$settings['default_flags']);
 App::$routing = new Routing(App::$server['REQUEST_URI']);
 App::$message = new Message();
 App::$template = new Template();
-App::$cache = new FileCache('var/cache/misc/');
+App::$cache = new CacheAdapter('var/cache/misc/');
 App::$session = new Session();
 
 require_once __DIR__.'/lib_sql.php';
@@ -102,7 +105,6 @@ if (!App::$user->checkAccess($part['user_flag'])) {
     }
     exit;
 }
-
 
 if (isset(App::$settings['modules'])) {
     foreach (App::$settings['modules'] as $name => $data) {

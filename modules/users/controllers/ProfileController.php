@@ -31,7 +31,7 @@ class ProfileController extends BaseController
         if ($model->load(App::$input['form']) && $model->validate() && check_csrf_token()) {
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
-            App::setFlash('success', 'Профиль успешно сохранён');
+            App::addFlash('success', 'Профиль успешно сохранён');
             $this->redirect('');
         }
         return $this->render('user_profile.html.twig', [

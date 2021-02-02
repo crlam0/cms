@@ -6,13 +6,11 @@ namespace classes;
  * This is the model class for user.
  *
  * @property integer $id
+ * @property string $flags
  * @property string $login
  * @property string $fullname
  *
  */
-
-
-
 
 class User extends BaseModel
 {
@@ -145,14 +143,14 @@ class User extends BaseModel
     }
 
     /**
-     * Load data from _SESSION.
+     * Load data from session
      *
-     * @param array $session
+     * @param \classes\Session $session
      *
      */
-    public function authBySession(array $session) : bool
+    public function authBySession(\classes\Session $session) : bool
     {
-        if (array_key_exists('UID', $session)) {
+        if ($session['UID']) {
             if (!(int)$session['UID']>0) {
                 return false;
             }
@@ -160,7 +158,7 @@ class User extends BaseModel
         } else {
             return false;
         }
-        if (array_key_exists('FLAGS', $session)) {
+        if ($session['FLAGS']) {
             $flags = $session['FLAGS'];
         } else {
             return false;
@@ -179,9 +177,11 @@ class User extends BaseModel
      */
     public function authByLoginPassword(string $login, string $password)
     {
+        echo $login . ' - ' . $password;
         $row = App::$db->getRow("select id,flags,passwd,salt from users where login=? and flags like '%active%'", ['login' => $login]);
         if ($row) {
             if (password_verify($password, $row['passwd'])) {
+                echo 'password_verify';
                 $this->authByArray($row);
                 return $row;
             }
@@ -368,7 +368,7 @@ class User extends BaseModel
         $token = App::$db->testParam($value);
         if ($data = $this->checkToken($token)) {
             App::debug('Auth by Rememberme cookie');
-            list($_SESSION['UID'],$_SESSION['FLAGS']) = $data;
+            list(App::$session['UID'], App::$session['FLAGS']) = $data;
             return $this->authByIdFlags($data['id'], $data['flags']);
         }
         return false;

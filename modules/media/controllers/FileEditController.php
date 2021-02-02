@@ -53,7 +53,7 @@ class FileEditController extends BaseController
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             if ($this->saveFile($model, $_FILES['upload_file']) && $model->save(false)) {
-                App::setFlash('success', 'Файл успешно добавлен.');
+                App::addFlash('success', 'Файл успешно добавлен.');
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
@@ -76,7 +76,7 @@ class FileEditController extends BaseController
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             if ($this->saveFile($model, $_FILES['upload_file']) && $model->save(false)) {
-                App::setFlash('success', 'Файл успешно изменен.');
+                App::addFlash('success', 'Файл успешно изменен.');
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
@@ -120,7 +120,7 @@ class FileEditController extends BaseController
             $model->file_name = $file_name;
             return true;
         } else {
-            App::setFlash('danger', 'Ошибка копирования файла !');
+            App::addFlash('danger', 'Ошибка копирования файла !');
             return false;
         }
     }
@@ -140,7 +140,7 @@ class FileEditController extends BaseController
     {
         if (is_file(App::$DIR . $this->file_path . $model->file_name)) {
             if (!unlink(App::$DIR . $this->file_path . $model->file_name)) {
-                App::setFlash('danger', 'Ошибка удаления файла');
+                App::addFlash('danger', 'Ошибка удаления файла');
                 return false;
             }
         }

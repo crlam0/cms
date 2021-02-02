@@ -36,7 +36,7 @@ class MenuListEditController extends BaseController
             $model->top_menu = isset(App::$input['form']['top_menu']) ? 1 : 0;
             $model->bottom_menu = isset(App::$input['form']['bottom_menu']) ? 1 : 0;
             $model->save(false);
-            App::setFlash('success', 'Раздел успешно добавлен');
+            App::addFlash('success', 'Раздел успешно добавлен');
             $this->redirect('index');
         }
         return $this->render('menu_list_form.html.twig', [
@@ -54,7 +54,7 @@ class MenuListEditController extends BaseController
             $model->top_menu = isset(App::$input['form']['top_menu']) ? 1 : 0;
             $model->bottom_menu = isset(App::$input['form']['bottom_menu']) ? 1 : 0;
             $model->save(false);
-            App::setFlash('success', 'Раздел успешно обновлён');
+            App::addFlash('success', 'Раздел успешно обновлён');
             $this->redirect('index');
         }
 
@@ -68,7 +68,7 @@ class MenuListEditController extends BaseController
     public function actionDelete(int $id): string
     {
         if (App::$db->getRow("select id from menu_item where menu_id=?", ['id' => $id])) {
-            App::setFlash('danger', 'Этот раздел не пустой !');
+            App::addFlash('danger', 'Этот раздел не пустой !');
             $this->redirect('index');
         }
         $model = new MenuList($id);

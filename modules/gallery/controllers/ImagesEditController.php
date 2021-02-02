@@ -56,7 +56,7 @@ class ImagesEditController extends BaseController
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
-                App::setFlash('success', 'Изображение успешно добавлено.');
+                App::addFlash('success', 'Изображение успешно добавлено.');
             }
             $this->redirect('index');
         }
@@ -74,7 +74,7 @@ class ImagesEditController extends BaseController
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
-                App::setFlash('success', 'Изображение успешно изменено.');
+                App::addFlash('success', 'Изображение успешно изменено.');
             }
             $this->redirect('index');
         }
@@ -140,7 +140,7 @@ class ImagesEditController extends BaseController
                 $model->save(false);
             }
         }
-        App::setFlash('success', 'Изображения успешно добавлены.');
+        App::addFlash('success', 'Изображения успешно добавлены.');
         $this->redirect('index');
     }
 
@@ -150,7 +150,7 @@ class ImagesEditController extends BaseController
             return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            App::setFlash('danger', 'Неверный тип файла !');
+            App::addFlash('danger', 'Неверный тип файла !');
             return false;
         }
         $this->deleteImageFile($model);
@@ -161,7 +161,7 @@ class ImagesEditController extends BaseController
             $model->file_type = $file['type'];
             return true;
         } else {
-            App::setFlash('danger', 'Ошибка копирования файла !');
+            App::addFlash('danger', 'Ошибка копирования файла !');
             return false;
         }
     }
@@ -181,7 +181,7 @@ class ImagesEditController extends BaseController
     {
         if (is_file(App::$DIR . $this->image_path . $model->file_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->file_name)) {
-                App::setFlash('danger', 'Ошибка удаления файла');
+                App::addFlash('danger', 'Ошибка удаления файла');
                 return false;
             }
         }

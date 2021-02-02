@@ -50,7 +50,7 @@ class FeedbackEditController extends BaseController
             App::$db->insertTable($this->table, App::$input['form']);
             $item_id = App::$db->insert_id();
             if ($this->saveImage($_FILES['image_file'], $item_id, $item_id)) {
-                App::setFlash('success', 'Предложение успешно добавлено');
+                App::addFlash('success', 'Предложение успешно добавлено');
             }
             redirect('index');
         }
@@ -80,7 +80,7 @@ class FeedbackEditController extends BaseController
             App::$input['form']['date'] = App::$input['form']['date'] ?? 'now()';
             App::$db->updateTable($this->table, App::$input['form'], ['id' => $id]);
             if ($this->saveImage($_FILES['image_file'], $id, $id)) {
-                App::setFlash('success', 'Предложение успешно обновлено');
+                App::addFlash('success', 'Предложение успешно обновлено');
             }
             redirect('index');
         }
@@ -118,7 +118,7 @@ class FeedbackEditController extends BaseController
             return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            App::setFlash('danger', 'Неверный тип файла !');
+            App::addFlash('danger', 'Неверный тип файла !');
             return false;
         }
         $this->deleteImageFile($item_id);
@@ -128,7 +128,7 @@ class FeedbackEditController extends BaseController
             App::$db->updateTable($this->table, ['file_name' => $file_name, 'file_type' => $file['type']], ['id' => $item_id]);
             return true;
         } else {
-            App::setFlash('danger', 'Ошибка копирования файла !');
+            App::addFlash('danger', 'Ошибка копирования файла !');
             return false;
         }
     }

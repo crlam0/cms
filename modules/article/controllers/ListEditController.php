@@ -44,7 +44,7 @@ class ListEditController extends BaseController
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
-                App::setFlash('success', 'Раздел успешно добавлен');
+                App::addFlash('success', 'Раздел успешно добавлен');
             }
             $this->redirect('index');
         }
@@ -70,7 +70,7 @@ class ListEditController extends BaseController
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
-                App::setFlash('success', 'Раздел успешно обновлён');
+                App::addFlash('success', 'Раздел успешно обновлён');
             }
             $this->redirect('index');
         }
@@ -88,7 +88,7 @@ class ListEditController extends BaseController
     public function actionDelete(int $id): string
     {
         if (App::$db->getRow("select id from article_item where list_id=?", ['id' => $id])) {
-            App::setFlash('danger', 'Этот раздел не пустой !');
+            App::addFlash('danger', 'Этот раздел не пустой !');
             $this->redirect('index');
         }
         $model = new ArticleList($id);
@@ -115,7 +115,7 @@ class ListEditController extends BaseController
             return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            App::setFlash('danger', 'Неверный тип файла !');
+            App::addFlash('danger', 'Неверный тип файла !');
             return false;
         }
         $this->deleteImageFile($model);
@@ -126,7 +126,7 @@ class ListEditController extends BaseController
             $model->image_type = $file['type'];
             return true;
         } else {
-            App::setFlash('danger', 'Ошибка копирования файла !');
+            App::addFlash('danger', 'Ошибка копирования файла !');
             return false;
         }
     }
@@ -146,7 +146,7 @@ class ListEditController extends BaseController
     {
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {
-                App::setFlash('danger', 'Ошибка удаления файла');
+                App::addFlash('danger', 'Ошибка удаления файла');
                 return false;
             }
         }

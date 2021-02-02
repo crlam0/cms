@@ -27,7 +27,7 @@ class MessagesEditController extends BaseController
     {
         $model = new Message();
         if ($model->load(App::$input['form']) && $model->save()) {
-            App::setFlash('success', 'Сообщение добавлено');
+            App::addFlash('success', 'Сообщение добавлено');
             $this->redirect('index');
         }
         return $this->render('messages_form.html.twig', [
@@ -41,7 +41,7 @@ class MessagesEditController extends BaseController
     {
         $model = new Message($id);
         if ($model->load(App::$input['form']) && $model->save()) {
-            App::setFlash('success', 'Сообщение сохранено');
+            App::addFlash('success', 'Сообщение сохранено');
             $this->redirect('index');
         }
         return $this->render('messages_form.html.twig', [

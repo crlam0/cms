@@ -50,7 +50,6 @@ class FAQController extends BaseController
      */
     private function checkInput(array $input)
     {
-        global $_SESSION;
         if (!check_csrf_token()) {
             return App::$message->get('error', [], 'CSRF Error');
         }
@@ -66,7 +65,7 @@ class FAQController extends BaseController
         if (!preg_match("/^[A-Za-z0-9-_\.]+@[A-Za-z0-9-\.]+\.[A-Za-z0-9-\.]{2,3}$/", $input['email'])) {
             return App::$message->get('form_error_email');
         }
-        if (!array_key_exists('IMG_CODE', $_SESSION) || $input['img_code'] != $_SESSION['IMG_CODE']) {
+        if (!App::$session['IMG_CODE'] || $input['img_code'] != App::$session['IMG_CODE']) {
             return App::$message->get('form_error_code');
         }
         return true;
@@ -94,14 +93,13 @@ class FAQController extends BaseController
 
     public function actionAdd() : string
     {
-        global $_SESSION;
         $content = '';
         if (is_array(App::$input['form'])) {
             App::$input['form']['txt'] = $this->editor->GetValue();
             $input_result = $this->checkInput(App::$input['form']);
             if ($input_result === true) {
                 $this->requestDone(App::$input['form']);
-                $_SESSION['IMG_CODE'] = rand(111111, 999999);
+                App::$session['IMG_CODE'] = rand(111111, 999999);
                 $content = App::$message->get('', [], 'Сообщение успешно добавлено !');
                 return $content . $this->actionIndex();
             } else {
@@ -118,7 +116,7 @@ class FAQController extends BaseController
         }
         $tags['editor'] = $this->editor->GetContol(400, 200, '../theme/bbcode_editor');
         $tags['functions'] = ['get_csrf_token'];
-        $_SESSION['IMG_CODE'] = rand(111111, 999999);
+        App::$session['IMG_CODE'] = rand(111111, 999999);
         $content .= App::$template->parse('faq_form', $tags);
         return $content;
     }

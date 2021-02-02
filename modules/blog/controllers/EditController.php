@@ -54,7 +54,7 @@ class EditController extends BaseController
             $model->date_add = 'now()';
             $model->uid = App::$user->id;
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
-                App::setFlash('success', 'Пост успешно добавлен.');
+                App::addFlash('success', 'Пост успешно добавлен.');
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
@@ -79,7 +79,7 @@ class EditController extends BaseController
             }
             $model->content = replace_base_href($model->content, true);
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
-                App::setFlash('success', 'Пост успешно изменён.');
+                App::addFlash('success', 'Пост успешно изменён.');
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
@@ -118,7 +118,7 @@ class EditController extends BaseController
             return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            App::setFlash('danger', 'Неверный тип файла !');
+            App::addFlash('danger', 'Неверный тип файла !');
             return false;
         }
         $this->deleteImageFile($model);
@@ -129,7 +129,7 @@ class EditController extends BaseController
             $model->image_type = $file['type'];
             return true;
         } else {
-            App::setFlash('danger', 'Ошибка копирования файла !');
+            App::addFlash('danger', 'Ошибка копирования файла !');
             return false;
         }
     }

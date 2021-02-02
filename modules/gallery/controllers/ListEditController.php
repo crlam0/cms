@@ -60,7 +60,7 @@ class ListEditController extends BaseController
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             $model->save(false);
-            App::setFlash('success', 'Раздел успешно добавлен');
+            App::addFlash('success', 'Раздел успешно добавлен');
             $this->redirect('index');
         }
         $model->descr = replace_base_href($model->descr, false);
@@ -82,7 +82,7 @@ class ListEditController extends BaseController
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             $model->save(false);
-            App::setFlash('success', 'Раздел успешно обновлён');
+            App::addFlash('success', 'Раздел успешно обновлён');
             // $this->redirect('index');
         }
         $model->descr = replace_base_href($model->descr, false);
@@ -96,7 +96,7 @@ class ListEditController extends BaseController
     public function actionDelete(int $id): string
     {
         if (App::$db->getRow("select id from gallery_images where gallery_id=?", ['id' => $id])) {
-            App::setFlash('danger', 'Этот раздел не пустой !');
+            App::addFlash('danger', 'Этот раздел не пустой !');
             $this->redirect('index');
         }
         $model = new GalleryList($id);

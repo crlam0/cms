@@ -23,6 +23,7 @@ use classes\Routing;
 use classes\User;
 use classes\Template;
 use classes\Message;
+use classes\Session;
 use classes\FileCache;
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
@@ -62,6 +63,7 @@ App::$routing = new Routing(App::$server['REQUEST_URI']);
 App::$message = new Message();
 App::$template = new Template();
 App::$cache = new FileCache('var/cache/misc/');
+App::$session = new Session();
 
 require_once __DIR__.'/lib_sql.php';
 require_once __DIR__.'/lib_messages.php';
@@ -71,10 +73,9 @@ require_once __DIR__.'/lib_functions.php';
 $App->debug('Library loaded');
 
 if (App::$server['SERVER_PROTOCOL']) {
-    session_cache_limiter('nocache');
-    session_name($SESSID);
-    session_start();
-    if (! App::$user->authBySession($_SESSION)) {
+    App::$session->setName($SESSID);
+    App::$session->open();
+    if (! App::$user->authBySession(App::$session)) {
         App::$user->authByRememberme($COOKIE_NAME);
     }
     require_once __DIR__.'/lib_stats.php';
@@ -96,7 +97,7 @@ if (!App::$user->checkAccess($part['user_flag'])) {
     if (App::$user->id) {
         App::sendResult(App::$message->getError('У вас нет соответствующих прав !'), $tags, 403);
     } else {
-        $_SESSION['GO_TO_URI'] = App::$server['REQUEST_URI'];
+        App::$session['GO_TO_URI'] = App::$server['REQUEST_URI'];
         redirect(App::$SUBDIR . 'login/');
     }
     exit;

@@ -44,7 +44,6 @@ class SignupController extends BaseController
 
     public function actionStep2(): string
     {
-        global $_SESSION;
         $this->title = 'Регистрация';
         $this->breadcrumbs[] = ['title'=>$this->title];
         $user = App::$user->checkToken(App::$input['token']);
@@ -55,8 +54,8 @@ class SignupController extends BaseController
         App::$db->updateTable('users', $data, ['id' => $user['id']]);
         App::$user->makeToken($user['id'], 0, User::TOKEN_NULL);
         App::$user->authByIdFlags($user['id'], $data['flags']);
-        $_SESSION['UID'] = $user['id'];
-        $_SESSION['FLAGS'] = $data['flags'];
+        App::$session['UID'] = $user['id'];
+        App::$session['FLAGS'] = $data['flags'];
         return App::$message->get('info', [], 'Учётная запись активирована');
         ;
     }

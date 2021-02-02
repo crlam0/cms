@@ -62,7 +62,7 @@ class EditController extends BaseController
             $model->regdate = 'now()';
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
-            App::setFlash('success', 'Пользователь успешно добавлен.');
+            App::addFlash('success', 'Пользователь успешно добавлен.');
             $this->redirect('update', ['id' => $model->id]);
         }
         return $this->render('users_form.html.twig', [
@@ -80,7 +80,7 @@ class EditController extends BaseController
             $model->passwd = $model->encryptPassword(App::$input['form']['passwd'], $model->salt);
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
-            App::setFlash('success', 'Пользователь успешно изменён.');
+            App::addFlash('success', 'Пользователь успешно изменён.');
             $this->redirect('update', ['id' => $model->id]);
         }
         return $this->render('users_form.html.twig', [

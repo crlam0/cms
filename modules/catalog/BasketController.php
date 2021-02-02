@@ -11,15 +11,14 @@ class BasketController extends Controller
 
     public function actionAddBuy(): string
     {
-        global $_SESSION;
-        if (!isset($_SESSION['BUY'][App::$input['item_id']]['count'])) {
-            $_SESSION['BUY'][App::$input['item_id']]['count'] = 0;
+        if (!isset(App::$session['BUY'][App::$input['item_id']]['count'])) {
+            App::$session['BUY'][App::$input['item_id']]['count'] = 0;
         }
         $cnt = (int) App::$input['cnt'];
         if ($cnt > 0 && $cnt < 99) {
-            $_SESSION['BUY'][App::$input['item_id']]['count'] += $cnt;
+            App::$session['BUY'][App::$input['item_id']]['count'] += $cnt;
             $json['result'] = 'OK';
-            $json['count'] = count($_SESSION['BUY']);
+            $json['count'] = count(App::$session['BUY']);
         } else {
             $json['result'] = 'ERR';
         }
@@ -46,9 +45,8 @@ class BasketController extends Controller
 
     private function getBasketData(): array
     {
-        global $_SESSION;
         $where='';
-        foreach ($_SESSION['BUY'] as $item_id => $cnt) {
+        foreach (App::$session['BUY'] as $item_id => $cnt) {
             $where.= !strlen($where) ? " id='{$item_id}'" : " or id='{$item_id}'" ;
         }
         $query = "select * from cat_item where $where order by b_code,title asc";
@@ -58,9 +56,10 @@ class BasketController extends Controller
         $item_list = '';
         if ($result->num_rows) {
             while ($row = $result->fetch_array()) {
-                $summ+=$row['price'] * $_SESSION['BUY'][$row['id']]['count'];
-                $cnt+=$_SESSION['BUY'][$row['id']]['count'];
-                $item_list.="Наименовние: {$row['title']}\t Кол-во:" . $_SESSION["BUY"][$row['id']]['count'] . "\t  Цена: {$row['price']}\n";
+                $summ += $row['price'] * App::$session['BUY'][$row['id']]['count'];
+                $cnt += App::$session['BUY'][$row['id']]['count'];
+
+                $item_list.="Наименовние: {$row['title']}\t Кол-во:" . App::$session["BUY"][$row['id']]['count'] . "\t  Цена: {$row['price']}\n";
             }
         }
         return ['summ' => $summ, 'cnt' => $cnt, 'item_list' => $item_list, 'result' => $result];
@@ -68,8 +67,7 @@ class BasketController extends Controller
 
     public function actionGetSummary(): void
     {
-        global $_SESSION;
-        if (count($_SESSION['BUY'])) {
+        if (count(App::$session['BUY'])) {
             $data = $this->getBasketData();
             $summ = $data['summ'];
             $result = $data['result'];
@@ -107,7 +105,6 @@ class BasketController extends Controller
 
     private function requestDone(array $form) : string
     {
-        global $_SESSION;
         $data = $this->getBasketData();
         $summ = $data['summ'];
         $item_list = $data['item_list'];
@@ -136,7 +133,7 @@ class BasketController extends Controller
 
         $query = "insert into request" . App::$db->insertFields($data);
         App::$db->query($query);
-        unset($_SESSION['BUY']);
+        unset(App::$session['BUY']);
         return App::$message->get('', [], 'Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.');
     }
 
@@ -146,7 +143,7 @@ class BasketController extends Controller
         $this->breadcrumbs[] = [ 'title' => 'Корзина', 'url' => 'basket/' ];
         $this->breadcrumbs[] = [ 'title' => $this->title ];
 
-        if (!isset($_SESSION['BUY']) || !is_array($_SESSION['BUY']) ||  !count($_SESSION['BUY'])) {
+        if (!isset(App::$session['BUY']) || !is_array(App::$session['BUY']) ||  !count(App::$session['BUY'])) {
             return App::$message->get('notice', [], 'Корзина пуста !');
         }
 
@@ -174,7 +171,7 @@ class BasketController extends Controller
 
     public function actionClear(): void
     {
-        unset($_SESSION['BUY']);
+        App::$session['BUY'] = [];
         redirect(App::$SUBDIR . 'basket/');
         exit;
     }
@@ -182,7 +179,7 @@ class BasketController extends Controller
     public function actionDel(): string
     {
         $item_id = App::$input['item_id'];
-        unset($_SESSION['BUY'][$item_id]);
+        unset(App::$session['BUY'][$item_id]);
         return $this->actionIndex();
     }
 
@@ -190,7 +187,7 @@ class BasketController extends Controller
     {
         foreach (App::$input['buy_cnt'] as $item_id => $item_cnt) {
             if (is_numeric($item_cnt) && $item_cnt > 0 && $item_cnt < 99) {
-                $_SESSION['BUY'][$item_id]['count'] = $item_cnt;
+                App::$session['BUY'][$item_id]['count'] = $item_cnt;
             }
         }
         if ($type == 'request') {
@@ -200,7 +197,6 @@ class BasketController extends Controller
 
     public function actionIndex() : string
     {
-        global $_SESSION;
 
         $this->title = 'Корзина';
         $this->breadcrumbs[] = ['title' => $this->title ];
@@ -209,12 +205,12 @@ class BasketController extends Controller
             $this->buttonClick(App::$input['button']);
         }
 
-        if (!isset($_SESSION['BUY']) || !is_array($_SESSION['BUY']) ||  !count($_SESSION['BUY'])) {
+        if (!isset(App::$session['BUY']) || !is_array(App::$session['BUY']) ||  !count(App::$session['BUY'])) {
             return App::$message->get('notice', [], 'Корзина пуста !');
         }
         $where = '';
         $count = 0;
-        foreach ($_SESSION["BUY"] as $item_id => $cnt) {
+        foreach (App::$session["BUY"] as $item_id => $cnt) {
             $where.=(!strlen($where) ? " cat_item.id='$item_id'" : " or cat_item.id='$item_id'");
             $count = $count + (int)$cnt;
         }
@@ -223,8 +219,8 @@ class BasketController extends Controller
         $summ = 0;
         $cnt = 0;
         while ($row = $result->fetch_array()) {
-            $summ+=$row['price'] * $_SESSION['BUY'][$row['id']]['count'];
-            $cnt+=$_SESSION['BUY'][$row['id']]['count'];
+            $summ += $row['price'] * App::$session['BUY'][$row['id']]['count'];
+            $cnt += App::$session['BUY'][$row['id']]['count'];
         }
         $result->data_seek(0);
         $tags['summ'] = add_zero($summ);

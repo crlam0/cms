@@ -60,7 +60,7 @@ class ItemEditController extends BaseController
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
-                App::setFlash('success', 'Статья успешно добавлена.');
+                App::addFlash('success', 'Статья успешно добавлена.');
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
@@ -86,7 +86,7 @@ class ItemEditController extends BaseController
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
-                App::setFlash('success', 'Статья успешно изменена.');
+                App::addFlash('success', 'Статья успешно изменена.');
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
@@ -124,7 +124,7 @@ class ItemEditController extends BaseController
             return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            App::setFlash('danger', 'Неверный тип файла !');
+            App::addFlash('danger', 'Неверный тип файла !');
             return false;
         }
         $this->deleteImageFile($model);
@@ -135,7 +135,7 @@ class ItemEditController extends BaseController
             $model->image_type = $file['type'];
             return true;
         } else {
-            App::setFlash('danger', 'Ошибка копирования файла !');
+            App::addFlash('danger', 'Ошибка копирования файла !');
             return false;
         }
     }
@@ -155,7 +155,7 @@ class ItemEditController extends BaseController
     {
         if (is_file(App::$DIR . $this->image_path . $model->image_name)) {
             if (!unlink(App::$DIR . $this->image_path . $model->image_name)) {
-                App::setFlash('danger', 'Ошибка удаления файла');
+                App::addFlash('danger', 'Ошибка удаления файла');
                 return false;
             }
         }

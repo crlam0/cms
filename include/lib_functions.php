@@ -300,12 +300,11 @@ function show_month($month, $show_day_func = null): void
  */
 function get_csrf_token()
 {
-    global $_SESSION;
-    if (!array_key_exists('CSRF_Token', $_SESSION)) {
+    if (App::$session['CSRF_Token']) {
         $token = App::$user->encryptPassword(App::$user->generateSalt(), App::$user->generateSalt());
-        $_SESSION['CSRF_Token'] = $token;
+        App::$session['CSRF_Token'] = $token;
     }
-    return $_SESSION['CSRF_Token'];
+    return App::$session['CSRF_Token'];
 }
 
 /**
@@ -315,8 +314,7 @@ function get_csrf_token()
  */
 function check_csrf_token(): bool
 {
-    global $_SESSION;
-    return App::$input['CSRF_Token'] === $_SESSION['CSRF_Token'];
+    return App::$input['CSRF_Token'] === App::$session['CSRF_Token'];
 }
 
 

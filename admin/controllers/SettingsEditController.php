@@ -27,7 +27,7 @@ class SettingsEditController extends BaseController
     {
         $model = new Setting();
         if ($model->load(App::$input['form']) && $model->save()) {
-            App::setFlash('success', 'Настройка добавлена');
+            App::addFlash('success', 'Настройка добавлена');
             $this->redirect('index');
         }
         return $this->render('settings_form.html.twig', [
@@ -41,7 +41,7 @@ class SettingsEditController extends BaseController
     {
         $model = new Setting($id);
         if ($model->load(App::$input['form']) && $model->save()) {
-            App::setFlash('success', 'Настройка сохранена');
+            App::addFlash('success', 'Настройка сохранена');
             $this->redirect('index');
         }
         return $this->render('settings_form.html.twig', [

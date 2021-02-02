@@ -77,7 +77,6 @@ class Comments
      */
     public function show_form(array $tags = []) : string
     {
-        global $_SESSION;
         if ($this->new_form) {
             $this->editor->SetValue('');
             $tags['author'] = '';
@@ -91,7 +90,7 @@ class Comments
         if (!isset($tags['action'])) {
             $tags['action'] = dirname(App::$server['PHP_SELF']);
         }
-        $_SESSION['IMG_CODE'] = rand(111111, 999999);
+        App::$session['IMG_CODE'] = rand(111111, 999999);
         return $this->get_form_data_result . App::$template->parse('comment_add_form', $tags);
     }
 
@@ -114,7 +113,7 @@ class Comments
         } elseif (strlen($this->editor->GetValue()) > 512) {
             $output.=App::$message->get('form_error_msg_too_long');
             $err = true;
-        } elseif (($input['img_code'] != $_SESSION['IMG_CODE']) && (!App::$settings['debug'])) {
+        } elseif (($input['img_code'] != App::$session['IMG_CODE']) && (!App::$settings['debug'])) {
             $output.=App::$message->get('form_error_code');
             $err = true;
         }

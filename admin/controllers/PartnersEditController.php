@@ -48,7 +48,7 @@ class PartnersEditController extends BaseController
             App::$db->insertTable($this->table, App::$input['form']);
             $item_id = App::$db->insert_id();
             if ($this->saveImage($_FILES['image_file'], $item_id, App::$input['form']['title'])) {
-                App::setFlash('success', 'Партнёр успешно добавлен');
+                App::addFlash('success', 'Партнёр успешно добавлен');
             }
             redirect('index');
         }
@@ -78,7 +78,7 @@ class PartnersEditController extends BaseController
         if (is_array(App::$input['form'])) {
             App::$db->updateTable($this->table, App::$input['form'], ['id' => $id]);
             if ($this->saveImage($_FILES['image_file'], $id, App::$input['form']['title'])) {
-                App::setFlash('success', 'Партнёр успешно обновлён');
+                App::addFlash('success', 'Партнёр успешно обновлён');
             }
             redirect('index');
         }
@@ -116,7 +116,7 @@ class PartnersEditController extends BaseController
             return true;
         }
         if (!in_array($file['type'], Image::$validImageTypes)) {
-            App::setFlash('danger', 'Неверный тип файла !');
+            App::addFlash('danger', 'Неверный тип файла !');
             return false;
         }
         $this->deleteImageFile($item_id);
@@ -126,7 +126,7 @@ class PartnersEditController extends BaseController
             App::$db->updateTable($this->table, ['file_name' => $file_name, 'file_type' => $file['type']], ['id' => $item_id]);
             return true;
         } else {
-            App::setFlash('danger', 'Ошибка копирования файла !');
+            App::addFlash('danger', 'Ошибка копирования файла !');
             return false;
         }
     }

@@ -56,6 +56,10 @@ class App
     */
     public static $server;
     /**
+    * @var Session Session implementation from Yii2 framework
+    */
+    public static $session;
+    /**
     * @var Array Settings array from file and database
     */
     public static $settings;
@@ -265,7 +269,7 @@ class App
     }
 
     /**
-     * Add message to session
+     * Set message to session
      *
      * @param string $type
      * @param string $message
@@ -274,9 +278,20 @@ class App
      */
     public static function setFlash(string $type, string $message): void
     {
-        global $_SESSION;
-        $_SESSION['flash_type'] = $type;
-        $_SESSION['flash_message'] = $message;
+        static::$session->setFlash($type, $message);
+    }
+
+    /**
+     * Add message to session
+     *
+     * @param string $type
+     * @param string $message
+     *
+     * @return void
+     */
+    public static function addFlash(string $type, string $message): void
+    {
+        static::$session->addFlash($type, $message);
     }
 
     /**
@@ -284,18 +299,34 @@ class App
      *
      * @return array
      */
-    public static function getFlash()
+    public static function getFlash($key)
     {
-        global $_SESSION;
-        if (!isset($_SESSION['flash_type'])) {
-            return [];
+        return static::$session->getFlash($key);
+    }
+
+    private static function proceedFlashItem(&$result, $key, $value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $message) {
+                $result[] = [
+                    'type' => $key,
+                    'message' => $message
+                ];
+            }
+        } else {
+            $result[] = [
+                'type' => $key,
+                'message' => $value
+            ];
         }
-        $result = [
-            'type' => $_SESSION['flash_type'],
-            'message' => $_SESSION['flash_message'],
-        ];
-        unset($_SESSION['flash_type']);
-        unset($_SESSION['flash_message']);
+    }
+
+    private static function getFlashes()
+    {
+        $result = [];
+        foreach (static::$session->getAllFlashes(true) as $key => $value) {
+            static::proceedFlashItem($result, $key, $value);
+        }
         return $result;
     }
 
@@ -350,7 +381,7 @@ class App
             static::debug('Failed auth, user ID: ' . static::$user->id . ' URL: ' . static::$routing->request_uri);
             return static::$message->getError('У вас нет соответствующих прав !');
         } else {
-            $_SESSION['GO_TO_URI'] = static::$server['REQUEST_URI'];
+            static::$session['GO_TO_URI'] = static::$server['REQUEST_URI'];
             redirect(static::$SUBDIR . 'login/');
         }
         exit;
@@ -376,7 +407,7 @@ class App
                 break;
         }
         header(static::$server['SERVER_PROTOCOL'] . $http_message, true, $code);
-        $tags['flash'] = static::getFlash();
+        $tags['flash'] = static::getFlashes();
         $tags['errors'] = static::getErrors();
         echo static::$template->parse(static::get('tpl_default'), $tags, null, $content);
         exit;

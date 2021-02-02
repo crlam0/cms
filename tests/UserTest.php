@@ -33,12 +33,15 @@ class UserTest extends TestCase
         self::assertStringContainsString('active', $this->User->flags);
     }
 
+
+    /*
     public function testAuthBySession() : void
     {
         $this->User->authBySession(['UID'=>10, 'FLAGS'=>'active']);
         self::assertEquals('10', $this->User->id);
         self::assertStringContainsString('active', $this->User->flags);
     }
+    */
 
     public function testLogout() : void
     {

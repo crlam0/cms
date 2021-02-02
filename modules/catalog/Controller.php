@@ -124,7 +124,6 @@ class Controller extends BaseController
 
     private function getPartItemsContent(int $part_id, int $page, bool $show_empty_message = true): string
     {
-        global $_SESSION;
 
         $content = '';
 
@@ -133,15 +132,15 @@ class Controller extends BaseController
         if (isset($row_part['descr']) && strlen($row_part['descr'])) {
             $tags['part_descr'] = $row_part['descr'];
         }
-        if (!isset($_SESSION['catalog_page'])) {
-            $_SESSION['catalog_page'] = 1;
+        if (!isset(App::$session['catalog_page'])) {
+            App::$session['catalog_page'] = 1;
         }
         if ($page) {
-            $_SESSION['catalog_page'] = $page;
+            App::$session['catalog_page'] = $page;
         }
         list($total) = App::$db->getRow("SELECT count(id) from cat_item where part_id=?", ['part_id' => $part_id]);
 
-        $pager = new Pagination($total, $_SESSION['catalog_page'], App::$settings['catalog_items_per_page']);
+        $pager = new Pagination($total, App::$session['catalog_page'], App::$settings['catalog_items_per_page']);
         $tags['pager'] = $pager;
 
         $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
@@ -224,8 +223,8 @@ class Controller extends BaseController
         if ($result->num_rows) {
             $tags['images'] = $result->fetch_all(MYSQLI_ASSOC);
         }
-        if ($_SESSION['catalog_page']>1) {
-            $tags['page'] = 'page' . $_SESSION['catalog_page'] . '/';
+        if (App::$session['catalog_page']>1) {
+            $tags['page'] = 'page' . App::$session['catalog_page'] . '/';
         }
         return $this->render('cat_item_view', $tags, $result);
     }
@@ -386,7 +385,6 @@ class Controller extends BaseController
 
     public function getItemsCount($id)
     {
-        global $_SESSION;
-        return $_SESSION['BUY'][$id]['count'];
+        return App::$session['BUY'][$id]['count'];
     }
 }

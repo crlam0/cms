@@ -10,19 +10,19 @@ class LoginController extends BaseController
 
     private function auth(): string
     {
-        global $_SESSION, $COOKIE_NAME;
+        global $COOKIE_NAME;
         if ($row = App::$user->authByLoginPassword(App::$input['login'], App::$input['passwd'])) {
-            $_SESSION['UID']=App::$user->id;
-            $_SESSION['FLAGS']=App::$user->flags;
+            App::$session['UID'] = App::$user->id;
+            App::$session['FLAGS'] = App::$user->flags;
             if (App::$input['rememberme']) {
                 App::$user->setRememberme($COOKIE_NAME);
             }
             if (mb_strlen($row['salt']) !== 22) {
                 return App::$message->get('notice', [], 'Ваш пароль устарел. Пожалуйста, поменяйте его на другой <a href="' . App::$SUBDIR . 'passwd-change/" />по этой ссылке</a> ');
             }
-            if (isset($_SESSION['GO_TO_URI'])) {
-                $uri = $_SESSION['GO_TO_URI'];
-                unset($_SESSION['GO_TO_URI']);
+            if (isset(App::$session['GO_TO_URI'])) {
+                $uri = App::$session['GO_TO_URI'];
+                unset(App::$session['GO_TO_URI']);
                 redirect($uri);
             } else {
                 redirect(App::$SUBDIR);

@@ -26,7 +26,7 @@ class DBDumpClearCommand extends Command
     /**
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $this->paths = glob('dump-*.sql');
 
@@ -38,5 +38,6 @@ class DBDumpClearCommand extends Command
                 $output->writeln('<error>Cant delete: ' . $dump_name . '</error>');
             }
         }
+        return 0;
     }
 }

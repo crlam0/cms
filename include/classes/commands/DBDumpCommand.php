@@ -26,7 +26,7 @@ class DBDumpCommand extends Command
     /**
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         global $DBHOST, $DBUSER, $DBPASSWD, $DBNAME;
         $table = $input->getArgument('table');
@@ -47,5 +47,6 @@ class DBDumpCommand extends Command
         } else {
             $output->writeln('<info>Done!</info>');
         }
+        return 0;
     }
 }

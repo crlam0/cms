@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\catalog;
+namespace modules\catalog\contrillers;
 
 use classes\BaseController;
 use classes\App;
@@ -35,7 +35,7 @@ class PriceController extends BaseController
     {
         $content = '';
 
-        $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
+        $query = "select cat_item.*,file_name,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
         left join cat_item_images on (cat_item_images.id=default_img or cat_item_images.item_id=cat_item.id)
         where part_id='{$row['id']}'
         group by cat_item.id

@@ -12,6 +12,7 @@ class LoginController extends BaseController
     {
         global $COOKIE_NAME;
         if ($row = App::$user->authByLoginPassword(App::$input['login'], App::$input['passwd'])) {
+            echo 'TEEEEEEEEEEEEST';
             App::$session['UID'] = App::$user->id;
             App::$session['FLAGS'] = App::$user->flags;
             if (App::$input['rememberme']) {

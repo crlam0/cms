@@ -1,0 +1,17 @@
+{% for row in tree %}
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" href="#collapse{{ row.id }}">
+            <h4 class="panel-title">
+                {{ row.strokes }}{{ row.title }}
+            </h4>
+        </div>
+        <div id="collapse{{ row.id }}" class="panel-collapse collapse">
+            <ul class="list-group">
+                {{ this.getListGroupContent(row.id, related_products) }}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endfor %}

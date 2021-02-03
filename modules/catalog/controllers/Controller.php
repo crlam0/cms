@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\catalog;
+namespace modules\catalog\controllers;
 
 use classes\App;
 use classes\BaseController;
@@ -132,7 +132,7 @@ class Controller extends BaseController
         if (isset($row_part['descr']) && strlen($row_part['descr'])) {
             $tags['part_descr'] = $row_part['descr'];
         }
-        if (!isset(App::$session['catalog_page'])) {
+        if (!App::$session['catalog_page']) {
             App::$session['catalog_page'] = 1;
         }
         if ($page) {
@@ -140,10 +140,10 @@ class Controller extends BaseController
         }
         list($total) = App::$db->getRow("SELECT count(id) from cat_item where part_id=?", ['part_id' => $part_id]);
 
-        $pager = new Pagination($total, App::$session['catalog_page'], App::$settings['catalog_items_per_page']);
+        $pager = new Pagination($total, App::$session['catalog_page'], App::$settings['catalog_items_per_page'] ?? 12);
         $tags['pager'] = $pager;
 
-        $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
+        $query = "select cat_item.*,file_name,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
                 left join cat_item_images on (cat_item_images.id=default_img)
                 where part_id=?
                 group by cat_item.id   
@@ -181,7 +181,7 @@ class Controller extends BaseController
         }
         if (count($related_products)) {
             $where_str = implode(',', array_keys($related_products));
-            $query = "select cat_item.*,fname,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
+            $query = "select cat_item.*,file_name,cat_item.id as item_id,cat_item_images.id as image_id from cat_item 
                 left join cat_item_images on (cat_item_images.id=default_img)
                 where cat_item.id in (" . $where_str . ")
                 group by cat_item.num   
@@ -201,7 +201,7 @@ class Controller extends BaseController
 
         $item_id = $this->getItemId($part_id, $item_title);
 
-        $query = "select cat_item.*,fname,file_type,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id=?";
+        $query = "select cat_item.*,file_name,file_type,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id=?";
         $result = App::$db->query($query, ['id' => $item_id]);
 
         if (!$result->num_rows) {
@@ -232,26 +232,26 @@ class Controller extends BaseController
     public function actionLoadImage($file_name, $image_id, $item_id): array
     {
         $input = App::$input;
-        $query = "select default_img,fname,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id=?";
-        list($default_img,$default_img_fname,$title)=App::$db->getRow($query, ['id' => $input['item_id']]);
+        $query = "select default_img,file_name,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id=?";
+        list($default_img,$default_img_file_name,$title)=App::$db->getRow($query, ['id' => $input['item_id']]);
 
         $nav_ins = '';
 
-        list($prev_id,$fname) = App::$db->getRow("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<'" . $input['image_id'] . "' and id<>'{$default_img}' order by id desc limit 1");
+        list($prev_id,$file_name) = App::$db->getRow("select id,file_name from cat_item_images where item_id='" . $input['item_id'] . "' and id<'" . $input['image_id'] . "' and id<>'{$default_img}' order by id desc limit 1");
         if ($input['image_id'] != $default_img) {
             if ($prev_id) {
-                $nav_ins.= "<a image_id={$prev_id} item_id={$input['item_id']} file_name={$fname} class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
+                $nav_ins.= "<a image_id={$prev_id} item_id={$input['item_id']} file_name={$file_name} class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
             } else {
-                $nav_ins.= "<a image_id={$default_img} item_id={$input["item_id"]} file_name=\"{$default_img_fname}\" class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
+                $nav_ins.= "<a image_id={$default_img} item_id={$input["item_id"]} file_name=\"{$default_img_file_name}\" class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
             }
-            list($next_id,$fname) = App::$db->getRow("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id>'" . $input['image_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
+            list($next_id,$file_name) = App::$db->getRow("select id,file_name from cat_item_images where item_id='" . $input['item_id'] . "' and id>'" . $input['image_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
             if ($next_id) {
-                $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$fname} class=\"cat_image_button btn btn-default\">Следующая >></a>";
+                $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$file_name} class=\"cat_image_button btn btn-default\">Следующая >></a>";
             }
         } else {
-            list($next_id,$fname) = App::$db->getRow("select id,fname from cat_item_images where item_id='" . $input['item_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
+            list($next_id,$file_name) = App::$db->getRow("select id,file_name from cat_item_images where item_id='" . $input['item_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
             if ($next_id) {
-                $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$fname} class=\"cat_image_button btn btn-default\">Следующая >></a>";
+                $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$file_name} class=\"cat_image_button btn btn-default\">Следующая >></a>";
             }
         }
 
@@ -360,7 +360,7 @@ class Controller extends BaseController
     public function getListImage($row): string
     {
         App::$input['preview']=true;
-        $file_name = App::$DIR . App::$settings['catalog_item_img_path'] . $row['fname'];
+        $file_name = App::$DIR . App::$settings['catalog_item_img_path'] . $row['file_name'];
         // $image = new Image($file_name, $row['file_type']);
         $image = new Image($file_name);
         $cript_name = 'modules/catalog/image.php?preview='.App::$settings['catalog_item_img_preview'].'&crop=1&id=' . $row['image_id'];
@@ -370,14 +370,14 @@ class Controller extends BaseController
     /**
      * @return bool|string
      */
-    public function getPartImageFilename($fname, $width = 0)
+    public function getPartImageFilename($file_name, $width = 0)
     {
         $IMG_PART_PATH = App::$DIR . App::$settings['catalog_part_img_path'];
         if (!$width) {
             $width = App::$settings['catalog_part_img_preview'];
         }
-        if (is_file($IMG_PART_PATH . $fname)) {
-            return App::$settings['catalog_part_img_path'] . $fname;
+        if (is_file($IMG_PART_PATH . $file_name)) {
+            return App::$settings['catalog_part_img_path'] . $file_name;
         } else {
             return false;
         }

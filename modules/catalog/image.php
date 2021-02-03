@@ -7,9 +7,9 @@ use classes\Image;
 use modules\catalog\Controller;
 
 if (isset(App::$input['id'])) {
-    list($file_name, $file_type) = App::$db->getRow("select fname,file_type from cat_item_images where id='" . App::$input['id'] ."'");
+    list($file_name, $file_type) = App::$db->getRow("select file_name,file_type from cat_item_images where id='" . App::$input['id'] ."'");
 } else {
-    list($file_name, $file_type) = App::$db->getRow("select fname,file_type from cat_item_images where fname='" . App::$input['file_name'] ."'");
+    list($file_name, $file_type) = App::$db->getRow("select file_name,file_type from cat_item_images where file_name='" . App::$input['file_name'] ."'");
 }
 
 $crop = App::$input['crop'];

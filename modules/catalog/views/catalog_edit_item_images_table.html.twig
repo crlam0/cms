@@ -1,0 +1,25 @@
+<table width="550" class="table table-striped table-responsive table-bordered normal-form">
+    <tr class=header align="center">
+        <td width="15%">По умолчанию</td>
+        <td width="45%">Изображение</td>
+        <td width="25%">Описание</td>
+        <td width="15%">Удалить</td>
+    </tr>
+    {% for row in rows %}
+        <tr class="content" valign="middle" align="left">
+        <td align="center">
+            <input type="radio" name="ch_default" class="default_img" image_id="{{ row.id }}"  
+                   {% if row.id == row.default_img %} checked {% endif %} />
+        </td>
+        <td align="center">
+            <img src="{{ SUBDIR }}{{ image_path }}{{ row.file_name }}" border="0" width="150">
+        </td>
+        <td><span id="{{row.id }}">{{ row.descr }}</span></td>
+        <td align="center">
+            <a href="#" class="del_button" image_id="{{ row.id }}" alt="Удалить">
+                <img src="{{ SUBDIR }}admin/images/del.gif" border="0">
+            </a>
+        </td>
+        </tr>
+    {% endfor %}
+</table>

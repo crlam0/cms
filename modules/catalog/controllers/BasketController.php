@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\catalog;
+namespace modules\catalog\controllers;
 
 use classes\BaseController;
 use classes\App;
@@ -214,7 +214,7 @@ class BasketController extends Controller
             $where.=(!strlen($where) ? " cat_item.id='$item_id'" : " or cat_item.id='$item_id'");
             $count = $count + (int)$cnt;
         }
-        $query = "select cat_item.*,fname,file_type,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
+        $query = "select cat_item.*,file_name,file_type,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
         $result = App::$db->query($query);
         $summ = 0;
         $cnt = 0;

@@ -30,7 +30,7 @@ class CacheClearCommand extends Command
     /**
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $output->writeln('<comment>Clearing cache</comment>');
 
@@ -62,5 +62,6 @@ class CacheClearCommand extends Command
         }
 
         $output->writeln('<info>Done!</info>');
+        return 0;
     }
 }

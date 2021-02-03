@@ -13,12 +13,12 @@ class Bootstrap
         App::$routing->addRoutes([
             'catalog' => [
                 'pattern' => '^catalog\/$',
-                'controller' => 'modules\catalog\Controller',
+                'controller' => 'modules\catalog\controllers\Controller',
                 'action' => 'index',
             ],
             'catalog-part' => [
                 'pattern' => '^catalog\/(.*)\/$',
-                'controller' => 'modules\catalog\Controller',
+                'controller' => 'modules\catalog\controllers\Controller',
                 'action' => 'part-list',
                 'params' => [
                     '0' => 'uri',
@@ -26,7 +26,7 @@ class Bootstrap
             ],
             'catalog-item' => [
                 'pattern' => '^catalog\/(.*)\/(.*)$',
-                'controller' => 'modules\catalog\Controller',
+                'controller' => 'modules\catalog\controllers\Controller',
                 'action' => 'item',
                 'params' => [
                     '0' => 'uri',
@@ -35,16 +35,30 @@ class Bootstrap
             ],
             'catalog-load-image' => [
                 'pattern' => '^catalog\/load-image$',
-                'controller' => 'modules\catalog\Controller',
+                'controller' => 'modules\catalog\controllers\Controller',
                 'action' => 'load-image'
             ],
             'basket' => [
                 'pattern' => '^basket\/[\w\-]*$',
-                'controller' => 'modules\catalog\BasketController',
+                'controller' => 'modules\catalog\controllers\BasketController',
             ],
             'price' => [
                 'pattern' => '^price\/[\w\-]*$',
-                'controller' => 'modules\catalog\PriceController',
+                'controller' => 'modules\catalog\controllers\PriceController',
+            ],
+
+            /* For admin module */
+
+            'catalog-part-edit' => [
+                'pattern' => '^admin\/catalog\-edit\/[\w\-]*$',
+                'controller' => 'modules\catalog\controllers\PartEditController',
+            ],
+            'catalog-item-edit' => [
+                'pattern' => '^admin\/catalog\-edit\/items\/(\d+)\/[\w\-]*$',
+                'controller' => 'modules\catalog\controllers\ItemEditController',
+                'params' => [
+                    '0' => 'part_id',
+                ]
             ],
         ]);
 

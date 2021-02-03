@@ -4,9 +4,9 @@
     {% for row in rows %}
     <tr valign="middle">
         <td align="center" width="200">
-            {% set image = this.getImageFilename(row.fname,row.file_type,190,true) %}
+            {% set image = this.getImageFilename(row.file_name,row.file_type,190,true) %}
             {% if image %}
-                <img src="{{SUBDIR}}{{image}}" alt="{{ row.title }}" file_name="{{ row.fname }}" item_id="{{ row.id }}" image_id="{{ row.cat_item_images_id}}" border="0" align="left" class="cat_item_image_popup">
+                <img src="{{SUBDIR}}{{image}}" alt="{{ row.title }}" file_name="{{ row.file_name }}" item_id="{{ row.id }}" image_id="{{ row.cat_item_images_id}}" border="0" align="left" class="cat_item_image_popup">
             {% else %}
                 Изображение отсутствует
             {% endif %}

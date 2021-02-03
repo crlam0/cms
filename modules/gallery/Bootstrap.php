@@ -38,6 +38,7 @@ class Bootstrap
                     '1' => 'page',
                 ]
             ],
+
             /* For admin module */
 
             'gallery-list-edit' => [

@@ -29,7 +29,7 @@ class DBRestoreCommand extends Command
     /**
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         global $DBHOST, $DBUSER, $DBPASSWD, $DBNAME;
         $last = $input->getArgument('last');
@@ -51,9 +51,9 @@ class DBRestoreCommand extends Command
         if ($result!==0) {
             $output->writeln('<error>ERROR!</error>');
             $output->writeln('<error>Command was: ' . $command . '</error>');
-            unlink($dump_name);
         } else {
             $output->writeln('<info>Done!</info>');
         }
+        return 0;
     }
 }

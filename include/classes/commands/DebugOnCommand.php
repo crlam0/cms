@@ -30,7 +30,7 @@ class DebugOnCommand extends Command
     /**
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $output->writeln('<comment>Switch debug mode on</comment>');
 
@@ -41,5 +41,6 @@ class DebugOnCommand extends Command
             $output->writeln('<error>ERROR!</error>');
             $output->writeln('<error>Error was: ' . $this->db->error() . '</error>');
         }
+        return 0;
     }
 }

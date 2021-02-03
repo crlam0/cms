@@ -177,11 +177,9 @@ class User extends BaseModel
      */
     public function authByLoginPassword(string $login, string $password)
     {
-        echo $login . ' - ' . $password;
         $row = App::$db->getRow("select id,flags,passwd,salt from users where login=? and flags like '%active%'", ['login' => $login]);
         if ($row) {
             if (password_verify($password, $row['passwd'])) {
-                echo 'password_verify';
                 $this->authByArray($row);
                 return $row;
             }

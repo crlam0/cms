@@ -3,6 +3,8 @@ if (!isset($input)) {
     require '../include/common.php';
 }
 
+use classes\App;
+
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 $tags['Header'] = 'Прайс-лист';
 
@@ -10,19 +12,19 @@ if (isset($input['attr_name'])) {
     $input['id'] = intval($input['id']);
     // $input['value'] = intval($input['value']);
     if ($input['attr_type'] == "simple") {
-        $query = "update cat_item set {$input['attr_name']}='{$input['value']}' where id='{$input['id']}'";
-        $result = my_query($query);
+        $query = "update cat_item set {$input['attr_name']}='{$input['value']}' where id=?";
+        $result = App::$db->query($query, ['id' => $input['id']]);
     } elseif ($input['attr_type'] == "json" || $input['attr_type'] == "boolean") {
         $query = "select props from cat_item where id='{$input['id']}'";
-        $row = my_select_row($query);
+        $row = App::$db->getRow($query);
         if ($row) {
             if (!$props_values = my_json_decode($row['props'])) {
                 $props_values=[];
             }
             $props_values[$input['attr_name']] = $input['value'];
             $props_json = json_encode($props_values);
-            $query = "update cat_item set props='{$props_json}' where id='{$input['id']}'";
-            $result = my_query($query);
+            $query = "update cat_item set props='{$props_json}' where id=?";
+            $result = App::$db->query($query, ['id' => $input['id']]);
         }
     }
     if ($result) {
@@ -39,10 +41,10 @@ function part_items($part_id): string
     $query = "select cat_item.*,cat_item.id as item_id,cat_part.items_props
         from cat_item
         left join cat_part on (cat_part.id=part_id)
-    where part_id='{$part_id}'
+    where part_id=?
     group by cat_item.id
     order by num,title asc";
-    $result = my_query($query);
+    App::$db->query($query, ['part_id' => $input['part_id']]);
     $content = '<table class="table table-striped table-responsive table-bordered">';
     if ($result->num_rows) {
         $content .= '<tr>';
@@ -52,7 +54,7 @@ function part_items($part_id): string
             $props_array = json_decode($tags['items_props'], true);
             // print_array($props_array);
             if (!is_array($props_array)) {
-                $content.=my_msg_to_str('', [], 'Массив свойств неверен');
+                $content.=App::$message->get('', [], 'Массив свойств неверен');
             } else {
                 $props_values=json_decode($tags['props'], true);
                 // print_array($props_values);
@@ -76,7 +78,7 @@ function part_items($part_id): string
                 $props_array = json_decode($tags['items_props'], true);
                 // print_array($props_array);
                 if (!is_array($props_array)) {
-                    $content.=my_msg_to_str('', [], 'Массив свойств неверен');
+                    $content.=App::$message->get('', [], 'Массив свойств неверен');
                 } else {
                     $props_values=json_decode($tags['props'], true);
                     // print_array($props_values);
@@ -112,8 +114,8 @@ if (true) {
         if ($deep) {
             $subparts++;
         }
-        $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id='$prev_id' group by cat_part.id order by cat_part.num,cat_part.title asc";
-        $result = my_query($query);
+        $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id=? group by cat_part.id order by cat_part.num,cat_part.title asc";
+        $result = App::$db->query($query, ['prev_id' => $input['prev_id']]);
         while ($row = $result->fetch_array()) {
 //          $subparts++;
             if ((!$deep) && (!$prev_id)) {
@@ -166,5 +168,4 @@ $(document).ready(function(){
 
     ';
 
-
-echo get_tpl_by_name($part['tpl_name'], $tags, null, $final_content);
+echo App::$template->parse($part['tpl_name'], $tags, null, $final_content);

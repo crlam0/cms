@@ -139,9 +139,9 @@ class Comments
             $input['ip'] = App::$server['REMOTE_ADDR'];
             $input['date_add'] = 'now()';
             $input['uid'] = App::$user->id;
-            $input['target_type']=$this->target_type;
-            $input['target_id']=$this->target_id;
-            $input['content']=$this->editor->GetHTML();
+            $input['target_type'] = $this->target_type;
+            $input['target_id'] = $this->target_id;
+            $input['content'] = $this->editor->GetHTML();
 
             if (App::$user->id) {
                 $input['author'] = App::$user->fullname;
@@ -150,15 +150,14 @@ class Comments
 
             unset($input['add_comment']);
             unset($input['img_code']);
-            $query = "insert into {$this->table} " . db_insert_fields($input);
-            App::$db->query($query);
-            $output.=App::$message->get('', [], 'Комментарий успешно добавлен');
+            App::$db->insertTable($this->table, $input);
+            $output .= App::$message->get('', [], 'Комментарий успешно добавлен');
 
-            $remote_host=(check_key('REMOTE_HOST', App::$server) ? App::$server['REMOTE_HOST'] : gethostbyaddr(App::$server['REMOTE_ADDR']) );
-            $message="Автор: {$input['author']} ( {$input['email']} )\n";
-            $message.="IP: {$input['ip']} ( {$remote_host} )\n";
-            $message.="Сообщение:\n";
-            $message.=str_replace('\r\n', "\n", $input['content']) . "\n";
+            $remote_host = (check_key('REMOTE_HOST', App::$server) ? App::$server['REMOTE_HOST'] : gethostbyaddr(App::$server['REMOTE_ADDR']) );
+            $message = "Автор: {$input['author']} ( {$input['email']} )\n";
+            $message .= "IP: {$input['ip']} ( {$remote_host} )\n";
+            $message .= "Сообщение:\n";
+            $message .= str_replace('\r\n', "\n", $input['content']) . "\n";
             if (!App::$debug) {
                 App::$message->mail(App::$settings['email_to_addr'], 'На сайте http://'.App::$server['HTTP_HOST'].App::$SUBDIR.' оставлен новый комментарий.', $message);
             }

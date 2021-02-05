@@ -73,8 +73,6 @@ class SignupController extends BaseController
             $form['regdate'] = 'now()';
             unset($form['new_passwd1']);
             unset($form['new_passwd2']);
-            // $query = "insert into users " . db_insert_fields($form);
-            // App::$db->query($query);
             App::$db->insertTable('users', $form);
             $user_id = App::$db->insert_id();
             $token = App::$user->makeToken($user_id, 1, User::TOKEN_SALT);

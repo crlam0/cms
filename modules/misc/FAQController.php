@@ -78,8 +78,7 @@ class FAQController extends BaseController
         // $input[txt]=strip_tags($input[txt],"<b><i><p><br>");
         $input['txt'] = $this->editor->GetHTML();
         unset($input['img_code']);
-        $query = "insert into {$this->TABLE} " . db_insert_fields($input);
-        App::$db->query($query);
+        App::$db->insertTable($this->TABLE, $input);
         $message='Автор: ' . $input['author'] . PHP_EOL;
         $message.='E-Mail: ' . $input['email'] . PHP_EOL;
         $message.='IP: ' . $input['ip'] . PHP_EOL;

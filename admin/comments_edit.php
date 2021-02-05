@@ -3,35 +3,35 @@
 $tags['Header'] = "Комментарии";
 include "../include/common.php";
 
+use classes\App;
+
 $TABLE = "comments";
 
 if ($input["active"]) {
-    $query = "update $TABLE set active='" . $input["active"] . "' where id=" . $input["id"];
-    if (my_query($query)) {
-        print $input["active"];
+    $query = "update $TABLE set active=? where id=?";
+    if (App::$db->query($query, ['active' => $input['active'], 'id' => $input['id']])) {
+        echo $input["active"];
     } else {
-        print mysql_error();
+        echo mysql_error();
     }
     exit;
 }
 
 if ($input["del_comment"]) {
-    $query = "delete from $TABLE where id={$input["id"]}";
-    $result = my_query($query);
+    App::$db->deleteFromTable($TABLE, ['id' => $input['id']]);
     $list = 1;
-    $content.=my_msg_to_str('', [], "Комментарий успешно удален.");
+    $content.=App::$message->get('', [], "Комментарий успешно удален.");
 }
 
 if ($input["edited_comment"]) {
-    $query = "update $TABLE set " . db_update_fields($input['form']) . " where id='{$input['id']}'";
-    my_query($query);
-    $content.=my_msg_to_str('', [], "Комментарий успешно изменен.");
+    App::$db->updateTable($TABLE, $input['form'], ['id' => $input['id']]);
+    $content.=App::$message->get('', [], "Комментарий успешно изменен.");
 }
 
 if (($input["edit_comment"]) || ($input["add_comment"])) {
     if ($input["edit_comment"]) {
-        $query = "select * from $TABLE where id='{$input['id']}'";
-        $result = my_query($query);
+        $query = "select * from $TABLE where id=?";
+        $result = App::$db->query($query, ['id' => $input['id']]);
         $tags = array_merge($tags, $result->fetch_array());
         $tags['type'] = "edited_comment";
         $tags['form_title'] = "Редактирование";
@@ -41,15 +41,15 @@ if (($input["edit_comment"]) || ($input["add_comment"])) {
         $tags['form_title'] = "Добавление";
         $tags['Header'] = "Добавление комментария";
     }
-    $content.=get_tpl_by_name("comment_edit_form", $tags);
-    echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
+    $content.=App::$template->parse("comment_edit_form", $tags);
+    echo App::$template->parse($part['tpl_name'], $tags, null, $content);
     exit();
 }
 
 $query = "SELECT * from $TABLE order by id desc";
-$result = my_query($query);
+$result = App::$db->query($query);
 
 $tags['INCLUDE_HEAD'] = $JQUERY_INC;
 
-$content.=get_tpl_by_name("comments_edit_table", $tags, $result);
-echo get_tpl_by_name($part['tpl_name'], $tags, null, $content);
+$content.=App::$template->parse("comments_edit_table", $tags, $result);
+echo App::$template->parse($part['tpl_name'], $tags, null, $content);

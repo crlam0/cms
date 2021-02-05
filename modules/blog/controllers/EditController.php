@@ -192,7 +192,7 @@ class EditController extends BaseController
 
         function get_option($name, $sql, $target_id): string
         {
-            $result = my_query($sql);
+            $result = App::$db->query($sql);
             $output = '<td>' . $name . ':</td><td><select class="form-control" name="form[target_id]">';
             while ($row = $result->fetch_array()) {
                 $output.="<option value={$row['id']}" . ($row['id'] == $target_id ? ' selected' : '') . ">{$row['title']}</option>";

@@ -221,7 +221,7 @@ class PartEditController extends BaseController
     
     public function actionGetRelatedProductsList($part_id) 
     {        
-        list($json_row) = my_select_row("select related_products from cat_part where id='". $part_id ."'", true);
+        list($json_row) = App::$db->getRow("select related_products from cat_part where id=?", ['id' => $part_id]);
         if (!$related_products = my_json_decode($json_row)) {
             $related_products=[];
         }

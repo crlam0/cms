@@ -294,7 +294,6 @@ class Controller extends BaseController
     public function getPropName($part_id, $name)
     {
         list($items_props) = App::$db->getRow("select items_props from cat_part where id=?", ['id' => $part_id]);
-        list($items_props) = my_select_row($query);
         if ($props_values = my_json_decode($items_props)) {
             return $props_values[$name]['name'];
         }

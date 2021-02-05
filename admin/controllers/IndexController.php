@@ -39,7 +39,7 @@ class IndexController extends BaseController
             $result = $sitemap->write();
             $content .= App::$message->get('', [], "Файл sitemap.xml сгенерирован, записано {$result['count']} позиций.");
         }
-        $tables = my_query("SHOW TABLES LIKE 'comments'");
+        $tables = App::$db->query("SHOW TABLES LIKE 'comments'");
         if ($tables->num_rows) {
             $query = "select * from comments order by date_add desc limit 5";
             $result = App::$db->query($query);
@@ -48,7 +48,7 @@ class IndexController extends BaseController
             }
         }
 
-        $tables = my_query("SHOW TABLES LIKE 'request'");
+        $tables = App::$db->query("SHOW TABLES LIKE 'request'");
         if ($tables->num_rows) {
             $query = "select * from request order by date desc limit 5";
             $result = App::$db->query($query);

@@ -1,20 +1,21 @@
 <?php
-$tags['Header']='Список заказов';
+
+$tags['Header'] = 'Список заказов';
 include_once "../include/common.php";
 
+use classes\App;
+
 if ($input['active']) {
-        $query="update request set active='".$input['active']."' where id='{$input['id']}'";
-        $result=my_query($query);
-        $view=1;
+    $query = "update request set active=? where id=?";
+    App::$db->query($query, ['active' => $input['active'], 'id' => $input['id']]);
+    $view = 1;
 }
 
 if ($input['del']) {
-    $query = "delete from request where id='{$input['id']}'";
-    my_query($query, null, true);
+    App::$db->deleteFromTable('request', ['id' => $input['id']]);
 }
 
-function file_info($tmp, $row): string
-{
+function file_info($tmp, $row): string {
     global $DIR, $SUBDIR, $settings;
     if (isset($row['file_name']) && is_file($DIR . $settings['files_upload_path'] . $row['file_name'])) {
         return "<br />Прикреплен файл: <a href=\"{$SUBDIR}{$settings['files_upload_path']}{$row['file_name']}\" target=\"_blank\">{$row['file_name']}</a>";
@@ -23,9 +24,8 @@ function file_info($tmp, $row): string
     }
 }
 
+$query = "SELECT * from request order by id desc";
+$result = App::$db->query($query);
 
-$query="SELECT * from request order by id desc";
-$result=my_query($query);
-
-$content.=get_tpl_by_name('request_list', $tags, $result);
-echo get_tpl_default($tags, null, $content);
+$content .= App::$template->parse('request_list', $tags, $result);
+echo  App::$template->parse($part['tpl_name'], $tags, null, $content);

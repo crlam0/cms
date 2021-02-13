@@ -220,7 +220,7 @@ class MenuItemEditController extends BaseController
 
         switch ($target_type) {
             case 'link':
-                $output = '<td>Прямая ссылка:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[href]" value=" ' . $href . '"></td>';
+                $output = '<td>Прямая ссылка:</td><td><input class="form-control" type="edit" maxlength="255" size="64" name="form[href]" value="' . $href . '"></td>';
                 break;
             case 'article':
                 $output = get_option('Статья', 'select * from article_item order by title', $target_id);

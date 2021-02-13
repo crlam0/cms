@@ -14,9 +14,6 @@ $DIR=dirname(dirname(__FILE__)) . '/';
 $App = new App($DIR, $SUBDIR);
 $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
 
-App::$logger = new Logger('main');
-App::$logger->pushHandler(new StreamHandler(App::$DIR . 'var/log/test.log', Logger::ERROR));
-
 require_once App::$DIR.'vendor/autoload.php';
 
 App::$settings['debug'] = false;

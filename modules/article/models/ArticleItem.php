@@ -34,6 +34,7 @@ class ArticleItem extends BaseModel
             'title',
             'seo_alias',
             'content',
+            'author',
             'uid',
             'image_name',
             'image_type',

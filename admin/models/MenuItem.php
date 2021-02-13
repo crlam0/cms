@@ -51,7 +51,6 @@ class MenuItem extends BaseModel
             [['title'], 'required'],
             [['title'], 'string', ['min' => 1, 'max' => 255]],
             [['menu_id', 'target_id', 'submenu_id'], 'integer'],
-            [['href'], 'text'],
         ];
     }
 

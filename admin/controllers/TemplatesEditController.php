@@ -94,7 +94,8 @@ class TemplatesEditController extends BaseController
         foreach ($paths as $path) {
             $search_filename = $path . '/' . $filename;
             if (file_exists($search_filename)) {
-                return file_get_contents($search_filename);
+                $content = file_get_contents($search_filename);
+                return str_replace('textarea', 'text_area', $content);
             }
         }
         return '';
@@ -108,6 +109,7 @@ class TemplatesEditController extends BaseController
         if (!strstr($form['file_name'], '.html.twig')) {
             $form['file_name'].='.html.twig';
         }
+        $form['content'] = str_replace('text_area', 'textarea', $form['content']);
         $filename = App::$DIR . 'templates/' . $form['file_name'];
         return file_put_contents($filename, stripcslashes($form['content'])) && clear_cache_dir('twig');
     }

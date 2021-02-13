@@ -2,6 +2,8 @@
 $tags['Header']='Страница администрирования';
 require '../include/common.php';
 
+use classes\App;
+
 $controller = new admin\controllers\IndexController();
 $content = $controller->actionIndex();
 

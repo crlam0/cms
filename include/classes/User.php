@@ -68,9 +68,9 @@ class User extends BaseModel
         return [
             [['login', 'passwd'], 'required'],
             [['login'], 'string', ['min' => 1, 'max' => 64]],
-            [['salt', 'email'], 'string', ['min' => 0, 'max' => 32]],
+            [['email'], 'string', ['min' => 0, 'max' => 32]],
             [['passwd'], 'string', ['min' => 8, 'max' => 64]],
-            [['fullname', 'flags', 'token'], 'string', ['min' => 0, 'max' => 255]],
+            [['fullname', 'flags'], 'string', ['min' => 0, 'max' => 255]],
             [['id', 'token_expire'], 'integer'],
         ];
     }

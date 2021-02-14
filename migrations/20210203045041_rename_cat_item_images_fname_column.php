@@ -10,6 +10,5 @@ class RenameCatItemImagesFnameColumn extends AbstractMigration
         $table = $this->table('cat_item_images');
         $table->renameColumn('fname', 'file_name')
               ->save();
-
     }
 }

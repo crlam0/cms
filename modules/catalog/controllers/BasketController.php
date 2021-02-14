@@ -132,7 +132,7 @@ class BasketController extends Controller
         $data['comment'] = $form['comment'];
 
         App::$db->insertTable('request', $data);
-        
+
         unset(App::$session['BUY']);
         return App::$message->get('', [], 'Ваш заказ принят! В ближайшее время с Вами свяжется наш менеджер для подтверждения  и уточнения по замене, если на данный период времени некоторые позиции отсутствуют.');
     }

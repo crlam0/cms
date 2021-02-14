@@ -112,7 +112,7 @@ class ItemEditController extends BaseController
     public function actionDelete(int $part_id, int $id): void
     {
         $model = new CatalogItem($id);
-        foreach($model->getImages() as $image) {
+        foreach ($model->getImages() as $image) {
             $this->deleteImageFile($image['file_name']);
             App::$db->deleteFromTable('cat_item_images', ['id' => $image['id']]);
         }
@@ -129,7 +129,7 @@ class ItemEditController extends BaseController
             return 'Отсутствует';
         }
     }
-    
+
     public function actionGetImagesList(int $part_id, int $item_id)
     {
         $IMG_URL = App::$SUBDIR . $this->image_path;
@@ -191,7 +191,7 @@ class ItemEditController extends BaseController
                 'descr' => App::$input['descr'] ?? '',
             ]);
             $image_id = App::$db->insert_id();
-            if(!$model->default_img) {
+            if (!$model->default_img) {
                 $model->default_img = $image_id;
                 $model->save(false);
             }
@@ -201,31 +201,31 @@ class ItemEditController extends BaseController
             return false;
         }
     }
-    
+
     public function actionUploadImageFile(int $part_id, int $item_id)
     {
         $item = new CatalogItem($item_id);
-        if($this->saveImage($item, $_FILES['img_file'])) {
+        if ($this->saveImage($item, $_FILES['img_file'])) {
             echo 'OK';
         } else {
             echo 'upload error';
         }
         exit;
     }
-    
+
     public function actionSetDefaultImage(int $part_id, int $item_id, int $image_id)
     {
         $query = "update cat_item set default_img=? where id=?";
         App::$db->query($query, ['default_img'=>$image_id, 'id'=>$item_id]);
         echo 'OK';
         exit;
-    }    
+    }
 
     public function actionDeleteImageFile(int $part_id, $image_id)
     {
         list($file_name) = App::$db->getRow('select file_name from cat_item_images where id=?', ['id' => $image_id]);
         App::$db->deleteFromTable('cat_item_images', ['id' => $image_id]);
-        if($this->deleteImageFile($file_name)) {
+        if ($this->deleteImageFile($file_name)) {
             echo 'OK';
         } else {
             echo 'Error delete file';

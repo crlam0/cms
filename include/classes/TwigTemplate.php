@@ -139,7 +139,7 @@ class TwigTemplate
         $loader = $this->twig->getLoader();
         return $loader->getPaths();
     }
-    
+
     /**
      * Create template from string
      *

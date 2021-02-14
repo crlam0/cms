@@ -24,12 +24,13 @@ class PartEditController extends BaseController
         $this->image_height = App::$settings['modules']['catalog']['part_image_height'] ?? 200;
         $this->user_flag = 'admin';
     }
-    
-    private function makeTree(&$tree, $prev_id, $deep, $exclude_id = -1): void {
+
+    private function makeTree(&$tree, $prev_id, $deep, $exclude_id = -1): void
+    {
         $query = "SELECT * from cat_part where prev_id=? order by num,title+1 asc";
-        $result = App::$db->query($query,['prev_id' => $prev_id]);
+        $result = App::$db->query($query, ['prev_id' => $prev_id]);
         while ($row = $result->fetch_array()) {
-            if($row['id'] == $exclude_id) {
+            if ($row['id'] == $exclude_id) {
                 continue;
             }
             $spaces = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $deep);
@@ -43,15 +44,15 @@ class PartEditController extends BaseController
             ];
             $this->makeTree($tree, $row['id'], $deep + 1, $exclude_id);
         }
-    }    
+    }
 
     public function actionIndex(): string
     {
         $model = new CatalogPart;
-        
+
         $tree = [];
         $this->makeTree($tree, 0, 0);
-        
+
         $result = $model->findAll([], 'num ASC');
         return $this->render('catalog_edit_part_table.html.twig', ['tree' => $tree], $result);
     }
@@ -64,7 +65,7 @@ class PartEditController extends BaseController
         echo $active;
         exit;
     }
-    
+
     public function actionCreate(): string
     {
         $model = new CatalogPart();
@@ -83,13 +84,13 @@ class PartEditController extends BaseController
         }
         $tree = [];
         $this->makeTree($tree, 0, 0);
-        
+
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor_mini.js');
         App::addAsset('js', 'include/edit_area/edit_area_full.js');
-        App::addAsset('js', 'include/js/editor_html.js'); 
+        App::addAsset('js', 'include/js/editor_html.js');
         App::addAsset('header', 'X-XSS-Protection:0');
-        
+
         $model->descr = replace_base_href($model->descr, false);
         return $this->render('catalog_edit_part_form.html.twig', [
             'model' => $model,
@@ -114,16 +115,16 @@ class PartEditController extends BaseController
             }
             // $this->redirect('index');
         }
-        
+
         $tree = [];
         $this->makeTree($tree, 0, 0, $id);
-        
+
         App::addAsset('js', 'include/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor_mini.js');
         App::addAsset('js', 'include/edit_area/edit_area_full.js');
-        App::addAsset('js', 'include/js/editor_html.js'); 
+        App::addAsset('js', 'include/js/editor_html.js');
         App::addAsset('header', 'X-XSS-Protection:0');
-        
+
         $model->descr = replace_base_href($model->descr, false);
         return $this->render('catalog_edit_part_form.html.twig', [
             'model' => $model,
@@ -201,8 +202,8 @@ class PartEditController extends BaseController
         $model->image_name = '';
         $model->image_type = '';
     }
-    
-    public function getListGroupContent($part_id, $related_products) 
+
+    public function getListGroupContent($part_id, $related_products)
     {
         $content = '';
         $query = "SELECT cat_item.* from cat_item where part_id=? order by num,title asc";
@@ -218,9 +219,9 @@ class PartEditController extends BaseController
         }
         return $content;
     }
-    
-    public function actionGetRelatedProductsList($part_id) 
-    {        
+
+    public function actionGetRelatedProductsList($part_id)
+    {
         list($json_row) = App::$db->getRow("select related_products from cat_part where id=?", ['id' => $part_id]);
         if (!$related_products = my_json_decode($json_row)) {
             $related_products=[];
@@ -234,10 +235,9 @@ class PartEditController extends BaseController
         $json['result'] = 'OK';
         echo json_encode($json);
         exit;
-        
     }
-    
-    public function actionChangeRelatedProduct(int $part_id, int $item_id, $value) 
+
+    public function actionChangeRelatedProduct(int $part_id, int $item_id, $value)
     {
         list($json_row) = App::$db->getRow("select related_products from cat_part where id=?", ['id' => $part_id]);
         if (!$related_products = my_json_decode($json_row)) {
@@ -248,10 +248,9 @@ class PartEditController extends BaseController
         } else {
             unset($related_products[$item_id]);
         }
-        $json = json_encode($related_products);        
+        $json = json_encode($related_products);
         App::$db->updateTable('cat_part', ['related_products' => $json], ['id' => $part_id]);
         echo 'OK';
         exit;
     }
-    
 }

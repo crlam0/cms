@@ -16,12 +16,14 @@ class CacheAdapter
     public function __construct(string $cache_path)
     {
         $this->cache_path = App::$DIR . $cache_path;
-        Cache::setConfig('default', [
-            'className' => 'Cake\Cache\Engine\FileEngine',
-            'duration' => '+1 week',
-            'probability' => 100,
-            'path' => $this->cache_path,
-        ]);        
+        if (!Cache::getConfig('default')) {
+            Cache::setConfig('default', [
+                'className' => 'Cake\Cache\Engine\FileEngine',
+                'duration' => '+1 week',
+                'probability' => 100,
+                'path' => $this->cache_path,
+            ]);
+        }
     }
 
     public function get($key) : string
@@ -34,11 +36,11 @@ class CacheAdapter
         return Cache::read($key) !== false;
     }
 
-    public function set($key, $data): bool
+    public function set($key, $data): string
     {
-        if(!Cache::write($key, $data)) {
+        if (!Cache::write($key, $data)) {
             App::error('Cant write cache data in ' . $this->cache_path);
-        }        
+        }
         return $data;
     }
 

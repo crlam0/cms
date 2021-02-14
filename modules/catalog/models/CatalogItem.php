@@ -73,17 +73,16 @@ class CatalogItem extends BaseModel
             'cnt_weight' => 'Кол-во, вес',
         ];
     }
-    
+
     public function getImages() : array
     {
         $images = App::$db->findAll('cat_item_images', ['item_id' => $this->id]);
-        return $images->fetch_all(MYSQLI_ASSOC);        
+        return $images->fetch_all(MYSQLI_ASSOC);
     }
-    
+
     public function getDefaultImage() : array
     {
         $images = App::$db->findAll('cat_item_images', ['id' => $this->default_img]);
-        return $images->fetch_all(MYSQLI_ASSOC);        
-    }    
-    
+        return $images->fetch_all(MYSQLI_ASSOC);
+    }
 }

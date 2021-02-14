@@ -162,22 +162,22 @@ class BaseModel implements \ArrayAccess
                 }
                 break;
             case 'integer':
-                if ($this->checkInteger($value, $rule)) {
+                if (is_null($value) || $this->checkInteger($value, $rule)) {
                     return true;
                 }
                 break;
             case 'string':
-                if ($this->checkString($value, $rule)) {
+                if (is_null($value) || $this->checkString($value, $rule)) {
                     return true;
                 }
                 break;
             case 'number':
-                if (is_numeric($value)) {
+                if (is_null($value) || is_numeric($value)) {
                     return true;
                 }
                 break;
             case 'text':
-                if (is_string($value)) {
+                if (is_null($value) || is_string($value)) {
                     return true;
                 }
                 break;

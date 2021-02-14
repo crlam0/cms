@@ -26,6 +26,19 @@ class ModelTest extends TestCase
         self::assertEquals('Test 1', $this->model['name']);
     }
 
+    public function testCheckRequired(): void
+    {
+        $this->model->value = 5;
+        $this->model->name = null;
+        self::assertFalse($this->model->validate());
+        $this->model->value = null;
+        $this->model->name = 'Test 1';
+        self::assertFalse($this->model->validate());
+        $this->model->value = 5;
+        $this->model->name = 'Test 1';
+        self::assertTrue($this->model->validate());
+    }
+    
     public function testCheckRulesString(): void
     {
         $this->model->value = 5;
@@ -50,16 +63,4 @@ class ModelTest extends TestCase
         self::assertTrue($this->model->validate());
     }
 
-    public function testCheckRequired(): void
-    {
-        $this->model->value = 5;
-        $this->model->name = '';
-        self::assertFalse($this->model->validate());
-        $this->model->value = 0;
-        $this->model->name = 'Test 1';
-        self::assertFalse($this->model->validate());
-        $this->model->value = 5;
-        $this->model->name = 'Test 1';
-        self::assertTrue($this->model->validate());
-    }
 }

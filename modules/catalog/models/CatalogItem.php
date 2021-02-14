@@ -40,6 +40,7 @@ class CatalogItem extends BaseModel
             'descr_full',
             'price',
             'cnt_weight',
+            'props',
         ];
     }
 

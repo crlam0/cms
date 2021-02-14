@@ -55,6 +55,10 @@ class Bootstrap
                 'pattern' => '^admin\/blog\-edit\/[\w\-]*$',
                 'controller' => 'modules\blog\controllers\EditController',
             ],
+            'comments-edit' => [
+                'pattern' => '^admin\/comments\-edit\/[\w\-]*$',
+                'controller' => 'modules\blog\controllers\CommentsEditController',
+            ],
         ]);
 
         App::$routing->addGetUrlFunction('blog_post', function ($id, $row) {

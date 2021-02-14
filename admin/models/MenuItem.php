@@ -65,9 +65,6 @@ class MenuItem extends BaseModel
             'position' => 'Позиция',
             'title' => 'Название',
             'css_class' => 'Рисунок',
-            'title' => 'Название',
-            'title' => 'Название',
-            'title' => 'Название',
         ];
     }
 }

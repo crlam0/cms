@@ -16,7 +16,7 @@
         {% endif %}
 
     </head>
-    <body bgcolor="#fff">
+    <body>
         <div class="modal fade modal-wide" id="myModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -24,26 +24,26 @@
                         <h4 class="modal-title" id="popupHeader"></h4>
                     </div>
                     <div class="modal-body">
-                        <div id=popupContent></div>                        
+                        <div id="popupContent"></div>                        
                     </div>
                 </div>
             </div>
         </div>
-        <table border=0 cellspacing=3 cellpadding=3 width=100% height=100% align=center bgcolor=#fff>
-            <tr valign=top>
-                <td width=150 align=center>
-                    {{ get_block('menu_admin') }}
-                </td>
-                <td width=100% align=center>
-                    <center><h1>{{ Header }}</h1></center>                    
-                    {% if flash is defined and errors is defined %}                    
-                        {% include 'flash_errors.html.twig' with { 'flash': flash, 'errors': errors } %}
-                    {% endif %}
-                    {{ inner_content }}                    
-                    <br />
-                </td>
-            </tr>
-        </table>
+        <div class="row" style="width: 100%;">
+            <div class="col-xs-2">
+                {{ get_block('menu_admin') }}
+                <br />
+                <br />
+            </div>
+            <div class="col-xs-9">
+                <center><h1>{{ Header }}</h1></center>                    
+                {% if flash is defined and errors is defined %}                    
+                    {% include 'flash_errors.html.twig' with { 'flash': flash, 'errors': errors } %}
+                {% endif %}
+                {{ inner_content }}
+                <br />
+            </div>
+        </div>
         <script src="{{ SUBDIR }}include/js/bootstrap.min.js"></script>
         <script src="{{ SUBDIR }}include/js/misc.js"></script>
         

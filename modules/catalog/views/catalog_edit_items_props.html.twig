@@ -1,0 +1,32 @@
+
+{{ content }}
+
+<script type="text/javascript">
+$(document).ready(function(){  
+    $("input.attr_change").change(function(){
+	var id=$(this).attr("id");
+        var attr_type=$(this).attr("attr_type");
+        var attr_name=$(this).attr("attr_name");
+        if(attr_type == "boolean") {
+            var value=$(this).prop("checked");
+            if (!value) {
+                value = "";
+            }
+        } else {
+            var value=$(this).val();
+        }
+        var data = "item_id=" + id + "&attr_type=" + attr_type + "&attr_name="+attr_name + "&value=" +value;
+        // console.log(data);        
+	$.ajax({
+	   type: "GET", url: "{{ this.base_url }}change", data: data,
+	   success: function(msg){
+            if(msg !== "OK") {
+                  alert(msg);
+            }
+	   }
+	});
+    });
+});
+</script>
+
+

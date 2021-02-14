@@ -54,6 +54,10 @@ class Bootstrap
                 'pattern' => '^admin\/parts\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\PartsEditController',
             ],
+            'request-list' => [
+                'pattern' => '^admin\/request\-list\/[\w\-]*$',
+                'controller' => 'admin\controllers\RequestController',
+            ],
             'settings-edit' => [
                 'pattern' => '^admin\/settings\-edit\/[\w\-]*$',
                 'controller' => 'admin\controllers\SettingsEditController',

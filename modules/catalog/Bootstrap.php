@@ -60,6 +60,14 @@ class Bootstrap
                     '0' => 'part_id',
                 ]
             ],
+            'catalog-items-props-edit' => [
+                'pattern' => '^admin\/items\-props\-edit\/[\w\-]*$',
+                'controller' => 'modules\catalog\controllers\ItemsPropsEditController',
+            ],
+            'discount-edit' => [
+                'pattern' => '^admin\/discount\-edit\/[\w\-]*$',
+                'controller' => 'modules\catalog\controllers\DiscountEditController',
+            ],
         ]);
 
         function cat_prev_part($prev_id, $deep, $array)

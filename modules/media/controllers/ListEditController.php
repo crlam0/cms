@@ -97,7 +97,7 @@ class ListEditController extends BaseController
 
     public function actionDelete(int $id): string
     {
-        if (App::$db->getRow("select id from media_item where list_id=?", ['id' => $id])) {
+        if (App::$db->getRow("select id from media_files where list_id=?", ['id' => $id])) {
             App::addFlash('danger', 'Этот раздел не пустой !');
             $this->redirect('index');
         }

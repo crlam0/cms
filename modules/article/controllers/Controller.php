@@ -61,8 +61,10 @@ class Controller extends BaseController
         list($id, $title) = App::$db->getRow("select id,title from article_list where id=?", ['list_id' => $row['list_id']]);
 
         $this->title = $row['title'];
-        $this->breadcrumbs[] = ['title'=>'Статьи', 'url'=>'article/'];
-        $this->breadcrumbs[] = ['title'=>$title, 'url'=>App::$routing->getUrl('article_list', $id)];
+        if ($row['active'] == 'Y') {
+            $this->breadcrumbs[] = ['title'=>'Статьи', 'url'=>'article/'];
+            $this->breadcrumbs[] = ['title'=>$title, 'url'=>App::$routing->getUrl('article_list', $id)];
+        }
         $this->breadcrumbs[] = ['title'=>$row['title']];
 
         $row['content'] = replace_base_href($row['content']);

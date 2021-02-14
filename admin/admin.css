@@ -69,38 +69,20 @@ tr.content_gray {
     text-align: left;
     background-color: #dddddd;
 }
-A:link {
+a:link {
     font-weight: bold;
     color: #1111aa;
-    TEXT-DECORATION: underline;
+    text-decoration: underline;
 }
-A:visited {
+a:visited {
     font-weight: bold;
     color: #777788;
-    TEXT-DECORATION: underline;
+    text-decoration: underline;
 }
-A:active, A:hover {
+a:active, a:hover {
     font-weight: bold;
     color: #CC0000;
-    TEXT-DECORATION: none
-}
-
-font.info {font-size: 12pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #444499;}
-font.notice {font-size: 12pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #449944;}
-font.error {font-size: 12pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #330000;}
-font.debug {font-size: 8pt;font-family: Tahoma;font-weight: bold;text-align: CENTER;color: #999999;}
-div.msg_info { margin:10px 0; text-align: center;width: 400px;line-height: 40px;background: #eeeeee;border: 1px solid #777777;}
-div.msg_notice { margin:10px 0; text-align: center;width: 400px;line-height: 40px;background: #ffeeee;border: 1px solid #777777;}
-div.msg_error { margin:10px 0; text-align: center; width: 400px;line-height: 40px;background: #ff5555;border: 1px solid #777777;}
-
-a.button {
-    margin: 0px 0px 0px 0px;
-    padding: 3px 7px 3px 7px;
-    height: 30px;
-    border: 1px solid #c8c8c8;
-    background: #ffffff;
-    line-height: 30px;
-    font-size: 90%;
+    text-decoration: none
 }
 
 a.btn {
@@ -111,7 +93,6 @@ a.btn {
 img.margin {
     margin: 5px;
 }
-
 
 .normal-form {
     width: 800px;
@@ -126,8 +107,8 @@ img.margin {
 }
 
 .modal-fs .modal-dialog {
-  width: 800px;
-  max-width: 99%;
+    width: 800px;
+    max-width: 99%;
 }
 
 .modal-wide .modal-body {
@@ -146,3 +127,28 @@ img.margin {
 div#request-result {
     margin-top: 10px;
 }
+
+table#nav td {
+    text-align: center;
+    padding-bottom: 5px;
+}
+
+.admin-menu-image {
+    width: 100%;
+    text-align: center;
+    padding-bottom: 5px;
+}
+
+.admin-menu-image span{
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.admin-menu-item {
+    width: 100%;
+    text-align: center;
+    padding-bottom: 3px;
+    background-color: #eee;
+}
+

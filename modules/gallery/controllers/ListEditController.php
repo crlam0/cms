@@ -40,7 +40,7 @@ class ListEditController extends BaseController
     {
         $image = new GalleryImage($image_id);
         $image_path = App::$settings['modules']['gallery']['upload_path'] ?? 'upload/gallery/';
-        if (is_file(App::$DIR . $image_path . $image->file_name)) {
+        if (isset($image->file_name) && is_file(App::$DIR . $image_path . $image->file_name)) {
             return '<img src="' . App::$SUBDIR . $image_path . $image->file_name . '" border="0" width="200" />';
         } else {
             return 'Отсутствует';

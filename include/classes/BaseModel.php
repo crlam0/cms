@@ -89,6 +89,9 @@ class BaseModel implements \ArrayAccess
 
     public function __get(string $name)
     {
+        if($this->data == null) {
+            throw new \InvalidArgumentException('Empty model data');
+        }
         if (array_key_exists($name, $this->data)) {
             return $this->data[$name];
         }

@@ -64,6 +64,7 @@ class CatalogPart extends BaseModel
     {
         return [
             'id' => 'ID',
+            'num' => 'Номер',
             'title' => 'Название',
             'seo_alias' => 'SEO алиас',
             'descr' => 'Описание',

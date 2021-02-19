@@ -29,17 +29,19 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="width: 100%;">
+        <div class="row" style="width: 100%;text-align: center;">
             <div class="col-xs-2">
                 {{ get_block('menu_admin') }}
                 <br />
                 <br />
             </div>
             <div class="col-xs-9">
-                <center><h1>{{ Header }}</h1></center>                    
-                {% if flash is defined and errors is defined %}                    
-                    {% include 'flash_errors.html.twig' with { 'flash': flash, 'errors': errors } %}
-                {% endif %}
+                <center><h1>{{ Header }}</h1></center>
+                <center>
+                    {% if flash is defined and errors is defined %}                    
+                        {% include 'flash_errors.html.twig' with { 'flash': flash, 'errors': errors } %}
+                    {% endif %}
+                </center>
                 {{ inner_content }}
                 <br />
             </div>

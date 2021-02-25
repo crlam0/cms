@@ -18,7 +18,7 @@
  *
  * @return false|string true is access granted, false if no access
  */
-function auth(): string|bool {
+function auth() {
   // You can insert your own code over here to check if the user is authorized.
   // If you use a session variable, you've got to start the session first (session_start())
   // return true;
@@ -95,4 +95,3 @@ $config['plugin'] = null;
 //	not working yet
 //$config['upload']['suffix'] = '_'; // string; if overwrite is false, the suffix will be added after the filename (before .ext)
 
-?>

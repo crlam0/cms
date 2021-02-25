@@ -110,6 +110,6 @@ class IndexController extends BaseController
         $result = $sitemap->write();
         $content = $result['output'];
 
-        return App::$message->get('success', [], 'Директория кэша очищена') . $content;
+        return App::$message->get('success', [], 'Файл SITEMAP создан, записано ' . $result['count'] . ' позиций') . $content;
     }
 }

@@ -63,6 +63,7 @@ class Template
             $tags['inner_content'] = '';
         }
 
+        $twig->addFunction('get_webpack_asset');
         $twig->addFunction('get_block');
         $twig->addFunction('widget');
         $twig->addFunction('include_php');

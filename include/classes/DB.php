@@ -342,7 +342,8 @@ class DB
                 $str_values .= $value;
             } else {
                 $str_values .= '?';
-                $params[$field] = stripcslashes($value);
+                // $params[$field] = stripcslashes($value);
+                $params[$field] = $value;
             }
             if ($a != $total) {
                 $str_fields .= ',';
@@ -369,7 +370,7 @@ class DB
         $total = count($fields);
         $a = 0;
         foreach ($fields as $field => $value) {
-            if ($value === null) {
+            if ($value === null || $field === 'id') {
                 continue;
             }
             $a++;
@@ -377,7 +378,8 @@ class DB
                 $sql .= $field . "={$value}";
             } else {
                 $sql .= $field . '=?';
-                $params[$field] = stripcslashes($value);
+                // $params[$field] = stripcslashes($value);
+                $params[$field] = $value;
             }
             $sql .= ',';
         }
@@ -392,9 +394,10 @@ class DB
                 if ($a != $total) {
                     $sql .= ' AND ';
                 }
-                $params['$field'] = $value;
+                $params[$field] = $value;
             }
         }
+        // print_array($params);echo $sql;exit;
         return $this->query($sql, $params);
     }
 

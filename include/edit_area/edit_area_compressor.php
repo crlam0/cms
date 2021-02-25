@@ -320,7 +320,7 @@
 		/**
 		 * @return false|string
 		 */
-		function get_content(string $end_uri): bool|string
+		function get_content(string $end_uri)
 		{
 			$end_uri=preg_replace("/\.\./", "", $end_uri); // Remove any .. (security)
 			$file= $this->path.$end_uri;

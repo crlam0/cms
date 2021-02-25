@@ -1,0 +1,13 @@
+<center><h5>Статистика по IP</h5></center>
+<table width=400  class="table table-striped table-responsive table-bordered normal-form" align="center">
+<tr class=header align="center">
+<td width=70%>Хост</td>
+<td width=30%>Посещений</td>
+</tr>
+{% for row in rows %}
+        <tr class="content">
+        <td align="center"><b>{{ row.remote_addr }}</b></td>
+        <td align="center">{{ row.hits }}</td>
+        </tr>
+{% endfor %}
+</table>

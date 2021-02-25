@@ -314,7 +314,6 @@ function get_csrf_token()
  */
 function check_csrf_token(): bool
 {
-    var_dump(App::$input['CSRF_Token']);
     return App::$input['CSRF_Token'] === App::$session['CSRF_Token'];
 }
 
@@ -549,7 +548,8 @@ function redirect($url): void
 function replace_base_href($content, $direction = false)
 {
     if ($direction) {
-        return str_replace(App::$server['REQUEST_SCHEME'] . '://' . App::$server["HTTP_HOST"] . App::$SUBDIR, "[%SUBDIR%]", $content);
+        $content = str_replace(App::$server['REQUEST_SCHEME'] . '://' . App::$server["HTTP_HOST"] . App::$SUBDIR, "[%SUBDIR%]", $content);
+        return str_replace(App::$SUBDIR, "[%SUBDIR%]", $content);
     } else {
         // return str_replace("[%SUBDIR%]", $server['REQUEST_SCHEME'] . '://' . $server["HTTP_HOST"] . $SUBDIR, $content);
         return str_replace("[%SUBDIR%]", App::$SUBDIR, $content);

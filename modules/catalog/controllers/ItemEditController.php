@@ -65,7 +65,7 @@ class ItemEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
+        App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         // App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
         $model->num = 1;
@@ -92,7 +92,7 @@ class ItemEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
+        App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('js', 'include/js/jquery.form.js');
         App::addAsset('header', 'X-XSS-Protection:0');

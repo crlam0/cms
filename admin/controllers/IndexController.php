@@ -8,8 +8,6 @@ use classes\Sitemap;
 
 class IndexController extends BaseController
 {
-
-
     private $sitemap;
 
     public function __construct()
@@ -26,7 +24,7 @@ class IndexController extends BaseController
         $content = '';
 
         $time_diff = 0;
-
+        
         if (file_exists($this->sitemap)) {
             $time_diff=time()-filemtime($this->sitemap);
         }
@@ -44,7 +42,7 @@ class IndexController extends BaseController
             $query = "select * from comments order by date_add desc limit 5";
             $result = App::$db->query($query);
             if ($result->num_rows) {
-                $content .= App::$template->parse('admin_last_comments', [], $result);
+                $content .= App::$template->parse('admin_last_comments.html.twig', [], $result);
             }
         }
 
@@ -53,17 +51,17 @@ class IndexController extends BaseController
             $query = "select * from request order by date desc limit 5";
             $result = App::$db->query($query);
             if ($result->num_rows) {
-                $content .= App::$template->parse('admin_last_requests', [], $result);
+                $content .= App::$template->parse('admin_last_requests.html.twig', [], $result);
             }
         }
 
         $query = "SELECT day,count(id) as hits,sum(unique_visitor) as unique_hits from visitor_log group by day order by day desc limit 12";
         $result = App::$db->query($query);
-        $content .= App::$template->parse('stats_day_table', [], $result);
+        $content .= App::$template->parse('stats_day_table.html.twig', [], $result);
 
         $query = "SELECT * from visitor_log where unique_visitor=1 order by id desc limit 20";
         $result = App::$db->query($query);
-        $content .= App::$template->parse('stats_last_visitors_table', [], $result);
+        $content .= App::$template->parse('stats_last_visitors_table.html.twig', [], $result);
 
         return $content;
     }
@@ -81,23 +79,23 @@ class IndexController extends BaseController
     {
         $query="SELECT day,count(id) as hits,sum(unique_visitor) as unique_hits from visitor_log group by day order by day desc limit 31";
         $result = App::$db->query($query);
-        $content = App::$template->parse('stats_day_table', [], $result);
+        $content = App::$template->parse('stats_day_table.html.twig', [], $result);
 
         $query="SELECT remote_host,count(id) as hits from visitor_log group by remote_host order by hits desc limit 20";
         $result = App::$db->query($query);
-        $content .= App::$template->parse('stats_hosts_table', [], $result);
+        $content .= App::$template->parse('stats_hosts_table.html.twig', [], $result);
 
         $query="SELECT remote_addr,count(id) as hits from visitor_log group by remote_addr order by hits desc limit 20";
         $result = App::$db->query($query);
-        $content .= App::$template->parse('stats_addr_table', [], $result);
+        $content .= App::$template->parse('stats_addr_table.html.twig', [], $result);
 
         $query="SELECT user_agent,count(id) as hits from visitor_log group by user_agent order by hits desc limit 10";
         $result = App::$db->query($query);
-        $content .= App::$template->parse('stats_user_agent_table', [], $result);
+        $content .= App::$template->parse('stats_user_agent_table.html.twig', [], $result);
 
         $query="SELECT request_uri,count(id) as hits from visitor_log group by request_uri order by hits desc limit 20";
         $result = App::$db->query($query);
-        $content .= App::$template->parse('stats_script_name_table', [], $result);
+        $content .= App::$template->parse('stats_script_name_table.html.twig', [], $result);
 
         return $content;
     }

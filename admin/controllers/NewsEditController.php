@@ -62,7 +62,7 @@ class NewsEditController extends BaseController
             'file_type' => null,
         ];
 
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
+        App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
 
@@ -85,7 +85,7 @@ class NewsEditController extends BaseController
         $tags['action'] = $this->getUrl('update', ['id' => $id]);
         $tags['form_title'] = 'Изменение';
 
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
+        App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
 

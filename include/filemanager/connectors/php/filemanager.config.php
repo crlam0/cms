@@ -65,7 +65,7 @@ $config['upload']['imagesonly'] = false; // true or false; Only allow images (jp
  *	Images array
  *	used to display image thumbnails
  */
-$config['images'] = array('jpg', 'jpeg','gif','png');
+$config['images'] = array('jpg', 'jpeg','gif', 'png');
 
 
 /**

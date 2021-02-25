@@ -144,32 +144,10 @@ class Template
      */
     function parse(string $name, array $tags = [], ?\mysqli_result $sql_result = null, string $inner_content = '') : string
     {
-
         $template = null;
-        if (file_exists(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl')) {
-            $temp = $this->MyTemplate->loadFromFile(dirname(App::$server['SCRIPT_FILENAME']) . '/templates.tpl', $name);
-            if ($temp) {
-                $template['name'] = $name;
-                $template['content'] = $temp;
-                $template['template_type'] = 'my';
-            }
-        }
-        if (strpos(App::$server['REQUEST_URI'], 'admin/') && file_exists(dirname(App::$server['SCRIPT_FILENAME']) . '/admin/templates.tpl')) {
-            $temp = $this->MyTemplate->loadFromFile(dirname(App::$server['SCRIPT_FILENAME']) . '/admin/templates.tpl', $name);
-            if ($temp) {
-                $template['name'] = $name;
-                $template['content'] = $temp;
-                $template['template_type'] = 'my';
-            }
-        }
-        if (strstr($name, '.tpl')) {
-            $template['name'] = $name;
-            $template['file_name']=$name;
-            $template['template_type'] = 'my';
-        }
         if (strstr($name, '.html.twig')) {
             $template['name'] = $name;
-            $template['file_name']=$name;
+            $template['file_name'] = $name;
             $template['template_type'] = 'twig';
         }
         if (!$template) {
@@ -179,7 +157,7 @@ class Template
             $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}'");
         }
         if (!$template) {
-            return App::$message->get('tpl_not_found', ['name'=>$name]);
+            return App::$message->get('tpl_not_found', ['name' => $name]);
         }
         App::debug("Parse template '{$template['name']}'");
         if ($template['template_type'] === 'my') {

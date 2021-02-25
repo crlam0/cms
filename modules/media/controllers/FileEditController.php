@@ -57,7 +57,7 @@ class FileEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
+        App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
         $model->descr = replace_base_href($model->descr, false);
@@ -80,7 +80,7 @@ class FileEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
+        App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
         $model->descr = replace_base_href($model->descr, false);

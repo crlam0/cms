@@ -85,7 +85,7 @@ class PartEditController extends BaseController
         $tree = [];
         $this->makeTree($tree, 0, 0);
 
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
+        App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor_mini.js');
         App::addAsset('js', 'include/edit_area/edit_area_full.js');
         App::addAsset('js', 'include/js/editor_html.js');
@@ -119,7 +119,7 @@ class PartEditController extends BaseController
         $tree = [];
         $this->makeTree($tree, 0, 0, $id);
 
-        App::addAsset('js', 'include/ckeditor/ckeditor.js');
+        App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor_mini.js');
         App::addAsset('js', 'include/edit_area/edit_area_full.js');
         App::addAsset('js', 'include/js/editor_html.js');

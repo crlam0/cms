@@ -254,7 +254,6 @@ class User extends BaseModel
 
             $salt .= chr($chr);
         }
-        // echo $salt;
         return $salt;
     }
 

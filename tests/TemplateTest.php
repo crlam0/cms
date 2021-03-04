@@ -13,12 +13,6 @@ class TemplateTest extends TestCase
         $this->Template = new Template();
     }
 
-    public function testFileParse(): void
-    {
-        $content=$this->Template->parse('tests/test.tpl');
-        self::assertStringStartsWith('<!DOCTYPE html>', $content);
-    }
-
     public function testSQLParse(): void
     {
         $content=$this->Template->parse('faq_list');

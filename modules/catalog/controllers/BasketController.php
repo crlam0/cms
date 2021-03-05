@@ -9,14 +9,17 @@ use classes\SummToStr;
 class BasketController extends Controller
 {
 
-    public function actionAddBuy(): string
+    public function actionAddBuy(int $item_id, int $cnt): string
     {
-        if (!isset(App::$session['BUY'][App::$input['item_id']]['count'])) {
-            App::$session['BUY'][App::$input['item_id']]['count'] = 0;
+        if (!isset(App::$session['BUY'])) {
+            App::$session['BUY'] = [];
         }
-        $cnt = (int) App::$input['cnt'];
+        if (!isset(App::$session['BUY'][App::$input['item_id']]['count'])) {
+            App::$session['BUY'][$item_id]['count'] = 0;
+        }
+        $cnt = (int) $cnt;
         if ($cnt > 0 && $cnt < 99) {
-            App::$session['BUY'][App::$input['item_id']]['count'] += $cnt;
+            App::$session['BUY'][$item_id]['count'] += $cnt;
             $json['result'] = 'OK';
             $json['count'] = count(App::$session['BUY']);
         } else {
@@ -58,7 +61,6 @@ class BasketController extends Controller
             while ($row = $result->fetch_array()) {
                 $summ += $row['price'] * App::$session['BUY'][$row['id']]['count'];
                 $cnt += App::$session['BUY'][$row['id']]['count'];
-
                 $item_list.="Наименовние: {$row['title']}\t Кол-во:" . App::$session["BUY"][$row['id']]['count'] . "\t  Цена: {$row['price']}\n";
             }
         }
@@ -209,18 +211,14 @@ class BasketController extends Controller
             return App::$message->get('notice', [], 'Корзина пуста !');
         }
         $where = '';
-        $count = 0;
-        foreach (App::$session["BUY"] as $item_id => $cnt) {
-            $where.=(!strlen($where) ? " cat_item.id='$item_id'" : " or cat_item.id='$item_id'");
-            $count = $count + (int)$cnt;
+        foreach (App::$session['BUY'] as $item_id => $cnt) {
+            $where .= (!strlen($where) ? " cat_item.id='$item_id'" : " or cat_item.id='$item_id'");
         }
         $query = "select cat_item.*,file_name,file_type,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where $where order by b_code,title asc";
         $result = App::$db->query($query);
         $summ = 0;
-        $cnt = 0;
         while ($row = $result->fetch_array()) {
             $summ += $row['price'] * App::$session['BUY'][$row['id']]['count'];
-            $cnt += App::$session['BUY'][$row['id']]['count'];
         }
         $result->data_seek(0);
         $tags['summ'] = add_zero($summ);

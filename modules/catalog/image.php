@@ -4,7 +4,7 @@ include "../../include/common.php";
 
 use classes\App;
 use classes\Image;
-use modules\catalog\Controller;
+use modules\catalog\controllers\Controller;
 
 if (isset(App::$input['id'])) {
     list($file_name, $file_type) = App::$db->getRow("select file_name,file_type from cat_item_images where id='" . App::$input['id'] ."'");

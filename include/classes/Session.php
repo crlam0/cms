@@ -966,12 +966,29 @@ class Session implements \IteratorAggregate, \ArrayAccess, \Countable
      * @param int $offset the offset to retrieve element.
      * @return mixed the element at the offset, null if no element is found at the offset
      */
+    
+    public function &offsetGet($offset)
+    {
+        $this->open();
+        if (isset($_SESSION[$offset])) {
+            $data = & $_SESSION[$offset];
+            return $data;
+        } else {
+            $tmp = null;
+            $data = & $tmp;
+            return $data;
+        }
+    }
+
+    /*
     public function offsetGet($offset)
     {
         $this->open();
 
         return isset($_SESSION[$offset]) ? $_SESSION[$offset] : null;
     }
+     * 
+     */
 
     /**
      * This method is required by the interface [[\ArrayAccess]].

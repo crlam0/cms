@@ -77,6 +77,9 @@ class PartEditController extends BaseController
             $model->date_add = 'now()';
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
+            if(isset(App::$settings['modules']['catalog']['default_items_props']) && !strlen($model->items_props)){
+                $model->items_props = App::$settings['modules']['catalog']['default_items_props'];
+            }        
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
                 App::addFlash('success', 'Раздел успешно добавлен');
             }
@@ -110,6 +113,9 @@ class PartEditController extends BaseController
             $model->descr = replace_base_href($model->descr, true);
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
+            if(isset(App::$settings['modules']['catalog']['default_items_props']) && !strlen($model->items_props)){
+                $model->items_props = App::$settings['modules']['catalog']['default_items_props'];
+            }        
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
                 App::addFlash('success', 'Раздел успешно обновлён');
             }

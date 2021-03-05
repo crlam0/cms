@@ -50,7 +50,7 @@ class SignupController extends BaseController
         if (!$user) {
             return App::$message->get('error', [], 'Неверный код.');
         }
-        $data['flags'] = implode(";", ['active', 'passwd']);
+        $data['flags'] = implode(";", App::$settings['modules']['users']['default_flags']);
         App::$db->updateTable('users', $data, ['id' => $user['id']]);
         App::$user->makeToken($user['id'], 0, User::TOKEN_NULL);
         App::$user->authByIdFlags($user['id'], $data['flags']);
@@ -92,6 +92,12 @@ class SignupController extends BaseController
     {
         $this->title = 'Регистрация';
         $this->breadcrumbs[] = ['title'=>$this->title];
+        
+        $signup_availbale = App::$settings['modules']['users']['signup_availbale'] ?? false;
+        
+        if(!$signup_availbale) {
+            return App::$message->get('error', [], 'Регистрация на сайте запрещена.');
+        }
 
         if (!App::$user->id) {
             $tags = [

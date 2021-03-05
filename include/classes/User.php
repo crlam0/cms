@@ -299,7 +299,7 @@ class User extends BaseModel
     public function makeToken(int $expire_days, int $type = 0) : string
     {
         if (!$this->id) {
-            return null;
+            return '';
         }
         $token_expire = time() + $expire_days*24*3600;
         switch ($type) {

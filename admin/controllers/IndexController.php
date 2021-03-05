@@ -14,6 +14,7 @@ class IndexController extends BaseController
     {
         parent::__construct();
         $this->sitemap = App::$DIR . 'sitemap.xml';
+        $this->user_flag = 'admin';
     }
 
     public function actionIndex(): string

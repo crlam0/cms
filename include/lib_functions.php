@@ -546,7 +546,7 @@ function redirect($url): void
   </html>', htmlspecialchars($url, ENT_QUOTES, 'UTF-8'));
 
     header('Location: ' . $url);
-    header('Status: 301 Moved Permanently', false, 301);
+    header('Status: 302 Found', false, 302);
 
     die($content);
 }

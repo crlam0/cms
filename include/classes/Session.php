@@ -141,6 +141,8 @@ class Session implements \IteratorAggregate, \ArrayAccess, \Countable
         $this->registerSessionHandler();
 
         $this->setCookieParamsInternal();
+        
+        session_cache_limiter('nocache');
 
         App::$debug ? session_start() : @session_start();
 

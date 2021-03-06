@@ -117,6 +117,7 @@ if (isset(App::$settings['modules'])) {
                 App::debug('Boostrap class for module "' . $name .'" decalred but not exists: "' . $data['bootstrap'] . '"');
             }
         }
+        unset($data);
     }
 }
 

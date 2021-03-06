@@ -12,11 +12,11 @@ class Bootstrap
 
         App::$routing->addRoutes([
             'login' => [
-                'pattern' => '^login\/?$',
+                'pattern' => '^login\/?[\w\-]*$',
                 'controller' => 'modules\users\controllers\LoginController'
             ],
             'logout' => [
-                'pattern' => '^logout\/?$',
+                'pattern' => '^logout\/?[\w\-]*$',
                 'controller' => 'modules\users\controllers\LogoutController'
             ],
             'passwd-change' => [

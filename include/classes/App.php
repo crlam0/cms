@@ -432,6 +432,13 @@ class App
         }
         static::sendResult($content, $tags, 200);
     }
+    
+    private function logErrorResult($e) 
+    {
+        static::error('Exception: ' . $e->getMessage());
+        static::error('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
+        static::error($e->getTraceAsString());        
+    }
 
     /**
      * Run cotroller found in routing
@@ -455,11 +462,17 @@ class App
                 $this->sendResult($content, $tags, 403);
             }
             return $this->getContent($controller, $content, $tags);
-        } catch (\Throwable $e) {
-            static::error('Exception: ' . $e->getMessage());
-            static::error('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
-            static::error($e->getTraceAsString());
-            $tags['Header']='';
+        }
+        
+        catch (\BadMethodCallException $e) {
+            $this->logErrorResult($e);
+            $tags['Header'] = '';
+            static::sendResult(static::$message->get('file_not_found', ['file_name' => static::$routing->request_uri]), $tags, 404);
+        }
+        
+        catch (\Throwable $e) {
+            $this->logErrorResult($e);
+            $tags['Header'] = '';
             static::sendResult(static::$message->getError('Внутренние неполадки, приносим свои извинения.'), $tags, 500);
         }
     }

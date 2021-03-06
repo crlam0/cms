@@ -89,7 +89,7 @@ class BaseController
         if (method_exists($this, $methodName)) {
             $reflection = new \ReflectionMethod($this, $methodName);
             if (!$reflection->isPublic()) {
-                throw new \InvalidArgumentException('Method ' . $methodName . ' found but is private.');
+                throw new \BadMethodCallException('Method ' . $methodName . ' found but is private.');
             }
             try {
                 return $reflection->invokeArgs($this, $this->prepareParams($reflection, $params));
@@ -100,7 +100,7 @@ class BaseController
                 $this->wrongParams($reflection, $params);
             }
         }
-        throw new \InvalidArgumentException('Method ' . $methodName . ' not found.');
+        throw new \BadMethodCallException('Method ' . $methodName . ' not found.');
     }
 
     /**

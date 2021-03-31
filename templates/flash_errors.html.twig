@@ -1,0 +1,12 @@
+{% if flash is defined %}
+    {% for item in flash %}
+        <p class="alert normal-form alert-{{ item.type }}">{{ item.message }}</p>
+    {% endfor %}    
+{% endif %}
+
+{% if count(errors) %}
+    {% for row in errors %}
+        <p class="alert normal-form alert-danger">{{ row }}</p>
+    {% endfor %}
+{% endif %}
+

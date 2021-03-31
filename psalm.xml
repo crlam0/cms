@@ -10,6 +10,8 @@
         <directory name="./" />
         <ignoreFiles>
             <directory name="src" />
+            <directory name="templates" />
+            <directory name="var" />
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>

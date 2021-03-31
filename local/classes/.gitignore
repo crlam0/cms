@@ -1,5 +1,5 @@
 *
 !.gitignore
-!index.php
-!classes/
+!MainMenuWidgetSample.php
 !*.php-sample
+

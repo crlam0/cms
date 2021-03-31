@@ -41,7 +41,7 @@ class CommentsEditController extends BaseController
         $model = new Comment($id);
         if ($model->load(App::$input['form']) && $model->validate()) {
             if ($model->save(false)) {
-                App::addFlash('success', 'Пост успешно изменён.');
+                App::addFlash('success', 'Коментарий успешно изменён.');
             }
             $this->redirect('index');
         }

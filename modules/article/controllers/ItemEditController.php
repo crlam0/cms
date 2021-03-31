@@ -18,7 +18,7 @@ class ItemEditController extends BaseController
     {
         parent::__construct();
         $this->title = 'Статьи';
-        $this->breadcrumbs[] = ['title' => $this->title];
+        $this->breadcrumbs[] = ['title' => $this->title, 'url' => 'admin/article-edit/'];
         $this->image_path = App::$settings['modules']['article']['item_upload_path'] ?? 'upload/article/';
         $this->image_width = App::$settings['modules']['article']['item_image_width'] ?? 640;
         $this->image_height = App::$settings['modules']['article']['item_image_height'] ?? 480;
@@ -54,6 +54,10 @@ class ItemEditController extends BaseController
             if (!$model->seo_alias) {
                 $model->seo_alias = encodestring($model->title);
             }
+            if (!$model->image_name) {
+                $model->image_name = '';
+                $model->image_type = '';
+            }
             $model->content = replace_base_href($model->content, true);
             $model->active = 'Y';
             $model->date_add = 'now()';
@@ -64,6 +68,13 @@ class ItemEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
+        
+        [$list_title] = App::$db->getRow("select title from article_list where id=?", ['id' => $list_id]);
+        $this->title = 'Статьи в разделе ' . $list_title;
+        $this->breadcrumbs[] = ['title' => $this->title, 'url' => $this->base_url];
+        $this->title = 'Добавление статьи';
+        $this->breadcrumbs[] = ['title' => $this->title];
+        
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
@@ -79,6 +90,7 @@ class ItemEditController extends BaseController
     {
         $model = new ArticleItem($id);
         if ($model->load(App::$input['form']) && $model->validate()) {
+            echo 'Update';
             if (!$model->seo_alias) {
                 $model->seo_alias = encodestring($model->title);
             }
@@ -90,6 +102,13 @@ class ItemEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
+        
+        [$list_title] = App::$db->getRow("select title from article_list where id=?", ['id' => $list_id]);
+        $this->title = 'Статьи в разделе ' . $list_title;
+        $this->breadcrumbs[] = ['title' => $this->title, 'url' => $this->base_url];
+        $this->title = 'Изменение статьи ' . $model->title;
+        $this->breadcrumbs[] = ['title' => $this->title];
+        
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');

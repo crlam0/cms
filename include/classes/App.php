@@ -300,6 +300,15 @@ class App
         return static::$session->getFlash($key);
     }
 
+    /**
+     * Get messages from session
+     *
+     * @param array $result
+     * @param string $key
+     * @param string $value
+     *
+     * @return void
+     */
     private static function proceedFlashItem(&$result, $key, $value)
     {
         if (is_array($value)) {
@@ -317,6 +326,11 @@ class App
         }
     }
 
+    /**
+     * Get messages from session
+     *
+     * @return array
+     */
     private static function getFlashes()
     {
         $result = [];
@@ -391,6 +405,12 @@ class App
                 break;
             case 301:
                 $http_message = ' 301 Moved Permanently';
+                break;
+            case 302:
+                $http_message = ' 302 Found';
+                break;
+            case 307:
+                $http_message = ' 307 Temporary Redirect';
                 break;
             case 403:
                 $http_message = ' 403 Forbidden';

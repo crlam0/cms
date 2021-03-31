@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="RU_ru">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="keywords" content="{{ settings.base_keywords }}" />
+        <meta name="description" content="{{ settings.site_description }}" />
+
+        <title>{{ settings.site_title }}{% if Header is defined %} : {{ Header }} {% endif %}</title>
+
+        <meta property="og:locale" content="ru_RU">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="{{ settings.site_title }}">
+        <meta property="og:description" content="{{ settings.site_description }}">
+        <meta property="og:url" content="{{ server.REQUEST_SCHEME }}://{{ server.HTTP_HOST }}{{ SUBDIR }}">
+        <meta property="og:image" content="{{ server.REQUEST_SCHEME }}://{{ server.HTTP_HOST }}{{ SUBDIR }}theme/images/logo.png">
+        <meta property="og:site_name" content="{{ settings.site_title }}">
+
+        <link rel="icon" type="image/png" href="{{ SUBDIR }}favicon.png" />
+        <link rel="icon" type="image/svg" href="{{ SUBDIR }}favicon.svg" />
+
+        <link href="{{ SUBDIR }}theme{{ get_webpack_asset('/css/main.css') }}" rel="stylesheet"/>
+
+	{% if INCLUDE_HEAD is defined %}
+            {{ INCLUDE_HEAD }}
+        {% endif %}
+    </head>
+    <body>
+        {% include 'popup.html.twig' %}
+        <div class="container" id="">
+
+            <header id="main-header">
+                <img src="{{ SUBDIR }}theme/images/top_center.png" alt="boot.nsk.ru" class="main-logo" border="0">
+            </header>
+            <div class="row">
+                <div class="col-md-3">                    
+                    <div class="widget">
+                        <div class="widget-title"><span>Разделы</span></div>
+                        <div class="widget-content">
+                            <nav class="navbar sidebar navbar-default navbar-expand-md navbar-light">
+                                <div class="navbar-header">
+                                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-main" aria-expanded="false">
+                                        <span class="sr-only">Меню</span>
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                </div>
+
+                                <div class="collapse navbar-collapse" id="navbar-main">
+                                    {{ get_block('local/MainMenuWidgetSample', false) }}
+                                </div>
+                            </nav>
+                        </div>
+                    </div>    
+                </div>
+                <div class="col-md-9">
+                    {% if isIndexPage is not defined %}
+                        {% include 'breadcrumb.html.twig' %}
+                    {% endif %}
+                    <div class="" id="content">
+                        <div class="page-header">
+                            <h1>{{ Header }}</h1>
+                        </div>
+                        {% if flash is defined and errors is defined %}                    
+                            {% include 'flash_errors.html.twig' with { 'flash': flash, 'errors': errors } %}
+                        {% endif %}
+                        {{ inner_content }}
+                    </div>
+                </div>
+            </div>
+            <footer class="" id="main-footer">
+                <div class="footer-line">
+                    <img src="{{ SUBDIR }}theme/images/bottom_center.jpg" alt="boot.nsk.ru" class="bottom-logo" border="0">
+                </div>
+                <div class="banners">
+                {% if settings.debug != 1 %}
+                     {{ get_block('banners', true) }}
+                {% endif %}
+                </div>
+            </footer>
+                    
+        </div>
+
+        <script src="{{ SUBDIR }}theme{{ get_webpack_asset('/js/main.js') }}"></script>
+
+        {% if INCLUDE_JS is defined %}
+            {{ INCLUDE_JS }}
+        {% endif %}
+        
+        {{ get_block('debug') }}
+
+    </body>
+</html>

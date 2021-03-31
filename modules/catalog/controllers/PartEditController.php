@@ -73,6 +73,21 @@ class PartEditController extends BaseController
             if (!$model->seo_alias) {
                 $model->seo_alias = encodestring($model->title);
             }
+            if (!$model->num) {
+                $model->num = 1;
+            }
+            if (!$model->num) {
+                $model->num = 1;
+            }
+            if (!$model->item_image_width) {
+                $model->item_image_width = 1024;
+            }
+            if (!$model->item_image_height) {
+                $model->item_image_height = 768;
+            }
+            if (!$model->related_products) {
+                $model->related_products = '';
+            }
             $model->descr = replace_base_href($model->descr, true);
             $model->date_add = 'now()';
             $model->date_change = 'now()';

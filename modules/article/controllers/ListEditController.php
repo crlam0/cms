@@ -39,6 +39,10 @@ class ListEditController extends BaseController
             if (!$model->seo_alias) {
                 $model->seo_alias = encodestring($model->title);
             }
+            if (!$model->image_name) {
+                $model->image_name = '';
+                $model->image_type = '';
+            }
             $model->descr = replace_base_href($model->descr, true);
             $model->date_add = 'now()';
             $model->date_change = 'now()';

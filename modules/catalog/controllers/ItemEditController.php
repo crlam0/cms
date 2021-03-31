@@ -18,7 +18,7 @@ class ItemEditController extends BaseController
     {
         parent::__construct();
         $this->title = 'Наименования';
-        $this->breadcrumbs[] = ['title' => $this->title];
+        $this->breadcrumbs[] = ['title' => $this->title, 'url' => 'admin/catalog-edit/'];
         $this->image_path = App::$settings['modules']['catalog']['item_upload_path'] ?? 'upload/cat_item/';
         $this->image_width = App::$settings['modules']['catalog']['item_image_width'] ?? 640;
         $this->image_height = App::$settings['modules']['catalog']['item_image_height'] ?? 480;
@@ -65,8 +65,16 @@ class ItemEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
+        
+        [$list_title] = App::$db->getRow("select title from cat_part where id=?", ['id' => $part_id]);
+        $this->title = 'Наименования в разделе ' . $list_title;
+        $this->breadcrumbs[] = ['title' => $this->title, 'url' => $this->base_url];
+        $this->title = 'Добавление наименования';
+        $this->breadcrumbs[] = ['title' => $this->title];
+
+        
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
-        // App::addAsset('js', 'include/js/editor.js');
+        App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
         $model->num = 1;
         return $this->render('catalog_edit_item_form.html.twig', [
@@ -92,6 +100,14 @@ class ItemEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
+        
+        [$list_title] = App::$db->getRow("select title from cat_part where id=?", ['id' => $part_id]);
+        $this->title = 'Товары в разделе ' . $list_title;
+        $this->breadcrumbs[] = ['title' => $this->title, 'url' => $this->base_url];
+        $this->title = 'Изменение товара ' . $model->title;
+        $this->breadcrumbs[] = ['title' => $this->title];
+
+        
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('js', 'include/js/jquery.form.js');

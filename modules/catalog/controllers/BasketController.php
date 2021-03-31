@@ -59,7 +59,7 @@ class BasketController extends Controller
         $item_list = '';
         if ($result->num_rows) {
             while ($row = $result->fetch_array()) {
-                $summ += $row['price'] * App::$session['BUY'][$row['id']]['count'];
+                $summ += (int)$row['price'] * App::$session['BUY'][$row['id']]['count'];
                 $cnt += App::$session['BUY'][$row['id']]['count'];
                 $item_list.="Наименовние: {$row['title']}\t Кол-во:" . App::$session["BUY"][$row['id']]['count'] . "\t  Цена: {$row['price']}\n";
             }

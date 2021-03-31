@@ -547,6 +547,7 @@ function redirect($url): void
 
     header('Location: ' . $url);
     header('Status: 302 Found', false, 302);
+//    header('Status: 307 Temporary Redirect', false, 307);
 
     die($content);
 }

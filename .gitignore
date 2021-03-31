@@ -16,7 +16,6 @@
 /*.sh
 
 /src/
-/var/
 
 *.local.*
 *Local*

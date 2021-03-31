@@ -36,12 +36,14 @@
                 <br />
             </div>
             <div class="col-xs-9">
-                <center><h1>{{ Header }}</h1></center>                    
+                <center><h1>{{ Header }}</h1></center>
                 {% if flash is defined and errors is defined %}                    
                     {% include 'flash_errors.html.twig' with { 'flash': flash, 'errors': errors } %}
                 {% endif %}
+                <center>
                 {{ inner_content }}
                 <br />
+                </center>
             </div>
         </div>
         <script src="{{ SUBDIR }}include/js/bootstrap.min.js"></script>

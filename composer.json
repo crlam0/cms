@@ -5,7 +5,8 @@
     "require": {
         "php": ">=7.2.0",
         "bower-asset/bootstrap": "^3.3",
-        "bower-asset/Jquery": "^2.2",
+        "bower-asset/EditArea": "^0.8",
+        "bower-asset/jquery": "^2.2",
         "ckeditor/ckeditor": "^4.16",
         "robmorgan/phinx": "^0.11",
         "swiftmailer/swiftmailer": "^6.0",

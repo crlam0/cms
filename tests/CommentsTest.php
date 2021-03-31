@@ -41,7 +41,8 @@ class CommentsTest extends TestCase
         global $_SESSION;
 
         App::$user = new User;
-        App::$template = new Template();
+        App::$template = new Template();        
+        App::$template->addPath('modules/blog/views/');
         App::$message = new Message();
         $_SESSION['CSRF_Token'] = '';
     }

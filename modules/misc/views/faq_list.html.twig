@@ -1,0 +1,31 @@
+<div id="faq">
+
+{% for row in rows %}
+    <div class="post_wrapper">
+        <div class="post_title">
+           {{ row.author }}
+           <span class=faq_date>{{ row.date }}</span>
+        </div>
+        <div class="faq_txt">{{ row.txt|nl2br }}</div>
+	{% if row.ans %}
+		<div class=faq_ans>Ответ:</div>
+		<div class=faq_ans_txt>{{ row.ans|nl2br }}</div>
+	{% endif %}
+    </div>
+{% endfor %}
+
+{% if pager is defined %}
+    {% 
+        include 'pager.html.twig' with {
+            'pager': pager,
+            'main_route': 'faq/',
+            'route': 'faq/page{$page}/',
+        }
+    %}
+{% endif %}
+
+<center>
+<a href="{{ SUBDIR }}faq/add" class="button btn btn-default">Добавить</a>
+</center>
+
+</div>

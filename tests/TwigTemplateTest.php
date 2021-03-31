@@ -31,11 +31,11 @@ class TwigTemplateTest extends TestCase
 
     public function testSQLParse(): void
     {
-        $result=classes\App::$db->query("select login from users where login='boot'");
+        $result=classes\App::$db->query("select login from users where login='admin'");
         $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, [], '{% for row in rows %}{{ row.login }}{% endfor %}');
         $content = $twig->render('index.html.twig', ['name'=>'Test', 'rows' => $rows]);
-        self::assertEquals('boot', $content);
+        self::assertEquals('admin', $content);
     }
 }

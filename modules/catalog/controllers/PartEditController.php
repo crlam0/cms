@@ -76,9 +76,6 @@ class PartEditController extends BaseController
             if (!$model->num) {
                 $model->num = 1;
             }
-            if (!$model->num) {
-                $model->num = 1;
-            }
             if (!$model->item_image_width) {
                 $model->item_image_width = 1024;
             }
@@ -105,9 +102,7 @@ class PartEditController extends BaseController
 
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor_mini.js');
-        App::addAsset('js', 'include/edit_area/edit_area_full.js');
         App::addAsset('js', 'include/js/editor_html.js');
-        App::addAsset('header', 'X-XSS-Protection:0');
 
         $model->descr = replace_base_href($model->descr, false);
         return $this->render('catalog_edit_part_form.html.twig', [
@@ -142,9 +137,7 @@ class PartEditController extends BaseController
 
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor_mini.js');
-        App::addAsset('js', 'include/edit_area/edit_area_full.js');
         App::addAsset('js', 'include/js/editor_html.js');
-        App::addAsset('header', 'X-XSS-Protection:0');
 
         $model->descr = replace_base_href($model->descr, false);
         return $this->render('catalog_edit_part_form.html.twig', [

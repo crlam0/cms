@@ -187,7 +187,7 @@ class ItemEditController extends BaseController
         $this->redirect('update', ['id' =>$model->id]);
     }
 
-    private function saveImage(CatalogItem $model, $file)
+    public function saveImage(CatalogItem $model, $file)
     {
         if (!$file['size']) {
             return true;

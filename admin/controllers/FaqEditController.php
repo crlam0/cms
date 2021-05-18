@@ -20,7 +20,7 @@ class FaqEditController extends BaseController
 
     public function actionIndex(): string
     {
-        $result = App::$db->findAll($this->table, [], 'date,author asc');
+        $result = App::$db->findAll($this->table, [], 'date desc,author asc');
         // $query = "SELECT * from {$this->table} order by date,author asc";
         // $result = App::$db->query($query);
 
@@ -56,7 +56,7 @@ class FaqEditController extends BaseController
             'ans' => '',
         ];
 
-        return $this->render('faq_form.html.twig', $tags);
+        return $this->render('faq_edit_form.html.twig', $tags);
     }
 
     public function actionUpdate(int $id): string
@@ -71,7 +71,7 @@ class FaqEditController extends BaseController
         $tags['action'] = $this->getUrl('update', ['id' => $id]);
         $tags['form_title'] = 'Изменение';
 
-        return $this->render('faq_form.html.twig', $tags);
+        return $this->render('faq_edit_form.html.twig', $tags);
     }
 
     public function actionDelete(int $id): string

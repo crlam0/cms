@@ -175,7 +175,7 @@ class Session implements \IteratorAggregate, \ArrayAccess, \Countable
 
         if ($this->handler !== null) {
             if (!is_object($this->handler)) {
-                $this->handler = Yii::createObject($this->handler);
+                $this->handler = App::createObject($this->handler);
             }
             if (!$this->handler instanceof \SessionHandlerInterface) {
                 throw new InvalidConfigException('"' . get_class($this) . '::handler" must implement the SessionHandlerInterface.');

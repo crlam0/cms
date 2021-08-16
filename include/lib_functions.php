@@ -372,6 +372,7 @@ function get_webpack_asset(string $name) {
     $file_name = App::$DIR . 'theme/mix-manifest.json';
     if(!file_exists($file_name)) {
         App::error('File mix-manifest.json not exists !');
+        return '';
     }
     $json = file_get_contents(App::$DIR . 'theme/mix-manifest.json');
     $assets = my_json_decode($json);

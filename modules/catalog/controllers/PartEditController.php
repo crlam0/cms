@@ -70,8 +70,15 @@ class PartEditController extends BaseController
     {
         $model = new CatalogPart();
         if ($model->load(App::$input['form']) && $model->validate()) {
+            if(!strlen($model->num)){
+                list($num) = App::$db->getRow("select max(num) from cat_part where prev_id=?", ['prev_id' => $model->prev_id]);
+                $model->num = $num + 1;
+            }            
             if (!$model->seo_alias) {
                 $model->seo_alias = encodestring($model->title);
+            }
+            if(!$model->related_products) {
+                $model->related_products = '';
             }
             $model->descr = replace_base_href($model->descr, true);
             $model->date_add = 'now()';
@@ -87,6 +94,10 @@ class PartEditController extends BaseController
         }
         $tree = [];
         $this->makeTree($tree, 0, 0);
+        
+        $model->price_title = 'Цена';
+        $model->item_image_width = '200';
+        $model->item_image_height = '200';
 
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor_mini.js');

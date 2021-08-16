@@ -65,10 +65,15 @@ class ItemEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
+        list($num) = App::$db->getRow("select max(num) from cat_item where part_id=?", ['part_id' => $part_id]);
+        if(!$num) {
+            $model->num = 1;
+        } else {
+            $model->num = $num + 1;
+        }                
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         // App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
-        $model->num = 1;
         return $this->render('catalog_edit_item_form.html.twig', [
             'model' => $model,
             'action' => 'create',

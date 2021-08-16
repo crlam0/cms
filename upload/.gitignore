@@ -1,2 +1,9 @@
 *
+!article/
+!blog/
+!cat_item/
+!cat_part/
+!gallery/
+!media/
+!slider/
 !.gitignore

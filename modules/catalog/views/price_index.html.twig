@@ -1,0 +1,16 @@
+<br />
+<div id="price">
+    <div class="row">
+        <div class="col-sm-12 col-md-8"><div id="cat_parts">
+                {{ subparts }}
+            </div>
+        </div>
+            <div class="col-sm-12 col-md-4">
+                <div id="price_parts">
+                {% for row in rows %}
+                    <a href=#{{ row.seo_alias }}>{{ row.title }}</a><br />
+                {% endfor %}
+                </div>                    
+            </div>
+    </div>
+</div>

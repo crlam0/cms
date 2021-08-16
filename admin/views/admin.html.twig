@@ -7,10 +7,10 @@
         <meta name="description" content="">
         <title>[{{ settings.site_title }} > Адм. раздел >{% if INCLUDE_HEAD is defined %} {{ Header }} {% endif %}</title>
         <!-- Bootstrap core CSS -->
-        <link href="{{ SUBDIR }}admin/bootstrap.min.css" rel="stylesheet" />
+        <link href="{{ SUBDIR }}vendor/bower-asset/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="{{ SUBDIR }}admin/admin.css" rel="stylesheet" />
         <link rel="icon" type="image/png" href="{{ SUBDIR }}favicon.png" />
-        <script type="text/javascript" src="{{ SUBDIR }}include/js/jquery.min.js"></script>        
+        <script type="text/javascript" src="{{ SUBDIR }}vendor/bower-asset/jquery/dist/jquery.min.js"></script>        
 	{% if INCLUDE_HEAD is defined %}
             {{ INCLUDE_HEAD }}
         {% endif %}
@@ -29,25 +29,26 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="width: 100%;text-align: center;">
+        <div class="row admin-content-wrapper">
             <div class="col-xs-2">
                 {{ get_block('menu_admin') }}
-                <br />
-                <br />
             </div>
-            <div class="col-xs-9">
+            <div class="col-xs-9 admin-content">
                 {% include 'breadcrumb.html.twig' %}
-                <center><h1>{{ Header }}</h1></center>
                 <center>
-                    {% if flash is defined and errors is defined %}                    
+                    <h1>{{ Header }}</h1>
+                </center>
+                <center>
+                    {% if flash is defined and errors is defined %}
                         {% include 'flash_errors.html.twig' with { 'flash': flash, 'errors': errors } %}
                     {% endif %}
                 {{ inner_content }}
                 </center>
                 <br />
+                </center>
             </div>
         </div>
-        <script src="{{ SUBDIR }}include/js/bootstrap.min.js"></script>
+        <script src="{{ SUBDIR }}vendor/bower-asset/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="{{ SUBDIR }}include/js/misc.js"></script>
         
         {% if INCLUDE_JS is defined %}

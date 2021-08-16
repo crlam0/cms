@@ -1,0 +1,12 @@
+<?php
+$DBNAME='test_site_db';
+$DBHOST='localhost';
+$DBUSER='user';
+$DBPASSWD='password';
+$SUBDIR='/test_site/';
+$DIR=$_SERVER['DOCUMENT_ROOT'].$SUBDIR;
+$BASE_HREF=''.$SUBDIR;
+$SESSID='TEST_SITE_PHPSESSID';
+$COOKIE_NAME='TEST_SITE';
+// $REDIRECT_TO_HTTPS=true;
+        

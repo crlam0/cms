@@ -1,0 +1,31 @@
+<a name="comments"></a>
+<div id="comments">
+    {% for row in rows %}
+        {% if row.fullname|length >0 %}
+            {% set author = row.fullname %}
+        {% else %}
+            {% set author = row.author %}
+        {% endif %}        
+        <div class="be-comment">
+            <div class="be-img-comment">
+                {% if row.avatar|length > 0 %}
+                    <img src="{{ SUBDIR }}{{ settings.modules.users.avatar_upload_path }}{{ row.avatar }}" alt="{{ row.author }}" class="avatar-img">
+                {% else %}
+                    <img src="{{ SUBDIR }}{{ settings.modules.users.avatar_upload_path }}default.png" alt="" class="avatar-img">
+                {% endif %}
+            </div>
+            <div class="be-comment-content">
+                <span class="be-comment-name">
+                    <a href="blog-detail-2.html">{{ author }}</a>
+                </span>
+                <span class="be-comment-time">
+                    <i class="fa fa-clock-o"></i>
+                    {{ row.date_add }}
+                </span>
+                <p class="be-comment-text">
+                    {{ row.content|nl2br }}
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+</div>

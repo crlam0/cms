@@ -1,0 +1,20 @@
+{% if count(breadcrumbs) > 1 %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% for item in breadcrumbs %}
+                {% if item.url is defined %}
+                    {% if SUBDIR in item.url %}
+                        <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.title }}</a></li>
+                    {% else %}
+                        <li class="breadcrumb-item"><a href="{{ SUBDIR }}{{ item.url }}">{{ item.title }}</a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ item.title }}</li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+{% elseif nav_str is defined %}
+    <div class=nav_str>{{ nav_str }}</div><br />
+{%endif %}
+

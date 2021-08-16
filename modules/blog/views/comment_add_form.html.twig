@@ -1,0 +1,19 @@
+<a name="comment_form"></a>
+<form action="{{ action }}" method="POST">    
+    <input type="hidden" name="form[add_comment]" value="1">
+    <input type="hidden" name="send_img_code" value="1">
+    <input type="hidden" name="CSRF_Token" value="{{ get_csrf_token() }}">
+    <div class="comment_add_form"><b>Комментарий :</b></div>
+    <div>{{ editor }}</div>
+    {% if not authorized %}
+        <div class="comment_form">Автор: </div><div class="comment_form">
+            <input type="edit" maxlength=64 class="form-control" name="form[author]" value="{{ author }}" required>
+        </div>
+        <div class="comment_form">E-Mail: </div><div class=comment_form>
+            <input type="edit" maxlength=128 class="form-control" name="form[email]" value="{{ email }}" required>
+        </div>
+        <div class="comment_form"><img src="{{ SUBDIR }}include/image_code.php" border=0 alt="Код подтверждения"></div>
+        <div class="comment_form"><input type="edit" class="form-control" name="form[img_code]" maxlength=6 value="" required></div>
+    {% endif %}
+    <div class="comment_form"><input type="submit" class="btn btn-primary" value="Отправить"></div>
+</form>

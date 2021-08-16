@@ -84,7 +84,6 @@ class FAQController extends BaseController
         $message.='IP: ' . $input['ip'] . PHP_EOL;
         $message.='Сообщение:' . PHP_EOL;
         $message.=str_replace('\r\n', PHP_EOL, $input['txt']) . PHP_EOL;
-        echo $message;
         if (!App::$debug) {
             App::$message->mail(App::$settings['email_to_addr'], 'На сайте http://' . App::$server['HTTP_HOST'] . App::$SUBDIR . ' оставлено новое сообщение.', $message);
         }

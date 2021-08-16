@@ -7,16 +7,16 @@ class DBTest extends TestCase
 {
     public function testUsers(): void
     {
-        $row = classes\App::$db->getRow("select login from users where login='boot'");
-        self::assertEquals($row['login'], 'boot');
+        $row = classes\App::$db->getRow("select login from users where login='admin'");
+        self::assertEquals($row['login'], 'admin');
     }
 
     public function testDB(): void
     {
         global $DBHOST, $DBUSER, $DBPASSWD, $DBNAME;
         $DB = new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
-        $row = $DB->getRow("select login from users where login='boot'");
-        self::assertEquals($row['login'], 'boot');
+        $row = $DB->getRow("select login from users where login='admin'");
+        self::assertEquals($row['login'], 'admin');
     }
 
     public function testInsert(): void

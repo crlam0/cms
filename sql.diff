@@ -1,3 +1,9 @@
+=== 2021-05-18
+
+ALTER TABLE `cat_item_images`
+	CHANGE COLUMN `file_name` `file_name` VARCHAR(256) NULL DEFAULT NULL COLLATE 'cp1251_general_ci' AFTER `date_add`;
+
+
 === 2021-02-01
 
 ALTER TABLE `partners`
@@ -12,6 +18,7 @@ ALTER TABLE `feedback`
 
 === 2021-01-13
 
+update menu_item set target_type='' WHERE target_type IS null;
 update menu_item set target_id=0 WHERE target_id IS null;
 update blog_posts set target_id=0 WHERE target_id IS null;
 update menu_item set target_id=0 WHERE target_id IS NULL;

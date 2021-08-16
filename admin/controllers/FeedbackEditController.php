@@ -47,6 +47,8 @@ class FeedbackEditController extends BaseController
         global $_FILES;
         if (is_array(App::$input['form'])) {
             App::$input['form']['date'] = App::$input['form']['date'] ?? 'now()';
+            App::$input['form']['file_name'] = '';
+            App::$input['form']['file_type'] = '';
             App::$db->insertTable($this->table, App::$input['form']);
             $item_id = App::$db->insert_id();
             if ($this->saveImage($_FILES['image_file'], $item_id, $item_id)) {

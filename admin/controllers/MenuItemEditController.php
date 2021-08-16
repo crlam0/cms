@@ -53,6 +53,13 @@ class MenuItemEditController extends BaseController
         App::$input['form']['target_id'] = App::$input['form']['target_id'] ?? 0;
         if ($model->load(App::$input['form']) && $model->validate()) {
             $model->active = '1';
+            if (!$model->href) {
+                $model->href = '';
+            }
+            if (!$model->image_name) {
+                $model->image_name = '';
+                $model->image_type = '';
+            }            
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
             App::addFlash('success', 'Пункт меню успешно добавлен.');

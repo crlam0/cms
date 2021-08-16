@@ -1,0 +1,49 @@
+<?php
+
+namespace local;
+
+use classes\App;
+use classes\BaseController;
+
+use modules\blog\controllers\Controller;
+
+use modules\users\models\User;
+
+/**
+ * Controller for index page.
+ *
+ * @author BooT
+ */
+class IndexController extends BaseController 
+{    
+    public function actionIndex(): string
+    {
+        $_SESSION['IMG_CODE'] = rand(111111, 999999);
+        
+        // $cache_key = 'index page';
+        
+        // if(App::$cache->has($cache_key)) {
+            // return App::$cache->get($cache_key);
+        // }
+
+        $result = App::$db->findAll('article_item', ['seo_alias' => 'main']);
+        $row = $result->fetch_array();
+        [$title,$text] = [$row['title'], $row['content']];
+        
+        $this->title = $title;
+        $this->breadcrumbs = [];
+        
+        $content = \replace_base_href($text);
+        
+        $controller = new Controller();
+        
+        $blog_content = $controller->actionIndex();        
+
+        // $this->tags['INCLUDE_JS'] = '<script type="text/javascript" src="' . App::$SUBDIR . 'modules/blog/blog.js"></script>' . "\n";
+
+        App::addAsset('js', 'modules/blog/blog.js');
+
+        // App::$cache->set($cache_key, $content . $blog_content);
+        return $content . $blog_content;        
+    }    
+}

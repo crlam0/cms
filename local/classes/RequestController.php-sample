@@ -1,0 +1,18 @@
+<?php
+
+namespace local;
+
+use classes\App;
+use classes\BaseController;
+
+/**
+ * Controller for JS requests.
+ *
+ * @author BooT
+ */
+class RequestController extends BaseController 
+{    
+    
+    
+   
+}

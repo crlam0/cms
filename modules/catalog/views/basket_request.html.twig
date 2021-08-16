@@ -3,8 +3,8 @@
         <input type="hidden" name="request_done" value="1">          
         <input type="edit" maxlength="64" name="form[lastname]" class="form-control form-normal" placeholder="Фамилия" value="{{ lastname }}" required><br />
         <input type="edit" maxlength="64" name="form[firstname]" class="form-control" placeholder="Имя" value="{{ firstname }}" required><br />
-        <input type="edit" maxlength="64" name="form[phone]" class="form-control" placeholder="Телефон" value="{{ phone }}" required><br />
-        <input type="edit" maxlength="64" name="form[email]" class="form-control" placeholder="Адрес E-Mail" value="{{ email }}" required><br />
+        <input type="tel" maxlength="64" name="form[phone]" class="form-control" placeholder="Телефон" value="{{ phone }}" required><br />
+        <input type="email" maxlength="64" name="form[email]" class="form-control" placeholder="Адрес E-Mail" value="{{ email }}" required><br />
         <textarea name="form[comment]" class="form-control" placeholder="Ваш коментарий" rows="4">{{ comment }}</textarea><br />
 
         <input type="submit" class="btn btn-success" value="  Отправить  ">

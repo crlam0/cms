@@ -16,10 +16,9 @@
 /*.sh
 
 /src/
-/var/
 
-*.local.*
-*Local*
+/*.*-sample
+
 /favicon.*
 /sitemap.xml
 /.phpunit.result.cache

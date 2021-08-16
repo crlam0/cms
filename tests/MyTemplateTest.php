@@ -22,8 +22,8 @@ class MyTemplateTest extends TestCase
 
     public function testSQLParse(): void
     {
-        $result=classes\App::$db->query("select login from users where login='boot'");
+        $result=classes\App::$db->query("select login from users where login='admin'");
         $content=$this->MyTemplate->parse("[%loop_begin%]\n[%row(login)%]\n[%loop_end%]", [], $result);
-        self::assertEquals('boot' . "\n", $content);
+        self::assertEquals('admin' . "\n", $content);
     }
 }

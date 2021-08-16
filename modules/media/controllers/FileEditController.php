@@ -16,7 +16,7 @@ class FileEditController extends BaseController
     {
         parent::__construct();
         $this->title = 'Файлы';
-        $this->breadcrumbs[] = ['title' => $this->title];
+        $this->breadcrumbs[] = ['title' => $this->title, 'url' => 'admin/media-edit/'];
         $this->file_path = App::$settings['modules']['media']['item_upload_path'] ?? 'upload/media/';
         $this->user_flag = 'admin';
     }
@@ -57,6 +57,13 @@ class FileEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
+        
+        [$list_title] = App::$db->getRow("select title from media_list where id=?", ['id' => $list_id]);
+        $this->title = 'Файлы в разделе ' . $list_title;
+        $this->breadcrumbs[] = ['title' => $this->title, 'url' => $this->base_url];
+        $this->title = 'Добавление файла';
+        $this->breadcrumbs[] = ['title' => $this->title];
+        
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
@@ -80,6 +87,13 @@ class FileEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
+        
+        [$list_title] = App::$db->getRow("select title from media_list where id=?", ['id' => $list_id]);
+        $this->title = 'Файлы в разделе ' . $list_title;
+        $this->breadcrumbs[] = ['title' => $this->title, 'url' => $this->base_url];
+        $this->title = 'Изменение файла ' . $model->title;
+        $this->breadcrumbs[] = ['title' => $this->title];
+        
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');

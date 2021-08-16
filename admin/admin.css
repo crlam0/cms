@@ -152,3 +152,12 @@ table#nav td {
     background-color: #eee;
 }
 
+.admin-content-wrapper {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.admin-content {
+    margin-top: 10px;
+}
+

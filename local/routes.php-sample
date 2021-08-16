@@ -1,0 +1,10 @@
+<?php
+
+return [
+    'request-local' => [
+        'pattern' => '^request\/[\w\-]+$',
+        'controller' => 'local\RequestController',
+    ],    
+
+];
+

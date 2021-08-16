@@ -59,9 +59,9 @@ class BasketController extends Controller
         $item_list = '';
         if ($result->num_rows) {
             while ($row = $result->fetch_array()) {
-                $summ += $row['price'] * App::$session['BUY'][$row['id']]['count'];
+                $summ += (int)$row['price'] * App::$session['BUY'][$row['id']]['count'];
                 $cnt += App::$session['BUY'][$row['id']]['count'];
-                $item_list.="Наименовние: {$row['title']}\t Кол-во:" . App::$session["BUY"][$row['id']]['count'] . "\t  Цена: {$row['price']}\n";
+                $item_list.="Наименовние: {$row['title']}\t Кол-во:" . App::$session['BUY'][$row['id']]['count'] . "\t  Цена: {$row['price']}\n";
             }
         }
         return ['summ' => $summ, 'cnt' => $cnt, 'item_list' => $item_list, 'result' => $result];
@@ -80,7 +80,7 @@ class BasketController extends Controller
             $content = $this->render('basket_summary.html.twig', $tags, $result);
             echo $content;
         } else {
-            echo App::$message->get('notice', [], "Корзина пуста !");
+            echo App::$message->get('notice', [], 'Корзина пуста !');
         }
         exit();
     }

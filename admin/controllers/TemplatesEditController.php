@@ -36,7 +36,7 @@ class TemplatesEditController extends BaseController
             $this->redirect('update', ['id' =>$model->id]);
         }
 
-        App::addAsset('js', 'include/edit_area/edit_area_full.js');
+        App::addAsset('js', 'vendor/bower-asset/EditArea/edit_area/edit_area_full.js');
         App::addAsset('js', 'include/js/editor_html.js');
         App::addAsset('header', 'X-XSS-Protection:0');
 
@@ -64,7 +64,7 @@ class TemplatesEditController extends BaseController
             $model->content = $this->twigTplLoad($model->file_name);
         }
 
-        App::addAsset('js', 'include/edit_area/edit_area_full.js');
+        App::addAsset('js', 'vendor/bower-asset/EditArea/edit_area/edit_area_full.js');
         App::addAsset('js', 'include/js/editor_html.js');
         App::addAsset('header', 'X-XSS-Protection:0');
 

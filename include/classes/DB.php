@@ -419,15 +419,18 @@ class DB
      * Select records from DB.
      *
      * @param string $table Table name
-     * @param array $where Fields for where statement
+     * @param string|array $where Fields for where statement
      * @param string $order_by Expression for ORDER BY
      *
      * @return mysqli_result
      */
-    public function findAll(string $table, array $where = [], string $order_by = 'id desc'): \mysqli_result
+    public function findAll(string $table, $where = null, string $order_by = 'id desc'): \mysqli_result
     {
-        if (!count($where)) {
+        if (!$where || (is_array($where) && !count($where))) {
             return $this->query("SELECT * FROM {$table} ORDER BY {$order_by}");
+        }
+        if (!is_array($where)) {
+            return $this->query("SELECT * FROM {$table} WHERE {$where} ORDER BY {$order_by}");
         }
         $expr = '';
         foreach ($where as $key => $value) {

@@ -38,14 +38,11 @@
                 <center>
                     <h1>{{ Header }}</h1>
                 </center>
-                <center>
                     {% if flash is defined and errors is defined %}
                         {% include 'flash_errors.html.twig' with { 'flash': flash, 'errors': errors } %}
                     {% endif %}
                 {{ inner_content }}
-                </center>
                 <br />
-                </center>
             </div>
         </div>
         <script src="{{ SUBDIR }}vendor/bower-asset/bootstrap/dist/js/bootstrap.min.js"></script>

@@ -60,6 +60,9 @@ class EditController extends BaseController
             $model->passwd = $model->encryptPassword(App::$input['form']['passwd'], $model->salt);
             $model->flags = App::$settings['default_flags'];
             $model->regdate = 'now()';
+            $model->token = '';
+            $model->token_expire = '0';
+            $model->avatar = '';
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
             App::addFlash('success', 'Пользователь успешно добавлен.');

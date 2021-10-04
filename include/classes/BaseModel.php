@@ -319,12 +319,12 @@ class BaseModel implements \ArrayAccess
     /**
      * Return model's data from DB.
      *
-     * @param array $where params for where statement.
+     * @param string|array $where params for where statement.
      * @param string $order_by Order by string.
      *
      * @return \mysqli_result
      */
-    public static function findAll(array $where = [], string $order_by = 'id desc'): ?\mysqli_result
+    public static function findAll($where = null, string $order_by = 'id desc'): ?\mysqli_result
     {
         return App::$db->findAll(static::tableName(), $where, $order_by);
     }

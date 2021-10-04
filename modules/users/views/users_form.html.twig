@@ -76,7 +76,7 @@ $(document).ready(function(){
                     console.log(msg);
                 } else {
                     $(".flags-panel").fadeOut("slow", function () {
-                        get_flags_data(post_id);                        
+                        get_flags_data(user_id);                        
                     });
                     $('#popupHeader').html('<h4>Флаги</h4>');
                     $('#popupContent').html(msg.content);
@@ -112,7 +112,7 @@ $(document).ready(function(){
     $('body').on('click', '.btn_del_flag', function () {
         var flag_id = $(this).attr("flag_id");
         $.ajax({
-           type: "GET", url: "{{ this.base_url }}flag-delete", data: "id=" + flag_id,
+           type: "GET", url: "{{ this.base_url }}flag-delete", data: "flag_id=" + flag_id,
            success: function(msg){
             if(msg !== "OK") {
                 console.log(msg);

@@ -11,7 +11,7 @@ class TemplateTest extends TestCase
     {
         parent::setUp();
         $this->Template = new Template();
-        $this->Template->addPath('modules/misc/views/');
+        // $this->Template->addPath('modules/misc/views/');
     }
 
     public function testSQLParse(): void

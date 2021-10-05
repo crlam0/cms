@@ -104,7 +104,10 @@ class ItemsPropsEditController extends BaseController
                         }
                         foreach ($props_array as $input_name => $params) {
                             $content .= '<td align="center">' . PHP_EOL;
-                            if (check_key('type', $params) == 'boolean') {
+                            if (check_key('attr_type', $params) == 'simple') {
+                                $content .= '<input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="simple" attr_name="'.$params['attr_name'].'" value="'.$tags[$params['attr_name']].'">';
+                                
+                            } elseif (check_key('type', $params) == 'boolean') {
                                 $content .= '<input type="checkbox" class="attr_change" size="8" id="'.$tags['id'].'"  attr_type="boolean" attr_name="'.$input_name.'" '.(check_key($input_name, $param_value) ? ' checked' : '').'>';
                             } else {
                                 $content .= '<input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="string" attr_name="'.$input_name.'" value="'.check_key($input_name, $param_value).'">';
@@ -123,10 +126,10 @@ class ItemsPropsEditController extends BaseController
     public function actionChange(int $item_id, string $attr_type, string $attr_name, string $value): string
     {
         $model = new CatalogItem($item_id);
-        if ($attr_type == "simple") {
+        if ($attr_type == 'simple') {
             $model[$attr_name] = $value;
             $model->save(false);
-        } elseif ($attr_type == "string" || $attr_type == 'boolean') {
+        } elseif ($attr_type == 'string' || $attr_type == 'boolean') {
             if (!$props_values = my_json_decode($model->props)) {
                 $props_values=[];
             }

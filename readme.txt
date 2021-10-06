@@ -2,11 +2,10 @@
 
 1. clone https://github.com/crlam0/cms repository
 2. extract files from 'sample-files.zip' as is
-3. rename 'local/config.php-sample' to 'local/config.php' and put your settings of database.
-4. rename 'local/settings.php-sample' to 'local/settings.php' and change default values if needed.
-5. run 'composer update'
-6. run 'bin/app db:restore' and choose 'dump-sample.sql'
-7. Enjoy !
+3. put your settings of database in 'local/config.php'.
+4. run 'composer update'
+5. run 'bin/app db:restore' and choose 'dump-sample.sql'
+6. Enjoy !
 
 For access admin panel use 'admin/' url, user 'admin', password 'adminadmin'
 For enable debug mode run 'bin/app debug:on'

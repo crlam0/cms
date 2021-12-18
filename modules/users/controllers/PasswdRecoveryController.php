@@ -46,6 +46,7 @@ class PasswdRecoveryController extends BaseController
             return App::$message->get('error', [], 'Неверный код.');
         }
         if (App::$input['passwd_change'] && ($content = $this->checkInput()) === true && check_csrf_token()) {
+            App::$user->makeToken($user['id'], 0, User::TOKEN_NULL);
             return $this->passwdChange($user);
         }
         $tags['token'] = App::$input['token'];

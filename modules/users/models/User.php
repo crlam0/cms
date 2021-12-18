@@ -54,9 +54,9 @@ class User extends ClassesUser
 
     public function findByToken($token): void
     {
-        $row = App::$db->getRow("select id,flags from users where token=? and flags like '%active%'", ['token' => $token]);
-        if ($row) {
-            $this->authByArray($row);
+        $data = $this->checkToken($token);
+        if ($data) {
+            $this->authByArray($data);
         }
     }
 

@@ -1,17 +1,17 @@
 <div class="center-block" align="center">
-<div align="center" style="max-width: 400px;margin-top:30px;">
-<form action="{{ SUBDIR }}passwd_recovery/step2" method="post" name="passwd_change_form">
+    <div align="center" style="max-width: 400px;margin-top:30px;">
+        <form action="{{ SUBDIR }}passwd_recovery/step2" method="post" name="passwd_change_form">
 
-<input type="hidden" name="passwd_change" value="1">
-<input type="hidden" name="CSRF_Token" value="{{ get_csrf_token() }}">
-<input type="hidden" name="token" value="{{ token }}">
+            <input type="hidden" name="passwd_change" value="1">
+            <input type="hidden" name="CSRF_Token" value="{{ get_csrf_token() }}">
+            <input type="hidden" name="token" value="{{ token }}">
 
-<input type="password" name="new_passwd1" class="form-control" placeholder="Новый пароль" required>
-<br />
-<input type="password" name="new_passwd2" class="form-control" placeholder="Повтор нового пароля" required>
-<br />
-<input type="submit" class="btn btn-primary" value="   Сменить   ">
+            <input type="password" name="new_passwd1" class="form-control" placeholder="Новый пароль" required>
+            <br />
+            <input type="password" name="new_passwd2" class="form-control" placeholder="Повтор нового пароля" required>
+            <br />
+            <input type="submit" class="btn btn-primary" value="   Сменить   ">
 
-</form>
-</div>
+        </form>
+    </div>
 </div>

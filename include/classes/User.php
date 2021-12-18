@@ -326,7 +326,7 @@ class User extends BaseModel
      */
     public function checkToken(string $token)
     {
-        $data = App::$db->getRow('select id,flags,token_expire from users where token=?', ['token' => $token]);
+        $data = App::$db->getRow("select id,flags,token_expire from users where token=?", ['token' => $token]);
         if (!$data) {
             return false;
         }

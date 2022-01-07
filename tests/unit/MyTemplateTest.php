@@ -1,9 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use classes\MyTemplate;
 
-class MyTemplateTest extends TestCase
+class MyTemplateTest extends \Codeception\Test\Unit
 {
     private $Blocks;
     private $MyTemplate;

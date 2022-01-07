@@ -1,12 +1,10 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-
 use classes\App;
 use classes\Routing;
 use classes\Sitemap;
 
-class SitemapTest extends TestCase
+class SitemapTest extends \Codeception\Test\Unit
 {
 
     public function setUp() : void

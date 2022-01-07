@@ -1,10 +1,9 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use classes\Routing;
 use classes\App;
 
-class RoutingTest extends TestCase
+class RoutingTest extends \Codeception\Test\Unit
 {
     private $Routing;
 

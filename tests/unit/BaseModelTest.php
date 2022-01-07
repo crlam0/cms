@@ -1,9 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use classes\App;
 
-class ModelTest extends TestCase
+class ModelTest extends \Codeception\Test\Unit
 {
     
     public function setUp() : void
@@ -20,7 +19,7 @@ class ModelTest extends TestCase
 
     public function testGetterAndSetter(): void
     {
-        $model = new tests\TestModel;
+        $model = new tests\unit\TestModel;
         $model->name = 'Test 1';
         self::assertEquals('Test 1', $model->name);
         self::assertEquals('Test 1', $model['name']);
@@ -28,7 +27,7 @@ class ModelTest extends TestCase
 
     public function testLoad(): void
     {
-        $model = new tests\TestModel;
+        $model = new tests\unit\TestModel;
         $model->load(['name' => 'Test 2']);
         self::assertEquals('Test 2', $model->name);
         self::assertEquals('Test 2', $model['name']);
@@ -36,7 +35,7 @@ class ModelTest extends TestCase
 
     public function testCheckRequired(): void
     {
-        $model = new tests\TestModel;
+        $model = new tests\unit\TestModel;
         $model->value = 5;
         $model->name = null;
         self::assertFalse($model->validate());
@@ -50,7 +49,7 @@ class ModelTest extends TestCase
     
     public function testCheckRulesString(): void
     {
-        $model = new tests\TestModel;
+        $model = new tests\unit\TestModel;
         $model->value = 5;
         $model->name = '';
         self::assertFalse($model->validate());
@@ -62,7 +61,7 @@ class ModelTest extends TestCase
 
     public function testCheckRulesInteger(): void
     {
-        $model = new tests\TestModel;
+        $model = new tests\unit\TestModel;
         $model->name = 'Test 6';
         $model->value = 0;
         self::assertFalse($model->validate());
@@ -74,13 +73,13 @@ class ModelTest extends TestCase
 
     public function testSave(): void
     {
-        $model = new tests\TestModel;
+        $model = new tests\unit\TestModel;
         $model->name = 'Test 7';
         $model->value = 2;
         $model->save();
         $id = $model->id;
         self::assertIsInt($id);
-        $test_model = new tests\TestModel($id);
+        $test_model = new tests\unit\TestModel($id);
         self::assertNotNull($test_model);
         self::assertEquals($id, $test_model->id);
         self::assertEquals($model->name, $test_model->name);
@@ -91,7 +90,7 @@ class ModelTest extends TestCase
     
     public function testGetOne(): void 
     {
-        $model = new tests\TestModel;
+        $model = new tests\unit\TestModel;
         $model->name = 'Test 8';
         $model->value = 3;
         $model->save();      
@@ -103,7 +102,7 @@ class ModelTest extends TestCase
     
     public function testGetById(): void 
     {
-        $model = new tests\TestModel;
+        $model = new tests\unit\TestModel;
         $model->name = 'Test 9';
         $model->value = 4;
         $model->save();
@@ -117,7 +116,7 @@ class ModelTest extends TestCase
     
     public function testGelAll(): void 
     {
-        $model = new tests\TestModel;
+        $model = new tests\unit\TestModel;
         $model->name = 'Test 10';
         $model->value = 5;
         $model->save();

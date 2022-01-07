@@ -1,6 +1,5 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use classes\Comments;
 use classes\App;
 use classes\User;
@@ -34,7 +33,7 @@ function check_csrf_token(): bool
 }
 
 
-class CommentsTest extends TestCase
+class CommentsTest extends \Codeception\Test\Unit
 {
     public function setUp() : void
     {

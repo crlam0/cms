@@ -1,9 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use classes\BBCodeEditor;
 
-class BBCodeEditorTest extends TestCase
+class BBCodeEditorTest extends \Codeception\Test\Unit
 {
 
     public function testBBCodeEditor(): void

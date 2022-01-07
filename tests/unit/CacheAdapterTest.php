@@ -1,10 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-
 use classes\CacheAdapter;
 
-class CacheAdapterTest extends TestCase
+class CacheAdapterTest extends \Codeception\Test\Unit
 {
     private $cache = null;
 

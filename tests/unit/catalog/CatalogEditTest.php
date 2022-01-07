@@ -1,8 +1,6 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-
-class CatalogEditTest extends TestCase
+class CatalogEditTest extends \Codeception\Test\Unit
 {
     public function testPartEditIndex(): void
     {

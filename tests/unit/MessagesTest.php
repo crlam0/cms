@@ -1,9 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use classes\Message;
 
-class MessagesTest extends TestCase
+class MessagesTest extends \Codeception\Test\Unit
 {
 
     public function testMessageGet(): void

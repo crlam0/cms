@@ -1,14 +1,11 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use classes\Blocks;
 use classes\App;
 use classes\User;
 use classes\Routing;
 
-require_once 'bootstrap.php';
-
-class BlocksTest extends TestCase
+class BlocksTest extends \Codeception\Test\Unit
 {
     private $Blocks;
 

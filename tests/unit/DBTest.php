@@ -1,9 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use classes\DB;
 
-class DBTest extends TestCase
+class DBTest extends \Codeception\Test\Unit
 {
     public function testUsers(): void
     {
@@ -13,7 +12,7 @@ class DBTest extends TestCase
 
     public function testDB(): void
     {
-        global $DBHOST, $DBUSER, $DBPASSWD, $DBNAME;
+        require dirname(__FILE__) . '/../../local/config.php';
         $DB = new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME);
         $row = $DB->getRow("select login from users where login='boot'");
         self::assertEquals($row['login'], 'boot');

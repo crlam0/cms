@@ -1,9 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use admin\controllers\TemplatesEditController as Controller;
 
-class TemplatesEditTest extends TestCase
+class TemplatesEditTest extends \Codeception\Test\Unit
 {
     public function testIndex(): void
     {

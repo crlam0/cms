@@ -4,6 +4,7 @@
 
 /composer.phar
 /composer.lock
+/codecept.phar
 
 /package.json
 /package-lock.json

@@ -1,9 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use classes\App;
 
-class AppTest extends TestCase
+class AppTest extends \Codeception\Test\Unit
 {
 
     private $App;
@@ -11,29 +10,19 @@ class AppTest extends TestCase
     public function setUp() : void
     {
         parent::setUp();
-        $this->App = new App('test1', 'test2');
+        $this->App = new App(App::$DIR, App::$SUBDIR);
     }
 
     public function tearDown() : void
     {
-        global $DIR, $SUBDIR;
-        $this->App = new App($DIR, $SUBDIR);
+        // global $DIR, $SUBDIR;
+        // $this->App = new App($DIR, $SUBDIR);
     }
 
     public function testSetGet(): void
     {
         App::set('test', '123');
         self::assertEquals('123', App::get('test'));
-    }
-
-    public function testDIR(): void
-    {
-        self::assertEquals('test1', App::$DIR);
-    }
-
-    public function testSUBDIR(): void
-    {
-        self::assertEquals('test2', App::$SUBDIR);
     }
 
     public function testLoadInputData(): void

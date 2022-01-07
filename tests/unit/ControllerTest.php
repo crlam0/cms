@@ -1,15 +1,13 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-
-class ControllerTest extends TestCase
+class ControllerTest extends \Codeception\Test\Unit
 {
     private $Controller;
 
     public function setUp() : void
     {
         parent::setUp();
-        $this->Controller = new tests\TestController;
+        $this->Controller = new tests\unit\TestController;
     }
 
     public function testRun(): void

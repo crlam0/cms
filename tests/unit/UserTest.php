@@ -1,9 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
 use classes\User;
 
-class UserTest extends TestCase
+class UserTest extends \Codeception\Test\Unit
 {
 
     private $User;
@@ -67,17 +66,5 @@ class UserTest extends TestCase
     {
         $salt = $this->User->generateSalt();
         self::assertEquals(22, strlen($salt));
-    }
-
-    public function testEncryptPassword() : void
-    {
-        $salt = $this->User->generateSalt();
-        $password = $this->User->encryptPassword('test', $salt);
-        $password2 = $this->User->encryptPassword('test', $salt);
-        $password3 = $this->User->encryptPassword('test2', $salt);
-
-        self::assertStringStartsWith('$2a$', $password);
-        self::assertEquals($password, $password2);
-        self::assertNotEquals($password, $password3);
     }
 }

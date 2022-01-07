@@ -1,6 +1,6 @@
 <?php
 
-namespace admin\Controllers;
+namespace admin\controllers;
 
 use classes\App;
 use classes\BaseController;
@@ -8,8 +8,6 @@ use classes\Image;
 
 class PartnersEditController extends BaseController
 {
-
-
     private $table;
     private $image_path;
     private $image_width;

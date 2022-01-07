@@ -1,13 +1,12 @@
 <?php
 
-namespace admin\Controllers;
+namespace admin\controllers;
 
 use classes\App;
 use classes\BaseController;
 
 class PartsEditController extends BaseController
 {
-
 
     private $table;
 

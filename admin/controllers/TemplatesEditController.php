@@ -1,6 +1,6 @@
 <?php
 
-namespace admin\Controllers;
+namespace admin\controllers;
 
 use classes\App;
 use classes\BaseController;
@@ -9,7 +9,6 @@ use admin\models\Template;
 
 class TemplatesEditController extends BaseController
 {
-
 
     private $TABLE;
 

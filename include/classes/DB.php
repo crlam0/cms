@@ -140,29 +140,11 @@ class DB
             return $result;
         } catch (\InvalidArgumentException $e) {
             App::error($e->getMessage());
-            if ($this->debug) {
+            if (!$this->debug) {
                 die($e->getMessage());
             } else {
                 die('Sorry, internal server error. Try to retry later.');
             }
-        }
-    }
-
-    /**
-     * Return one row from query
-     *
-     * @param string $sql SQL Query
-     * @param array $params
-     *
-     * @return array One row
-     */
-    public function getRow(string $sql, array $params = [])
-    {
-        $result = $this->query($sql, $params);
-        if ($result->num_rows) {
-            return $result->fetch_array();
-        } else {
-            return false;
         }
     }
 
@@ -245,7 +227,123 @@ class DB
         }
         return $value;
     }
+    
+    /**
+     * Return one row from query
+     *
+     * @param string $sql SQL Query
+     * @param array $params
+     *
+     * @return array|null One row
+     */
+    public function getRow(string $sql, array $params = [])
+    {
+        $result = $this->query($sql, $params);
+        if ($result->num_rows) {
+            return $result->fetch_array();
+        } else {
+            return null;
+        }
+    }    
+    
+    /**
+     * Select record by id.
+     *
+     * @param string $table Table name
+     * @param string $id
+     *
+     * @return mysqli_result
+     */
+    public function findById(string $table, string $id): \mysqli_result
+    {
+        $query = "SELECT * FROM {$table} WHERE id=?";
+        return $this->query($query, ['id' => $id]);
+    }
 
+    /**
+     * Get row by id.
+     *
+     * @param string $table Table name
+     * @param string $id
+     *
+     * @return array|null
+     */
+    public function getById(string $table, string $id)
+    {
+        $result = $this->findById($table, $id);
+        if ($result->num_rows) {
+            return $result->fetch_assoc();
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Select records from DB.
+     *
+     * @param string $table Table name
+     * @param string|array $where Fields for where statement
+     * @param string $order_by Expression for ORDER BY
+     *
+     * @return mysqli_result
+     */
+    public function findAll(string $table, $where = null, string $order_by = 'id desc'): \mysqli_result
+    {
+        if (!$where || (is_array($where) && !count($where))) {
+            return $this->query("SELECT * FROM {$table} ORDER BY {$order_by}");
+        }
+        if (!is_array($where)) {
+            return $this->query("SELECT * FROM {$table} WHERE {$where} ORDER BY {$order_by}");
+        }
+        $expr = '';
+        foreach ($where as $key => $value) {
+            if (strlen($expr) == 0) {
+                $expr .= $key . '=?';
+            } else {
+                $expr .= ' AND ' . $key . '=?';
+            }
+        }
+        $query = "SELECT * FROM {$table} WHERE {$expr} ORDER BY {$order_by}";
+        return $this->query($query, $where);
+    }
+    
+    /**
+     * Get all data from table.
+     * 
+     * @param string $table Table name
+     * @param string|array $where Fields for where statement
+     *
+     * @return array|null
+     */
+    public function getAll(string $table, $where = null, string $order_by = 'id desc')
+    {
+        $result = $this->findAll($table, $where, $order_by);
+        if ($result->num_rows) {
+            return $result->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get row data from table.
+     * 
+     * @param string $table Table name
+     * @param string|array $where Fields for where statement
+     *
+     * @return mysqli_result
+     */
+    public function getOne(string $table, $where = null)
+    {
+        $result = $this->findAll($table, $where);
+        if ($result->num_rows) {
+            return $result->fetch_assoc();
+        } else {
+            return null;
+        }
+    }
+    
+    
     /**
      * Return string for insert query
      *
@@ -343,7 +441,7 @@ class DB
             } else {
                 $str_values .= '?';
                 // $params[$field] = stripcslashes($value);
-                $params[$field] = $value;
+                $params[$field] = $value ?? '';
             }
             if ($a != $total) {
                 $str_fields .= ',';
@@ -379,7 +477,7 @@ class DB
             } else {
                 $sql .= $field . '=?';
                 // $params[$field] = stripcslashes($value);
-                $params[$field] = $value;
+                $params[$field] = $value ?? '';
             }
             $sql .= ',';
         }
@@ -399,49 +497,6 @@ class DB
         }
         // print_array($params);echo $sql;exit;
         return $this->query($sql, $params);
-    }
-
-    /**
-     * Select record from DB.
-     *
-     * @param string $table Table name
-     * @param string $id
-     *
-     * @return mysqli_result
-     */
-    public function findOne(string $table, string $id): \mysqli_result
-    {
-        $query = "SELECT * FROM {$table} WHERE id=?";
-        return $this->query($query, ['id' => $id]);
-    }
-
-    /**
-     * Select records from DB.
-     *
-     * @param string $table Table name
-     * @param string|array $where Fields for where statement
-     * @param string $order_by Expression for ORDER BY
-     *
-     * @return mysqli_result
-     */
-    public function findAll(string $table, $where = null, string $order_by = 'id desc'): \mysqli_result
-    {
-        if (!$where || (is_array($where) && !count($where))) {
-            return $this->query("SELECT * FROM {$table} ORDER BY {$order_by}");
-        }
-        if (!is_array($where)) {
-            return $this->query("SELECT * FROM {$table} WHERE {$where} ORDER BY {$order_by}");
-        }
-        $expr = '';
-        foreach ($where as $key => $value) {
-            if (strlen($expr) == 0) {
-                $expr .= $key . '=?';
-            } else {
-                $expr .= ' AND ' . $key . '=?';
-            }
-        }
-        $query = "SELECT * FROM {$table} WHERE {$expr} ORDER BY {$order_by}";
-        return $this->query($query, $where);
     }
 
     /**

@@ -24,7 +24,7 @@ class BaseModel implements \ArrayAccess
     /**
      * @return array Fields
      */
-    public static function fields()
+    protected static function fields()
     {
         return [];
     }
@@ -76,7 +76,7 @@ class BaseModel implements \ArrayAccess
      */
     public function loadFromDb($id = null)
     {
-        $result = static::findOne($id);
+        $result = static::findById($id);
         if ($result !== null && $result->num_rows) {
             $row = $result->fetch_assoc();
             foreach ($row as $key => $value) {
@@ -308,12 +308,51 @@ class BaseModel implements \ArrayAccess
      *
      * @return \mysqli_result|null
      */
-    public static function findOne(?int $id): ?\mysqli_result
+    public static function findById(?int $id): ?\mysqli_result
     {
         if ($id !== null) {
-            return App::$db->findOne(static::tableName(), $id);
+            return App::$db->findById(static::tableName(), $id);
         }
         return null;
+    }
+
+    /**
+     * Return model data from DB.
+     *
+     * @param integer $id
+     *
+     * @return array|null
+     */
+    public static function getById($id)
+    {
+        $data = App::$db->getById(static::tableName(), $id);
+        if ($data == null) {
+            return null;
+        }
+        $class = get_called_class();
+        $model = new $class();
+        $model->load($data);
+        return $model;
+    }
+    
+    /**
+     * Return model's data from DB.
+     *
+     * @param string|array $where params for where statement.
+     * @param string $order_by Order by string.
+     *
+     * @return array|null
+     */
+    public static function getOne($where = null)
+    {
+        $data = App::$db->getOne(static::tableName(), $where);
+        if($data == null) {
+            return null;
+        }
+        $class = get_called_class();
+        $model = new $class();
+        $model->load($data);
+        return $model;        
     }
 
     /**
@@ -329,6 +368,30 @@ class BaseModel implements \ArrayAccess
         return App::$db->findAll(static::tableName(), $where, $order_by);
     }
 
+    /**
+     * Return model's data from DB.
+     *
+     * @param string|array $where params for where statement.
+     * @param string $order_by Order by string.
+     *
+     * @return array|null
+     */
+    public static function getAll($where = null, string $order_by = 'id desc')
+    {
+        $data = App::$db->getAll(static::tableName(), $where, $order_by);
+        if($data == null || !is_array($data) || !count($data) ) {
+            return null;
+        }
+        $class = get_called_class();
+        $models = [];
+        foreach($data as $item) {
+            $model = new $class();
+            $model->load($item);
+            $models[] = $model;
+        }        
+        return $models;
+    }
+    
     /**
      * Return model's data
      *

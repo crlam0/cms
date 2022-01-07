@@ -21,7 +21,7 @@ class TestModel extends BaseModel
             'id',
             'name',
             'value',
-            'comment'
+            'comment',
         ];
     }
 
@@ -42,6 +42,7 @@ class TestModel extends BaseModel
             [['name', 'value'], 'required'],
             [['name'], 'string', ['min' => 1, 'max' => 8]],
             [['value'], 'integer', ['min' => 1, 'max' => 8]],
+            [['comment'], 'string', ['min' => 0, 'max' => 255]],
         ];
     }
 
@@ -57,4 +58,5 @@ class TestModel extends BaseModel
             'comment' => 'Коментарий',
         ];
     }
+
 }

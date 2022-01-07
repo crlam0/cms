@@ -87,8 +87,10 @@ class PartEditController extends BaseController
             if(isset(App::$settings['modules']['catalog']['default_items_props']) && !strlen($model->items_props)){
                 $model->items_props = App::$settings['modules']['catalog']['default_items_props'];
             }        
-            if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
-                App::addFlash('success', 'Раздел успешно добавлен');
+            if ($model->save(false)) {
+                if($this->saveImage($model, $_FILES['image_file'])) {
+                    App::addFlash('success', 'Раздел успешно добавлен');
+                }
             }
             $this->redirect('index');
         }
@@ -98,6 +100,7 @@ class PartEditController extends BaseController
         $model->price_title = 'Цена';
         $model->item_image_width = '1024';
         $model->item_image_height = '768';
+        $model->items_props = App::$settings['modules']['catalog']['default_items_props'] ?? '';
 
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor_mini.js');
@@ -183,7 +186,7 @@ class PartEditController extends BaseController
         $this->deleteImageFile($model);
         $f_info = pathinfo($file['name']);
         $file_name = $model->id . '.' . $f_info['extension'];
-        if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, $this->image_width, $this->image_height)) {
+        if (move_uploaded_image($file, App::$DIR . $this->image_path . $file_name, $this->image_width)) {
             $model->image_name = $file_name;
             $model->image_type = $file['type'];
             return true;

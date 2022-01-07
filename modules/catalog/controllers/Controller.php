@@ -125,9 +125,13 @@ class Controller extends BaseController
     private function getPartItemsContent(int $part_id, int $page, bool $show_empty_message = true): string
     {
 
-        $content = '';
 
         $row_part = App::$db->getRow("select * from cat_part where id=?", ['part_id' => $part_id]);
+        if(!$row_part) {
+            $tags['title'] = '';
+            $tags['image_name'] = '';
+            return $this->render('cat_item_list_empty.html.twig', $tags);            
+        }
 
         if (isset($row_part['descr']) && strlen($row_part['descr'])) {
             $tags['part_descr'] = $row_part['descr'];
@@ -152,13 +156,13 @@ class Controller extends BaseController
         if ($result->num_rows) {
             $tags['cat_part_href'] = App::$routing->getUrl('cat_part', $part_id);
             $tags['functions'] = [];
-            $content .= $this->render('cat_item_list', $tags, $result);
+            return $this->render('cat_item_list', $tags, $result);
         } elseif ($show_empty_message) {
             $tags['title'] = $row_part['title'];
             $tags['image_name'] = $row_part['image_name'];
-            $content .= $this->render('cat_item_list_empty.html.twig', $tags);
+            return $this->render('cat_item_list_empty.html.twig', $tags);
         }
-        return $content;
+        return '';
     }
 
     /**
@@ -229,14 +233,26 @@ class Controller extends BaseController
         return $this->render('cat_item_view', $tags, $result);
     }
 
-    public function actionLoadImage($file_name, $image_id, $item_id): array
+    public function actionLoadImage($item_id, $image_id): array
     {
-        $input = App::$input;
-        $query = "select default_img,file_name,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id=?";
-        list($default_img,$default_img_file_name,$title)=App::$db->getRow($query, ['id' => $input['item_id']]);
+        // $input = App::$input;
+        // $query = "select default_img,file_name,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id=?";
+        // list($default_img,$default_img_file_name,$title)=App::$db->getRow($query, ['id' => $input['item_id']]);
+        
+        $item = App::$db->getById('cat_item', $item_id);
+        $image = App::$db->getById('cat_item_images', $image_id);
+        if(!$item || !$image) {
+            return [
+                'title' => 'Ошибка',
+                'content' => '',
+            ];
+        }
+        
+        list($tags['prev_id']) = App::$db->getRow("select id from cat_item_images where item_id='{$item_id}' and id<'{$image_id}' order by id desc limit 1");
+        list($tags['next_id']) = App::$db->getRow("select id from cat_item_images where item_id='{$item_id}' and id>'{$image_id}' order by id asc limit 1");
+        
 
-        $nav_ins = '';
-
+        /*
         list($prev_id,$file_name) = App::$db->getRow("select id,file_name from cat_item_images where item_id='" . $input['item_id'] . "' and id<'" . $input['image_id'] . "' and id<>'{$default_img}' order by id desc limit 1");
         if ($input['image_id'] != $default_img) {
             if ($prev_id) {
@@ -254,15 +270,13 @@ class Controller extends BaseController
                 $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$file_name} class=\"cat_image_button btn btn-default\">Следующая >></a>";
             }
         }
+         * 
+         */
 
-        $URL = $this->getImageUrl($input['file_name'], '', App::$settings['catalog_item_img_max_width'], 0);
-
-        $content = '<center><img src="' . APP::$SUBDIR . $URL .'" border="0" alt="' . $title . '"></center>';
-        if (strlen($nav_ins)) {
-            $content.="<br /><center>{$nav_ins}</center>";
-        }
-        $json['title'] = $title;
-        $json['content'] = $content;
+        $tags['IMAGE'] = App::$SUBDIR . $this->getImageUrl($image['file_name'], '', 1024, 0);
+        $tags['item_id'] = $item_id;
+        $json['content'] = $this->render('cat_image_view.html.twig', $tags);
+        $json['title'] = $item['title'];
         return $json;
     }
 
@@ -347,7 +361,7 @@ class Controller extends BaseController
     {
         $IMG_ITEM_PATH = App::$DIR . App::$settings['catalog_item_img_path'];
         if (!$width) {
-            $width = App::$settings['catalog_item_img_preview'];
+            $width = App::$settings['catalog_item_img_preview'] ?? 190;
         }
         if (is_file($IMG_ITEM_PATH . $file_name)) {
             return $this->getImageUrl($file_name, $file_type, $width, $crop);
@@ -363,7 +377,7 @@ class Controller extends BaseController
         // $image = new Image($file_name, $row['file_type']);
         $image = new Image($file_name);
         $cript_name = 'modules/catalog/image.php?preview='.App::$settings['catalog_item_img_preview'].'&crop=1&id=' . $row['image_id'];
-        return $image->getHTML($row, static::$cache_path, 'catalog_popup', $cript_name, App::$settings['catalog_item_img_preview']);
+        return $image->getHTML($row, static::$cache_path, 'catalog_popup', $cript_name, App::$settings['catalog_item_img_preview'] ?? 190);
     }
 
     /**

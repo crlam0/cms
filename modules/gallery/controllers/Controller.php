@@ -74,17 +74,17 @@ class Controller extends BaseController
     public function actionLoad(): array
     {
         $query = "SELECT * from gallery_images where id='".App::$input['id']."'";
-        $tags = App::$db->getRow($query);
-        $gallery_id = $tags['gallery_id'];
+        $image = App::$db->getRow($query);
+        $gallery_id = $image['gallery_id'];
 
-        list($tags['prev_id']) = App::$db->getRow("select id from gallery_images where gallery_id='{$gallery_id}' and id<'{$tags['id']}' order by id desc limit 1");
-        list($tags['next_id']) = App::$db->getRow("select id from gallery_images where gallery_id='{$gallery_id}' and id>'{$tags['id']}' order by id asc limit 1");
+        list($tags['prev_id']) = App::$db->getRow("select id from gallery_images where gallery_id='{$gallery_id}' and id<'{$image['id']}' order by id desc limit 1");
+        list($tags['next_id']) = App::$db->getRow("select id from gallery_images where gallery_id='{$gallery_id}' and id>'{$image['id']}' order by id asc limit 1");
 
-        $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $tags['file_name'];
-        $image = new Image($file_name, $tags['file_type']);
-        $tags['IMAGE'] = $image->getHTML($tags, 'var/cache/gallery/', '', 'modules/gallery/image.php?clientHeight='.App::$input['clientHeight'].'&id=' . $tags['id'], $this->getMaxWidth());
+        $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $image['file_name'];
+        $image_obj = new Image($file_name, $image['file_type']);
+        $tags['IMAGE'] = $image_obj->getHTML($image, 'var/cache/gallery/', '', 'modules/gallery/image.php?clientHeight='.App::$input['clientHeight'].'&id=' . $image['id'], $this->getMaxWidth());
 
-        $json = $tags;
+        $json['title'] = $image['title'];
         $json['content'] = $this->render('gallery_image_view', $tags);
         return $json;
     }

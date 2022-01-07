@@ -140,10 +140,10 @@ class DB
             return $result;
         } catch (\InvalidArgumentException $e) {
             App::error($e->getMessage());
-            if (!$this->debug) {
+            if ($this->debug) {
                 die($e->getMessage());
             } else {
-                die('Sorry, internal server error. Try to retry later.');
+                die('Sorry, internal server error. Retry later.');
             }
         }
     }

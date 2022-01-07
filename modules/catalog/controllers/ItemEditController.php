@@ -60,6 +60,7 @@ class ItemEditController extends BaseController
             $model->date_add = 'now()';
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
+            $model->default_img = 0;
             if ($model->save(false)) {
                 App::addFlash('success', 'Наименовение успешно добавлено.');
             }

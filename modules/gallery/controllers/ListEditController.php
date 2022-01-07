@@ -11,12 +11,14 @@ use modules\gallery\models\GalleryImage;
 
 class ListEditController extends BaseController
 {
+    private $image_path;
 
     public function __construct()
     {
         parent::__construct();
         $this->title = 'Галерея';
         $this->breadcrumbs[] = ['title' => $this->title];
+        $this->image_path = App::$settings['modules']['gallery']['upload_path'] ?? 'upload/gallery/';
         $this->user_flag = 'admin';
     }
 
@@ -39,9 +41,9 @@ class ListEditController extends BaseController
     public function showImage($image_id): string
     {
         $image = new GalleryImage($image_id);
-        $image_path = App::$settings['modules']['gallery']['upload_path'] ?? 'upload/gallery/';
-        if (isset($image->file_name) && is_file(App::$DIR . $image_path . $image->file_name)) {
-            return '<img src="' . App::$SUBDIR . $image_path . $image->file_name . '" border="0" width="200" />';
+        $file_name = $this->image_path . $image->file_name; 
+        if (is_file(App::$DIR . $file_name)) {
+            return '<img src="' . App::$SUBDIR . $file_name . '" border="0" width="200" />';
         } else {
             return 'Отсутствует';
         }

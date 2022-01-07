@@ -19,7 +19,7 @@ class ImagesEditController extends BaseController
     {
         parent::__construct();
         $this->title = 'Галерея';
-        $this->breadcrumbs[] = ['title' => $this->title];
+        $this->breadcrumbs[] = ['title' => $this->title, 'url' => 'admin/gallery-edit/'];
         $this->image_path = App::$settings['modules']['gallery']['upload_path'] ?? 'upload/gallery/';
         $this->image_max_width = App::$settings['modules']['gallery']['image_max_width'] ?? 1024;
         $this->image_max_height = App::$settings['modules']['gallery']['image_max_height'] ?? 768;

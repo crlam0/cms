@@ -25,12 +25,11 @@ $(document).ready(function () {
     });
 
     $("img.cat_item_image_popup").click(function () {
-        var file_name = $(this).attr("file_name");
         var item_id = $(this).attr("item_id");
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
         $.ajax({
-            type: "GET", url: MYDIR + "load-image", dataType: "json", data: "file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight=" + windowHeight,
+            type: "GET", url: MYDIR + "load-image", dataType: "json", data: "item_id=" + item_id + '&image_id=' + image_id + "&windowHeight=" + windowHeight,
             success: function (msg) {
                 $('#popupHeader').html(msg.title);
                 $('#popupContent').html(msg.content);
@@ -50,12 +49,11 @@ $(document).ready(function () {
     });
 
     $('body').on('click', 'img.cat_images', function () {
-        var file_name = $(this).attr("file_name");
         var item_id = $(this).attr("item_id");
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
         $.ajax({
-            type: "GET", url: MYDIR + "load-image", dataType: "json", data: "file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight=" + windowHeight,
+            type: "GET", url: MYDIR + "load-image", dataType: "json", data: "item_id=" + item_id + '&image_id=' + image_id + "&windowHeight=" + windowHeight,
             success: function (msg) {
                 $('#popupHeader').html(msg.title);
                 $('#popupContent').html(msg.content);
@@ -74,13 +72,12 @@ $(document).ready(function () {
     });
 
     $('body').on('click', 'a.cat_image_button', function () {
-        var file_name = $(this).attr("file_name");
         var item_id = $(this).attr("item_id");
         var image_id = $(this).attr("image_id");
         var windowHeight = document.documentElement.clientHeight;
         $(".modal-dialog").fadeOut("slow", function () {
             $.ajax({
-                type: "GET", url: MYDIR + "load-image", dataType: "json", data: "get_popup_image_content=1&file_name=" + file_name + "&image_id=" + image_id + '&item_id=' + item_id + "&windowHeight=" + windowHeight,
+                type: "GET", url: MYDIR + "load-image", dataType: "json", data: "item_id=" + item_id + '&image_id=' + image_id + "&windowHeight=" + windowHeight,
                 success: function (msg) {
                     $('#popupHeader').html(msg.title);
                     $('#popupContent').html(msg.content);

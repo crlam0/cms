@@ -2,14 +2,14 @@
     {% for row in rows %}
         <div class="cat_part">
             <div class="cat_part_image">
+                <a href="{{ SUBDIR }}{{ routing.getUrl('cat_part', row.id) }}" title="{{ row.title }}">
                 {% set image = this.getPartImageFilename(row.image_name) %}
                 {% if image %}
-                    <a href="{{ SUBDIR }}{{ routing.getUrl('cat_part', row.id) }}" title="{{ row.title }}">
-                        <img src="{{ SUBDIR }}{{ image }}" alt="{{ row.title }}" border="0" align="left">
-                    </a>
+                    <img src="{{ SUBDIR }}{{ image }}" alt="{{ row.title }}" border="0" align="left">
                 {% else %}
                     Изображение отсутствует
                 {% endif %}
+                </a>
             </div>
             <div class="cat_part_title">
                 <a href="{{ SUBDIR }}{{ routing.getUrl('cat_part', row.id) }}" title="{{ row.title }}">{{ row.title }}</a>

@@ -37,10 +37,10 @@
                 {% include 'breadcrumb.html.twig' %}
                 <center>
                     <h1>{{ Header }}</h1>
-                </center>
                     {% if flash is defined and errors is defined %}
                         {% include 'flash_errors.html.twig' with { 'flash': flash, 'errors': errors } %}
                     {% endif %}
+                </center>
                 {{ inner_content }}
                 <br />
             </div>

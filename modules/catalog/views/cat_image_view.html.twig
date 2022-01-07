@@ -1,0 +1,16 @@
+<center>
+    <div id="gallery">
+        <center>
+            <img src="{{ IMAGE }}" />
+        </center>
+        <br />
+        <div align="center">
+            {% if prev_id %}
+                <a class="btn btn-default cat_image_button" item_id="{{ item_id }}" image_id="{{ prev_id }}"><< Предыдущая</a>
+            {% endif %}
+            {% if next_id %}
+                <a class="btn btn-default cat_image_button" item_id="{{ item_id }}" image_id="{{ next_id }}">Следующая >></a>
+            {% endif %}
+        </div>
+    </div>
+</center>

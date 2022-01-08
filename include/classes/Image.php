@@ -16,7 +16,7 @@ class Image
 
     public static $validImageTypes = ['image/pjpeg', 'image/jpeg', 'image/gif', 'image/png', 'image/x-png'];
 
-    public function __construct(string $file_name, $file_type = '')
+    public function __construct(string $file_name, $file_type = '', $dont_read_file = false)
     {
         if (!is_file($file_name)) {
             return false;
@@ -26,6 +26,9 @@ class Image
         if (!in_array($this->file_type, static::$validImageTypes)) {
             App::$message->error('Неверный тип файла !');
             return false;
+        }
+        if($dont_read_file) {
+            return;
         }
         if ($this->file_type == 'image/jpeg') {
             $this->src_image = imagecreatefromjpeg($file_name);

@@ -109,7 +109,7 @@ class Controller extends BaseController
     {
         App::$input['preview']=true;
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
-        $image = new Image($file_name, $row['file_type']);
+        $image = new Image($file_name, $row['file_type'], true);
         return $image->getHTML($row, static::$cache_path, 'gallery_popup', 'modules/gallery/image.php?preview=1&id=' . $row['id'], $this->getMaxWidth());
     }
 
@@ -122,7 +122,7 @@ class Controller extends BaseController
         $row['file_name'] = $row['def_file_name'];
         $row['id'] = $row['def_id'];
         $file_name = App::$DIR . App::$settings['gallery_upload_path'] . $row['file_name'];
-        $image = new Image($file_name, $row['def_file_type']);
+        $image = new Image($file_name, $row['def_file_type'], true);
         return $image->getHTML($row, static::$cache_path, '', 'modules/gallery/image.php?icon=1&id=' . $row['id'], $this->getMaxWidth());
     }
 

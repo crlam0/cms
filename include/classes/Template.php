@@ -47,8 +47,12 @@ class Template
                 $twig = $this->TwigTemplate;
                 $template['name'] = $file_name;
             } else {
-                $tags['file_name'] = $template['file_name'];
-                return App::$message->get('file_not_found', $tags);
+                if(App::$message != null) {
+                    $tags['file_name'] = $template['file_name'];
+                    return App::$message->get('file_not_found', $tags);
+                } else {
+                    return "Template file '{$template['file_name']}' not found.";
+                }
             }
         } else {
             $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, ['debug' => App::$debug], $template['content']);
@@ -122,9 +126,12 @@ class Template
             if ($file_name) {
                 $template['content'] = implode('', file($file_name));
             } else {
-                $tags['file_name'] = $template['file_name'];
-                App::$message->get('file_not_found', $tags);
-                return '';
+                if(App::$message != null) {
+                    $tags['file_name'] = $template['file_name'];
+                    return App::$message->get('file_not_found', $tags);
+                } else {
+                    return "Template '{$template['file_name']}' not found.";
+                }
             }
         }
         if (!strstr($template['content'], '[%')) {
@@ -151,7 +158,7 @@ class Template
             $template['file_name'] = $name;
             $template['template_type'] = 'twig';
         }
-        if (!$template) {
+        if (!$template && App::$server->keyExists('REQUEST_URI')) {
             $template = App::$db->getRow("SELECT * FROM templates WHERE name='{$name}' AND '" . App::$server['REQUEST_URI'] . "' LIKE concat('%',uri,'%')");
         }
         if (!$template) {

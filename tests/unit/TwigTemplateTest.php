@@ -31,8 +31,8 @@ class TwigTemplateTest extends TestCase
 
     public function testSQLParse(): void
     {
-        $result=classes\App::$db->query("select login from users where login='boot'");
-        $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $result = classes\App::$db->query("select login from users where login='boot'");
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
 
         $twig = new TwigTemplate(TwigTemplate::TYPE_STRING, [], '{% for row in rows %}{{ row.login }}{% endfor %}');
         $content = $twig->render('index.html.twig', ['name'=>'Test', 'rows' => $rows]);

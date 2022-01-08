@@ -12,8 +12,7 @@
 <table width=90%  class="table table-responsive table-bordered normal-form" align="center">
     <tr class=header align="center">
 	<td width=15%>Дата</td>
-	<td width=20%>Алиас</td>
-	<td width=40%>Заголовок</td>
+	<td width=60%>Заголовок</td>
 	<td width=15%>Активен</td>
 	<td width=5% align="center">&nbsp;</td>
 	<td width=5% align="center">&nbsp;</td>
@@ -21,7 +20,6 @@
 {% for row in rows %}
     <tr class="active_{{ row.active }}" align="left" id="tr_{{ row.id }}">
 	<td><b>{{ row.date_add }}</b></td>
-	<td>{{ row.seo_alias }}</td>
 	<td>{{ row.title }}</td>
 	<td align="center"><input class="" type="checkbox" class="sw_active" value='{{ row.id }}' {% if row.active=='Y'%} checked{% endif %}></td>
 	<td width=16><a href="{{ this.base_url }}update?id={{ row.id }}"><img src="{{ SUBDIR }}admin/images/open.gif" alt="Изменить" border="0"></a></td>

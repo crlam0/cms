@@ -235,44 +235,21 @@ class Controller extends BaseController
 
     public function actionLoadImage($item_id, $image_id): array
     {
-        // $input = App::$input;
-        // $query = "select default_img,file_name,cat_item.title from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id=?";
-        // list($default_img,$default_img_file_name,$title)=App::$db->getRow($query, ['id' => $input['item_id']]);
-        
         $item = App::$db->getById('cat_item', $item_id);
         $image = App::$db->getById('cat_item_images', $image_id);
         if(!$item || !$image) {
-            return [
-                'title' => 'Ошибка',
-                'content' => '',
-            ];
-        }
-        
-        list($tags['prev_id']) = App::$db->getRow("select id from cat_item_images where item_id='{$item_id}' and id<'{$image_id}' order by id desc limit 1");
-        list($tags['next_id']) = App::$db->getRow("select id from cat_item_images where item_id='{$item_id}' and id>'{$image_id}' order by id asc limit 1");
-        
-
-        /*
-        list($prev_id,$file_name) = App::$db->getRow("select id,file_name from cat_item_images where item_id='" . $input['item_id'] . "' and id<'" . $input['image_id'] . "' and id<>'{$default_img}' order by id desc limit 1");
-        if ($input['image_id'] != $default_img) {
-            if ($prev_id) {
-                $nav_ins.= "<a image_id={$prev_id} item_id={$input['item_id']} file_name={$file_name} class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
-            } else {
-                $nav_ins.= "<a image_id={$default_img} item_id={$input["item_id"]} file_name=\"{$default_img_file_name}\" class=\"cat_image_button btn btn-default\"><< Предыдущая</a>";
+            return ['title' => 'Ошибка', 'content' => 'Файл не найден'];
+        }        
+        if ($image_id != $item['default_img']) {
+            [$tags['prev_id']] = App::$db->getRow("select id,file_name from cat_item_images where item_id='{$item_id}' and id<'{$image_id}' and id<>'{$item['default_img']}' order by id desc limit 1");
+            if (!$tags['prev_id']) {
+                $tags['prev_id'] = $item['default_img'];
             }
-            list($next_id,$file_name) = App::$db->getRow("select id,file_name from cat_item_images where item_id='" . $input['item_id'] . "' and id>'" . $input['image_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
-            if ($next_id) {
-                $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$file_name} class=\"cat_image_button btn btn-default\">Следующая >></a>";
-            }
+            [$tags['next_id']] = App::$db->getRow("select id,file_name from cat_item_images where item_id='{$item_id}' and id>'{$image_id}' and id<>'{$item['default_img']}' order by id asc limit 1");
         } else {
-            list($next_id,$file_name) = App::$db->getRow("select id,file_name from cat_item_images where item_id='" . $input['item_id'] . "' and id<>'{$default_img}' order by id asc limit 1");
-            if ($next_id) {
-                $nav_ins.= "<a image_id={$next_id} item_id={$input['item_id']} file_name={$file_name} class=\"cat_image_button btn btn-default\">Следующая >></a>";
-            }
+            $tags['prev_id'] = 0;
+            [$tags['next_id']] = App::$db->getRow("select id,file_name from cat_item_images where item_id='{$item_id}' and id<>'{$item['default_img']}' order by id asc limit 1");
         }
-         * 
-         */
-
         $tags['IMAGE'] = App::$SUBDIR . $this->getImageUrl($image['file_name'], '', 1024, 0);
         $tags['item_id'] = $item_id;
         $json['content'] = $this->render('cat_image_view.html.twig', $tags);

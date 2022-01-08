@@ -83,8 +83,6 @@ class TwigTemplate
         }
 
         $environment->addGlobal('SUBDIR', App::$SUBDIR);
-        $environment->addGlobal('PHP_SELF', App::$server['PHP_SELF']);
-        $environment->addGlobal('PHP_SELF_DIR', App::$server['PHP_SELF_DIR']);
         $environment->addGlobal('settings', App::$settings);
         $environment->addGlobal('server', App::$server);
         $environment->addGlobal('routing', App::$routing);

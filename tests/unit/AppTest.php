@@ -4,7 +4,6 @@ use classes\App;
 
 class AppTest extends \Codeception\Test\Unit
 {
-
     private $App;
 
     public function setUp() : void
@@ -15,8 +14,7 @@ class AppTest extends \Codeception\Test\Unit
 
     public function tearDown() : void
     {
-        // global $DIR, $SUBDIR;
-        // $this->App = new App($DIR, $SUBDIR);
+        unset($this->App);
     }
 
     public function testSetGet(): void

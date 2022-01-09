@@ -139,5 +139,6 @@ class Controller extends BaseController
                 </div>
             ';
         }
+        return '';
     }
 }

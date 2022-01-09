@@ -14,4 +14,5 @@ $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
 $App->loadInputData([],[],['REQUEST_URI'=>$SUBDIR]);
 App::$template = new Template();
 
-App::$settings['debug'] = false;
+App::$debug = true;
+App::$db->debug = true;

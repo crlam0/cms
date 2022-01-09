@@ -58,6 +58,4 @@ class CommentsEditController extends BaseController
         $model->delete();
         $this->redirect('index');
     }
-
-
 }

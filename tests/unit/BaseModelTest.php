@@ -4,18 +4,18 @@ use classes\App;
 
 class ModelTest extends \Codeception\Test\Unit
 {
-    
+
     public function setUp() : void
     {
         parent::setUp();
     }
 
     public function tearDown() : void
-    {        
+    {
         App::$db->deleteFromTable('test', ['1' => '1']);
         parent::tearDown();
     }
-    
+
 
     public function testGetterAndSetter(): void
     {
@@ -46,7 +46,7 @@ class ModelTest extends \Codeception\Test\Unit
         $model->name = 'Test 4';
         self::assertTrue($model->validate());
     }
-    
+
     public function testCheckRulesString(): void
     {
         $model = new tests\unit\TestModel;
@@ -86,43 +86,42 @@ class ModelTest extends \Codeception\Test\Unit
         self::assertEquals($model->value, $test_model->value);
         $model->delete();
     }
-    
-    
-    public function testGetOne(): void 
+
+
+    public function testGetOne(): void
     {
         $model = new tests\unit\TestModel;
         $model->name = 'Test 8';
         $model->value = 3;
-        $model->save();      
+        $model->save();
         $test_model = $model::getOne(['name' => $model->name]);
         self::assertIsInt($test_model->id);
         self::assertEquals($model->id, $test_model->id);
         $model->delete();
     }
-    
-    public function testGetById(): void 
+
+    public function testGetById(): void
     {
         $model = new tests\unit\TestModel;
         $model->name = 'Test 9';
         $model->value = 4;
         $model->save();
         $id = $model->id;
-        self::assertIsInt($id);        
+        self::assertIsInt($id);
         $test_model = $model::getById($id);
         self::assertIsInt($test_model->id);
         self::assertEquals($id, $test_model->id);
         $model->delete();
     }
-    
-    public function testGelAll(): void 
+
+    public function testGelAll(): void
     {
         $model = new tests\unit\TestModel;
         $model->name = 'Test 10';
         $model->value = 5;
         $model->save();
         $models = $model::getAll();
-        self::assertEquals($model->id, $models[0]['id']);        
+        self::assertEquals($model->id, $models[0]['id']);
         $model->delete();
     }
-    
 }

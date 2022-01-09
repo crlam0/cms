@@ -8,7 +8,7 @@ class CatalogEditTest extends \Codeception\Test\Unit
         $content = $controller->actionIndex();
         self::assertIsString($content);
     }
-    
+
     public function testItemEditIndex(): void
     {
         $controller = new modules\catalog\controllers\ItemEditController;

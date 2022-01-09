@@ -58,5 +58,4 @@ class TestModel extends BaseModel
             'comment' => 'Коментарий',
         ];
     }
-
 }

@@ -251,10 +251,10 @@ final class Routing
     {
         $this->get_url_functions[$target_type] = $function;
     }
-    
+
     public function getRoute(string $name)
     {
-        if(array_key_exists($name, $this->routes)) {
+        if (array_key_exists($name, $this->routes)) {
             return $this->routes[$name];
         }
         return null;

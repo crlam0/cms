@@ -67,12 +67,12 @@ class ItemEditController extends BaseController
             $this->redirect('update', ['id' =>$model->id]);
         }
         list($num) = App::$db->getRow("select max(num) from cat_item where part_id=?", ['part_id' => $part_id]);
-        if(!$num) {
+        if (!$num) {
             $model->num = 1;
         } else {
             $model->num = $num + 1;
-        }                
-        
+        }
+
         [$list_title] = App::$db->getRow("select title from cat_part where id=?", ['id' => $part_id]);
         $this->title = 'Наименования в разделе ' . $list_title;
         $this->breadcrumbs[] = ['title' => $this->title, 'url' => $this->base_url];
@@ -105,14 +105,14 @@ class ItemEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
-        
+
         [$list_title] = App::$db->getRow("select title from cat_part where id=?", ['id' => $part_id]);
         $this->title = 'Товары в разделе ' . $list_title;
         $this->breadcrumbs[] = ['title' => $this->title, 'url' => $this->base_url];
         $this->title = 'Изменение товара ' . $model->title;
         $this->breadcrumbs[] = ['title' => $this->title];
 
-        
+
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('js', 'include/js/jquery.form.js');

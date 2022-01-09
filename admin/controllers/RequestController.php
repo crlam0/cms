@@ -22,18 +22,17 @@ class RequestController extends BaseController
         $result = App::$db->query($query);
         return $this->render('request_list.html.twig', [], $result);
     }
-    
+
     public function actionActive(int $id, string $active): string
     {
         App::$db->updateTable('request', ['active' => $active], ['id' => $id]);
         echo $active;
         exit;
     }
-    
+
     public function actionDelete(int $id): void
     {
         App::$db->deleteFromTable('request', ['id' => $id]);
         $this->redirect('index');
     }
-    
 }

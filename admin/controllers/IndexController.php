@@ -25,7 +25,7 @@ class IndexController extends BaseController
         $content = '';
 
         $time_diff = 0;
-        
+
         if (file_exists($this->sitemap)) {
             $time_diff=time()-filemtime($this->sitemap);
         }

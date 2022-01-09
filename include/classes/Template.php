@@ -47,7 +47,7 @@ class Template
                 $twig = $this->TwigTemplate;
                 $template['name'] = $file_name;
             } else {
-                if(App::$message != null) {
+                if (App::$message != null) {
                     $tags['file_name'] = $template['file_name'];
                     return App::$message->get('file_not_found', $tags);
                 } else {
@@ -126,7 +126,7 @@ class Template
             if ($file_name) {
                 $template['content'] = implode('', file($file_name));
             } else {
-                if(App::$message != null) {
+                if (App::$message != null) {
                     $tags['file_name'] = $template['file_name'];
                     return App::$message->get('file_not_found', $tags);
                 } else {

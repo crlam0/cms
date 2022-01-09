@@ -27,7 +27,7 @@ class Image
             App::$message->error('Неверный тип файла !');
             return false;
         }
-        if($dont_read_file) {
+        if ($dont_read_file) {
             return;
         }
         if ($this->file_type == 'image/jpeg') {

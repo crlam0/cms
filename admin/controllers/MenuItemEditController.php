@@ -59,7 +59,7 @@ class MenuItemEditController extends BaseController
             if (!$model->image_name) {
                 $model->image_name = '';
                 $model->image_type = '';
-            }            
+            }
             $this->saveImage($model, $_FILES['image_file']);
             $model->save(false);
             App::addFlash('success', 'Пункт меню успешно добавлен.');

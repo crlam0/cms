@@ -141,7 +141,7 @@ class Session implements \IteratorAggregate, \ArrayAccess, \Countable
         $this->registerSessionHandler();
 
         $this->setCookieParamsInternal();
-        
+
         session_cache_limiter('nocache');
 
         App::$debug ? session_start() : @session_start();
@@ -968,7 +968,7 @@ class Session implements \IteratorAggregate, \ArrayAccess, \Countable
      * @param int $offset the offset to retrieve element.
      * @return mixed the element at the offset, null if no element is found at the offset
      */
-    
+
     public function &offsetGet($offset)
     {
         $this->open();
@@ -989,7 +989,7 @@ class Session implements \IteratorAggregate, \ArrayAccess, \Countable
 
         return isset($_SESSION[$offset]) ? $_SESSION[$offset] : null;
     }
-     * 
+     *
      */
 
     /**

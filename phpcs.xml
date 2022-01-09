@@ -23,9 +23,8 @@
     <file>tests</file>
 
     <exclude-pattern>include/*(css|js)$</exclude-pattern>
-    <exclude-pattern>include/ckeditor/*$</exclude-pattern>
-    <exclude-pattern>include/edit_area/*$</exclude-pattern>
     <exclude-pattern>include/filemanager/*$</exclude-pattern>
+    <exclude-pattern>modules/article/dompdf/*$</exclude-pattern>
     <exclude-pattern>modules/media/player/*$</exclude-pattern>
 
 </ruleset>

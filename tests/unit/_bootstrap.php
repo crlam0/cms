@@ -14,4 +14,3 @@ $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
 // $App->loadInputData([],[],[]);
 // App::$settings['debug'] = true;
 // App::$db->debug = App::$settings['debug'];
-

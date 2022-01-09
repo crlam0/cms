@@ -29,12 +29,12 @@ class ItemsPropsEditController extends BaseController
 
         return $this->render('catalog_edit_items_props.html.twig', ['content' => $content]);
     }
-    
+
     private function subPart(&$content, $prev_id, $deep, $max_deep): void
     {
         $model = new CatalogPart;
         $result = $model->findAll(['prev_id' => $prev_id], 'num, title asc');
-        
+
         while ($row = $result->fetch_array()) {
             if ((!$deep) && (!$prev_id)) {
                 $content .= "<h3>{$row['title']}</h3>";
@@ -47,7 +47,7 @@ class ItemsPropsEditController extends BaseController
             }
         }
     }
-    
+
     private function partItems($part_id): string
     {
         $input = App::$input;
@@ -106,7 +106,6 @@ class ItemsPropsEditController extends BaseController
                             $content .= '<td align="center">' . PHP_EOL;
                             if (check_key('attr_type', $params) == 'simple') {
                                 $content .= '<input type="edit" class="form-control attr_change" maxlength="8" size="4" id="'.$tags['id'].'" attr_type="simple" attr_name="'.$params['attr_name'].'" value="'.$tags[$params['attr_name']].'">';
-                                
                             } elseif (check_key('type', $params) == 'boolean') {
                                 $content .= '<input type="checkbox" class="attr_change" size="8" id="'.$tags['id'].'"  attr_type="boolean" attr_name="'.$input_name.'" '.(check_key($input_name, $param_value) ? ' checked' : '').'>';
                             } else {
@@ -121,7 +120,7 @@ class ItemsPropsEditController extends BaseController
         $content .= '</table>';
         return $content;
     }
-    
+
 
     public function actionChange(int $item_id, string $attr_type, string $attr_name, string $value): string
     {
@@ -140,5 +139,4 @@ class ItemsPropsEditController extends BaseController
         echo 'OK';
         exit();
     }
-
 }

@@ -92,10 +92,10 @@ class SignupController extends BaseController
     {
         $this->title = 'Регистрация';
         $this->breadcrumbs[] = ['title'=>$this->title];
-        
+
         $signup_availbale = App::$settings['modules']['users']['signup_availbale'] ?? false;
-        
-        if(!$signup_availbale) {
+
+        if (!$signup_availbale) {
             return App::$message->get('error', [], 'Регистрация на сайте запрещена.');
         }
 

@@ -368,15 +368,16 @@ function include_php($file_name)
     return $content;
 }
 
-function get_webpack_asset(string $name) {
+function get_webpack_asset(string $name)
+{
     $file_name = App::$DIR . 'theme/mix-manifest.json';
-    if(!file_exists($file_name)) {
+    if (!file_exists($file_name)) {
         App::error('File mix-manifest.json not exists !');
         return '';
     }
     $json = file_get_contents(App::$DIR . 'theme/mix-manifest.json');
     $assets = my_json_decode($json);
-    if(!array_key_exists($name, $assets)) {
+    if (!array_key_exists($name, $assets)) {
         App::error('Key "' . $name . '" not exists in "mix-manifest.json"');
         return '';
     } else {

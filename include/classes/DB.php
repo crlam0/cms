@@ -227,7 +227,7 @@ class DB
         }
         return $value;
     }
-    
+
     /**
      * Return one row from query
      *
@@ -244,8 +244,8 @@ class DB
         } else {
             return null;
         }
-    }    
-    
+    }
+
     /**
      * Select record by id.
      *
@@ -277,7 +277,7 @@ class DB
             return null;
         }
     }
-    
+
     /**
      * Select records from DB.
      *
@@ -306,10 +306,10 @@ class DB
         $query = "SELECT * FROM {$table} WHERE {$expr} ORDER BY {$order_by}";
         return $this->query($query, $where);
     }
-    
+
     /**
      * Get all data from table.
-     * 
+     *
      * @param string $table Table name
      * @param string|array $where Fields for where statement
      *
@@ -327,7 +327,7 @@ class DB
 
     /**
      * Get row data from table.
-     * 
+     *
      * @param string $table Table name
      * @param string|array $where Fields for where statement
      *
@@ -342,8 +342,8 @@ class DB
             return null;
         }
     }
-    
-    
+
+
     /**
      * Return string for insert query
      *

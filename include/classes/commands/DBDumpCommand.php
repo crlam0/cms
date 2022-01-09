@@ -32,7 +32,7 @@ class DBDumpCommand extends Command
         $table = $input->getArgument('table');
         if (strlen($table)) {
             $output->writeln('<comment>Only table(s) </comment><info>'.$table.'</info>');
-            if(strstr($table, ',')) {
+            if (strstr($table, ',')) {
                 $table_add = str_replace(',', '_', $table);
                 $table = str_replace(',', ' ', $table);
             }

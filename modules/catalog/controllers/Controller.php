@@ -127,10 +127,10 @@ class Controller extends BaseController
 
 
         $row_part = App::$db->getRow("select * from cat_part where id=?", ['part_id' => $part_id]);
-        if(!$row_part) {
+        if (!$row_part) {
             $tags['title'] = '';
             $tags['image_name'] = '';
-            return $this->render('cat_item_list_empty.html.twig', $tags);            
+            return $this->render('cat_item_list_empty.html.twig', $tags);
         }
 
         if (isset($row_part['descr']) && strlen($row_part['descr'])) {
@@ -237,9 +237,9 @@ class Controller extends BaseController
     {
         $item = App::$db->getById('cat_item', $item_id);
         $image = App::$db->getById('cat_item_images', $image_id);
-        if(!$item || !$image) {
+        if (!$item || !$image) {
             return ['title' => 'Ошибка', 'content' => 'Файл не найден'];
-        }        
+        }
         if ($image_id != $item['default_img']) {
             [$tags['prev_id']] = App::$db->getRow("select id,file_name from cat_item_images where item_id='{$item_id}' and id<'{$image_id}' and id<>'{$item['default_img']}' order by id desc limit 1");
             if (!$tags['prev_id']) {

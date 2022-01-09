@@ -89,7 +89,7 @@ class BaseModel implements \ArrayAccess
 
     public function __get(string $name)
     {
-        if($this->data == null) {
+        if ($this->data == null) {
             throw new \InvalidArgumentException('Empty model data');
         }
         if (array_key_exists($name, $this->data)) {
@@ -334,7 +334,7 @@ class BaseModel implements \ArrayAccess
         $model->load($data);
         return $model;
     }
-    
+
     /**
      * Return model's data from DB.
      *
@@ -346,13 +346,13 @@ class BaseModel implements \ArrayAccess
     public static function getOne($where = null)
     {
         $data = App::$db->getOne(static::tableName(), $where);
-        if($data == null) {
+        if ($data == null) {
             return null;
         }
         $class = get_called_class();
         $model = new $class();
         $model->load($data);
-        return $model;        
+        return $model;
     }
 
     /**
@@ -379,19 +379,19 @@ class BaseModel implements \ArrayAccess
     public static function getAll($where = null, string $order_by = 'id desc')
     {
         $data = App::$db->getAll(static::tableName(), $where, $order_by);
-        if($data == null || !is_array($data) || !count($data) ) {
+        if ($data == null || !is_array($data) || !count($data)) {
             return null;
         }
         $class = get_called_class();
         $models = [];
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $model = new $class();
             $model->load($item);
             $models[] = $model;
-        }        
+        }
         return $models;
     }
-    
+
     /**
      * Return model's data
      *

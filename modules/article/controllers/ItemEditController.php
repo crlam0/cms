@@ -68,13 +68,13 @@ class ItemEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
-        
+
         [$list_title] = App::$db->getRow("select title from article_list where id=?", ['id' => $list_id]);
         $this->title = 'Статьи в разделе ' . $list_title;
         $this->breadcrumbs[] = ['title' => $this->title, 'url' => $this->base_url];
         $this->title = 'Добавление статьи';
         $this->breadcrumbs[] = ['title' => $this->title];
-        
+
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');
@@ -102,13 +102,13 @@ class ItemEditController extends BaseController
             }
             $this->redirect('update', ['id' =>$model->id]);
         }
-        
+
         [$list_title] = App::$db->getRow("select title from article_list where id=?", ['id' => $list_id]);
         $this->title = 'Статьи в разделе ' . $list_title;
         $this->breadcrumbs[] = ['title' => $this->title, 'url' => $this->base_url];
         $this->title = 'Изменение статьи ' . $model->title;
         $this->breadcrumbs[] = ['title' => $this->title];
-        
+
         App::addAsset('js', 'vendor/ckeditor/ckeditor/ckeditor.js');
         App::addAsset('js', 'include/js/editor.js');
         App::addAsset('header', 'X-XSS-Protection:0');

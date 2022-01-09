@@ -48,7 +48,7 @@ class EditController extends BaseController
             }
             if (!$model->target_id) {
                 $model->target_id = 0;
-            }            
+            }
             if (!$model->image_name) {
                 $model->image_name = '';
                 $model->image_type = '';

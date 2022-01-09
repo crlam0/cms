@@ -41,7 +41,7 @@ class ListEditController extends BaseController
     public function showImage($image_id): string
     {
         $image = new GalleryImage($image_id);
-        $file_name = $this->image_path . $image->file_name; 
+        $file_name = $this->image_path . $image->file_name;
         if (is_file(App::$DIR . $file_name)) {
             return '<img src="' . App::$SUBDIR . $file_name . '" border="0" width="200" />';
         } else {

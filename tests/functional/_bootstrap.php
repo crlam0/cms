@@ -11,7 +11,7 @@ $DIR = dirname(dirname(dirname(__FILE__))) . '/';
 
 $App = new App($DIR, $SUBDIR);
 $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
-$App->loadInputData([],[],['REQUEST_URI'=>$SUBDIR]);
+$App->loadInputData([], [], ['REQUEST_URI'=>$SUBDIR]);
 App::$template = new Template();
 
 App::$debug = true;

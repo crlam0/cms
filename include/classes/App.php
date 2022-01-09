@@ -452,12 +452,12 @@ class App
         }
         static::sendResult($content, $tags, 200);
     }
-    
-    private function logErrorResult($e) 
+
+    private function logErrorResult($e)
     {
         static::error('Exception: ' . $e->getMessage());
         static::error('File: ' . $e->getFile() . ' (Line:' . $e->getLine().')');
-        static::error($e->getTraceAsString());        
+        static::error($e->getTraceAsString());
     }
 
     /**
@@ -482,15 +482,11 @@ class App
                 $this->sendResult($content, $tags, 403);
             }
             return $this->getContent($controller, $content, $tags);
-        }
-        
-        catch (\BadMethodCallException $e) {
+        } catch (\BadMethodCallException $e) {
             $this->logErrorResult($e);
             $tags['Header'] = '';
             static::sendResult(static::$message->get('file_not_found', ['file_name' => static::$routing->request_uri]), $tags, 404);
-        }
-        
-        catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logErrorResult($e);
             $tags['Header'] = '';
             static::sendResult(static::$message->getError('Внутренние неполадки, приносим свои извинения.'), $tags, 500);

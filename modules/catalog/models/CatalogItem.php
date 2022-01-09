@@ -11,7 +11,8 @@ use classes\BaseModel;
  * @author BooT
  */
 class CatalogItem extends BaseModel
-{    
+{
+
 
     /**
      * @inheritdoc
@@ -87,7 +88,4 @@ class CatalogItem extends BaseModel
         $images = App::$db->findAll('cat_item_images', ['id' => $this->default_img]);
         return $images->fetch_all(MYSQLI_ASSOC);
     }
-    
-
-    
 }

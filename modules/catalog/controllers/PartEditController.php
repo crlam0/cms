@@ -70,25 +70,25 @@ class PartEditController extends BaseController
     {
         $model = new CatalogPart();
         if ($model->load(App::$input['form']) && $model->validate()) {
-            if(!strlen($model->num)){
+            if (!strlen($model->num)) {
                 list($num) = App::$db->getRow("select max(num) from cat_part where prev_id=?", ['prev_id' => $model->prev_id]);
                 $model->num = $num + 1;
-            }            
+            }
             if (!$model->seo_alias) {
                 $model->seo_alias = encodestring($model->title);
             }
-            if(!$model->related_products) {
+            if (!$model->related_products) {
                 $model->related_products = '';
             }
             $model->descr = replace_base_href($model->descr, true);
             $model->date_add = 'now()';
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
-            if(isset(App::$settings['modules']['catalog']['default_items_props']) && !strlen($model->items_props)){
+            if (isset(App::$settings['modules']['catalog']['default_items_props']) && !strlen($model->items_props)) {
                 $model->items_props = App::$settings['modules']['catalog']['default_items_props'];
-            }        
+            }
             if ($model->save(false)) {
-                if($this->saveImage($model, $_FILES['image_file'])) {
+                if ($this->saveImage($model, $_FILES['image_file'])) {
                     App::addFlash('success', 'Раздел успешно добавлен');
                 }
             }
@@ -96,7 +96,7 @@ class PartEditController extends BaseController
         }
         $tree = [];
         $this->makeTree($tree, 0, 0);
-        
+
         $model->price_title = 'Цена';
         $model->item_image_width = '1024';
         $model->item_image_height = '768';
@@ -125,9 +125,9 @@ class PartEditController extends BaseController
             $model->descr = replace_base_href($model->descr, true);
             $model->date_change = 'now()';
             $model->uid = App::$user->id;
-            if(isset(App::$settings['modules']['catalog']['default_items_props']) && !strlen($model->items_props)){
+            if (isset(App::$settings['modules']['catalog']['default_items_props']) && !strlen($model->items_props)) {
                 $model->items_props = App::$settings['modules']['catalog']['default_items_props'];
-            }        
+            }
             if ($this->saveImage($model, $_FILES['image_file']) && $model->save(false)) {
                 App::addFlash('success', 'Раздел успешно обновлён');
             }

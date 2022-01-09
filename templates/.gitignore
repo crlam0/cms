@@ -2,4 +2,5 @@
 !breadcrumb.html.twig
 !flash_errors.html.twig
 !pager.html.twig
+!search.html.twig
 !.gitignore

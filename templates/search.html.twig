@@ -1,0 +1,26 @@
+<div id="search">
+    <form action="{{ SUBDIR }}search/" method="post">        
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" name="search_str" value="{{ search_str }}" placeholder="Поиск ...">
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Искать</button>
+          </div>
+        </div>
+    </form><br />
+    {% if rows is defined %}
+        {% for row in rows %}
+            {% set content = cut_string(row.content,200) %}
+            {% set href = "" %}
+            {% if row.type == "article_item" %}
+                {% set href = routing.getUrl('article', null, row) %}
+            {% endif %}
+            {% if row.type == "blog_post" %}
+                {% set href = routing.getUrl('blog_post', null, row) %}
+            {% endif %}            
+            <div style="margin-bottom: 20px;">
+                <a class=search_result href="{{ SUBDIR }}{{ href }}" title="{{ row.title }}"><h4>{{ row.title }}</h4></a>
+                {{ content|striptags }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

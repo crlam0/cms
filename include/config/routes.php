@@ -12,7 +12,8 @@ return [
     ],
     'search' => [
         'pattern' => '^search\/?$',
-        'file' => 'modules/misc/search.php'
+        'controller' => 'modules\misc\SearchController',
+        'action' => 'index'
     ],
     'request' => [
         'pattern' => '^request\/?$',

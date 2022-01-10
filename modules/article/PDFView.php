@@ -47,7 +47,7 @@ class PDFView
         
         error_reporting(0);
         
-        $content = str_replace('src="', 'src="http://localhost', $content);
+        $content = str_replace('src="', 'src="' . App::$server['REQUEST_SCHEME'] . '://' . App::$server['HTTP_HOST'], $content);
         
         // echo $content;exit;
 

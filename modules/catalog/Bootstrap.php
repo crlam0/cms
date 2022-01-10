@@ -47,6 +47,15 @@ class Bootstrap
                 'controller' => 'modules\catalog\controllers\PriceController',
             ],
 
+            'catalog-pdf' => [
+                'pattern' => '^catalog\/.*\/(.*)\.pdf$',
+                'controller' => 'modules\catalog\controllers\Controller',
+                'action' => 'PDF',
+                'params' => [
+                    '0' => 'alias',
+                ]
+            ],
+
             /* For admin module */
 
             'catalog-part-edit' => [

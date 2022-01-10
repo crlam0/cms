@@ -36,7 +36,6 @@ $App = new App($DIR, $SUBDIR);
 $App->setDB(new DB($DBHOST, $DBUSER, $DBPASSWD, $DBNAME));
 $App->loadSettings(__DIR__ . '/../local/settings.php');
 $App->loadInputData($_GET, $_POST, $_SERVER);
-$App->addGlobals();
 App::$debug = App::$settings['debug'];
 App::$db->debug = App::$settings['debug'];
 

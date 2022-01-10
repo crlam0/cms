@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\catalog\contrillers;
+namespace modules\catalog\controllers;
 
 use classes\BaseController;
 use classes\App;

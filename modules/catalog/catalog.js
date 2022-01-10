@@ -3,7 +3,7 @@ $(document).ready(function () {
 
     var MYDIR = DIR + 'modules/catalog/';
 
-    $('body').on('click', 'a.buy_button', function () {
+    $('body').on('click', '.buy_button', function () {
         var id = $(this).attr("item_id");
         var cnt_id = ".cnt_" + id;
         cnt = $(cnt_id).val();

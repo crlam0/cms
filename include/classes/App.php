@@ -189,18 +189,6 @@ class App
     }
 
     /**
-     * Put data to global arrays
-     *
-     */
-    public function addGlobals() : void
-    {
-        global $input, $server, $settings;
-        $input = static::$input;
-        $server = static::$server;
-        $settings = static::$settings;
-    }
-
-    /**
      * Get value from container.
      *
      * @param string $key Key name

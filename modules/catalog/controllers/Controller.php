@@ -24,7 +24,7 @@ class Controller extends BaseController
             } else {
                 $query = "select id from cat_part where seo_alias like ? and prev_id=?";
                 $row = App::$db->getRow($query, ['seo_alias' => $alias, 'prev_id' => $part_id]);
-                if (is_numeric($row['id'])) {
+                if ($row && is_numeric($row['id'])) {
                     $part_id = $row['id'];
                 }
             }
@@ -105,7 +105,7 @@ class Controller extends BaseController
         }
         list($this->title,$this->breadcrumbs) = $this->getHeaderBreadCrumbs($part_id);
         App::addAsset('js', 'modules/catalog/catalog.js');
-
+        
         $query = "SELECT cat_part.*,count(cat_item.id) as cnt from cat_part left join cat_item on (cat_item.part_id=cat_part.id) where prev_id=? group by cat_part.id order by cat_part.num,cat_part.title asc";
         $result =App::$db->query($query, ['prev_id' => $part_id]);
 
@@ -117,6 +117,7 @@ class Controller extends BaseController
             $content .= $this->render('cat_part_list', $tags, $result);
             $show_empty_message = false;
         }
+        
         $content .= $this->getPartItemsContent($part_id, $page, $show_empty_message);
         $content .= $this->getBackButton($part_id);
         return $content;
@@ -124,15 +125,8 @@ class Controller extends BaseController
 
     private function getPartItemsContent(int $part_id, int $page, bool $show_empty_message = true): string
     {
-
-
-        $row_part = App::$db->getRow("select * from cat_part where id=?", ['part_id' => $part_id]);
-        if (!$row_part) {
-            $tags['title'] = '';
-            $tags['image_name'] = '';
-            return $this->render('cat_item_list_empty.html.twig', $tags);
-        }
-
+        $row_part = App::$db->getRow("select * from cat_part where id=?", ['id' => $part_id]);
+        
         if (isset($row_part['descr']) && strlen($row_part['descr'])) {
             $tags['part_descr'] = $row_part['descr'];
         }
@@ -377,4 +371,19 @@ class Controller extends BaseController
     {
         return App::$session['BUY'][$id]['count'];
     }
+    
+    public function actionPDF(string $alias): string
+    {
+        $id = get_id_by_alias('cat_item', $alias, true);
+        // $row = App::$db->getById('cat_item', $id);
+        $query = "select cat_item.*,file_name,file_type,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id=?";
+        $row = App::$db->getRow($query, ['id' => $id]);
+
+        $PDF = new \modules\article\PDFView();
+        $data = $row;
+        $data['content'] = $row['descr_full'];
+        $data['this'] = $this;
+        return $PDF->get($data, 'pdf_cat_item.html.twig', $stream = true);
+    }
+    
 }

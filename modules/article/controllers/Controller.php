@@ -55,9 +55,7 @@ class Controller extends BaseController
     public function actionContent(string $list_alias, string $alias): string
     {
         $article_id = get_id_by_alias('article_item', $alias, true);
-        $query = "select * from article_item where id=?";
-        $result = App::$db->query($query, ['id' => $article_id]);
-        $row = $result->fetch_array();
+        $row = App::$db->getById('article_item', $article_id);
 
         [$id, $title] = App::$db->getRow("select id,title from article_list where id=?", ['list_id' => $row['list_id']]);
 
@@ -81,6 +79,6 @@ class Controller extends BaseController
         $id = get_id_by_alias('article_item', $alias, true);
         $data = App::$db->getById('article_item', $id);
         $PDF = new PDFView();
-        return $PDF->get($data, $stream = true);
+        return $PDF->get($data, 'article_view', $stream = true);
     }
 }

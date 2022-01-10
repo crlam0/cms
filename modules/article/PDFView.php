@@ -24,16 +24,16 @@ use Dompdf\Options;
 class PDFView
 {
 
-    public function get(array $row, bool $stream = false): string
+    public function get(array $data, string $template, bool $stream = false): string
     {
         if(!class_exists('Dompdf\Dompdf')) {
             return App::$message->get('error', [], 'Не установлены компоненты для создания PDF');
         }
-        $row['content'] = replace_base_href($row['content']);
+        $data['content'] = replace_base_href($data['content']);
         
         $tags = [
-            'title' => $row['title'],
-            'content' => App::$template->parse('article_view', $row),
+            'title' => $data['title'],
+            'content' => App::$template->parse($template, $data),
         ];
 
         $content = App::$template->parse('pdf.html.twig', $tags);
@@ -41,21 +41,27 @@ class PDFView
         $options = new Options();
         $options->setRootDir(App::$DIR . 'modules/article/dompdf');
         $options->setDefaultFont('times');
+        $options->isHtml5ParserEnabled(true);
+        $options->setIsRemoteEnabled(true);
         $dompdf = new Dompdf($options);        
         
         error_reporting(0);
+        
+        $content = str_replace('src="', 'src="http://localhost', $content);
+        
+        echo $content;exit;
 
         $dompdf->loadHtml($content, 'UTF-8');
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
         if ($stream) {
-            $dompdf->stream($row['title'] . '.pdf');
+            $dompdf->stream($data['title'] . '.pdf');
             header('Content-Description: File Transfer');
             exit;
         } else {
             header('Content-Type: content/pdf');
-            header('Content-Disposition: attachment; filename=' . $row['title'] . '.pdf');
+            header('Content-Disposition: attachment; filename=' . $data['title'] . '.pdf');
             header('Content-Transfer-Encoding: binary');
             header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');

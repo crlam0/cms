@@ -3,7 +3,11 @@
         <ol class="breadcrumb">
             {% for item in breadcrumbs %}
                 {% if item.url is defined %}
-                    <li class="breadcrumb-item"><a href="{{ SUBDIR }}{{ item.url }}">{{ item.title }}</a></li>
+                    {% if SUBDIR in item.url %}
+                        <li class="breadcrumb-item"><a href="{{ item.url }}">{{ item.title }}</a></li>
+                    {% else %}
+                        <li class="breadcrumb-item"><a href="{{ SUBDIR }}{{ item.url }}">{{ item.title }}</a></li>
+                    {% endif %}
                 {% else %}
                     <li class="breadcrumb-item active" aria-current="page">{{ item.title }}</li>
                 {% endif %}

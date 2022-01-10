@@ -49,7 +49,7 @@ class PDFView
         
         $content = str_replace('src="', 'src="http://localhost', $content);
         
-        echo $content;exit;
+        // echo $content;exit;
 
         $dompdf->loadHtml($content, 'UTF-8');
         $dompdf->setPaper('A4', 'portrait');

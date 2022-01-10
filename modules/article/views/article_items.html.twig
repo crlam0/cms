@@ -12,7 +12,7 @@
 
 <div id="articles_list">
     {% for row in rows %}
-        <div class="item_title"><a href={{ SUBDIR }}{{ routing.getUrl('article', null, row) }}>{{ row.title }}</a></div>
+        <div class="item_title"><a href="{{ SUBDIR }}{{ routing.getUrl('article', null, row) }}" title="{{ row.title }}">{{ row.title }}</a></div>
         <div class="item_descr">Дата: {{ row.date_add }}{% if row.author|length > 0 %}<span class="article-author">Автор: {{ row.author }}</span>{% endif %}</div>
         <div class="separator"></div>
     {% endfor %}

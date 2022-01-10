@@ -5,6 +5,7 @@ namespace modules\article\controllers;
 use classes\App;
 use classes\BaseController;
 use classes\Pagination;
+use modules\article\PDFView;
 
 class Controller extends BaseController
 {
@@ -58,7 +59,7 @@ class Controller extends BaseController
         $result = App::$db->query($query, ['id' => $article_id]);
         $row = $result->fetch_array();
 
-        list($id, $title) = App::$db->getRow("select id,title from article_list where id=?", ['list_id' => $row['list_id']]);
+        [$id, $title] = App::$db->getRow("select id,title from article_list where id=?", ['list_id' => $row['list_id']]);
 
         $this->title = $row['title'];
         if ($row['active'] == 'Y') {
@@ -75,14 +76,11 @@ class Controller extends BaseController
         return  App::$template->parse('article_view', $row);
     }
 
-    public function actionPDF(string $uri, string $alias): string
+    public function actionPDF(string $alias): string
     {
         $id = get_id_by_alias('article_item', $alias, true);
-        $query = "select * from article_item where id=?";
-        $result = App::$db->query($query, ['id' => $id]);
-        $row = $result->fetch_array();
-
+        $data = App::$db->getById('article_item', $id);
         $PDF = new PDFView();
-        return $PDF->get($row, $stream = true);
+        return $PDF->get($data, $stream = true);
     }
 }

@@ -14,6 +14,7 @@ if (file_exists(__DIR__ . '/dompdf/autoload.inc.php')) {
     include_once __DIR__ . '/dompdf/autoload.inc.php';
 }
 use Dompdf\Dompdf;
+use Dompdf\Options;
 
 /**
  * Description of PDFView
@@ -23,24 +24,28 @@ use Dompdf\Dompdf;
 class PDFView
 {
 
-    private function getHTML(array $row): string
+    public function get(array $row, bool $stream = false): string
     {
-        $content = '<html><head><style>body { font-family: arial; }</style></head>'.
-        '<body>';
-        $content .= '<h1>' . $row['title'] . '</h1><br />';
-        $content .= App::$template->parse('article_view', $row);
-        $content .='</body>'.
-        '</html>';
-        return $content;
-    }
-
-    public function get(array $row, bool $stream = false): void
-    {
+        if(!class_exists('Dompdf\Dompdf')) {
+            return App::$message->get('error', [], 'Не установлены компоненты для создания PDF');
+        }
         $row['content'] = replace_base_href($row['content']);
-        $content = $this->getHTML($row);
+        
+        $tags = [
+            'title' => $row['title'],
+            'content' => App::$template->parse('article_view', $row),
+        ];
 
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml($content);
+        $content = App::$template->parse('pdf.html.twig', $tags);
+        
+        $options = new Options();
+        $options->setRootDir(App::$DIR . 'modules/article/dompdf');
+        $options->setDefaultFont('times');
+        $dompdf = new Dompdf($options);        
+        
+        error_reporting(0);
+
+        $dompdf->loadHtml($content, 'UTF-8');
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
@@ -57,6 +62,7 @@ class PDFView
             header('Pragma: public');
             ob_end_flush();
             echo $dompdf->output();
+            exit;
         }
     }
 }

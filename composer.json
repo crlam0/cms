@@ -8,6 +8,7 @@
         "bower-asset/editarea": "^0.8",
         "bower-asset/jquery": "^2.2",
         "bower-asset/vue": "^2.6",
+        "cakephp/log": "^3.9",
         "ckeditor/ckeditor": "^4.16",
         "robmorgan/phinx": "^0.11",
         "swiftmailer/swiftmailer": "^6.0",

@@ -24,6 +24,14 @@ class Bootstrap
                     '0' => 'uri',
                 ]
             ],
+            'catalog-pdf' => [
+                'pattern' => '^catalog\/.*\/(.*)\.pdf$',
+                'controller' => 'modules\catalog\controllers\Controller',
+                'action' => 'PDF',
+                'params' => [
+                    '0' => 'alias',
+                ]
+            ],
             'catalog-item' => [
                 'pattern' => '^catalog\/(.*)\/(.*)$',
                 'controller' => 'modules\catalog\controllers\Controller',
@@ -45,15 +53,6 @@ class Bootstrap
             'price' => [
                 'pattern' => '^price\/[\w\-]*$',
                 'controller' => 'modules\catalog\controllers\PriceController',
-            ],
-
-            'catalog-pdf' => [
-                'pattern' => '^catalog\/.*\/(.*)\.pdf$',
-                'controller' => 'modules\catalog\controllers\Controller',
-                'action' => 'PDF',
-                'params' => [
-                    '0' => 'alias',
-                ]
             ],
 
             /* For admin module */

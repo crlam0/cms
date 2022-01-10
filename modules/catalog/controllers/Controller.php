@@ -166,7 +166,7 @@ class Controller extends BaseController
     {
         $query = "select id,part_id from cat_item where seo_alias=? and part_id=?";
         $row = App::$db->getRow($query, ['seo_alias' => $item_title, 'part_id' => $part_id]);
-        if (is_numeric($row['id'])) {
+        if (array_key_exists('id',$row) && is_numeric($row['id'])) {
             return $row['id'];
         }
         return 0;
@@ -375,7 +375,6 @@ class Controller extends BaseController
     public function actionPDF(string $alias): string
     {
         $id = get_id_by_alias('cat_item', $alias, true);
-        // $row = App::$db->getById('cat_item', $id);
         $query = "select cat_item.*,file_name,file_type,cat_item_images.descr as image_descr,cat_item_images.id as cat_item_images_id from cat_item left join cat_item_images on (cat_item_images.id=default_img) where cat_item.id=?";
         $row = App::$db->getRow($query, ['id' => $id]);
 
